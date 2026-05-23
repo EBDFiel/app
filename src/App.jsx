@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import './App.css'
 import { supabase } from './lib/supabase'
 
@@ -320,7 +322,7 @@ function App() {
 
     if (!janela) {
       alert(
-        'O navegador bloqueou a abertura da impressão. No celular, use o menu do navegador e escolha Compartilhar ou Imprimir.'
+        'O navegador bloqueou a abertura da impressão. No celular, use o botão Baixar PDF.'
       )
       return
     }
@@ -479,6 +481,70 @@ function App() {
       </html>
     `)
     janela.document.close()
+  }
+
+  async function baixarRelatorioPDF() {
+    const relatorio = document.querySelector('.relatorio-folha')
+
+    if (!relatorio) {
+      alert('Relatório não encontrado para gerar PDF.')
+      return
+    }
+
+    try {
+      const canvas = await html2canvas(relatorio, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+      })
+
+      const imagem = canvas.toDataURL('image/png')
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      const larguraPagina = pdf.internal.pageSize.getWidth()
+      const alturaPagina = pdf.internal.pageSize.getHeight()
+
+      const margem = 8
+      const larguraUtil = larguraPagina - margem * 2
+      const alturaImagem = (canvas.height * larguraUtil) / canvas.width
+
+      let posicaoY = margem
+
+      if (alturaImagem <= alturaPagina - margem * 2) {
+        pdf.addImage(imagem, 'PNG', margem, posicaoY, larguraUtil, alturaImagem)
+      } else {
+        let alturaRestante = alturaImagem
+        let posicaoImagem = 0
+
+        while (alturaRestante > 0) {
+          pdf.addImage(
+            imagem,
+            'PNG',
+            margem,
+            posicaoY - posicaoImagem,
+            larguraUtil,
+            alturaImagem
+          )
+
+          alturaRestante -= alturaPagina - margem * 2
+          posicaoImagem += alturaPagina - margem * 2
+
+          if (alturaRestante > 0) {
+            pdf.addPage()
+          }
+        }
+      }
+
+      pdf.save('relatorio-ebd-fiel.pdf')
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error)
+      alert('Não foi possível gerar o PDF. Tente novamente.')
+    }
   }
 
   function abrirNovaClasse() {
@@ -1313,12 +1379,18 @@ function App() {
             <p>Relatório geral no modelo da Escola Bíblica Dominical.</p>
           </div>
 
-          <button
-            className="botao-principal"
-            onClick={abrirRelatorioParaImpressao}
-          >
-            Imprimir / Salvar PDF
-          </button>
+          <div className="grupo-botoes">
+            <button
+              className="botao-principal"
+              onClick={abrirRelatorioParaImpressao}
+            >
+              Imprimir / Salvar PDF
+            </button>
+
+            <button className="botao-secundario" onClick={baixarRelatorioPDF}>
+              Baixar PDF
+            </button>
+          </div>
         </div>
 
         <div className="cards no-print">
