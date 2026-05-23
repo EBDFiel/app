@@ -21,6 +21,13 @@ function App() {
   const [carregando, setCarregando] = useState(true)
   const [erroSistema, setErroSistema] = useState('')
 
+  const [sessao, setSessao] = useState(null)
+  const [verificandoSessao, setVerificandoSessao] = useState(true)
+  const [emailLogin, setEmailLogin] = useState('')
+  const [senhaLogin, setSenhaLogin] = useState('')
+  const [carregandoLogin, setCarregandoLogin] = useState(false)
+  const [erroLogin, setErroLogin] = useState('')
+
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
@@ -61,8 +68,125 @@ function App() {
   ]
 
   useEffect(() => {
-    carregarDadosOnline()
+    iniciarAutenticacao()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSessao(session)
+
+      if (!session) {
+        limparDadosDoSistema()
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
+
+  async function iniciarAutenticacao() {
+    setVerificandoSessao(true)
+    setCarregando(true)
+
+    try {
+      const { data, error } = await supabase.auth.getSession()
+
+      if (error) {
+        throw error
+      }
+
+      setSessao(data.session)
+
+      if (data.session) {
+        await carregarDadosOnline()
+      } else {
+        limparDadosDoSistema()
+      }
+    } catch (error) {
+      console.error('Erro ao verificar sessão:', error)
+      setErroSistema('Erro ao verificar login.')
+    } finally {
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }
+  }
+
+  function limparDadosDoSistema() {
+    setClasses([])
+    setAlunos([])
+    setChamadasSalvas([])
+    setPaginaAtual('painel')
+    setMostrarFormularioClasse(false)
+    setMostrarFormularioAluno(false)
+    setClasseEditandoId(null)
+    setAlunoEditandoId(null)
+    setNovaClasse({ nome: '', professor: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '' })
+    setBuscaAluno('')
+    setFiltroClasseAluno('')
+    setClasseChamadaId('')
+    setPresencas({})
+    setDadosExtrasChamada({
+      visitantes: '',
+      biblias: '',
+      revistas: '',
+      ofertas: '',
+    })
+  }
+
+  async function entrarComEmailSenha(event) {
+    event.preventDefault()
+
+    if (!emailLogin.trim() || !senhaLogin.trim()) {
+      setErroLogin('Informe o e-mail e a senha.')
+      return
+    }
+
+    setCarregandoLogin(true)
+    setErroLogin('')
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailLogin.trim(),
+        password: senhaLogin,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setSessao(data.session)
+      setEmailLogin('')
+      setSenhaLogin('')
+
+      await carregarDadosOnline()
+    } catch (error) {
+      console.error('Erro ao entrar:', error)
+      setErroLogin('E-mail ou senha inválidos.')
+    } finally {
+      setCarregandoLogin(false)
+    }
+  }
+
+  async function sairDoSistema() {
+    const confirmar = window.confirm('Deseja sair do sistema?')
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      console.error('Erro ao sair:', error)
+      alert('Erro ao sair do sistema.')
+      return
+    }
+
+    setSessao(null)
+    limparDadosDoSistema()
+  }
 
   async function carregarDadosOnline() {
     setCarregando(true)
@@ -896,6 +1020,74 @@ function App() {
     }
   }
 
+  if (verificandoSessao) {
+    return (
+      <div className="app">
+        <aside className="menu-lateral">
+          <h1>EBD Fiel</h1>
+        </aside>
+
+        <main className="area-principal">
+          <section className="conteudo">
+            <h2>Verificando acesso...</h2>
+            <p>Aguarde um momento.</p>
+          </section>
+        </main>
+      </div>
+    )
+  }
+
+  if (!sessao) {
+    return (
+      <div className="app">
+        <aside className="menu-lateral">
+          <h1>EBD Fiel</h1>
+        </aside>
+
+        <main className="area-principal">
+          <section className="conteudo">
+            <h2>Acesso restrito</h2>
+            <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+
+            <form className="formulario" onSubmit={entrarComEmailSenha}>
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  value={emailLogin}
+                  onChange={(event) => setEmailLogin(event.target.value)}
+                  placeholder="seuemail@exemplo.com"
+                  autoComplete="email"
+                />
+              </label>
+
+              <label>
+                Senha
+                <input
+                  type="password"
+                  value={senhaLogin}
+                  onChange={(event) => setSenhaLogin(event.target.value)}
+                  placeholder="Digite sua senha"
+                  autoComplete="current-password"
+                />
+              </label>
+
+              {erroLogin && <div className="aviso">{erroLogin}</div>}
+
+              <button
+                className="botao-principal"
+                type="submit"
+                disabled={carregandoLogin}
+              >
+                {carregandoLogin ? 'Entrando...' : 'Entrar'}
+              </button>
+            </form>
+          </section>
+        </main>
+      </div>
+    )
+  }
+
   if (carregando) {
     return (
       <div className="app">
@@ -1506,6 +1698,18 @@ function App() {
             </button>
           ))}
         </nav>
+
+        <div style={{ marginTop: '24px', padding: '0 12px' }}>
+          <p style={{ fontSize: '12px', opacity: 0.8, marginBottom: '8px' }}>
+            Logado como:
+            <br />
+            {sessao?.user?.email}
+          </p>
+
+          <button className="botao-secundario" onClick={sairDoSistema}>
+            Sair
+          </button>
+        </div>
       </aside>
 
       <main className="area-principal">{renderizarPagina()}</main>
