@@ -1,4 +1,4 @@
- import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { supabase } from './lib/supabase'
 
@@ -306,6 +306,179 @@ function App() {
     }
 
     return Math.round((presentes / total) * 100)
+  }
+
+  function abrirRelatorioParaImpressao() {
+    const relatorio = document.querySelector('.relatorio-folha')
+
+    if (!relatorio) {
+      alert('Relatório não encontrado para impressão.')
+      return
+    }
+
+    const janela = window.open('', '_blank')
+
+    if (!janela) {
+      alert(
+        'O navegador bloqueou a abertura da impressão. No celular, use o menu do navegador e escolha Compartilhar ou Imprimir.'
+      )
+      return
+    }
+
+    janela.document.open()
+    janela.document.write(`
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Relatório EBD Fiel</title>
+
+          <style>
+            * {
+              box-sizing: border-box;
+            }
+
+            body {
+              margin: 0;
+              padding: 24px;
+              font-family: Arial, sans-serif;
+              color: #000;
+              background: #fff;
+            }
+
+            .area-acoes {
+              display: flex;
+              gap: 12px;
+              justify-content: center;
+              margin-bottom: 20px;
+            }
+
+            .area-acoes button {
+              border: 0;
+              border-radius: 8px;
+              padding: 12px 18px;
+              font-size: 15px;
+              font-weight: 700;
+              cursor: pointer;
+              background: #2563eb;
+              color: #fff;
+            }
+
+            .area-acoes .secundario {
+              background: #e5e7eb;
+              color: #111827;
+            }
+
+            .relatorio-folha {
+              width: 100%;
+              max-width: 980px;
+              margin: 0 auto;
+              background: #fff;
+            }
+
+            .cabecalho-relatorio {
+              text-align: center;
+              margin-bottom: 16px;
+              padding-bottom: 8px;
+              border-bottom: 2px dotted #000;
+            }
+
+            .cabecalho-relatorio h3 {
+              margin: 0 0 6px 0;
+              font-size: 20px;
+              font-weight: 700;
+            }
+
+            .cabecalho-relatorio p {
+              margin: 0;
+              font-size: 14px;
+              font-weight: 600;
+            }
+
+            .tabela-container {
+              width: 100%;
+              overflow-x: visible;
+            }
+
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              table-layout: fixed;
+              font-size: 11px;
+            }
+
+            th,
+            td {
+              border: 1px solid #000;
+              padding: 5px 4px;
+              text-align: center;
+              vertical-align: middle;
+              word-break: break-word;
+            }
+
+            th {
+              font-weight: 700;
+              background: #f3f4f6;
+            }
+
+            td:nth-child(2),
+            th:nth-child(2) {
+              text-align: left;
+              width: 22%;
+            }
+
+            .linha-total td {
+              font-weight: 700;
+              background: #f3f4f6;
+            }
+
+            .linha-domingo-anterior td {
+              font-weight: 700;
+            }
+
+            @media print {
+              body {
+                padding: 0;
+              }
+
+              .area-acoes {
+                display: none;
+              }
+
+              .relatorio-folha {
+                max-width: none;
+              }
+
+              @page {
+                size: A4 portrait;
+                margin: 10mm;
+              }
+            }
+          </style>
+        </head>
+
+        <body>
+          <div class="area-acoes">
+            <button onclick="window.print()">Imprimir / Salvar PDF</button>
+            <button class="secundario" onclick="window.close()">Fechar</button>
+          </div>
+
+          ${relatorio.outerHTML}
+
+          <script>
+            setTimeout(function () {
+              try {
+                window.print()
+              } catch (error) {
+                console.log(error)
+              }
+            }, 800)
+          </script>
+        </body>
+      </html>
+    `)
+    janela.document.close()
   }
 
   function abrirNovaClasse() {
@@ -1042,7 +1215,7 @@ function App() {
               </label>
 
               <label>
-                Ofertas
+                Ofertas R$
                 <input
                   type="number"
                   min="0"
@@ -1051,6 +1224,7 @@ function App() {
                   onChange={(event) =>
                     alterarDadosExtras('ofertas', event.target.value)
                   }
+                  placeholder="Ex: 25.50"
                 />
               </label>
             </div>
@@ -1073,6 +1247,11 @@ function App() {
               <p>
                 <strong>Visitantes:</strong>{' '}
                 {converterNumero(dadosExtrasChamada.visitantes)}
+              </p>
+
+              <p>
+                <strong>Ofertas:</strong>{' '}
+                {formatarMoeda(dadosExtrasChamada.ofertas)}
               </p>
             </div>
 
@@ -1134,8 +1313,11 @@ function App() {
             <p>Relatório geral no modelo da Escola Bíblica Dominical.</p>
           </div>
 
-          <button className="botao-principal" onClick={() => window.print()}>
-            Imprimir relatório
+          <button
+            className="botao-principal"
+            onClick={abrirRelatorioParaImpressao}
+          >
+            Imprimir / Salvar PDF
           </button>
         </div>
 
