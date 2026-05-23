@@ -577,7 +577,7 @@ function App() {
               }
 
               @page {
-                size: A4 portrait;
+                size: A4 landscape;
                 margin: 10mm;
               }
             }
@@ -608,24 +608,59 @@ function App() {
   }
 
   async function baixarRelatorioPDF() {
-    const relatorio = document.querySelector('.relatorio-folha')
+    const relatorioOriginal = document.querySelector('.relatorio-folha')
 
-    if (!relatorio) {
+    if (!relatorioOriginal) {
       alert('Relatório não encontrado para gerar PDF.')
       return
     }
 
     try {
-      const canvas = await html2canvas(relatorio, {
+      const areaTemporaria = document.createElement('div')
+
+      areaTemporaria.style.position = 'fixed'
+      areaTemporaria.style.left = '-9999px'
+      areaTemporaria.style.top = '0'
+      areaTemporaria.style.width = '1200px'
+      areaTemporaria.style.background = '#ffffff'
+      areaTemporaria.style.padding = '24px'
+      areaTemporaria.style.zIndex = '-1'
+
+      const relatorioClone = relatorioOriginal.cloneNode(true)
+
+      relatorioClone.style.width = '1150px'
+      relatorioClone.style.maxWidth = '1150px'
+      relatorioClone.style.background = '#ffffff'
+
+      const tabelaContainer = relatorioClone.querySelector('.tabela-container')
+      if (tabelaContainer) {
+        tabelaContainer.style.overflow = 'visible'
+        tabelaContainer.style.width = '100%'
+      }
+
+      const tabela = relatorioClone.querySelector('table')
+      if (tabela) {
+        tabela.style.width = '100%'
+        tabela.style.tableLayout = 'fixed'
+        tabela.style.borderCollapse = 'collapse'
+      }
+
+      areaTemporaria.appendChild(relatorioClone)
+      document.body.appendChild(areaTemporaria)
+
+      const canvas = await html2canvas(relatorioClone, {
         scale: 2,
         backgroundColor: '#ffffff',
         useCORS: true,
+        windowWidth: 1200,
       })
+
+      document.body.removeChild(areaTemporaria)
 
       const imagem = canvas.toDataURL('image/png')
 
       const pdf = new jsPDF({
-        orientation: 'portrait',
+        orientation: 'landscape',
         unit: 'mm',
         format: 'a4',
       })
@@ -637,26 +672,24 @@ function App() {
       const larguraUtil = larguraPagina - margem * 2
       const alturaImagem = (canvas.height * larguraUtil) / canvas.width
 
-      let posicaoY = margem
-
       if (alturaImagem <= alturaPagina - margem * 2) {
-        pdf.addImage(imagem, 'PNG', margem, posicaoY, larguraUtil, alturaImagem)
+        pdf.addImage(imagem, 'PNG', margem, margem, larguraUtil, alturaImagem)
       } else {
         let alturaRestante = alturaImagem
-        let posicaoImagem = 0
+        let deslocamento = 0
 
         while (alturaRestante > 0) {
           pdf.addImage(
             imagem,
             'PNG',
             margem,
-            posicaoY - posicaoImagem,
+            margem - deslocamento,
             larguraUtil,
             alturaImagem
           )
 
           alturaRestante -= alturaPagina - margem * 2
-          posicaoImagem += alturaPagina - margem * 2
+          deslocamento += alturaPagina - margem * 2
 
           if (alturaRestante > 0) {
             pdf.addPage()
