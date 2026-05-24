@@ -4142,51 +4142,30 @@ function App() {
           </div>
 
           {usuarioEhSecretaria() && (
-            <div className="bloco-professores-pdf">
-              <h4>Resumo dos Professores</h4>
-
-              <table className="tabela tabela-ebd tabela-professores-pdf">
-                <thead>
-                  <tr>
-                    <th>Total de professores</th>
-                    <th>Presentes</th>
-                    <th>Faltaram</th>
-                    <th>Justificaram</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>{resumoProfessores.totalProfessores}</td>
-                    <td>{resumoProfessores.presentes}</td>
-                    <td>{resumoProfessores.faltaram}</td>
-                    <td>{resumoProfessores.justificaram}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="relatorio-professores-integrado">
+              <div className="titulo-integrado-professores">
+                <strong>Professores</strong>
+                <span>
+                  Total: {resumoProfessores.totalProfessores} • Presentes:{' '}
+                  {resumoProfessores.presentes} • Faltaram:{' '}
+                  {resumoProfessores.faltaram} • Justificaram:{' '}
+                  {resumoProfessores.justificaram}
+                </span>
+              </div>
 
               {resumoProfessores.registros.length > 0 && (
-                <table className="tabela tabela-ebd tabela-professores-detalhe-pdf">
-                  <thead>
-                    <tr>
-                      <th>Nº</th>
-                      <th>Professor</th>
-                      <th>Classe de referência</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {resumoProfessores.registros.map((registro, indice) => (
-                      <tr key={`${registro.nome}-${indice}`}>
-                        <td>{indice + 1}</td>
-                        <td>{registro.nome}</td>
-                        <td>{registro.classeReferencia || registro.classes || '-'}</td>
-                        <td>{traduzirStatusProfessor(registro.status)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="professores-integrados-lista">
+                  {resumoProfessores.registros.map((registro, indice) => (
+                    <div
+                      className="professor-integrado-item"
+                      key={`${registro.nome}-${indice}`}
+                    >
+                      <span>{indice + 1}. {registro.nome}</span>
+                      <span>{registro.classeReferencia || registro.classes || '-'}</span>
+                      <strong>{traduzirStatusProfessor(registro.status)}</strong>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}

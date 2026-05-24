@@ -3670,3 +3670,393 @@ textarea:focus {
     border-radius: 22px;
   }
 }
+
+
+/* Relatório responsivo e professores integrados */
+.area-relatorio,
+.relatorio,
+.relatorio-ebd,
+.cabecalho-relatorio,
+.tabela-container,
+.tabela-relatorio-wrapper {
+  max-width: 100%;
+}
+
+.relatorio,
+.relatorio-ebd {
+  overflow: visible !important;
+}
+
+.tabela-container,
+.tabela-relatorio-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 18px;
+}
+
+.tabela-ebd,
+.tabela {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.relatorio-professores-integrado {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.titulo-integrado-professores {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbeafe;
+}
+
+.titulo-integrado-professores strong {
+  color: #0f172a;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.titulo-integrado-professores span {
+  color: #334155;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.professores-integrados-lista {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.professor-integrado-item {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.professor-integrado-item span {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.professor-integrado-item strong {
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+.bloco-professores-pdf {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .conteudo,
+  .area-conteudo,
+  .painel-conteudo,
+  main.conteudo {
+    width: min(100% - 16px, 1180px) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    padding: 14px !important;
+    border-radius: 20px !important;
+    width: 100%;
+  }
+
+  .cabecalho-relatorio {
+    text-align: center;
+  }
+
+  .cabecalho-relatorio h2,
+  .cabecalho-relatorio h3 {
+    font-size: 18px !important;
+  }
+
+  .cabecalho-relatorio p {
+    font-size: 13px !important;
+    line-height: 1.5;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    min-width: 720px;
+    font-size: 12px;
+  }
+
+  .relatorio-professores-integrado {
+    padding: 12px;
+  }
+
+  .professor-integrado-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .no-print,
+  .menu-lateral,
+  .sidebar,
+  .topo-pagina,
+  .botao-whatsapp-flutuante {
+    display: none !important;
+  }
+
+  .conteudo,
+  .area-conteudo,
+  .painel-conteudo,
+  main.conteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8mm !important;
+    margin: 0 !important;
+    border: 1px solid #0f172a !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+
+  .tabela-container,
+  .tabela-relatorio-wrapper {
+    overflow: visible !important;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 9px !important;
+    table-layout: fixed;
+  }
+
+  .tabela-ebd th,
+  .tabela-ebd td,
+  .tabela th,
+  .tabela td {
+    padding: 5px 4px !important;
+    word-break: break-word;
+  }
+
+  .relatorio-professores-integrado {
+    margin-top: 10px !important;
+    padding: 8px !important;
+    border: 1px solid #0f172a !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .titulo-integrado-professores {
+    padding-bottom: 6px;
+  }
+
+  .titulo-integrado-professores strong,
+  .titulo-integrado-professores span {
+    font-size: 10px !important;
+  }
+
+  .professores-integrados-lista {
+    gap: 4px;
+  }
+
+  .professor-integrado-item {
+    grid-template-columns: 1.2fr 1fr auto;
+    padding: 4px 6px !important;
+    border-radius: 0;
+    background: #ffffff !important;
+    font-size: 9px !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+}
+
+
+/* Relatório em formato vertical no celular */
+@media (max-width: 760px) {
+  .tabela-container,
+  .tabela-relatorio-wrapper {
+    overflow-x: visible !important;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    min-width: 0 !important;
+  }
+
+  .tabela-ebd thead,
+  .tabela thead {
+    display: none;
+  }
+
+  .tabela-ebd,
+  .tabela-ebd tbody,
+  .tabela-ebd tr,
+  .tabela-ebd td,
+  .tabela,
+  .tabela tbody,
+  .tabela tr,
+  .tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela-ebd tr,
+  .tabela tr {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
+  }
+
+  .tabela-ebd tr:last-child,
+  .tabela tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .tabela-ebd td,
+  .tabela td {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding: 9px 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    text-align: right;
+    font-size: 14px;
+    word-break: normal;
+  }
+
+  .tabela-ebd td:last-child,
+  .tabela td:last-child {
+    border-bottom: none !important;
+  }
+
+  .tabela-ebd td::before,
+  .tabela td::before {
+    content: "";
+    flex-shrink: 0;
+    color: #475569;
+    font-weight: 900;
+    text-align: left;
+  }
+
+  .tabela-ebd td:nth-child(1)::before,
+  .tabela td:nth-child(1)::before {
+    content: "Classe";
+  }
+
+  .tabela-ebd td:nth-child(2)::before,
+  .tabela td:nth-child(2)::before {
+    content: "Matrícula";
+  }
+
+  .tabela-ebd td:nth-child(3)::before,
+  .tabela td:nth-child(3)::before {
+    content: "Ausência";
+  }
+
+  .tabela-ebd td:nth-child(4)::before,
+  .tabela td:nth-child(4)::before {
+    content: "Presença";
+  }
+
+  .tabela-ebd td:nth-child(5)::before,
+  .tabela td:nth-child(5)::before {
+    content: "Visitante";
+  }
+
+  .tabela-ebd td:nth-child(6)::before,
+  .tabela td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  .tabela-ebd td:nth-child(7)::before,
+  .tabela td:nth-child(7)::before {
+    content: "Bíblia";
+  }
+
+  .tabela-ebd td:nth-child(8)::before,
+  .tabela td:nth-child(8)::before {
+    content: "Revista";
+  }
+
+  .tabela-ebd td:nth-child(9)::before,
+  .tabela td:nth-child(9)::before {
+    content: "Ofertas";
+  }
+
+  .tabela-ebd td:nth-child(10)::before,
+  .tabela td:nth-child(10)::before {
+    content: "%";
+  }
+
+  .tabela-ebd tr:last-child,
+  .tabela tr:last-child {
+    background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+    border-color: #bfdbfe;
+  }
+
+  .tabela-ebd tr:last-child td:first-child,
+  .tabela tr:last-child td:first-child {
+    color: #1d4ed8;
+    font-weight: 900;
+  }
+}
+
+@media print {
+  .tabela-ebd,
+  .tabela,
+  .tabela-ebd thead,
+  .tabela thead,
+  .tabela-ebd tbody,
+  .tabela tbody,
+  .tabela-ebd tr,
+  .tabela tr,
+  .tabela-ebd td,
+  .tabela td {
+    display: revert !important;
+  }
+
+  .tabela-ebd td::before,
+  .tabela td::before {
+    content: none !important;
+  }
+}
