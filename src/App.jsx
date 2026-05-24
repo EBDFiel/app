@@ -650,10 +650,30 @@ function App() {
       }
     }
 
-    const { data: alunosBanco, error: erroAlunos } = await consultaAlunos
+    let { data: alunosBanco, error: erroAlunos } = await consultaAlunos
 
     if (erroAlunos) {
       throw erroAlunos
+    }
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const criouProfessoresDasClasses = await migrarProfessoresDasClasses(
+        igrejaAtualId,
+        classesBanco || [],
+        alunosBanco || [],
+        sessaoAtual
+      )
+
+      if (criouProfessoresDasClasses) {
+        const { data: alunosAtualizados, error: erroAlunosAtualizados } =
+          await consultaAlunos
+
+        if (erroAlunosAtualizados) {
+          throw erroAlunosAtualizados
+        }
+
+        alunosBanco = alunosAtualizados || []
+      }
     }
 
     let consultaChamadas = supabase
@@ -2697,6 +2717,13 @@ function App() {
 
         {mostrarFormularioClasse && (
           <form className="formulario" onSubmit={salvarClasse}>
+            <div className="aviso aviso-edicao-classe">
+              <p>
+                Edite o nome da classe aqui. Para editar professores, use os botões
+                Editar/Excluir na lista de professores da própria classe.
+              </p>
+            </div>
+
             <label>
               Nome da classe
               <input
@@ -2730,7 +2757,7 @@ function App() {
         <div className="aviso aviso-classes-professores">
           <p>
             Você pode gerenciar professores por aqui ou pelo menu <strong>Professores</strong>.
-            Os dois lugares usam o mesmo cadastro e ficam sempre sincronizados.
+            Os professores antigos cadastrados nas classes são puxados automaticamente para o cadastro de professores.
           </p>
         </div>
 

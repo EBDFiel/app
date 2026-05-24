@@ -2019,3 +2019,16 @@ input:disabled {
     width: 100%;
   }
 }
+
+
+/* Migração automática de professores das classes */
+.aviso-edicao-classe {
+  margin-top: 0;
+  background: #f8fbff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-edicao-classe p {
+  margin: 0;
+}
