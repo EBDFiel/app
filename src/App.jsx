@@ -1346,7 +1346,7 @@ function App() {
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logo-ebd-fiel.png"
+                src="/logo-oficial-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -1385,7 +1385,7 @@ function App() {
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logo-ebd-fiel.png"
+                src="/logo-oficial-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -1489,7 +1489,7 @@ function App() {
           <div className="marca-publica">
             <div className="logo-simbolo logo-publica">
               <img
-                src="/logo-ebd-fiel.png"
+                src="/logo-oficial-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -1685,7 +1685,7 @@ function App() {
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logo-ebd-fiel.png"
+                src="/logo-oficial-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -1715,7 +1715,7 @@ function App() {
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logo-ebd-fiel.png"
+                src="/logo-oficial-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
