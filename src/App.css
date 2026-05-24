@@ -4202,3 +4202,26 @@ html {
     align-items: flex-start;
   }
 }
+
+
+/* Correção do logo no menu lateral */
+.marca-sidebar h1,
+.menu-lateral .marca-sidebar h1,
+.sidebar .marca-sidebar h1 {
+  color: #ffffff !important;
+}
+
+.marca-sidebar p,
+.menu-lateral .marca-sidebar p,
+.sidebar .marca-sidebar p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.marca-sidebar {
+  color: #ffffff;
+}
+
+/* Destacar melhor a Administração quando aparecer */
+.menu-navegacao button:last-child {
+  margin-top: 8px;
+}

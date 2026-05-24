@@ -265,6 +265,12 @@ function App() {
       icone: 'configuracoes',
       apenasSecretaria: true,
     },
+    {
+      id: 'administracao',
+      nome: 'Administração',
+      icone: 'configuracoes',
+      apenasAdminSistema: true,
+    },
   ]
 
   useEffect(() => {
@@ -814,7 +820,15 @@ function App() {
   }
 
   function menuPermitidoParaUsuario(item) {
-    return !item.apenasSecretaria || usuarioEhSecretaria()
+    if (item.apenasAdminSistema && !usuarioEhAdminSistema()) {
+      return false
+    }
+
+    if (item.apenasSecretaria && !usuarioEhSecretaria()) {
+      return false
+    }
+
+    return true
   }
 
   async function buscarTodosOsDados(sessaoAtual = sessao) {
