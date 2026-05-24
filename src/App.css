@@ -2032,3 +2032,553 @@ input:disabled {
 .aviso-edicao-classe p {
   margin: 0;
 }
+
+
+/* Relatórios modernos */
+.relatorios-dashboard {
+  margin-top: 24px;
+  display: grid;
+  gap: 22px;
+}
+
+.relatorios-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding: 26px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 32%),
+    linear-gradient(135deg, #1d4ed8 0%, #172554 100%);
+  color: #ffffff;
+  box-shadow: 0 24px 50px rgba(37, 99, 235, 0.18);
+}
+
+.relatorios-hero .selo-publico {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.relatorios-hero h3 {
+  margin: 12px 0 8px;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.relatorios-hero p {
+  margin: 0;
+  max-width: 680px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.relatorios-percentual {
+  min-width: 150px;
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.relatorios-percentual strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.relatorios-percentual span {
+  display: block;
+  margin-top: 6px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.cards-relatorios-modernas {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-top: 0;
+}
+
+.card-relatorio-moderna {
+  display: grid;
+  gap: 6px;
+}
+
+.card-relatorio-moderna span {
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+}
+
+.card-relatorio-moderna strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.card-relatorio-moderna p {
+  margin: 0;
+}
+
+.relatorio-professores-moderno {
+  padding: 24px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  border: 1px solid #bfdbfe;
+  box-shadow: var(--sombra-suave);
+}
+
+.cabecalho-relatorio-professores {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cabecalho-relatorio-professores h3 {
+  margin: 10px 0 6px;
+  font-size: 26px;
+}
+
+.cabecalho-relatorio-professores p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.circulo-presenca-professores {
+  width: 116px;
+  height: 116px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.22);
+}
+
+.circulo-presenca-professores strong {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.circulo-presenca-professores span {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.grade-professores-resumo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.grade-professores-resumo div {
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.grade-professores-resumo span {
+  display: block;
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.grade-professores-resumo strong {
+  font-size: 32px;
+}
+
+.lista-professores-relatorio {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.linha-professor-relatorio {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.linha-professor-relatorio strong {
+  display: block;
+}
+
+.linha-professor-relatorio p {
+  margin: 3px 0 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.status-professor {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.status-presente {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-faltou {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-justificou {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bloco-professores-pdf {
+  margin-top: 24px;
+}
+
+.bloco-professores-pdf h4 {
+  margin: 0 0 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tabela-professores-pdf,
+.tabela-professores-detalhe-pdf {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .relatorios-hero,
+  .cabecalho-relatorio-professores,
+  .linha-professor-relatorio {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .relatorios-percentual,
+  .circulo-presenca-professores {
+    border-radius: 22px;
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 22px;
+  }
+
+  .grade-professores-resumo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .grade-professores-resumo {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Página pública premium */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
+    radial-gradient(circle at 90% 16%, rgba(14, 165, 233, 0.16), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 48%, #f8fbff 100%);
+}
+
+.topo-publico {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: min(1180px, calc(100% - 36px));
+  margin-top: 14px;
+  padding: 14px 18px;
+  border: 1px solid rgba(219, 226, 234, 0.85);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+}
+
+.hero-publico {
+  margin-top: 58px;
+  gap: 44px;
+}
+
+.hero-publico-texto {
+  gap: 24px;
+}
+
+.hero-publico h1 {
+  max-width: 760px;
+  font-size: clamp(42px, 5.7vw, 74px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  color: #0f172a;
+}
+
+.hero-publico p {
+  max-width: 690px;
+  font-size: 19px;
+  color: #334155;
+}
+
+.selo-publico {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.acoes-publicas .botao-principal {
+  padding: 15px 24px;
+  border-radius: 16px;
+  font-size: 16px;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.22);
+}
+
+.acoes-publicas .botao-secundario {
+  padding: 14px 22px;
+  border-radius: 16px;
+  font-size: 16px;
+}
+
+.metricas-publicas div {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 40%),
+    rgba(255, 255, 255, 0.86);
+}
+
+.metricas-publicas strong {
+  font-size: 26px;
+  color: #1d4ed8;
+}
+
+.hero-publico-card {
+  position: relative;
+  padding: 1px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.72)),
+    linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  box-shadow: 0 34px 80px rgba(37, 99, 235, 0.24);
+}
+
+.hero-publico-card::before {
+  content: "";
+  position: absolute;
+  inset: -26px;
+  z-index: -1;
+  border-radius: 42px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.18), transparent 68%);
+}
+
+.mini-dashboard {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.mini-dashboard-topo strong {
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.mini-grid div {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mini-grid div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.linha-progresso-publica {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.secao-impacto-publica {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(180px, 0.75fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.impacto-card {
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(219, 226, 234, 0.95);
+  box-shadow: var(--sombra-suave);
+}
+
+.impacto-card-principal {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 30%),
+    linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+}
+
+.impacto-card span {
+  display: inline-flex;
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.impacto-card-principal span {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.impacto-card strong {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 16px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+.impacto-card h2,
+.impacto-card h3 {
+  margin: 14px 0 10px;
+  letter-spacing: -0.03em;
+}
+
+.impacto-card h2 {
+  font-size: clamp(28px, 3.7vw, 44px);
+  line-height: 1.08;
+}
+
+.impacto-card h3 {
+  font-size: 21px;
+}
+
+.impacto-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.impacto-card-principal p {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 17px;
+}
+
+.grade-recursos-publicos article {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.grade-recursos-publicos article::after {
+  content: "";
+  position: absolute;
+  right: -26px;
+  top: -26px;
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.grade-recursos-publicos article:hover {
+  transform: translateY(-3px);
+  border-color: #bfdbfe;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.1);
+}
+
+.secao-beneficios-publica {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 34%),
+    rgba(255, 255, 255, 0.94);
+}
+
+.lista-beneficios-publicos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lista-beneficios-publicos li::before {
+  content: "✓";
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 900;
+}
+
+.cartao-plano-publico {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.cartao-plano-publico::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 1100px) {
+  .secao-impacto-publica {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .impacto-card-principal {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .topo-publico {
+    position: static;
+    margin-top: 0;
+    border-radius: 0 0 24px 24px;
+    width: 100%;
+  }
+
+  .hero-publico {
+    margin-top: 28px;
+  }
+
+  .secao-impacto-publica {
+    grid-template-columns: 1fr;
+  }
+
+  .impacto-card-principal {
+    grid-column: span 1;
+  }
+
+  .hero-publico h1 {
+    font-size: 38px;
+  }
+}

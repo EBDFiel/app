@@ -1615,6 +1615,56 @@ function App() {
     )
   }
 
+  function buscarUltimaChamadaProfessores() {
+    if (chamadasProfessores.length === 0) {
+      return null
+    }
+
+    return chamadasProfessores[chamadasProfessores.length - 1]
+  }
+
+  function calcularResumoUltimaChamadaProfessores() {
+    const ultimaChamada = buscarUltimaChamadaProfessores()
+
+    if (!ultimaChamada) {
+      return {
+        totalProfessores: professoresSomente().length,
+        presentes: 0,
+        faltaram: 0,
+        justificaram: 0,
+        data: buscarDataAtual(),
+        registros: [],
+      }
+    }
+
+    return {
+      totalProfessores: ultimaChamada.totalProfessores,
+      presentes: ultimaChamada.totalPresentes,
+      faltaram: ultimaChamada.totalFaltas,
+      justificaram: ultimaChamada.totalJustificadas,
+      data: ultimaChamada.data,
+      registros: ultimaChamada.registros || [],
+    }
+  }
+
+  function traduzirStatusProfessor(status) {
+    if (status === 'presente') return 'Presente'
+    if (status === 'faltou') return 'Faltou'
+    if (status === 'justificou') return 'Justificou'
+    return 'Sem marcação'
+  }
+
+  function calcularPercentualPresencaProfessores() {
+    const resumo = calcularResumoUltimaChamadaProfessores()
+    const total = converterNumero(resumo.totalProfessores)
+
+    if (total === 0) {
+      return 0
+    }
+
+    return Math.round((converterNumero(resumo.presentes) / total) * 100)
+  }
+
   function alterarPresenca(alunoId, status) {
     setPresencas({
       ...presencas,
@@ -1938,11 +1988,11 @@ function App() {
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="classes" className="icone-beneficio" />
-              <span>Cadastro de classes</span>
+              <span>Classes organizadas</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="alunos" className="icone-beneficio" />
-              <span>Gestão de alunos</span>
+              <span>Alunos e professores</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="chamada" className="icone-beneficio" />
@@ -1950,7 +2000,7 @@ function App() {
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>Relatórios e PDF</span>
+              <span>Relatórios modernos</span>
             </div>
           </div>
         </section>
@@ -2004,7 +2054,7 @@ function App() {
               type="submit"
               disabled={carregandoLogin}
             >
-              {carregandoLogin ? 'Entrando...' : 'Entrar no sistema'}
+              {carregandoLogin ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
         </section>
@@ -2044,7 +2094,7 @@ function App() {
           <section className="hero-publico">
             <div className="hero-publico-texto">
               <span className="selo-publico">Sistema online para igrejas</span>
-              <h1>Organize sua Escola Bíblica Dominical com simplicidade e excelência.</h1>
+              <h1>Gestão moderna para uma Escola Bíblica Dominical mais organizada, presente e fiel.</h1>
               <p>
                 O EBD Fiel ajuda igrejas a controlar classes, alunos, chamadas,
                 frequência, relatórios e PDFs em uma plataforma moderna, acessível
@@ -2057,7 +2107,7 @@ function App() {
                   type="button"
                   onClick={() => setTelaPublica('login')}
                 >
-                  Entrar no sistema
+                  Entrar
                 </button>
 
                 <a
@@ -2090,7 +2140,7 @@ function App() {
               <div className="mini-dashboard">
                 <div className="mini-dashboard-topo">
                   <div>
-                    <span>Painel da igreja</span>
+                    <span>Painel inteligente</span>
                     <strong>EBD Fiel</strong>
                   </div>
                   <Icone nome="painel" className="icone-svg" />
@@ -2120,14 +2170,43 @@ function App() {
                 </div>
 
                 <div className="linha-progresso-publica">
-                  <span>Frequência mensal</span>
+                  <span>Presença semanal</span>
                   <strong>87%</strong>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="secao-publica" id="recursos">
+          <section className="secao-publica secao-impacto-publica">
+        <div className="impacto-card impacto-card-principal">
+          <span>Para secretarias, professores e liderança</span>
+          <h2>Menos papel, menos retrabalho e mais clareza todos os domingos.</h2>
+          <p>
+            O EBD Fiel transforma a rotina da Escola Bíblica Dominical em um processo
+            simples: cadastrar, acompanhar, chamar, conferir e gerar relatório.
+          </p>
+        </div>
+
+        <div className="impacto-card">
+          <strong>01</strong>
+          <h3>Controle por igreja</h3>
+          <p>Várias secretarias e professores trabalhando nos mesmos dados da igreja.</p>
+        </div>
+
+        <div className="impacto-card">
+          <strong>02</strong>
+          <h3>Chamadas separadas</h3>
+          <p>Alunos e professores com presenças organizadas de forma independente.</p>
+        </div>
+
+        <div className="impacto-card">
+          <strong>03</strong>
+          <h3>Relatórios prontos</h3>
+          <p>Resumo visual, frequência, PDF e informações importantes para a liderança.</p>
+        </div>
+      </section>
+
+      <section className="secao-publica" id="recursos">
             <div className="cabecalho-secao-publica">
               <span className="selo-publico">Recursos principais</span>
               <h2>Tudo que a secretaria da EBD precisa em um só lugar.</h2>
@@ -2147,7 +2226,7 @@ function App() {
               <article>
                 <Icone nome="chamada" className="icone-recurso-publico" />
                 <h3>Chamada digital</h3>
-                <p>Registre presença, faltas, visitantes, Bíblias, revistas e ofertas.</p>
+                <p>Registre presença de alunos e professores com poucos cliques.</p>
               </article>
               <article>
                 <Icone nome="relatorios" className="icone-recurso-publico" />
@@ -3682,6 +3761,8 @@ function App() {
     const totaisRelatorio = calcularTotaisRelatorio()
     const dataRelatorio = buscarDataUltimaChamada()
     const dataRelatorioFormatada = formatarDataRelatorio(dataRelatorio)
+    const resumoProfessores = calcularResumoUltimaChamadaProfessores()
+    const percentualProfessores = calcularPercentualPresencaProfessores()
 
     return (
       <section className="conteudo">
@@ -3709,36 +3790,103 @@ function App() {
           </div>
         </div>
 
-        <div className="cards no-print">
-          <div className="card">
-            <h3>Classes</h3>
-            <p>{classes.length} cadastradas</p>
+        <div className="relatorios-dashboard no-print">
+          <div className="relatorios-hero">
+            <div>
+              <span className="selo-publico">Relatórios da EBD</span>
+              <h3>Resumo geral da Escola Bíblica Dominical</h3>
+              <p>
+                Acompanhe alunos, classes, frequência e presença dos professores
+                com uma visualização mais clara e moderna.
+              </p>
+            </div>
+
+            <div className="relatorios-percentual">
+              <strong>{calcularFrequenciaGeral()}%</strong>
+              <span>frequência geral</span>
+            </div>
           </div>
 
-          <div className="card">
-            <h3>Alunos</h3>
-            <p>{alunosSomente().length} cadastrados</p>
-          </div>
+          <div className="cards cards-relatorios-modernas">
+            <div className="card card-relatorio-moderna">
+              <span>Classes</span>
+              <strong>{classes.length}</strong>
+              <p>classes cadastradas</p>
+            </div>
 
-          <div className="card">
-            <h3>Chamadas</h3>
-            <p>{chamadasSalvas.length} salvas</p>
-          </div>
+            <div className="card card-relatorio-moderna">
+              <span>Alunos</span>
+              <strong>{alunosSomente().length}</strong>
+              <p>alunos na chamada</p>
+            </div>
 
-          <div className="card destaque">
-            <h3>Frequência geral</h3>
-            <p>{calcularFrequenciaGeral()}%</p>
+            <div className="card card-relatorio-moderna">
+              <span>Chamadas</span>
+              <strong>{chamadasSalvas.length}</strong>
+              <p>chamadas de alunos salvas</p>
+            </div>
+
+            <div className="card card-relatorio-moderna destaque">
+              <span>Frequência</span>
+              <strong>{calcularFrequenciaGeral()}%</strong>
+              <p>média geral de presença</p>
+            </div>
           </div>
 
           {usuarioEhSecretaria() && (
-            <div className="card">
-              <h3>Professores</h3>
-              <p>{professoresSomente().length} cadastrados</p>
-              <p>
-                {calcularTotalProfessoresPresentes()} presenças •{' '}
-                {calcularTotalProfessoresFaltas()} faltas •{' '}
-                {calcularTotalProfessoresJustificadas()} justificadas
-              </p>
+            <div className="relatorio-professores-moderno">
+              <div className="cabecalho-relatorio-professores">
+                <div>
+                  <span className="selo-publico">Professores</span>
+                  <h3>Resumo da última chamada dos professores</h3>
+                  <p>Data da chamada: {formatarDataRelatorio(resumoProfessores.data)}</p>
+                </div>
+
+                <div className="circulo-presenca-professores">
+                  <strong>{percentualProfessores}%</strong>
+                  <span>presentes</span>
+                </div>
+              </div>
+
+              <div className="grade-professores-resumo">
+                <div>
+                  <span>Total de professores</span>
+                  <strong>{resumoProfessores.totalProfessores}</strong>
+                </div>
+
+                <div>
+                  <span>Presentes</span>
+                  <strong>{resumoProfessores.presentes}</strong>
+                </div>
+
+                <div>
+                  <span>Faltaram</span>
+                  <strong>{resumoProfessores.faltaram}</strong>
+                </div>
+
+                <div>
+                  <span>Justificaram</span>
+                  <strong>{resumoProfessores.justificaram}</strong>
+                </div>
+              </div>
+
+              {resumoProfessores.registros.length > 0 && (
+                <div className="lista-professores-relatorio">
+                  {resumoProfessores.registros.map((registro, indice) => (
+                    <div className="linha-professor-relatorio" key={`${registro.nome}-${indice}`}>
+                      <div>
+                        <strong>{registro.nome}</strong>
+                        {registro.classeReferencia && <p>{registro.classeReferencia}</p>}
+                        {registro.classes && <p>{registro.classes}</p>}
+                      </div>
+
+                      <span className={`status-professor status-${registro.status}`}>
+                        {traduzirStatusProfessor(registro.status)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -3820,6 +3968,56 @@ function App() {
               </tbody>
             </table>
           </div>
+
+          {usuarioEhSecretaria() && (
+            <div className="bloco-professores-pdf">
+              <h4>Resumo dos Professores</h4>
+
+              <table className="tabela tabela-ebd tabela-professores-pdf">
+                <thead>
+                  <tr>
+                    <th>Total de professores</th>
+                    <th>Presentes</th>
+                    <th>Faltaram</th>
+                    <th>Justificaram</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>{resumoProfessores.totalProfessores}</td>
+                    <td>{resumoProfessores.presentes}</td>
+                    <td>{resumoProfessores.faltaram}</td>
+                    <td>{resumoProfessores.justificaram}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {resumoProfessores.registros.length > 0 && (
+                <table className="tabela tabela-ebd tabela-professores-detalhe-pdf">
+                  <thead>
+                    <tr>
+                      <th>Nº</th>
+                      <th>Professor</th>
+                      <th>Classe de referência</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {resumoProfessores.registros.map((registro, indice) => (
+                      <tr key={`${registro.nome}-${indice}`}>
+                        <td>{indice + 1}</td>
+                        <td>{registro.nome}</td>
+                        <td>{registro.classeReferencia || registro.classes || '-'}</td>
+                        <td>{traduzirStatusProfessor(registro.status)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
         </div>
       </section>
     )
