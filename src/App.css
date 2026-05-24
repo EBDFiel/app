@@ -1927,3 +1927,9 @@ input:disabled {
   color: #1e3a8a;
   font-weight: 700;
 }
+
+
+/* Cadastro separado de alunos e professores */
+.menu-navegacao button span:last-child {
+  line-height: 1.2;
+}

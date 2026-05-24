@@ -232,6 +232,7 @@ function App() {
     { id: 'painel', nome: 'Painel', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
+    { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
     { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
@@ -1318,8 +1319,14 @@ function App() {
     await buscarTodosOsDados()
   }
 
-  function abrirNovoAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
+  function abrirNovoAluno(tipoPessoa = 'aluno') {
+    setNovoAluno({
+      nome: '',
+      classeId: '',
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa,
+    })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(true)
   }
@@ -1415,7 +1422,7 @@ function App() {
     await buscarTodosOsDados()
   }
 
-  function filtrarAlunos() {
+  function filtrarCadastrosPorTipo(tipoPessoa) {
     return alunos.filter((aluno) => {
       const nomeCombina = aluno.nome
         .toLowerCase()
@@ -1424,8 +1431,18 @@ function App() {
       const classeCombina =
         !filtroClasseAluno || aluno.classeId === Number(filtroClasseAluno)
 
-      return nomeCombina && classeCombina
+      const tipoCombina = (aluno.tipoPessoa || 'aluno') === tipoPessoa
+
+      return nomeCombina && classeCombina && tipoCombina
     })
+  }
+
+  function filtrarAlunos() {
+    return filtrarCadastrosPorTipo('aluno')
+  }
+
+  function filtrarProfessores() {
+    return filtrarCadastrosPorTipo('professor')
   }
 
   function limparFiltrosAlunos() {
@@ -2624,29 +2641,35 @@ function App() {
     )
   }
 
-  function renderizarAlunos() {
-    const alunosFiltrados = filtrarAlunos()
+  function renderizarCadastroPessoas(tipoPessoaPagina) {
+    const ehPaginaProfessor = tipoPessoaPagina === 'professor'
+    const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
+    const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
+    const descricaoPagina = ehPaginaProfessor
+      ? 'Cadastre, edite e organize os professores que aparecem na chamada dos professores.'
+      : usuarioEhProfessor()
+        ? 'Veja os alunos vinculados às suas classes.'
+        : 'Cadastre, edite, busque e organize os alunos por classe.'
 
     return (
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>Alunos e Professores</h2>
-            <p>
-              {usuarioEhProfessor()
-                ? 'Veja os alunos vinculados à sua classe.'
-                : 'Cadastre alunos e professores. O tipo escolhido define em qual chamada a pessoa aparece.'}
-            </p>
+            <h2>{tituloPagina}</h2>
+            <p>{descricaoPagina}</p>
           </div>
 
           {podeGerenciarCadastros() && !mostrarFormularioAluno && (
-            <button className="botao-principal" onClick={abrirNovoAluno}>
-              Novo cadastro
+            <button
+              className="botao-principal"
+              onClick={() => abrirNovoAluno(tipoPessoaPagina)}
+            >
+              {ehPaginaProfessor ? 'Novo professor' : 'Novo aluno'}
             </button>
           )}
         </div>
 
-        {mostrarFormularioAluno && (
+        {mostrarFormularioAluno && novoAluno.tipoPessoa === tipoPessoaPagina && (
           <form className="formulario" onSubmit={salvarAluno}>
             <label>
               Nome
@@ -2656,7 +2679,7 @@ function App() {
                 onChange={(event) =>
                   setNovoAluno({ ...novoAluno, nome: event.target.value })
                 }
-                placeholder="Ex: Ana Clara"
+                placeholder={ehPaginaProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
               />
             </label>
 
@@ -2690,7 +2713,7 @@ function App() {
                 ))}
               </select>
               <small className="texto-ajuda-campo">
-                Aluno entra na chamada dos alunos. Professor entra na chamada dos professores.
+                Aluno aparece na chamada dos alunos. Professor aparece na chamada dos professores.
               </small>
             </label>
 
@@ -2738,12 +2761,12 @@ function App() {
 
         <div className="filtros">
           <label>
-            Buscar aluno
+            Buscar {ehPaginaProfessor ? 'professor' : 'aluno'}
             <input
               type="text"
               value={buscaAluno}
               onChange={(event) => setBuscaAluno(event.target.value)}
-              placeholder="Digite o nome do aluno"
+              placeholder={ehPaginaProfessor ? 'Digite o nome do professor' : 'Digite o nome do aluno'}
             />
           </label>
 
@@ -2771,11 +2794,13 @@ function App() {
         </div>
 
         <p className="contador-resultados">
-          Mostrando {alunosFiltrados.length} de {alunos.length} cadastros
+          Mostrando {cadastrosFiltrados.length} de{' '}
+          {ehPaginaProfessor ? professoresSomente().length : alunosSomente().length}{' '}
+          {ehPaginaProfessor ? 'professores' : 'alunos'}
         </p>
 
         <div className="lista">
-          {alunosFiltrados.map((aluno) => (
+          {cadastrosFiltrados.map((aluno) => (
             <div className="item-lista item-com-acoes" key={aluno.id}>
               <div>
                 <h3>{aluno.nome}</h3>
@@ -2811,6 +2836,14 @@ function App() {
         </div>
       </section>
     )
+  }
+
+  function renderizarAlunos() {
+    return renderizarCadastroPessoas('aluno')
+  }
+
+  function renderizarProfessores() {
+    return renderizarCadastroPessoas('professor')
   }
 
   function renderizarUsuarios() {
@@ -3700,13 +3733,14 @@ function App() {
   }
 
   function renderizarPagina() {
-    if (!usuarioEhSecretaria() && ['classes', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
+    if (!usuarioEhSecretaria() && ['classes', 'professores', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
       return renderizarPainel()
     }
 
     if (paginaAtual === 'painel') return renderizarPainel()
     if (paginaAtual === 'classes') return renderizarClasses()
     if (paginaAtual === 'alunos') return renderizarAlunos()
+    if (paginaAtual === 'professores') return renderizarProfessores()
     if (paginaAtual === 'usuarios') return renderizarUsuarios()
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
