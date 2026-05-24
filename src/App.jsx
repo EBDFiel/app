@@ -364,19 +364,6 @@ function App() {
     setErroSistema('')
 
     try {
-      const { data: classesBanco, error: erroClasses } = await supabase
-        .from('classes')
-        .select('*')
-        .order('id', { ascending: true })
-
-      if (erroClasses) {
-        throw erroClasses
-      }
-
-      if (!classesBanco || classesBanco.length === 0) {
-        await inserirDadosIniciais()
-      }
-
       await buscarTodosOsDados()
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
@@ -389,17 +376,23 @@ function App() {
     }
   }
 
-  async function inserirDadosIniciais() {
+  async function inserirDadosIniciais(igrejaAtualId) {
+    if (!igrejaAtualId) {
+      throw new Error('Igreja não identificada para criar os dados iniciais.')
+    }
+
     const classesParaSalvar = classesIniciais.map((classe) => ({
       id: classe.id,
-      igreja_id: buscarIgrejaIdAtual(),
+      igreja_id: igrejaAtualId,
+      user_id: sessao?.user?.id,
       nome: classe.nome,
       professor: classe.professor,
     }))
 
     const alunosParaSalvar = alunosIniciais.map((aluno) => ({
       id: aluno.id,
-      igreja_id: buscarIgrejaIdAtual(),
+      igreja_id: igrejaAtualId,
+      user_id: sessao?.user?.id,
       nome: aluno.nome,
       classe_id: aluno.classeId,
       telefone: aluno.telefone,
@@ -447,24 +440,31 @@ function App() {
   }
 
   async function buscarTodosOsDados() {
+    if (!sessao?.user?.id) {
+      throw new Error('Usuário não identificado. Faça login novamente.')
+    }
+
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
       .select('*')
-      .eq('user_id', sessao?.user?.id)
+      .eq('user_id', sessao.user.id)
       .maybeSingle()
 
     if (erroPerfil) {
       throw erroPerfil
     }
 
-    const perfilAtual = perfilBanco || {
-      perfil: 'secretaria',
-      classe_id: null,
-      nome: 'Secretaria',
-      email: sessao?.user?.email || '',
+    if (!perfilBanco?.igreja_id) {
+      throw new Error(
+        'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
+      )
     }
 
+    const perfilAtual = perfilBanco
+    const igrejaAtualId = Number(perfilAtual.igreja_id)
+
     setPerfilUsuario(perfilAtual)
+    setIgrejaId(igrejaAtualId)
 
     const classePermitidaId =
       perfilAtual?.perfil === 'professor'
@@ -474,21 +474,45 @@ function App() {
     let consultaClasses = supabase
       .from('classes')
       .select('*')
+      .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
     if (classePermitidaId) {
       consultaClasses = consultaClasses.eq('id', classePermitidaId)
     }
 
-    const { data: classesBanco, error: erroClasses } = await consultaClasses
+    let { data: classesBanco, error: erroClasses } = await consultaClasses
 
     if (erroClasses) {
       throw erroClasses
     }
 
+    if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
+      await inserirDadosIniciais(igrejaAtualId)
+
+      let novaConsultaClasses = supabase
+        .from('classes')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (classePermitidaId) {
+        novaConsultaClasses = novaConsultaClasses.eq('id', classePermitidaId)
+      }
+
+      const resultadoClasses = await novaConsultaClasses
+      classesBanco = resultadoClasses.data
+      erroClasses = resultadoClasses.error
+
+      if (erroClasses) {
+        throw erroClasses
+      }
+    }
+
     let consultaAlunos = supabase
       .from('alunos')
       .select('*')
+      .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
     if (classePermitidaId) {
@@ -504,6 +528,7 @@ function App() {
     let consultaChamadas = supabase
       .from('chamadas')
       .select('*')
+      .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
     if (classePermitidaId) {
@@ -519,7 +544,7 @@ function App() {
     const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
       .from('configuracoes_igreja')
       .select('*')
-      .eq('igreja_id', buscarIgrejaIdAtual())
+      .eq('igreja_id', igrejaAtualId)
       .order('created_at', { ascending: true })
 
     if (erroConfiguracoes) {
@@ -527,7 +552,7 @@ function App() {
     }
 
     setClasses(
-      classesBanco.map((classe) => ({
+      (classesBanco || []).map((classe) => ({
         id: Number(classe.id),
         nome: classe.nome,
         professor: classe.professor,
@@ -535,7 +560,7 @@ function App() {
     )
 
     setAlunos(
-      alunosBanco.map((aluno) => ({
+      (alunosBanco || []).map((aluno) => ({
         id: Number(aluno.id),
         nome: aluno.nome,
         classeId: Number(aluno.classe_id),
@@ -544,7 +569,7 @@ function App() {
     )
 
     setChamadasSalvas(
-      chamadasBanco.map((chamada) => ({
+      (chamadasBanco || []).map((chamada) => ({
         id: Number(chamada.id),
         data: chamada.data,
         classeId: Number(chamada.classe_id),
@@ -1323,10 +1348,16 @@ function App() {
       return
     }
 
+    if (!buscarIgrejaIdAtual()) {
+      alert('Igreja não identificada. Saia e entre novamente no sistema.')
+      return
+    }
+
     setSalvandoConfiguracaoIgreja(true)
 
     const dadosConfiguracao = {
       user_id: sessao.user.id,
+      igreja_id: buscarIgrejaIdAtual(),
       nome_igreja: configuracaoIgreja.nome_igreja.trim(),
       congregacao: configuracaoIgreja.congregacao.trim(),
       pastor_dirigente: configuracaoIgreja.pastor_dirigente.trim(),
