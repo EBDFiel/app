@@ -170,6 +170,29 @@ function App() {
   const [perfisIgreja, setPerfisIgreja] = useState([])
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
+  const [igrejasAdmin, setIgrejasAdmin] = useState([])
+  const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
+  const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
+  const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
+  const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
+    nome_igreja: '',
+    congregacao: '',
+    pastor_dirigente: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    telefone: '',
+    email: '',
+    status_piloto: 'teste',
+    responsavel_nome: '',
+    responsavel_email: '',
+    responsavel_whatsapp: '',
+    observacoes_piloto: '',
+    data_inicio_piloto: '',
+    data_fim_piloto: '',
+    limite_usuarios: 10,
+  })
   const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
     id: null,
     nome_igreja: '',
@@ -544,6 +567,10 @@ function App() {
   function navegarParaPagina(paginaId) {
     setPaginaAtual(paginaId)
 
+    if (paginaId === 'administracao') {
+      carregarIgrejasAdmin()
+    }
+
     window.setTimeout(() => {
       const areaPrincipal =
         document.querySelector('.area-principal') ||
@@ -562,6 +589,182 @@ function App() {
         behavior: 'smooth',
       })
     }, 180)
+  }
+
+  const emailsAdminSistema = [
+    'gallianoalves@gmail.com',
+    'galliano.alves@gmail.com',
+    'ebdbetel7@gmail.com',
+    'ebdfiel7@gmail.com',
+  ]
+
+  function usuarioEhAdminSistema() {
+    return emailsAdminSistema.includes(String(sessao?.user?.email || '').toLowerCase())
+  }
+
+  function limparFormularioIgrejaAdmin() {
+    setNovaIgrejaAdmin({
+      nome_igreja: '',
+      congregacao: '',
+      pastor_dirigente: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      telefone: '',
+      email: '',
+      status_piloto: 'teste',
+      responsavel_nome: '',
+      responsavel_email: '',
+      responsavel_whatsapp: '',
+      observacoes_piloto: '',
+      data_inicio_piloto: '',
+      data_fim_piloto: '',
+      limite_usuarios: 10,
+    })
+    setIgrejaAdminEditandoId(null)
+    setMostrarFormularioIgrejaAdmin(false)
+  }
+
+  function abrirNovaIgrejaAdmin() {
+    limparFormularioIgrejaAdmin()
+    setMostrarFormularioIgrejaAdmin(true)
+  }
+
+  function editarIgrejaAdmin(igreja) {
+    setNovaIgrejaAdmin({
+      nome_igreja: igreja.nome_igreja || '',
+      congregacao: igreja.congregacao || '',
+      pastor_dirigente: igreja.pastor_dirigente || '',
+      cidade: igreja.cidade || '',
+      estado: igreja.estado || '',
+      bairro: igreja.bairro || '',
+      endereco: igreja.endereco || '',
+      telefone: igreja.telefone || '',
+      email: igreja.email || '',
+      status_piloto: igreja.status_piloto || 'teste',
+      responsavel_nome: igreja.responsavel_nome || '',
+      responsavel_email: igreja.responsavel_email || '',
+      responsavel_whatsapp: igreja.responsavel_whatsapp || '',
+      observacoes_piloto: igreja.observacoes_piloto || '',
+      data_inicio_piloto: igreja.data_inicio_piloto || '',
+      data_fim_piloto: igreja.data_fim_piloto || '',
+      limite_usuarios: igreja.limite_usuarios || 10,
+    })
+    setIgrejaAdminEditandoId(igreja.id)
+    setMostrarFormularioIgrejaAdmin(true)
+  }
+
+  async function carregarIgrejasAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('igrejas')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error(error)
+      alert(error?.message || 'Erro ao carregar igrejas do piloto.')
+      return
+    }
+
+    setIgrejasAdmin(data || [])
+  }
+
+  async function salvarIgrejaAdmin(event) {
+    event.preventDefault()
+
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem cadastrar igrejas.')
+      return
+    }
+
+    if (!novaIgrejaAdmin.nome_igreja.trim()) {
+      alert('Informe o nome da igreja.')
+      return
+    }
+
+    const dadosIgreja = {
+      nome_igreja: novaIgrejaAdmin.nome_igreja.trim(),
+      congregacao: novaIgrejaAdmin.congregacao.trim(),
+      pastor_dirigente: novaIgrejaAdmin.pastor_dirigente.trim(),
+      cidade: novaIgrejaAdmin.cidade.trim(),
+      estado: novaIgrejaAdmin.estado.trim(),
+      bairro: novaIgrejaAdmin.bairro.trim(),
+      endereco: novaIgrejaAdmin.endereco.trim(),
+      telefone: novaIgrejaAdmin.telefone.trim(),
+      email: novaIgrejaAdmin.email.trim(),
+      status_piloto: novaIgrejaAdmin.status_piloto,
+      responsavel_nome: novaIgrejaAdmin.responsavel_nome.trim(),
+      responsavel_email: novaIgrejaAdmin.responsavel_email.trim(),
+      responsavel_whatsapp: novaIgrejaAdmin.responsavel_whatsapp.trim(),
+      observacoes_piloto: novaIgrejaAdmin.observacoes_piloto.trim(),
+      data_inicio_piloto: novaIgrejaAdmin.data_inicio_piloto || null,
+      data_fim_piloto: novaIgrejaAdmin.data_fim_piloto || null,
+      limite_usuarios: Number(novaIgrejaAdmin.limite_usuarios || 10),
+    }
+
+    let resposta
+
+    if (igrejaAdminEditandoId) {
+      resposta = await supabase
+        .from('igrejas')
+        .update(dadosIgreja)
+        .eq('id', igrejaAdminEditandoId)
+    } else {
+      resposta = await supabase.from('igrejas').insert(dadosIgreja)
+    }
+
+    if (resposta.error) {
+      console.error(resposta.error)
+      alert(resposta.error?.message || 'Erro ao salvar igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+    limparFormularioIgrejaAdmin()
+    alert('Igreja salva com sucesso!')
+  }
+
+  async function excluirIgrejaAdmin(igreja) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem excluir igrejas.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta ação pode apagar os dados vinculados.`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.from('igrejas').delete().eq('id', igreja.id)
+
+    if (error) {
+      console.error(error)
+      alert(error?.message || 'Erro ao excluir igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+  }
+
+  function filtrarIgrejasAdmin() {
+    const termo = buscaIgrejaAdmin.toLowerCase()
+
+    return igrejasAdmin.filter((igreja) => {
+      return (
+        String(igreja.nome_igreja || '').toLowerCase().includes(termo) ||
+        String(igreja.congregacao || '').toLowerCase().includes(termo) ||
+        String(igreja.responsavel_nome || '').toLowerCase().includes(termo) ||
+        String(igreja.responsavel_email || '').toLowerCase().includes(termo)
+      )
+    })
   }
 
   function usuarioEhSecretaria() {
@@ -4359,7 +4562,418 @@ function App() {
     )
   }
 
+  function renderizarAdministracao() {
+    if (!usuarioEhAdminSistema()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>Esta área é exclusiva para administradores do sistema.</p>
+        </section>
+      )
+    }
+
+    const igrejasFiltradas = filtrarIgrejasAdmin()
+    const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
+    const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
+    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina topo-admin-sistema">
+          <div>
+            <span className="selo-admin">Administração do sistema</span>
+            <h2>Igrejas do piloto</h2>
+            <p>
+              Cadastre e acompanhe as igrejas que participarão dos testes do EBD Fiel.
+            </p>
+          </div>
+
+          {!mostrarFormularioIgrejaAdmin && (
+            <button className="botao-principal" onClick={abrirNovaIgrejaAdmin}>
+              Nova igreja
+            </button>
+          )}
+        </div>
+
+        <div className="cards cards-admin-sistema">
+          <div className="card card-admin">
+            <span>Total</span>
+            <strong>{igrejasAdmin.length}</strong>
+            <p>igrejas cadastradas</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Em teste</span>
+            <strong>{igrejasTeste}</strong>
+            <p>participando do piloto</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Ativas</span>
+            <strong>{igrejasAtivas}</strong>
+            <p>liberadas para uso</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Pausadas</span>
+            <strong>{igrejasPausadas}</strong>
+            <p>aguardando retorno</p>
+          </div>
+        </div>
+
+        {mostrarFormularioIgrejaAdmin && (
+          <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
+            <div className="topo-formulario-inline">
+              <div>
+                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja do piloto'}</h3>
+                <p>
+                  Depois de cadastrar a igreja aqui, crie o usuário da secretaria em
+                  Supabase → Authentication → Users e vincule o perfil na tabela perfis_usuarios.
+                </p>
+              </div>
+            </div>
+
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                Nome da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.nome_igreja}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      nome_igreja: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Assembleia de Deus Campo..."
+                />
+              </label>
+
+              <label>
+                Congregação
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.congregacao}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      congregacao: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Sede, Betel, Vila Nova..."
+                />
+              </label>
+
+              <label>
+                Pastor/Dirigente
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.pastor_dirigente}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      pastor_dirigente: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Pr. João Silva"
+                />
+              </label>
+
+              <label>
+                Status do piloto
+                <select
+                  value={novaIgrejaAdmin.status_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      status_piloto: event.target.value,
+                    })
+                  }
+                >
+                  <option value="teste">Teste</option>
+                  <option value="ativa">Ativa</option>
+                  <option value="pausada">Pausada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </label>
+
+              <label>
+                Cidade
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.cidade}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      cidade: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Estado
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.estado}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      estado: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: MG"
+                />
+              </label>
+
+              <label>
+                Bairro
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.bairro}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      bairro: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Endereço
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      endereco: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Telefone da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.telefone}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      telefone: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                E-mail da igreja
+                <input
+                  type="email"
+                  value={novaIgrejaAdmin.email}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      email: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Responsável
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.responsavel_nome}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_nome: event.target.value,
+                    })
+                  }
+                  placeholder="Nome da secretaria responsável"
+                />
+              </label>
+
+              <label>
+                E-mail do responsável
+                <input
+                  type="email"
+                  value={novaIgrejaAdmin.responsavel_email}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_email: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                WhatsApp do responsável
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.responsavel_whatsapp}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_whatsapp: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 27 99999-9999"
+                />
+              </label>
+
+              <label>
+                Limite de usuários
+                <input
+                  type="number"
+                  min="1"
+                  value={novaIgrejaAdmin.limite_usuarios}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      limite_usuarios: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Início do piloto
+                <input
+                  type="date"
+                  value={novaIgrejaAdmin.data_inicio_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      data_inicio_piloto: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Fim do piloto
+                <input
+                  type="date"
+                  value={novaIgrejaAdmin.data_fim_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      data_fim_piloto: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label className="campo-observacoes-admin">
+                Observações do piloto
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.observacoes_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      observacoes_piloto: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: igreja convidada para teste de 30 dias"
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {igrejaAdminEditandoId ? 'Salvar alterações' : 'Salvar igreja'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={limparFormularioIgrejaAdmin}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="filtros filtros-admin">
+          <label>
+            Buscar igreja
+            <input
+              type="text"
+              value={buscaIgrejaAdmin}
+              onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
+              placeholder="Buscar por igreja, congregação, responsável ou e-mail"
+            />
+          </label>
+
+          <button className="botao-secundario" onClick={carregarIgrejasAdmin}>
+            Atualizar lista
+          </button>
+        </div>
+
+        <div className="lista lista-admin-igrejas">
+          {igrejasFiltradas.map((igreja) => (
+            <div className="item-lista item-com-acoes igreja-admin-card" key={igreja.id}>
+              <div>
+                <div className="linha-titulo-admin">
+                  <h3>{igreja.nome_igreja}</h3>
+                  <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
+                    {igreja.status_piloto || 'teste'}
+                  </span>
+                </div>
+
+                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
+                {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
+                {(igreja.cidade || igreja.estado) && (
+                  <p>
+                    Local: {igreja.cidade}
+                    {igreja.estado ? `/${igreja.estado}` : ''}
+                  </p>
+                )}
+                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
+                {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
+                {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
+                {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
+                  <p>
+                    Piloto: {igreja.data_inicio_piloto || 'sem início'} até{' '}
+                    {igreja.data_fim_piloto || 'sem fim'}
+                  </p>
+                )}
+              </div>
+
+              <div className="acoes-item">
+                <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
+                  Editar
+                </button>
+
+                <button className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {igrejasFiltradas.length === 0 && (
+            <div className="aviso">
+              <p>Nenhuma igreja encontrada.</p>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
   function renderizarPagina() {
+    if (paginaAtual === 'administracao' && !usuarioEhAdminSistema()) {
+      return renderizarPainel()
+    }
+
     if (!usuarioEhSecretaria() && ['classes', 'professores', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
       return renderizarPainel()
     }
@@ -4372,6 +4986,7 @@ function App() {
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
     if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
+    if (paginaAtual === 'administracao') return renderizarAdministracao()
 
     return renderizarPainel()
   }
