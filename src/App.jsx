@@ -545,17 +545,23 @@ function App() {
     setPaginaAtual(paginaId)
 
     window.setTimeout(() => {
-      const conteudo =
-        document.querySelector('.conteudo') ||
-        document.querySelector('main') ||
-        document.body
+      const areaPrincipal =
+        document.querySelector('.area-principal') ||
+        document.querySelector('main')
 
-      if (conteudo && typeof conteudo.scrollIntoView === 'function') {
-        conteudo.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (!areaPrincipal) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        return
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 80)
+      const distanciaDoTopo =
+        areaPrincipal.getBoundingClientRect().top + window.pageYOffset - 8
+
+      window.scrollTo({
+        top: Math.max(distanciaDoTopo, 0),
+        behavior: 'smooth',
+      })
+    }, 180)
   }
 
   function usuarioEhSecretaria() {

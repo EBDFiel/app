@@ -4075,3 +4075,19 @@ html {
     scroll-margin-top: 12px;
   }
 }
+
+
+/* Correção definitiva: menu mobile rola para a área principal */
+html {
+  scroll-behavior: smooth;
+}
+
+.area-principal {
+  scroll-margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .area-principal {
+    scroll-margin-top: 8px;
+  }
+}
