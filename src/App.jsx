@@ -2093,7 +2093,7 @@ function App() {
         <main>
           <section className="hero-publico">
             <div className="hero-publico-texto">
-              <span className="selo-publico">Sistema online para igrejas</span>
+              <span className="selo-publico">Sistema online para Escola Bíblica Dominical</span>
               <h1>Gestão da EBD com visual moderno, presença organizada e relatórios prontos.</h1>
               <p>
                 Organize classes, alunos, professores, chamadas, aniversariantes e relatórios em uma plataforma online pensada para a rotina da igreja.
@@ -2114,7 +2114,7 @@ function App() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Solicitar acesso
+                  Solicitar demonstração
                 </a>
               </div>
 
@@ -2233,6 +2233,55 @@ function App() {
             </div>
           </section>
 
+          <section className="secao-publica secao-organiza-sistema">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">O que o sistema organiza</span>
+              <h2>Uma visão completa da rotina da Escola Bíblica Dominical.</h2>
+              <p>
+                O EBD Fiel reúne em um só lugar as informações que a secretaria,
+                professores e liderança precisam acompanhar durante a semana.
+              </p>
+            </div>
+
+            <div className="grade-organiza-sistema">
+              <article>
+                <span>01</span>
+                <strong>Classes</strong>
+                <p>Turmas organizadas com matrícula, professores e acompanhamento.</p>
+              </article>
+
+              <article>
+                <span>02</span>
+                <strong>Alunos</strong>
+                <p>Cadastros com telefone, data de nascimento e vínculo por classe.</p>
+              </article>
+
+              <article>
+                <span>03</span>
+                <strong>Professores</strong>
+                <p>Lista separada, chamada própria, faltas e justificativas.</p>
+              </article>
+
+              <article>
+                <span>04</span>
+                <strong>Chamadas</strong>
+                <p>Presença dos alunos e professores em áreas separadas.</p>
+              </article>
+
+              <article>
+                <span>05</span>
+                <strong>Relatórios</strong>
+                <p>Resumo geral, frequência, detalhes e impressão em PDF.</p>
+              </article>
+
+              <article>
+                <span>06</span>
+                <strong>Aniversariantes</strong>
+                <p>Alerta semanal para a secretaria acompanhar datas importantes.</p>
+              </article>
+            </div>
+          </section>
+
           <section className="secao-publica secao-publico-alvo">
             <div className="cabecalho-secao-publica">
               <span className="selo-publico">Para quem é</span>
@@ -2328,9 +2377,9 @@ function App() {
           <section className="secao-publica" id="planos">
             <div className="cartao-plano-publico">
               <span className="selo-publico">Comercialização</span>
-              <h2>Pronto para organizar a EBD da sua igreja?</h2>
+              <h2>Pronto para transformar a organização da sua EBD?</h2>
               <p>
-                Solicite uma demonstração e veja como sua igreja pode controlar classes, alunos, professores, chamadas e relatórios em poucos minutos.
+                Solicite uma demonstração gratuita e veja como sua igreja pode organizar classes, alunos, professores, chamadas, aniversariantes e relatórios em uma plataforma moderna.
               </p>
               <div className="acoes-publicas">
                 <a
@@ -2339,7 +2388,7 @@ function App() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Ver apresentação
+                  Solicitar demonstração
                 </a>
                 <button
                   className="botao-secundario"
@@ -2348,6 +2397,9 @@ function App() {
                 >
                   Acessar sistema
                 </button>
+              <p className="frase-confianca-cta">
+                Atendimento pelo WhatsApp • Plataforma online • Dados separados por igreja
+              </p>
               </div>
             </div>
           </section>
