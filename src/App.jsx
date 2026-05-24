@@ -255,7 +255,7 @@ function App() {
       setSessao(data.session)
 
       if (data.session) {
-        await carregarDadosOnline()
+        await carregarDadosOnline(data.session)
       } else {
         limparDadosDoSistema()
       }
@@ -364,7 +364,23 @@ function App() {
     setErroSistema('')
 
     try {
-      await buscarTodosOsDados(sessaoAtual)
+      let sessaoParaUsar = sessaoAtual
+
+      if (!sessaoParaUsar?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoParaUsar = data?.session || null
+
+        if (sessaoParaUsar) {
+          setSessao(sessaoParaUsar)
+        }
+      }
+
+      await buscarTodosOsDados(sessaoParaUsar)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
       setErroSistema(
@@ -441,7 +457,7 @@ function App() {
 
   async function buscarTodosOsDados(sessaoAtual = sessao) {
     if (!sessaoAtual?.user?.id) {
-      throw new Error('Usuário não identificado. Faça login novamente.')
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
@@ -1344,7 +1360,7 @@ function App() {
     }
 
     if (!sessao?.user?.id) {
-      alert('Usuário não identificado. Faça login novamente.')
+      alert('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
       return
     }
 
@@ -1405,7 +1421,7 @@ function App() {
         })
       }
 
-      await buscarTodosOsDados(sessaoAtual)
+      await buscarTodosOsDados(sessao)
       alert('Configurações da igreja salvas com sucesso!')
     } catch (error) {
       console.error('Erro ao salvar configurações da igreja:', error)
@@ -1879,7 +1895,10 @@ function App() {
           <h2>Erro ao carregar</h2>
           <p>{erroSistema}</p>
 
-          <button className="botao-principal botao-largura-total" onClick={carregarDadosOnline}>
+          <button
+            className="botao-principal botao-largura-total"
+            onClick={() => carregarDadosOnline()}
+          >
             Tentar novamente
           </button>
         </section>
