@@ -672,8 +672,7 @@ function App() {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error(error)
-      alert(error?.message || 'Erro ao carregar igrejas do piloto.')
+      mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
 
@@ -725,8 +724,7 @@ function App() {
     }
 
     if (resposta.error) {
-      console.error(resposta.error)
-      alert(resposta.error?.message || 'Erro ao salvar igreja.')
+      mostrarErroSistema(resposta.error, 'Erro ao salvar igreja.')
       return
     }
 
@@ -752,8 +750,7 @@ function App() {
     const { error } = await supabase.from('igrejas').delete().eq('id', igreja.id)
 
     if (error) {
-      console.error(error)
-      alert(error?.message || 'Erro ao excluir igreja.')
+      mostrarErroSistema(error, 'Erro ao excluir igreja.')
       return
     }
 
@@ -771,6 +768,64 @@ function App() {
         String(igreja.responsavel_email || '').toLowerCase().includes(termo)
       )
     })
+  }
+
+  function traduzirErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
+    const mensagemOriginal =
+      typeof erro === 'string'
+        ? erro
+        : erro?.message || erro?.error_description || mensagemPadrao
+
+    const mensagem = String(mensagemOriginal || '').toLowerCase()
+
+    if (mensagem.includes('could not find') && mensagem.includes('column')) {
+      const colunaEncontrada = String(mensagemOriginal).match(/'([^']+)' column/)
+      const tabelaEncontrada = String(mensagemOriginal).match(/of '([^']+)'/)
+
+      const coluna = colunaEncontrada?.[1] || 'necessária'
+      const tabela = tabelaEncontrada?.[1] || 'do banco de dados'
+
+      return `O campo "${coluna}" ainda não existe na tabela "${tabela}" do Supabase. Rode o SQL de atualização do banco, aguarde alguns segundos e tente novamente.`
+    }
+
+    if (mensagem.includes('schema cache')) {
+      return 'O Supabase ainda está atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
+    }
+
+    if (mensagem.includes('duplicate key') || mensagem.includes('already exists')) {
+      return 'Esse cadastro já existe. Verifique os dados informados e tente novamente.'
+    }
+
+    if (mensagem.includes('violates foreign key constraint')) {
+      return 'Não foi possível salvar porque há uma ligação obrigatória faltando no banco de dados. Verifique se a igreja, classe ou usuário vinculado existe.'
+    }
+
+    if (mensagem.includes('violates row-level security') || mensagem.includes('row-level security')) {
+      return 'Você não tem permissão para realizar esta ação. Verifique se está logado com o perfil correto.'
+    }
+
+    if (mensagem.includes('invalid input syntax')) {
+      return 'Algum campo foi preenchido com um formato inválido. Confira números, datas e campos obrigatórios.'
+    }
+
+    if (mensagem.includes('failed to fetch') || mensagem.includes('networkerror')) {
+      return 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
+    }
+
+    if (mensagem.includes('jwt') || mensagem.includes('token')) {
+      return 'Sua sessão expirou. Saia do sistema e entre novamente.'
+    }
+
+    if (mensagem.includes('auth')) {
+      return 'Não foi possível confirmar seu login. Saia do sistema e entre novamente.'
+    }
+
+    return mensagemPadrao
+  }
+
+  function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
+    console.error(erro)
+    alert(traduzirErroSistema(erro, mensagemPadrao))
   }
 
   function usuarioEhSecretaria() {
@@ -2942,8 +2997,7 @@ function App() {
       .single()
 
     if (error) {
-      console.error(error)
-      alert(error?.message || 'Erro ao salvar usuário.')
+      mostrarErroSistema(error, 'Erro ao salvar usuário.')
       return
     }
 
@@ -2953,8 +3007,7 @@ function App() {
       .eq('perfil_usuario_id', perfilSalvo.id)
 
     if (erroRemoverVinculos) {
-      console.error(erroRemoverVinculos)
-      alert(erroRemoverVinculos?.message || 'Erro ao atualizar vínculos do professor.')
+      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vínculos do professor.')
       return
     }
 
@@ -2971,8 +3024,7 @@ function App() {
         .insert(vinculosParaSalvar)
 
       if (erroInserirVinculos) {
-        console.error(erroInserirVinculos)
-        alert(erroInserirVinculos?.message || 'Erro ao vincular professor às classes.')
+        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor às classes.')
         return
       }
     }
@@ -3007,8 +3059,7 @@ function App() {
       .eq('id', perfil.id)
 
     if (error) {
-      console.error(error)
-      alert(error?.message || 'Erro ao remover perfil.')
+      mostrarErroSistema(error, 'Erro ao remover perfil.')
       return
     }
 
@@ -3853,8 +3904,7 @@ function App() {
       .insert(chamadaBanco)
 
     if (error) {
-      console.error(error)
-      alert(error?.message || 'Erro ao salvar chamada dos professores.')
+      mostrarErroSistema(error, 'Erro ao salvar chamada dos professores.')
       return
     }
 
