@@ -3393,3 +3393,280 @@ input:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Correção do bloco escuro: texto claro e melhor contraste */
+.impacto-card-principal h2,
+.impacto-card-principal h3,
+.impacto-card-principal strong {
+  color: #ffffff !important;
+}
+
+.impacto-card-principal p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.impacto-card-principal {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(230, 179, 30, 0.28), transparent 28%),
+    radial-gradient(circle at 10% 92%, rgba(14, 165, 233, 0.24), transparent 32%),
+    linear-gradient(135deg, #06283f 0%, #0B3B5F 52%, #5F4B8B 100%) !important;
+}
+
+.impacto-card-principal span {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+.impacto-card-principal h2 {
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+
+/* Repaginação moderna da área interna */
+.aplicacao,
+.app,
+.layout-app {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.10), transparent 24%),
+    radial-gradient(circle at 86% 12%, rgba(14, 165, 233, 0.10), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+}
+
+.menu-lateral,
+.sidebar {
+  background:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 30%),
+    linear-gradient(180deg, #07182f 0%, #0b1528 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 16px 0 42px rgba(15, 23, 42, 0.12);
+}
+
+.menu-lateral .marca-app,
+.sidebar .marca-app,
+.logo-area {
+  padding: 18px 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menu-lateral nav button,
+.menu-navegacao button,
+.sidebar nav button {
+  border-radius: 18px !important;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.menu-lateral nav button:hover,
+.menu-navegacao button:hover,
+.sidebar nav button:hover {
+  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+.menu-lateral nav button.ativo,
+.menu-navegacao button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.26);
+}
+
+.usuario-logado,
+.card-usuario,
+.bloco-usuario {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.conteudo,
+.painel-conteudo,
+.area-conteudo,
+main.conteudo {
+  width: min(1180px, calc(100% - 34px));
+  margin-inline: auto;
+}
+
+.conteudo > h2,
+.topo-pagina h2 {
+  font-size: clamp(30px, 3vw, 42px);
+  letter-spacing: -0.045em;
+  color: #0f172a;
+}
+
+.topo-pagina {
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.topo-pagina p {
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.card,
+.resumo,
+.item-lista,
+.formulario,
+.filtros,
+.alerta-aniversariantes,
+.relatorio-professores-moderno,
+.secao-configuracoes,
+.aviso {
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.045), transparent 34%),
+    #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.86) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07) !important;
+}
+
+.item-lista {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.item-lista:hover {
+  transform: translateY(-2px);
+  border-color: #bfdbfe !important;
+  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.10) !important;
+}
+
+.grade-resumos-comerciais,
+.cards,
+.cards-estatisticas,
+.grade-professores-resumo {
+  gap: 18px !important;
+}
+
+.resumo,
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.resumo::after,
+.card::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  bottom: -38px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.055);
+}
+
+.resumo h3,
+.card h3 {
+  color: #0f172a;
+}
+
+.resumo p,
+.card p {
+  color: #475569;
+}
+
+.botao-principal,
+button.botao-principal {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.24);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.botao-principal:hover,
+button.botao-principal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 40px rgba(37, 99, 235, 0.30);
+}
+
+.botao-secundario,
+.botao-editar,
+.botao-excluir,
+.botao-presenca,
+.botao-falta,
+.botao-justificou {
+  border-radius: 14px !important;
+}
+
+input,
+select,
+textarea {
+  border-radius: 14px !important;
+  border-color: #cbd5e1 !important;
+  background: #ffffff !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.lista {
+  gap: 16px !important;
+}
+
+.item-com-acoes {
+  align-items: center;
+}
+
+.acoes-item,
+.acoes-chamada {
+  gap: 10px !important;
+}
+
+.abas-chamada {
+  padding: 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+  width: fit-content;
+}
+
+.abas-chamada button {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.abas-chamada button.ativo {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+}
+
+.relatorios-hero,
+.secao-experiencia-publica,
+.cartao-plano-publico {
+  border-radius: 34px !important;
+}
+
+.tabela,
+.tabela-ebd {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .conteudo,
+  .painel-conteudo,
+  .area-conteudo,
+  main.conteudo {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .topo-pagina {
+    flex-direction: column;
+  }
+
+  .abas-chamada {
+    width: 100%;
+    border-radius: 22px;
+  }
+}
