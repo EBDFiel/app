@@ -470,6 +470,69 @@ function App() {
     }
   }
 
+
+  async function migrarProfessoresDasClasses(
+    igrejaAtualId,
+    classesBanco,
+    alunosBanco,
+    sessaoAtual = sessao
+  ) {
+    const professoresExistentes = (alunosBanco || [])
+      .filter((pessoa) => pessoa.tipo_pessoa === 'professor')
+      .map(
+        (pessoa) =>
+          `${String(pessoa.nome || '').trim().toLowerCase()}-${Number(
+            pessoa.classe_id || 0
+          )}`
+      )
+
+    const professoresParaCriar = []
+
+    ;(classesBanco || []).forEach((classe) => {
+      const textoProfessores = String(classe.professor || '').trim()
+
+      if (!textoProfessores) {
+        return
+      }
+
+      const nomes = textoProfessores
+        .split(/,|;|\/| e /i)
+        .map((nome) => nome.trim())
+        .filter(Boolean)
+
+      nomes.forEach((nome) => {
+        const chave = `${nome.toLowerCase()}-${Number(classe.id)}`
+
+        if (!professoresExistentes.includes(chave)) {
+          professoresExistentes.push(chave)
+
+          professoresParaCriar.push({
+            id: Date.now() + professoresParaCriar.length,
+            igreja_id: igrejaAtualId,
+            user_id: sessaoAtual?.user?.id,
+            nome,
+            classe_id: Number(classe.id),
+            telefone: '',
+            data_nascimento: null,
+            tipo_pessoa: 'professor',
+          })
+        }
+      })
+    })
+
+    if (professoresParaCriar.length === 0) {
+      return false
+    }
+
+    const { error } = await supabase.from('alunos').insert(professoresParaCriar)
+
+    if (error) {
+      throw error
+    }
+
+    return true
+  }
+
   function usuarioEhProfessor() {
     return perfilUsuario?.perfil === 'professor'
   }
@@ -2757,7 +2820,7 @@ function App() {
         <div className="aviso aviso-classes-professores">
           <p>
             Você pode gerenciar professores por aqui ou pelo menu <strong>Professores</strong>.
-            Os professores antigos cadastrados nas classes são puxados automaticamente para o cadastro de professores.
+            Os professores antigos cadastrados nas classes serão puxados automaticamente para o cadastro de professores ao carregar o sistema.
           </p>
         </div>
 
