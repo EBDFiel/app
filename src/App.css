@@ -4060,3 +4060,18 @@ textarea:focus {
     content: none !important;
   }
 }
+
+
+/* Navegação mobile: ao escolher uma opção, a página abre no topo */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 900px) {
+  .conteudo,
+  main.conteudo,
+  .area-conteudo,
+  .painel-conteudo {
+    scroll-margin-top: 12px;
+  }
+}

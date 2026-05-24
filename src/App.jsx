@@ -310,7 +310,7 @@ function App() {
       telefone: '',
       email: '',
     })
-    setPaginaAtual('painel')
+    navegarParaPagina('painel')
     setTelaPublica('landing')
     setMostrarFormularioClasse(false)
     setMostrarFormularioAluno(false)
@@ -539,6 +539,23 @@ function App() {
 
   function buscarIgrejaIdAtual() {
     return perfilUsuario?.igreja_id || igrejaId || null
+  }
+
+  function navegarParaPagina(paginaId) {
+    setPaginaAtual(paginaId)
+
+    window.setTimeout(() => {
+      const conteudo =
+        document.querySelector('.conteudo') ||
+        document.querySelector('main') ||
+        document.body
+
+      if (conteudo && typeof conteudo.scrollIntoView === 'function') {
+        conteudo.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 80)
   }
 
   function usuarioEhSecretaria() {
@@ -2796,11 +2813,11 @@ function App() {
 
             <div className="hero-acoes">
               {usuarioEhSecretaria() && (
-                <button className="botao-principal" onClick={() => setPaginaAtual('configuracoes')}>
+                <button className="botao-principal" onClick={() => navegarParaPagina('configuracoes')}>
                   Ajustar dados da igreja
                 </button>
               )}
-              <button className="botao-secundario" onClick={() => setPaginaAtual('relatorios')}>
+              <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
                 Ver relatórios
               </button>
             </div>
@@ -4375,7 +4392,7 @@ function App() {
             <button
               key={item.id}
               className={paginaAtual === item.id ? 'ativo' : ''}
-              onClick={() => setPaginaAtual(item.id)}
+              onClick={() => navegarParaPagina(item.id)}
             >
               <span className="icone-menu">
                 <Icone nome={item.icone} className="icone-svg" />
