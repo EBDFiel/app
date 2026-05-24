@@ -160,6 +160,7 @@ function App() {
   const [senhaLogin, setSenhaLogin] = useState('')
   const [carregandoLogin, setCarregandoLogin] = useState(false)
   const [erroLogin, setErroLogin] = useState('')
+  const [telaPublica, setTelaPublica] = useState('landing')
 
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
@@ -277,6 +278,7 @@ function App() {
       email: '',
     })
     setPaginaAtual('painel')
+    setTelaPublica('landing')
     setMostrarFormularioClasse(false)
     setMostrarFormularioAluno(false)
     setClasseEditandoId(null)
@@ -1376,7 +1378,7 @@ function App() {
     )
   }
 
-  if (!sessao) {
+  if (!sessao && telaPublica === 'login') {
     return (
       <div className="tela-login">
         <section className="painel-apresentacao">
@@ -1395,11 +1397,11 @@ function App() {
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Plataforma pronta para comercialização</span>
-            <h2>Controle sua Escola Bíblica com visual profissional e relatórios completos.</h2>
+            <span className="selo-apresentacao">Área segura do cliente</span>
+            <h2>Acesse o painel da sua igreja.</h2>
             <p>
-              Cadastre classes, alunos, faça chamadas, gere relatórios e personalize os dados
-              da igreja em um único sistema.
+              Entre com suas credenciais para gerenciar classes, alunos, chamadas,
+              configurações e relatórios da Escola Bíblica Dominical.
             </p>
           </div>
 
@@ -1424,6 +1426,14 @@ function App() {
         </section>
 
         <section className="cartao-login">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('landing')}
+          >
+            ← Voltar para apresentação
+          </button>
+
           <div className="topo-cartao-login">
             <div className="topo-cartao-icone">
               <Icone nome="usuarios" className="icone-status" />
@@ -1468,6 +1478,198 @@ function App() {
             </button>
           </form>
         </section>
+      </div>
+    )
+  }
+
+  if (!sessao) {
+    return (
+      <div className="pagina-publica">
+        <header className="topo-publico">
+          <div className="marca-publica">
+            <div className="logo-simbolo logo-publica">
+              <img
+                src="/logo-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <strong>EBD Fiel</strong>
+              <span>Gestão para Escola Bíblica Dominical</span>
+            </div>
+          </div>
+
+          <nav className="menu-publico">
+            <a href="#recursos">Recursos</a>
+            <a href="#beneficios">Benefícios</a>
+            <a href="#planos">Planos</a>
+            <button type="button" onClick={() => setTelaPublica('login')}>
+              Entrar
+            </button>
+          </nav>
+        </header>
+
+        <main>
+          <section className="hero-publico">
+            <div className="hero-publico-texto">
+              <span className="selo-publico">Sistema online para igrejas</span>
+              <h1>Organize sua Escola Bíblica Dominical com simplicidade e excelência.</h1>
+              <p>
+                O EBD Fiel ajuda igrejas a controlar classes, alunos, chamadas,
+                frequência, relatórios e PDFs em uma plataforma moderna, acessível
+                e pronta para uso.
+              </p>
+
+              <div className="acoes-publicas">
+                <button
+                  className="botao-principal"
+                  type="button"
+                  onClick={() => setTelaPublica('login')}
+                >
+                  Entrar no sistema
+                </button>
+
+                <a
+                  className="botao-secundario link-botao-publico"
+                  href="mailto:contato@ebdfiel.com.br?subject=Solicitar acesso ao EBD Fiel"
+                >
+                  Solicitar acesso
+                </a>
+              </div>
+
+              <div className="metricas-publicas">
+                <div>
+                  <strong>100%</strong>
+                  <span>online</span>
+                </div>
+                <div>
+                  <strong>PDF</strong>
+                  <span>relatórios</span>
+                </div>
+                <div>
+                  <strong>EBD</strong>
+                  <span>foco total</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero-publico-card">
+              <div className="mini-dashboard">
+                <div className="mini-dashboard-topo">
+                  <div>
+                    <span>Painel da igreja</span>
+                    <strong>EBD Fiel</strong>
+                  </div>
+                  <Icone nome="painel" className="icone-svg" />
+                </div>
+
+                <div className="mini-grid">
+                  <div>
+                    <Icone nome="classes" className="icone-svg" />
+                    <strong>Classes</strong>
+                    <span>Organizadas</span>
+                  </div>
+                  <div>
+                    <Icone nome="alunos" className="icone-svg" />
+                    <strong>Alunos</strong>
+                    <span>Cadastrados</span>
+                  </div>
+                  <div>
+                    <Icone nome="chamada" className="icone-svg" />
+                    <strong>Chamada</strong>
+                    <span>Digital</span>
+                  </div>
+                  <div>
+                    <Icone nome="relatorios" className="icone-svg" />
+                    <strong>Relatórios</strong>
+                    <span>PDF</span>
+                  </div>
+                </div>
+
+                <div className="linha-progresso-publica">
+                  <span>Frequência mensal</span>
+                  <strong>87%</strong>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="secao-publica" id="recursos">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Recursos principais</span>
+              <h2>Tudo que a secretaria da EBD precisa em um só lugar.</h2>
+            </div>
+
+            <div className="grade-recursos-publicos">
+              <article>
+                <Icone nome="classes" className="icone-recurso-publico" />
+                <h3>Classes e professores</h3>
+                <p>Cadastre turmas, professores e acompanhe a matrícula de cada classe.</p>
+              </article>
+              <article>
+                <Icone nome="alunos" className="icone-recurso-publico" />
+                <h3>Alunos organizados</h3>
+                <p>Tenha uma lista clara de alunos com busca, filtros e vínculo por classe.</p>
+              </article>
+              <article>
+                <Icone nome="chamada" className="icone-recurso-publico" />
+                <h3>Chamada digital</h3>
+                <p>Registre presença, faltas, visitantes, Bíblias, revistas e ofertas.</p>
+              </article>
+              <article>
+                <Icone nome="relatorios" className="icone-recurso-publico" />
+                <h3>Relatórios em PDF</h3>
+                <p>Gere relatórios prontos para imprimir, salvar e apresentar à liderança.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="secao-publica secao-beneficios-publica" id="beneficios">
+            <div>
+              <span className="selo-publico">Por que usar</span>
+              <h2>Mais organização, menos papel e dados sempre disponíveis.</h2>
+              <p>
+                O sistema foi pensado para igrejas que querem profissionalizar a gestão
+                da Escola Bíblica Dominical sem complicar a rotina dos professores.
+              </p>
+            </div>
+
+            <ul className="lista-beneficios-publicos">
+              <li>Interface simples para uso no computador ou celular.</li>
+              <li>Dados salvos online automaticamente.</li>
+              <li>Relatórios com dados da igreja e cabeçalho personalizado.</li>
+              <li>Visual profissional para apresentar o projeto aos clientes.</li>
+            </ul>
+          </section>
+
+          <section className="secao-publica" id="planos">
+            <div className="cartao-plano-publico">
+              <span className="selo-publico">Comercialização</span>
+              <h2>Pronto para oferecer para outras igrejas.</h2>
+              <p>
+                Comece com acesso controlado e personalize os dados de cada igreja.
+                O próximo passo pode ser adicionar planos, permissões e cadastro
+                separado por igreja.
+              </p>
+              <div className="acoes-publicas">
+                <a
+                  className="botao-principal link-botao-publico"
+                  href="mailto:contato@ebdfiel.com.br?subject=Quero conhecer o EBD Fiel"
+                >
+                  Quero conhecer
+                </a>
+                <button
+                  className="botao-secundario"
+                  type="button"
+                  onClick={() => setTelaPublica('login')}
+                >
+                  Já sou cliente
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     )
   }
