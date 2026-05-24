@@ -165,6 +165,7 @@ function App() {
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
+  const [perfilUsuario, setPerfilUsuario] = useState(null)
   const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
     id: null,
     nome_igreja: '',
@@ -209,11 +210,16 @@ function App() {
 
   const menu = [
     { id: 'painel', nome: 'Painel', icone: 'painel' },
-    { id: 'classes', nome: 'Classes', icone: 'classes' },
+    { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
-    { id: 'configuracoes', nome: 'Configurações', icone: 'configuracoes' },
+    {
+      id: 'configuracoes',
+      nome: 'Configurações',
+      icone: 'configuracoes',
+      apenasSecretaria: true,
+    },
   ]
 
   useEffect(() => {
@@ -265,6 +271,7 @@ function App() {
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
+    setPerfilUsuario(null)
     setConfiguracaoIgreja({
       id: null,
       nome_igreja: '',
@@ -411,29 +418,91 @@ function App() {
     }
   }
 
+  function usuarioEhProfessor() {
+    return perfilUsuario?.perfil === 'professor'
+  }
+
+  function usuarioEhSecretaria() {
+    return perfilUsuario?.perfil !== 'professor'
+  }
+
+  function buscarClasseDoProfessorId() {
+    return Number(perfilUsuario?.classe_id || 0)
+  }
+
+  function podeGerenciarCadastros() {
+    return usuarioEhSecretaria()
+  }
+
+  function menuPermitidoParaUsuario(item) {
+    return !item.apenasSecretaria || usuarioEhSecretaria()
+  }
+
   async function buscarTodosOsDados() {
-    const { data: classesBanco, error: erroClasses } = await supabase
+    const { data: perfilBanco, error: erroPerfil } = await supabase
+      .from('perfis_usuarios')
+      .select('*')
+      .eq('user_id', sessao?.user?.id)
+      .maybeSingle()
+
+    if (erroPerfil) {
+      throw erroPerfil
+    }
+
+    const perfilAtual = perfilBanco || {
+      perfil: 'secretaria',
+      classe_id: null,
+      nome: 'Secretaria',
+      email: sessao?.user?.email || '',
+    }
+
+    setPerfilUsuario(perfilAtual)
+
+    const classePermitidaId =
+      perfilAtual?.perfil === 'professor'
+        ? Number(perfilAtual?.classe_id || 0)
+        : null
+
+    let consultaClasses = supabase
       .from('classes')
       .select('*')
       .order('id', { ascending: true })
+
+    if (classePermitidaId) {
+      consultaClasses = consultaClasses.eq('id', classePermitidaId)
+    }
+
+    const { data: classesBanco, error: erroClasses } = await consultaClasses
 
     if (erroClasses) {
       throw erroClasses
     }
 
-    const { data: alunosBanco, error: erroAlunos } = await supabase
+    let consultaAlunos = supabase
       .from('alunos')
       .select('*')
       .order('id', { ascending: true })
+
+    if (classePermitidaId) {
+      consultaAlunos = consultaAlunos.eq('classe_id', classePermitidaId)
+    }
+
+    const { data: alunosBanco, error: erroAlunos } = await consultaAlunos
 
     if (erroAlunos) {
       throw erroAlunos
     }
 
-    const { data: chamadasBanco, error: erroChamadas } = await supabase
+    let consultaChamadas = supabase
       .from('chamadas')
       .select('*')
       .order('id', { ascending: true })
+
+    if (classePermitidaId) {
+      consultaChamadas = consultaChamadas.eq('classe_id', classePermitidaId)
+    }
+
+    const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
 
     if (erroChamadas) {
       throw erroChamadas
@@ -482,6 +551,10 @@ function App() {
         registros: Array.isArray(chamada.registros) ? chamada.registros : [],
       }))
     )
+
+    if (classePermitidaId) {
+      setClasseChamadaId(String(classePermitidaId))
+    }
 
     const configuracaoAtual = configuracoesBanco?.[0]
 
@@ -938,6 +1011,11 @@ function App() {
   async function salvarClasse(event) {
     event.preventDefault()
 
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode cadastrar ou editar classes.')
+      return
+    }
+
     if (!novaClasse.nome.trim() || !novaClasse.professor.trim()) {
       alert('Preencha o nome da classe e o professor.')
       return
@@ -976,6 +1054,11 @@ function App() {
   }
 
   async function excluirClasse(classeId) {
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode excluir classes.')
+      return
+    }
+
     const existemAlunos = alunos.some(
       (aluno) => aluno.classeId === Number(classeId)
     )
@@ -1027,6 +1110,11 @@ function App() {
   async function salvarAluno(event) {
     event.preventDefault()
 
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode cadastrar ou editar alunos.')
+      return
+    }
+
     if (!novoAluno.nome.trim() || !novoAluno.classeId) {
       alert('Preencha o nome do aluno e selecione uma classe.')
       return
@@ -1067,6 +1155,11 @@ function App() {
   }
 
   async function excluirAluno(alunoId) {
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode excluir alunos.')
+      return
+    }
+
     const confirmar = window.confirm('Tem certeza que deseja excluir este aluno?')
 
     if (!confirmar) {
@@ -1117,6 +1210,11 @@ function App() {
   }
 
   async function salvarChamada() {
+    if (usuarioEhProfessor() && Number(classeChamadaId) !== buscarClasseDoProfessorId()) {
+      alert('Professor pode fazer chamada apenas da própria classe.')
+      return
+    }
+
     if (!classeChamadaId) {
       alert('Selecione uma classe para fazer a chamada.')
       return
@@ -1203,6 +1301,11 @@ function App() {
 
   async function salvarConfiguracaoIgreja(event) {
     event.preventDefault()
+
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode alterar as configurações da igreja.')
+      return
+    }
 
     if (!sessao?.user?.id) {
       alert('Usuário não identificado. Faça login novamente.')
@@ -1747,7 +1850,12 @@ function App() {
       <section className="conteudo">
         <div className="hero-painel">
           <div className="hero-painel-conteudo">
-            <span className="hero-tag">Painel administrativo</span>
+            <div className="linha-tags-painel">
+              <span className="hero-tag">Painel administrativo</span>
+              <span className="hero-tag hero-tag-clara">
+                {usuarioEhProfessor() ? 'Perfil: Professor' : 'Perfil: Secretaria'}
+              </span>
+            </div>
             <h2>{buscarNomeIgrejaParaExibicao()}</h2>
             <p>
               Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
@@ -1755,9 +1863,11 @@ function App() {
             </p>
 
             <div className="hero-acoes">
-              <button className="botao-principal" onClick={() => setPaginaAtual('configuracoes')}>
-                Ajustar dados da igreja
-              </button>
+              {usuarioEhSecretaria() && (
+                <button className="botao-principal" onClick={() => setPaginaAtual('configuracoes')}>
+                  Ajustar dados da igreja
+                </button>
+              )}
               <button className="botao-secundario" onClick={() => setPaginaAtual('relatorios')}>
                 Ver relatórios
               </button>
@@ -1830,6 +1940,15 @@ function App() {
   }
 
   function renderizarClasses() {
+    if (!podeGerenciarCadastros()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>O cadastro de classes é gerenciado pela secretaria.</p>
+        </section>
+      )
+    }
+
     return (
       <section className="conteudo">
         <div className="topo-pagina">
@@ -1929,10 +2048,14 @@ function App() {
         <div className="topo-pagina">
           <div>
             <h2>Alunos</h2>
-            <p>Cadastre, edite, busque e organize os alunos por classe.</p>
+            <p>
+              {usuarioEhProfessor()
+                ? 'Veja os alunos vinculados à sua classe.'
+                : 'Cadastre, edite, busque e organize os alunos por classe.'}
+            </p>
           </div>
 
-          {!mostrarFormularioAluno && (
+          {podeGerenciarCadastros() && !mostrarFormularioAluno && (
             <button className="botao-principal" onClick={abrirNovoAluno}>
               Novo aluno
             </button>
@@ -2010,21 +2133,23 @@ function App() {
             />
           </label>
 
-          <label>
-            Filtrar por classe
-            <select
-              value={filtroClasseAluno}
-              onChange={(event) => setFiltroClasseAluno(event.target.value)}
-            >
-              <option value="">Todas as classes</option>
+          {usuarioEhSecretaria() && (
+            <label>
+              Filtrar por classe
+              <select
+                value={filtroClasseAluno}
+                onChange={(event) => setFiltroClasseAluno(event.target.value)}
+              >
+                <option value="">Todas as classes</option>
 
-              {classes.map((classe) => (
-                <option key={classe.id} value={classe.id}>
-                  {classe.nome}
-                </option>
-              ))}
-            </select>
-          </label>
+                {classes.map((classe) => (
+                  <option key={classe.id} value={classe.id}>
+                    {classe.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <button className="botao-secundario" onClick={limparFiltrosAlunos}>
             Limpar filtros
@@ -2044,21 +2169,23 @@ function App() {
                 {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
               </div>
 
-              <div className="acoes-item">
-                <button
-                  className="botao-editar"
-                  onClick={() => editarAluno(aluno)}
-                >
-                  Editar
-                </button>
+              {podeGerenciarCadastros() && (
+                <div className="acoes-item">
+                  <button
+                    className="botao-editar"
+                    onClick={() => editarAluno(aluno)}
+                  >
+                    Editar
+                  </button>
 
-                <button
-                  className="botao-excluir"
-                  onClick={() => excluirAluno(aluno.id)}
-                >
-                  Excluir
-                </button>
-              </div>
+                  <button
+                    className="botao-excluir"
+                    onClick={() => excluirAluno(aluno.id)}
+                  >
+                    Excluir
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -2076,7 +2203,11 @@ function App() {
         <div className="topo-pagina">
           <div>
             <h2>Chamada</h2>
-            <p>Marque a presença dos alunos e informe os dados extras.</p>
+            <p>
+              {usuarioEhProfessor()
+                ? 'Faça a chamada da sua classe vinculada.'
+                : 'Marque a presença dos alunos e informe os dados extras.'}
+            </p>
           </div>
         </div>
 
@@ -2085,6 +2216,7 @@ function App() {
             Classe
             <select
               value={classeChamadaId}
+              disabled={usuarioEhProfessor()}
               onChange={(event) => {
                 setClasseChamadaId(event.target.value)
                 setPresencas({})
@@ -2104,6 +2236,11 @@ function App() {
                 </option>
               ))}
             </select>
+            {usuarioEhProfessor() && (
+              <small className="texto-ajuda-campo">
+                Sua chamada fica limitada à classe definida pela secretaria.
+              </small>
+            )}
           </label>
 
           {classeChamadaId && (
@@ -2240,7 +2377,11 @@ function App() {
         <div className="topo-pagina no-print">
           <div>
             <h2>Relatórios</h2>
-            <p>Relatório geral no modelo da Escola Bíblica Dominical.</p>
+            <p>
+              {usuarioEhProfessor()
+                ? 'Relatório da sua classe no modelo da Escola Bíblica Dominical.'
+                : 'Relatório geral no modelo da Escola Bíblica Dominical.'}
+            </p>
           </div>
 
           <div className="grupo-botoes">
@@ -2362,6 +2503,15 @@ function App() {
   }
 
   function renderizarConfiguracoes() {
+    if (!podeGerenciarCadastros()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>As configurações da igreja são gerenciadas pela secretaria.</p>
+        </section>
+      )
+    }
+
     return (
       <section className="conteudo">
         <div className="topo-pagina">
@@ -2515,6 +2665,10 @@ function App() {
   }
 
   function renderizarPagina() {
+    if (!usuarioEhSecretaria() && ['classes', 'configuracoes'].includes(paginaAtual)) {
+      return renderizarPainel()
+    }
+
     if (paginaAtual === 'painel') return renderizarPainel()
     if (paginaAtual === 'classes') return renderizarClasses()
     if (paginaAtual === 'alunos') return renderizarAlunos()
@@ -2543,7 +2697,7 @@ function App() {
         </div>
 
         <nav className="menu-navegacao">
-          {menu.map((item) => (
+          {menu.filter(menuPermitidoParaUsuario).map((item) => (
             <button
               key={item.id}
               className={paginaAtual === item.id ? 'ativo' : ''}
@@ -2560,6 +2714,9 @@ function App() {
         <div className="cartao-usuario-sidebar">
           <p className="titulo-usuario-sidebar">Logado como</p>
           <strong>{sessao?.user?.email}</strong>
+          <span className="selo-perfil-sidebar">
+            {usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
+          </span>
 
           <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
             <Icone nome="sair" className="icone-svg" />

@@ -1667,3 +1667,43 @@ button:disabled {
     padding: 5px;
   }
 }
+
+
+/* Perfis de usuário */
+.linha-tags-painel {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.hero-tag-clara {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+.selo-perfil-sidebar {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.18);
+  color: #dbeafe;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.texto-ajuda-campo {
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+select:disabled,
+input:disabled {
+  background: #eef2f7;
+  color: #64748b;
+  cursor: not-allowed;
+}
