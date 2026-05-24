@@ -1933,3 +1933,89 @@ input:disabled {
 .menu-navegacao button span:last-child {
   line-height: 1.2;
 }
+
+
+/* Professores puxados automaticamente nas classes */
+.aviso-classes-professores {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-classes-professores strong {
+  color: #1d4ed8;
+}
+
+
+/* Professores também gerenciados pela tela de Classes */
+.formulario-professor-classe {
+  margin-bottom: 22px;
+  background: #ffffff;
+}
+
+.topo-formulario-inline h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.topo-formulario-inline p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.professores-na-classe {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.professor-classe-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+}
+
+.professor-classe-linha span {
+  font-weight: 800;
+  color: var(--cor-texto);
+}
+
+.professor-classe-linha > div {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.botao-pequeno {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.botao-sem-margem {
+  margin-top: 0;
+}
+
+.texto-sem-professor {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .professor-classe-linha {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .professor-classe-linha > div,
+  .botao-sem-margem {
+    width: 100%;
+  }
+}

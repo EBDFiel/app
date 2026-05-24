@@ -806,6 +806,22 @@ function App() {
     return classeEncontrada ? classeEncontrada.nome : 'Sem classe'
   }
 
+  function buscarProfessoresDaClasse(classeId) {
+    return professoresSomente()
+      .filter((professor) => professor.classeId === Number(classeId))
+      .sort((a, b) => a.nome.localeCompare(b.nome))
+  }
+
+  function buscarTextoProfessoresDaClasse(classeId) {
+    const professoresDaClasse = buscarProfessoresDaClasse(classeId)
+
+    if (professoresDaClasse.length === 0) {
+      return 'Nenhum professor vinculado'
+    }
+
+    return professoresDaClasse.map((professor) => professor.nome).join(', ')
+  }
+
   function buscarDataAtual() {
     return new Date().toLocaleDateString('pt-BR')
   }
@@ -1249,8 +1265,8 @@ function App() {
       return
     }
 
-    if (!novaClasse.nome.trim() || !novaClasse.professor.trim()) {
-      alert('Preencha o nome da classe e o professor.')
+    if (!novaClasse.nome.trim()) {
+      alert('Preencha o nome da classe.')
       return
     }
 
@@ -1259,7 +1275,7 @@ function App() {
         .from('classes')
         .update({
           nome: novaClasse.nome,
-          professor: novaClasse.professor,
+          professor: novaClasse.professor || '',
         })
         .eq('id', classeEditandoId)
 
@@ -1329,6 +1345,29 @@ function App() {
     })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(true)
+  }
+
+  function abrirNovoProfessorDaClasse(classeId) {
+    setNovoAluno({
+      nome: '',
+      classeId: String(classeId),
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa: 'professor',
+    })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(true)
+  }
+
+  function editarProfessorDaClasse(professor) {
+    editarAluno(professor)
+    setNovoAluno({
+      nome: professor.nome,
+      classeId: String(professor.classeId),
+      telefone: professor.telefone,
+      dataNascimento: professor.dataNascimento || '',
+      tipoPessoa: 'professor',
+    })
   }
 
   function editarAluno(aluno) {
@@ -2540,6 +2579,97 @@ function App() {
     )
   }
 
+  function renderizarFormularioProfessorClasse() {
+    if (!mostrarFormularioAluno || novoAluno.tipoPessoa !== 'professor') {
+      return null
+    }
+
+    return (
+      <form className="formulario formulario-professor-classe" onSubmit={salvarAluno}>
+        <div className="topo-formulario-inline">
+          <div>
+            <h3>{alunoEditandoId ? 'Editar professor' : 'Novo professor'}</h3>
+            <p>
+              Este cadastro também aparece no menu Professores e na Chamada dos professores.
+            </p>
+          </div>
+        </div>
+
+        <div className="grade-campos grade-campos-configuracoes">
+          <label>
+            Nome
+            <input
+              type="text"
+              value={novoAluno.nome}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, nome: event.target.value })
+              }
+              placeholder="Ex: Leandro Silva"
+            />
+          </label>
+
+          <label>
+            Classe de referência
+            <select
+              value={novoAluno.classeId}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, classeId: event.target.value })
+              }
+            >
+              <option value="">Selecione uma classe</option>
+
+              {classes.map((classe) => (
+                <option key={classe.id} value={classe.id}>
+                  {classe.nome}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Telefone
+            <input
+              type="text"
+              value={novoAluno.telefone}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, telefone: event.target.value })
+              }
+              placeholder="Ex: (11) 99999-0000"
+            />
+          </label>
+
+          <label>
+            Data de nascimento
+            <input
+              type="date"
+              value={novoAluno.dataNascimento}
+              onChange={(event) =>
+                setNovoAluno({
+                  ...novoAluno,
+                  dataNascimento: event.target.value,
+                })
+              }
+            />
+          </label>
+        </div>
+
+        <div className="grupo-botoes">
+          <button className="botao-principal" type="submit">
+            {alunoEditandoId ? 'Salvar alterações' : 'Salvar professor'}
+          </button>
+
+          <button
+            className="botao-secundario"
+            type="button"
+            onClick={cancelarFormularioAluno}
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    )
+  }
+
   function renderizarClasses() {
     if (!podeGerenciarCadastros()) {
       return (
@@ -2555,7 +2685,7 @@ function App() {
         <div className="topo-pagina">
           <div>
             <h2>Classes</h2>
-            <p>Gerencie as classes da Escola Bíblica Dominical.</p>
+            <p>Gerencie as classes e também cadastre, edite ou exclua professores vinculados a cada classe.</p>
           </div>
 
           {!mostrarFormularioClasse && (
@@ -2579,21 +2709,6 @@ function App() {
               />
             </label>
 
-            <label>
-              Professor
-              <input
-                type="text"
-                value={novaClasse.professor}
-                onChange={(event) =>
-                  setNovaClasse({
-                    ...novaClasse,
-                    professor: event.target.value,
-                  })
-                }
-                placeholder="Ex: Irmão João"
-              />
-            </label>
-
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
                 {classeEditandoId ? 'Salvar alterações' : 'Salvar classe'}
@@ -2610,32 +2725,82 @@ function App() {
           </form>
         )}
 
+        {renderizarFormularioProfessorClasse()}
+
+        <div className="aviso aviso-classes-professores">
+          <p>
+            Você pode gerenciar professores por aqui ou pelo menu <strong>Professores</strong>.
+            Os dois lugares usam o mesmo cadastro e ficam sempre sincronizados.
+          </p>
+        </div>
+
         <div className="lista">
-          {classes.map((classe) => (
+          {classes.map((classe) => {
+            const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
+
+            return (
             <div className="item-lista item-com-acoes" key={classe.id}>
               <div>
                 <h3>{classe.nome}</h3>
-                <p>Professor: {classe.professor}</p>
+                <p>Professores: {buscarTextoProfessoresDaClasse(classe.id)}</p>
                 <p>Matrícula: {calcularMatriculaDaClasse(classe.id)} alunos</p>
+
+                <div className="professores-na-classe">
+                  {professoresDaClasse.length > 0 ? (
+                    professoresDaClasse.map((professor) => (
+                      <div className="professor-classe-linha" key={professor.id}>
+                        <span>{professor.nome}</span>
+
+                        <div>
+                          <button
+                            className="botao-editar botao-pequeno"
+                            onClick={() => editarProfessorDaClasse(professor)}
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            className="botao-excluir botao-pequeno"
+                            onClick={() => excluirAluno(professor.id)}
+                          >
+                            Excluir
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="texto-sem-professor">
+                      Nenhum professor vinculado a esta classe.
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="acoes-item">
                 <button
+                  className="botao-principal botao-sem-margem"
+                  onClick={() => abrirNovoProfessorDaClasse(classe.id)}
+                >
+                  Novo professor
+                </button>
+
+                <button
                   className="botao-editar"
                   onClick={() => editarClasse(classe)}
                 >
-                  Editar
+                  Editar classe
                 </button>
 
                 <button
                   className="botao-excluir"
                   onClick={() => excluirClasse(classe.id)}
                 >
-                  Excluir
+                  Excluir classe
                 </button>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </section>
     )
@@ -2646,7 +2811,7 @@ function App() {
     const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
     const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
     const descricaoPagina = ehPaginaProfessor
-      ? 'Cadastre, edite e organize os professores que aparecem na chamada dos professores.'
+      ? 'Cadastre, edite e organize os professores. A classe de referência também atualiza a lista de professores em Classes.'
       : usuarioEhProfessor()
         ? 'Veja os alunos vinculados às suas classes.'
         : 'Cadastre, edite, busque e organize os alunos por classe.'
@@ -2713,7 +2878,7 @@ function App() {
                 ))}
               </select>
               <small className="texto-ajuda-campo">
-                Aluno aparece na chamada dos alunos. Professor aparece na chamada dos professores.
+                Aluno aparece na chamada dos alunos. Professor aparece na chamada dos professores e na lista de professores da classe.
               </small>
             </label>
 
