@@ -16,6 +16,139 @@ const alunosIniciais = [
   { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111' },
 ]
 
+
+function Icone({ nome, className = '' }) {
+  const comum = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: '1.8',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': 'true',
+    className,
+  }
+
+  switch (nome) {
+    case 'igreja':
+      return (
+        <svg {...comum}>
+          <path d="M12 3l2.2 3.2L18 8v11H6V8l3.8-1.8L12 3Z" />
+          <path d="M12 7v12" />
+          <path d="M9.5 10.5h5" />
+          <path d="M10 19v-3a2 2 0 0 1 4 0v3" />
+        </svg>
+      )
+    case 'painel':
+      return (
+        <svg {...comum}>
+          <rect x="3" y="3" width="8" height="8" rx="2" />
+          <rect x="13" y="3" width="8" height="5" rx="2" />
+          <rect x="13" y="10" width="8" height="11" rx="2" />
+          <rect x="3" y="13" width="8" height="8" rx="2" />
+        </svg>
+      )
+    case 'classes':
+      return (
+        <svg {...comum}>
+          <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H6.5A2.5 2.5 0 0 0 4 20.5v-14Z" />
+          <path d="M6.5 4A2.5 2.5 0 0 0 4 6.5V20" />
+          <path d="M8 8h8" />
+          <path d="M8 12h8" />
+        </svg>
+      )
+    case 'alunos':
+      return (
+        <svg {...comum}>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+          <circle cx="9.5" cy="7" r="3.5" />
+          <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M14.5 3.2a3.5 3.5 0 0 1 0 6.6" />
+        </svg>
+      )
+    case 'chamada':
+      return (
+        <svg {...comum}>
+          <rect x="4" y="3" width="16" height="18" rx="2" />
+          <path d="M8 7h8" />
+          <path d="M8 11h8" />
+          <path d="M8 15h3" />
+          <path d="m14 15 1.5 1.5L18 13" />
+        </svg>
+      )
+    case 'relatorios':
+      return (
+        <svg {...comum}>
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
+          <path d="M14 3v5h5" />
+          <path d="M9 13h6" />
+          <path d="M9 17h6" />
+        </svg>
+      )
+    case 'configuracoes':
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a2 2 0 1 1-4 0v-.2a1 1 0 0 0-.7-1 1 1 0 0 0-1 .2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a2 2 0 1 1 0-4h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1 1 0 0 0 1.1.2H9a1 1 0 0 0 .6-.9V4a2 2 0 1 1 4 0v.2a1 1 0 0 0 .7 1 1 1 0 0 0 1-.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1 1 0 0 0-.2 1.1V9c0 .4.2.8.6.9h.2a2 2 0 1 1 0 4h-.2a1 1 0 0 0-.9.7Z" />
+        </svg>
+      )
+    case 'sair':
+      return (
+        <svg {...comum}>
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+      )
+    case 'usuarios':
+      return (
+        <svg {...comum}>
+          <circle cx="9" cy="8" r="3" />
+          <path d="M3 19a6 6 0 0 1 12 0" />
+          <path d="M16 8h5" />
+          <path d="M18.5 5.5v5" />
+        </svg>
+      )
+    case 'biblia':
+      return (
+        <svg {...comum}>
+          <path d="M6 4.5A2.5 2.5 0 0 1 8.5 2H20v17H8.5A2.5 2.5 0 0 0 6 21.5v-17Z" />
+          <path d="M8.5 2A2.5 2.5 0 0 0 6 4.5V22" />
+          <path d="M13 6v6" />
+          <path d="M10 9h6" />
+        </svg>
+      )
+    case 'check':
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="m8.5 12.5 2.5 2.5 4.5-5" />
+        </svg>
+      )
+    default:
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="9" />
+        </svg>
+      )
+  }
+}
+
+function CardResumo({ icone, titulo, valor, descricao, destaque = false }) {
+  return (
+    <div className={`card card-estatistica${destaque ? ' destaque' : ''}`}>
+      <div className="card-icone">
+        <Icone nome={icone} className="icone-svg" />
+      </div>
+      <div className="card-conteudo">
+        <span className="card-titulo">{titulo}</span>
+        <strong className="card-valor">{valor}</strong>
+        <p>{descricao}</p>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [paginaAtual, setPaginaAtual] = useState('painel')
   const [carregando, setCarregando] = useState(true)
@@ -74,12 +207,12 @@ function App() {
   })
 
   const menu = [
-    { id: 'painel', nome: 'Painel' },
-    { id: 'classes', nome: 'Classes' },
-    { id: 'alunos', nome: 'Alunos' },
-    { id: 'chamada', nome: 'Chamada' },
-    { id: 'relatorios', nome: 'Relatórios' },
-    { id: 'configuracoes', nome: 'Configurações' },
+    { id: 'painel', nome: 'Painel', icone: 'painel' },
+    { id: 'classes', nome: 'Classes', icone: 'classes' },
+    { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
+    { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
+    { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'configuracoes', nome: 'Configurações', icone: 'configuracoes' },
   ]
 
   useEffect(() => {
@@ -1198,106 +1331,183 @@ function App() {
 
   if (verificandoSessao) {
     return (
-      <div className="app">
-        <aside className="menu-lateral">
-          <h1>EBD Fiel</h1>
-        </aside>
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <Icone nome="igreja" className="icone-logo" />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
 
-        <main className="area-principal">
-          <section className="conteudo">
-            <h2>Verificando acesso...</h2>
-            <p>Aguarde um momento.</p>
-          </section>
-        </main>
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Sistema comercial pronto para igrejas</span>
+            <h2>Organize classes, alunos, chamadas e relatórios em um só lugar.</h2>
+            <p>
+              Acesse o painel para acompanhar os dados da sua EBD com uma interface
+              moderna, simples e profissional.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="check" className="icone-status" />
+          </div>
+          <h2>Verificando acesso...</h2>
+          <p>Aguarde um momento enquanto conferimos sua sessão.</p>
+        </section>
       </div>
     )
   }
 
   if (!sessao) {
     return (
-      <div className="app">
-        <aside className="menu-lateral">
-          <h1>EBD Fiel</h1>
-        </aside>
+      <div className="tela-login">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <Icone nome="igreja" className="icone-logo" />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
 
-        <main className="area-principal">
-          <section className="conteudo">
-            <h2>Acesso restrito</h2>
-            <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Plataforma pronta para comercialização</span>
+            <h2>Controle sua Escola Bíblica com visual profissional e relatórios completos.</h2>
+            <p>
+              Cadastre classes, alunos, faça chamadas, gere relatórios e personalize os dados
+              da igreja em um único sistema.
+            </p>
+          </div>
 
-            <form className="formulario" onSubmit={entrarComEmailSenha}>
-              <label>
-                E-mail
-                <input
-                  type="email"
-                  value={emailLogin}
-                  onChange={(event) => setEmailLogin(event.target.value)}
-                  placeholder="seuemail@exemplo.com"
-                  autoComplete="email"
-                />
-              </label>
+          <div className="beneficios-login">
+            <div className="beneficio-item">
+              <Icone nome="classes" className="icone-beneficio" />
+              <span>Cadastro de classes</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="alunos" className="icone-beneficio" />
+              <span>Gestão de alunos</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="chamada" className="icone-beneficio" />
+              <span>Chamada digital</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="relatorios" className="icone-beneficio" />
+              <span>Relatórios e PDF</span>
+            </div>
+          </div>
+        </section>
 
-              <label>
-                Senha
-                <input
-                  type="password"
-                  value={senhaLogin}
-                  onChange={(event) => setSenhaLogin(event.target.value)}
-                  placeholder="Digite sua senha"
-                  autoComplete="current-password"
-                />
-              </label>
+        <section className="cartao-login">
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Acesso restrito</h2>
+              <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+            </div>
+          </div>
 
-              {erroLogin && <div className="aviso">{erroLogin}</div>}
+          <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
+            <label>
+              E-mail
+              <input
+                type="email"
+                value={emailLogin}
+                onChange={(event) => setEmailLogin(event.target.value)}
+                placeholder="seuemail@exemplo.com"
+                autoComplete="email"
+              />
+            </label>
 
-              <button
-                className="botao-principal"
-                type="submit"
-                disabled={carregandoLogin}
-              >
-                {carregandoLogin ? 'Entrando...' : 'Entrar'}
-              </button>
-            </form>
-          </section>
-        </main>
+            <label>
+              Senha
+              <input
+                type="password"
+                value={senhaLogin}
+                onChange={(event) => setSenhaLogin(event.target.value)}
+                placeholder="Digite sua senha"
+                autoComplete="current-password"
+              />
+            </label>
+
+            {erroLogin && <div className="aviso">{erroLogin}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoLogin}
+            >
+              {carregandoLogin ? 'Entrando...' : 'Entrar no sistema'}
+            </button>
+          </form>
+        </section>
       </div>
     )
   }
 
   if (carregando) {
     return (
-      <div className="app">
-        <aside className="menu-lateral">
-          <h1>EBD Fiel</h1>
-        </aside>
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <Icone nome="igreja" className="icone-logo" />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+        </section>
 
-        <main className="area-principal">
-          <section className="conteudo">
-            <h2>Carregando...</h2>
-            <p>Buscando dados no Supabase.</p>
-          </section>
-        </main>
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="painel" className="icone-status" />
+          </div>
+          <h2>Carregando...</h2>
+          <p>Buscando dados da igreja, classes, alunos e chamadas.</p>
+        </section>
       </div>
     )
   }
 
   if (erroSistema) {
     return (
-      <div className="app">
-        <aside className="menu-lateral">
-          <h1>EBD Fiel</h1>
-        </aside>
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <Icone nome="igreja" className="icone-logo" />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+        </section>
 
-        <main className="area-principal">
-          <section className="conteudo">
-            <h2>Erro ao carregar</h2>
-            <p>{erroSistema}</p>
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone mensagem-erro-icone">
+            <Icone nome="configuracoes" className="icone-status" />
+          </div>
+          <h2>Erro ao carregar</h2>
+          <p>{erroSistema}</p>
 
-            <button className="botao-principal" onClick={carregarDadosOnline}>
-              Tentar novamente
-            </button>
-          </section>
-        </main>
+          <button className="botao-principal botao-largura-total" onClick={carregarDadosOnline}>
+            Tentar novamente
+          </button>
+        </section>
       </div>
     )
   }
@@ -1305,32 +1515,85 @@ function App() {
   function renderizarPainel() {
     return (
       <section className="conteudo">
-        <h2>Painel</h2>
-        <p>Bem-vindo ao painel do {buscarNomeIgrejaParaExibicao()}.</p>
+        <div className="hero-painel">
+          <div className="hero-painel-conteudo">
+            <span className="hero-tag">Painel administrativo</span>
+            <h2>{buscarNomeIgrejaParaExibicao()}</h2>
+            <p>
+              Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
+              com uma estrutura pronta para uso e comercialização.
+            </p>
 
-        <div className="cards">
-          <div className="card">
-            <h3>Classes</h3>
-            <p>{classes.length} classes cadastradas.</p>
+            <div className="hero-acoes">
+              <button className="botao-principal" onClick={() => setPaginaAtual('configuracoes')}>
+                Ajustar dados da igreja
+              </button>
+              <button className="botao-secundario" onClick={() => setPaginaAtual('relatorios')}>
+                Ver relatórios
+              </button>
+            </div>
           </div>
 
-          <div className="card">
-            <h3>Alunos</h3>
-            <p>{alunos.length} alunos cadastrados.</p>
-          </div>
-
-          <div className="card">
-            <h3>Chamadas</h3>
-            <p>{chamadasSalvas.length} chamadas salvas.</p>
+          <div className="hero-painel-destaque">
+            <div className="hero-icone-area">
+              <Icone nome="biblia" className="icone-hero" />
+            </div>
+            <h3>Resumo rápido</h3>
+            <p>Dados sincronizados automaticamente no Supabase.</p>
+            <ul>
+              <li>{classes.length} classes ativas</li>
+              <li>{alunos.length} alunos cadastrados</li>
+              <li>{chamadasSalvas.length} chamadas registradas</li>
+              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
+            </ul>
           </div>
         </div>
 
-        <div className="resumo">
-          <h3>{buscarNomeIgrejaParaExibicao()}</h3>
-          <p>Os dados são carregados e salvos automaticamente no Supabase.</p>
-          {!configuracaoIgreja.nome_igreja && (
-            <p>Preencha os dados da igreja em Configurações para personalizar os relatórios.</p>
-          )}
+        <div className="cards cards-estatisticas">
+          <CardResumo
+            icone="classes"
+            titulo="Classes"
+            valor={classes.length}
+            descricao="Turmas organizadas para a EBD."
+          />
+          <CardResumo
+            icone="alunos"
+            titulo="Alunos"
+            valor={alunos.length}
+            descricao="Participantes cadastrados no sistema."
+          />
+          <CardResumo
+            icone="chamada"
+            titulo="Chamadas"
+            valor={chamadasSalvas.length}
+            descricao="Registros salvos de presença."
+          />
+          <CardResumo
+            icone="check"
+            titulo="Frequência geral"
+            valor={`${calcularFrequenciaGeral()}%`}
+            descricao="Média de presença nas chamadas lançadas."
+            destaque
+          />
+        </div>
+
+        <div className="grade-resumos-comerciais">
+          <div className="resumo resumo-comercial">
+            <h3>Visual pronto para comercialização</h3>
+            <p>
+              O sistema agora possui aparência mais profissional, menu com ícones e área
+              de configurações para personalizar os dados de cada igreja.
+            </p>
+          </div>
+
+          <div className="resumo resumo-comercial resumo-alerta-claro">
+            <h3>Personalização da igreja</h3>
+            <p>
+              {configuracaoIgreja.nome_igreja
+                ? 'Os dados da igreja já estão configurados e serão usados nos relatórios e PDFs.'
+                : 'Preencha os dados da igreja em Configurações para exibir nome, endereço e contatos nos relatórios.'}
+            </p>
+          </div>
         </div>
       </section>
     )
@@ -2030,29 +2293,38 @@ function App() {
   return (
     <div className="app">
       <aside className="menu-lateral">
-        <h1>EBD Fiel</h1>
+        <div className="marca-sidebar">
+          <div className="logo-simbolo logo-simbolo-sidebar">
+            <Icone nome="igreja" className="icone-logo" />
+          </div>
+          <div>
+            <h1>EBD Fiel</h1>
+            <p>Gestão da Escola Bíblica</p>
+          </div>
+        </div>
 
-        <nav>
+        <nav className="menu-navegacao">
           {menu.map((item) => (
             <button
               key={item.id}
               className={paginaAtual === item.id ? 'ativo' : ''}
               onClick={() => setPaginaAtual(item.id)}
             >
-              {item.nome}
+              <span className="icone-menu">
+                <Icone nome={item.icone} className="icone-svg" />
+              </span>
+              <span>{item.nome}</span>
             </button>
           ))}
         </nav>
 
-        <div style={{ marginTop: '24px', padding: '0 12px' }}>
-          <p style={{ fontSize: '12px', opacity: 0.8, marginBottom: '8px' }}>
-            Logado como:
-            <br />
-            {sessao?.user?.email}
-          </p>
+        <div className="cartao-usuario-sidebar">
+          <p className="titulo-usuario-sidebar">Logado como</p>
+          <strong>{sessao?.user?.email}</strong>
 
-          <button className="botao-secundario" onClick={sairDoSistema}>
-            Sair
+          <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
+            <Icone nome="sair" className="icone-svg" />
+            <span>Sair</span>
           </button>
         </div>
       </aside>
