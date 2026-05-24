@@ -166,6 +166,7 @@ function App() {
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
   const [perfilUsuario, setPerfilUsuario] = useState(null)
+  const [igrejaId, setIgrejaId] = useState(null)
   const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
     id: null,
     nome_igreja: '',
@@ -272,6 +273,7 @@ function App() {
     setAlunos([])
     setChamadasSalvas([])
     setPerfilUsuario(null)
+    setIgrejaId(null)
     setConfiguracaoIgreja({
       id: null,
       nome_igreja: '',
@@ -390,12 +392,14 @@ function App() {
   async function inserirDadosIniciais() {
     const classesParaSalvar = classesIniciais.map((classe) => ({
       id: classe.id,
+      igreja_id: buscarIgrejaIdAtual(),
       nome: classe.nome,
       professor: classe.professor,
     }))
 
     const alunosParaSalvar = alunosIniciais.map((aluno) => ({
       id: aluno.id,
+      igreja_id: buscarIgrejaIdAtual(),
       nome: aluno.nome,
       classe_id: aluno.classeId,
       telefone: aluno.telefone,
@@ -420,6 +424,10 @@ function App() {
 
   function usuarioEhProfessor() {
     return perfilUsuario?.perfil === 'professor'
+  }
+
+  function buscarIgrejaIdAtual() {
+    return perfilUsuario?.igreja_id || igrejaId || null
   }
 
   function usuarioEhSecretaria() {
@@ -511,7 +519,7 @@ function App() {
     const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
       .from('configuracoes_igreja')
       .select('*')
-      .eq('user_id', sessao?.user?.id)
+      .eq('igreja_id', buscarIgrejaIdAtual())
       .order('created_at', { ascending: true })
 
     if (erroConfiguracoes) {
@@ -1040,6 +1048,7 @@ function App() {
         id: Date.now(),
         nome: novaClasse.nome,
         professor: novaClasse.professor,
+        igreja_id: buscarIgrejaIdAtual(),
       })
 
       if (error) {
@@ -1141,6 +1150,7 @@ function App() {
       const { error } = await supabase.from('alunos').insert({
         id: Date.now(),
         ...alunoBanco,
+        igreja_id: buscarIgrejaIdAtual(),
       })
 
       if (error) {
@@ -1254,6 +1264,7 @@ function App() {
     const chamadaBanco = {
       id: Date.now(),
       data: buscarDataAtual(),
+      igreja_id: buscarIgrejaIdAtual(),
       classe_id: Number(classeChamadaId),
       matricula: alunosDaClasse.length,
       total_presentes: totalPresentes,
