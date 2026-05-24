@@ -1669,6 +1669,202 @@ button:disabled {
 }
 
 
+
+
+
+
+/* Chamada dos professores */
+.abas-chamada {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.abas-chamada button {
+  border: 1px solid var(--cor-borda);
+  background: #ffffff;
+  color: var(--cor-texto);
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.abas-chamada button.ativo {
+  background: var(--cor-primaria);
+  color: #ffffff;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.2);
+}
+
+.resumo-professores {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.acoes-chamada-professores {
+  justify-content: flex-end;
+}
+
+.botao-justificou {
+  border: 1px solid #f59e0b;
+  background: #ffffff;
+  color: #b45309;
+  border-radius: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.botao-justificou:hover {
+  background: #fffbeb;
+}
+
+.ativo-justificou {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+}
+
+.formulario-observacao-professores {
+  margin-top: 18px;
+}
+
+@media (max-width: 800px) {
+  .abas-chamada,
+  .abas-chamada button,
+  .botao-justificou {
+    width: 100%;
+  }
+}
+
+/* Classes vinculadas ao professor */
+.campo-classes-professor {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.lista-checkboxes-classes {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.checkbox-classe-professor {
+  display: flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px !important;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+
+.checkbox-classe-professor input {
+  width: auto !important;
+  min-height: auto !important;
+}
+
+/* Cadastro de usuários */
+.aviso-usuarios {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-usuarios strong {
+  color: #1e40af;
+}
+
+/* Aniversariantes da semana */
+.alerta-aniversariantes {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  border: 1px solid #bfdbfe;
+  box-shadow: var(--sombra-suave);
+}
+
+.topo-alerta-aniversariantes {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.topo-alerta-aniversariantes h3 {
+  margin: 10px 0 0;
+  font-size: 22px;
+}
+
+.topo-alerta-aniversariantes > strong {
+  min-width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.lista-aniversariantes {
+  display: grid;
+  gap: 12px;
+}
+
+.item-aniversariante {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.item-aniversariante strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.item-aniversariante p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.item-aniversariante span {
+  flex-shrink: 0;
+  color: var(--cor-primaria);
+  font-weight: 800;
+}
+
+.texto-sem-aniversariantes {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .topo-alerta-aniversariantes,
+  .item-aniversariante {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 /* Perfis de usuário */
 .linha-tags-painel {
   display: flex;

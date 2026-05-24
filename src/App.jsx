@@ -11,9 +11,9 @@ const classesIniciais = [
 ]
 
 const alunosIniciais = [
-  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000' },
-  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '' },
-  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111' },
+  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '' },
+  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '' },
+  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '' },
 ]
 
 
@@ -165,7 +165,10 @@ function App() {
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
+  const [chamadasProfessores, setChamadasProfessores] = useState([])
   const [perfilUsuario, setPerfilUsuario] = useState(null)
+  const [perfisIgreja, setPerfisIgreja] = useState([])
+  const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
   const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
     id: null,
@@ -180,6 +183,17 @@ function App() {
     email: '',
   })
   const [salvandoConfiguracaoIgreja, setSalvandoConfiguracaoIgreja] = useState(false)
+  const [mostrarFormularioPerfil, setMostrarFormularioPerfil] = useState(false)
+  const [perfilEditandoId, setPerfilEditandoId] = useState(null)
+  const [novoPerfil, setNovoPerfil] = useState({
+    userId: '',
+    nome: '',
+    email: '',
+    perfil: 'professor',
+    classeIds: [],
+    dataNascimento: '',
+  })
+
 
 
   const [mostrarFormularioClasse, setMostrarFormularioClasse] = useState(false)
@@ -195,13 +209,17 @@ function App() {
     nome: '',
     classeId: '',
     telefone: '',
+    dataNascimento: '',
   })
 
   const [buscaAluno, setBuscaAluno] = useState('')
   const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
 
+  const [tipoChamada, setTipoChamada] = useState('alunos')
   const [classeChamadaId, setClasseChamadaId] = useState('')
   const [presencas, setPresencas] = useState({})
+  const [presencasProfessores, setPresencasProfessores] = useState({})
+  const [observacoesChamadaProfessores, setObservacoesChamadaProfessores] = useState('')
   const [dadosExtrasChamada, setDadosExtrasChamada] = useState({
     visitantes: '',
     biblias: '',
@@ -213,6 +231,7 @@ function App() {
     { id: 'painel', nome: 'Painel', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
+    { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
     {
@@ -272,7 +291,10 @@ function App() {
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
+    setChamadasProfessores([])
     setPerfilUsuario(null)
+    setPerfisIgreja([])
+    setVinculosProfessores([])
     setIgrejaId(null)
     setConfiguracaoIgreja({
       id: null,
@@ -293,11 +315,24 @@ function App() {
     setClasseEditandoId(null)
     setAlunoEditandoId(null)
     setNovaClasse({ nome: '', professor: '' })
-    setNovoAluno({ nome: '', classeId: '', telefone: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
+    setMostrarFormularioPerfil(false)
+    setPerfilEditandoId(null)
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
     setBuscaAluno('')
     setFiltroClasseAluno('')
+    setTipoChamada('alunos')
     setClasseChamadaId('')
     setPresencas({})
+    setPresencasProfessores({})
+    setObservacoesChamadaProfessores('')
     setDadosExtrasChamada({
       visitantes: '',
       biblias: '',
@@ -412,6 +447,7 @@ function App() {
       nome: aluno.nome,
       classe_id: aluno.classeId,
       telefone: aluno.telefone,
+      data_nascimento: aluno.dataNascimento || null,
     }))
 
     const { error: erroClasses } = await supabase
@@ -443,8 +479,42 @@ function App() {
     return perfilUsuario?.perfil !== 'professor'
   }
 
+  function buscarClassesVinculadasAoProfessor(perfilId = perfilUsuario?.id) {
+    const ids = vinculosProfessores
+      .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilId) && vinculo.ativo !== false)
+      .map((vinculo) => Number(vinculo.classe_id))
+      .filter(Boolean)
+
+    if (ids.length === 0 && perfilUsuario?.classe_id && Number(perfilId) === Number(perfilUsuario?.id)) {
+      return [Number(perfilUsuario.classe_id)]
+    }
+
+    return [...new Set(ids)]
+  }
+
+  function buscarNomesClassesDoProfessor(perfilId, classeIdFallback = null) {
+    let ids = buscarClassesVinculadasAoProfessor(perfilId)
+
+    if (ids.length === 0 && classeIdFallback) {
+      ids = [Number(classeIdFallback)]
+    }
+
+    return ids
+      .map((classeId) => buscarNomeClasse(classeId))
+      .filter(Boolean)
+      .join(', ')
+  }
+
+  function professorPodeAcessarClasse(classeId) {
+    if (!usuarioEhProfessor()) {
+      return true
+    }
+
+    return buscarClassesVinculadasAoProfessor().includes(Number(classeId))
+  }
+
   function buscarClasseDoProfessorId() {
-    return Number(perfilUsuario?.classe_id || 0)
+    return buscarClassesVinculadasAoProfessor()[0] || Number(perfilUsuario?.classe_id || 0)
   }
 
   function podeGerenciarCadastros() {
@@ -482,9 +552,39 @@ function App() {
     setPerfilUsuario(perfilAtual)
     setIgrejaId(igrejaAtualId)
 
+    const { data: vinculosBanco, error: erroVinculos } = await supabase
+      .from('classes_professores')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .eq('ativo', true)
+
+    if (erroVinculos) {
+      throw erroVinculos
+    }
+
+    const idsClassesPermitidas =
+      perfilAtual?.perfil === 'professor'
+        ? [
+            ...new Set(
+              (vinculosBanco || [])
+                .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilAtual.id))
+                .map((vinculo) => Number(vinculo.classe_id))
+                .filter(Boolean)
+            ),
+          ]
+        : []
+
+    if (
+      perfilAtual?.perfil === 'professor' &&
+      idsClassesPermitidas.length === 0 &&
+      perfilAtual?.classe_id
+    ) {
+      idsClassesPermitidas.push(Number(perfilAtual.classe_id))
+    }
+
     const classePermitidaId =
       perfilAtual?.perfil === 'professor'
-        ? Number(perfilAtual?.classe_id || 0)
+        ? idsClassesPermitidas[0] || null
         : null
 
     let consultaClasses = supabase
@@ -493,8 +593,12 @@ function App() {
       .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
-    if (classePermitidaId) {
-      consultaClasses = consultaClasses.eq('id', classePermitidaId)
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaClasses = consultaClasses.in('id', idsClassesPermitidas)
+      } else {
+        consultaClasses = consultaClasses.eq('id', -1)
+      }
     }
 
     let { data: classesBanco, error: erroClasses } = await consultaClasses
@@ -512,8 +616,12 @@ function App() {
         .eq('igreja_id', igrejaAtualId)
         .order('id', { ascending: true })
 
-      if (classePermitidaId) {
-        novaConsultaClasses = novaConsultaClasses.eq('id', classePermitidaId)
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
+        } else {
+          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
+        }
       }
 
       const resultadoClasses = await novaConsultaClasses
@@ -531,8 +639,12 @@ function App() {
       .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
-    if (classePermitidaId) {
-      consultaAlunos = consultaAlunos.eq('classe_id', classePermitidaId)
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaAlunos = consultaAlunos.in('classe_id', idsClassesPermitidas)
+      } else {
+        consultaAlunos = consultaAlunos.eq('classe_id', -1)
+      }
     }
 
     const { data: alunosBanco, error: erroAlunos } = await consultaAlunos
@@ -547,14 +659,53 @@ function App() {
       .eq('igreja_id', igrejaAtualId)
       .order('id', { ascending: true })
 
-    if (classePermitidaId) {
-      consultaChamadas = consultaChamadas.eq('classe_id', classePermitidaId)
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaChamadas = consultaChamadas.in('classe_id', idsClassesPermitidas)
+      } else {
+        consultaChamadas = consultaChamadas.eq('classe_id', -1)
+      }
     }
 
     const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
 
     if (erroChamadas) {
       throw erroChamadas
+    }
+
+    let chamadasProfessoresBanco = []
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const { data: chamadasProfessoresEncontradas, error: erroChamadasProfessores } =
+        await supabase
+          .from('chamadas_professores')
+          .select('*')
+          .eq('igreja_id', igrejaAtualId)
+          .order('id', { ascending: true })
+
+      if (erroChamadasProfessores) {
+        throw erroChamadasProfessores
+      }
+
+      chamadasProfessoresBanco = chamadasProfessoresEncontradas || []
+    }
+
+    let perfisBanco = []
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const { data: perfisEncontrados, error: erroPerfis } = await supabase
+        .from('perfis_usuarios')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('nome', { ascending: true })
+
+      if (erroPerfis) {
+        throw erroPerfis
+      }
+
+      perfisBanco = perfisEncontrados || []
+    } else {
+      perfisBanco = [perfilAtual]
     }
 
     const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
@@ -581,6 +732,23 @@ function App() {
         nome: aluno.nome,
         classeId: Number(aluno.classe_id),
         telefone: aluno.telefone || '',
+        dataNascimento: aluno.data_nascimento || '',
+      }))
+    )
+
+    setPerfisIgreja(perfisBanco)
+    setVinculosProfessores(vinculosBanco || [])
+
+    setChamadasProfessores(
+      (chamadasProfessoresBanco || []).map((chamada) => ({
+        id: Number(chamada.id),
+        data: chamada.data,
+        totalProfessores: Number(chamada.total_professores || 0),
+        totalPresentes: Number(chamada.total_presentes || 0),
+        totalFaltas: Number(chamada.total_faltas || 0),
+        totalJustificadas: Number(chamada.total_justificadas || 0),
+        observacoes: chamada.observacoes || '',
+        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
       }))
     )
 
@@ -1136,7 +1304,7 @@ function App() {
   }
 
   function abrirNovoAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(true)
   }
@@ -1146,13 +1314,14 @@ function App() {
       nome: aluno.nome,
       classeId: String(aluno.classeId),
       telefone: aluno.telefone,
+      dataNascimento: aluno.dataNascimento || '',
     })
     setAlunoEditandoId(aluno.id)
     setMostrarFormularioAluno(true)
   }
 
   function cancelarFormularioAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(false)
   }
@@ -1174,6 +1343,7 @@ function App() {
       nome: novoAluno.nome,
       classe_id: Number(novoAluno.classeId),
       telefone: novoAluno.telefone,
+      data_nascimento: novoAluno.dataNascimento || null,
     }
 
     if (alunoEditandoId) {
@@ -1246,6 +1416,49 @@ function App() {
     setFiltroClasseAluno('')
   }
 
+  function buscarProfessoresDaIgreja() {
+    return perfisIgreja
+      .filter((perfil) => perfil.perfil === 'professor')
+      .sort((a, b) => (a.nome || a.email || '').localeCompare(b.nome || b.email || ''))
+  }
+
+  function alterarPresencaProfessor(perfilId, status) {
+    setPresencasProfessores({
+      ...presencasProfessores,
+      [perfilId]: status,
+    })
+  }
+
+  function buscarDataUltimaChamadaProfessores() {
+    if (chamadasProfessores.length === 0) {
+      return buscarDataAtual()
+    }
+
+    const ultimaChamada = chamadasProfessores[chamadasProfessores.length - 1]
+    return ultimaChamada.data || buscarDataAtual()
+  }
+
+  function calcularTotalProfessoresPresentes() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalPresentes),
+      0
+    )
+  }
+
+  function calcularTotalProfessoresFaltas() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalFaltas),
+      0
+    )
+  }
+
+  function calcularTotalProfessoresJustificadas() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalJustificadas),
+      0
+    )
+  }
+
   function alterarPresenca(alunoId, status) {
     setPresencas({
       ...presencas,
@@ -1261,8 +1474,8 @@ function App() {
   }
 
   async function salvarChamada() {
-    if (usuarioEhProfessor() && Number(classeChamadaId) !== buscarClasseDoProfessorId()) {
-      alert('Professor pode fazer chamada apenas da própria classe.')
+    if (usuarioEhProfessor() && !professorPodeAcessarClasse(classeChamadaId)) {
+      alert('Professor pode fazer chamada apenas das classes vinculadas pela secretaria.')
       return
     }
 
@@ -1906,7 +2119,258 @@ function App() {
     )
   }
 
+
+  function formatarDataNascimento(dataTexto) {
+    if (!dataTexto) {
+      return ''
+    }
+
+    const partes = dataTexto.split('-')
+
+    if (partes.length !== 3) {
+      return dataTexto
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`
+  }
+
+  function calcularDiasAteAniversario(dataNascimento) {
+    if (!dataNascimento) {
+      return null
+    }
+
+    const partes = dataNascimento.split('-')
+
+    if (partes.length !== 3) {
+      return null
+    }
+
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+
+    const mes = Number(partes[1]) - 1
+    const dia = Number(partes[2])
+
+    let aniversario = new Date(hoje.getFullYear(), mes, dia)
+    aniversario.setHours(0, 0, 0, 0)
+
+    if (aniversario < hoje) {
+      aniversario = new Date(hoje.getFullYear() + 1, mes, dia)
+      aniversario.setHours(0, 0, 0, 0)
+    }
+
+    const diferenca = aniversario.getTime() - hoje.getTime()
+    return Math.round(diferenca / (1000 * 60 * 60 * 24))
+  }
+
+  function buscarAniversariantesDaSemana() {
+    if (!usuarioEhSecretaria()) {
+      return []
+    }
+
+    const aniversariantesAlunos = alunos
+      .filter((aluno) => aluno.dataNascimento)
+      .map((aluno) => ({
+        id: `aluno-${aluno.id}`,
+        nome: aluno.nome,
+        tipo: 'Aluno',
+        detalhe: buscarNomeClasse(aluno.classeId),
+        dataNascimento: aluno.dataNascimento,
+        dias: calcularDiasAteAniversario(aluno.dataNascimento),
+      }))
+
+    const aniversariantesEquipe = perfisIgreja
+      .filter((perfil) => perfil.data_nascimento)
+      .map((perfil) => ({
+        id: `perfil-${perfil.id}`,
+        nome: perfil.nome || perfil.email,
+        tipo: perfil.perfil === 'professor' ? 'Professor' : 'Secretaria',
+        detalhe:
+          perfil.perfil === 'professor' && perfil.classe_id
+            ? buscarNomeClasse(perfil.classe_id)
+            : 'Equipe da igreja',
+        dataNascimento: perfil.data_nascimento,
+        dias: calcularDiasAteAniversario(perfil.data_nascimento),
+      }))
+
+    return [...aniversariantesAlunos, ...aniversariantesEquipe]
+      .filter((pessoa) => pessoa.dias !== null && pessoa.dias >= 0 && pessoa.dias <= 7)
+      .sort((a, b) => a.dias - b.dias || a.nome.localeCompare(b.nome))
+  }
+
+  function descreverAniversario(dias) {
+    if (dias === 0) {
+      return 'Hoje'
+    }
+
+    if (dias === 1) {
+      return 'Amanhã'
+    }
+
+    return `Em ${dias} dias`
+  }
+
+  function abrirNovoPerfil() {
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
+    setPerfilEditandoId(null)
+    setMostrarFormularioPerfil(true)
+  }
+
+  function editarPerfil(perfil) {
+    setNovoPerfil({
+      userId: perfil.user_id || '',
+      nome: perfil.nome || '',
+      email: perfil.email || '',
+      perfil: perfil.perfil || 'professor',
+      classeIds:
+        perfil.perfil === 'professor'
+          ? buscarClassesVinculadasAoProfessor(perfil.id).map(String)
+          : [],
+      dataNascimento: perfil.data_nascimento || '',
+    })
+    setPerfilEditandoId(perfil.id)
+    setMostrarFormularioPerfil(true)
+  }
+
+  function cancelarFormularioPerfil() {
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
+    setPerfilEditandoId(null)
+    setMostrarFormularioPerfil(false)
+  }
+
+  async function salvarPerfilUsuario(event) {
+    event.preventDefault()
+
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode cadastrar usuários.')
+      return
+    }
+
+    if (!novoPerfil.userId.trim()) {
+      alert('Informe o User UID do usuário criado no Supabase Auth.')
+      return
+    }
+
+    if (!novoPerfil.nome.trim() || !novoPerfil.email.trim()) {
+      alert('Informe o nome e o e-mail do usuário.')
+      return
+    }
+
+    if (novoPerfil.perfil === 'professor' && novoPerfil.classeIds.length === 0) {
+      alert('Selecione pelo menos uma classe do professor.')
+      return
+    }
+
+    const dadosPerfil = {
+      user_id: novoPerfil.userId.trim(),
+      nome: novoPerfil.nome.trim(),
+      email: novoPerfil.email.trim(),
+      perfil: novoPerfil.perfil,
+      classe_id:
+        novoPerfil.perfil === 'professor'
+          ? Number(novoPerfil.classeIds[0])
+          : null,
+      data_nascimento: novoPerfil.dataNascimento || null,
+      igreja_id: buscarIgrejaIdAtual(),
+    }
+
+    const { data: perfilSalvo, error } = await supabase
+      .from('perfis_usuarios')
+      .upsert(dadosPerfil, { onConflict: 'user_id' })
+      .select()
+      .single()
+
+    if (error) {
+      console.error(error)
+      alert(error?.message || 'Erro ao salvar usuário.')
+      return
+    }
+
+    const { error: erroRemoverVinculos } = await supabase
+      .from('classes_professores')
+      .delete()
+      .eq('perfil_usuario_id', perfilSalvo.id)
+
+    if (erroRemoverVinculos) {
+      console.error(erroRemoverVinculos)
+      alert(erroRemoverVinculos?.message || 'Erro ao atualizar vínculos do professor.')
+      return
+    }
+
+    if (perfilSalvo.perfil === 'professor' && novoPerfil.classeIds.length > 0) {
+      const vinculosParaSalvar = novoPerfil.classeIds.map((classeId) => ({
+        igreja_id: buscarIgrejaIdAtual(),
+        classe_id: Number(classeId),
+        perfil_usuario_id: perfilSalvo.id,
+        ativo: true,
+      }))
+
+      const { error: erroInserirVinculos } = await supabase
+        .from('classes_professores')
+        .insert(vinculosParaSalvar)
+
+      if (erroInserirVinculos) {
+        console.error(erroInserirVinculos)
+        alert(erroInserirVinculos?.message || 'Erro ao vincular professor às classes.')
+        return
+      }
+    }
+
+    await buscarTodosOsDados()
+    cancelarFormularioPerfil()
+    alert('Usuário salvo com sucesso!')
+  }
+
+  async function excluirPerfilUsuario(perfil) {
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode excluir usuários.')
+      return
+    }
+
+    if (perfil.user_id === sessao?.user?.id) {
+      alert('Você não pode excluir o seu próprio perfil de secretaria.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja remover o perfil de ${perfil.nome || perfil.email}?`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .delete()
+      .eq('id', perfil.id)
+
+    if (error) {
+      console.error(error)
+      alert(error?.message || 'Erro ao remover perfil.')
+      return
+    }
+
+    await buscarTodosOsDados()
+  }
+
   function renderizarPainel() {
+    const aniversariantesDaSemana = buscarAniversariantesDaSemana()
+
     return (
       <section className="conteudo">
         <div className="hero-painel">
@@ -1977,6 +2441,40 @@ function App() {
             destaque
           />
         </div>
+
+        {usuarioEhSecretaria() && (
+          <div className="alerta-aniversariantes">
+            <div className="topo-alerta-aniversariantes">
+              <div>
+                <span className="hero-tag">Aniversariantes da semana</span>
+                <h3>Alunos, professores e secretarias</h3>
+              </div>
+              <strong>{aniversariantesDaSemana.length}</strong>
+            </div>
+
+            {aniversariantesDaSemana.length > 0 ? (
+              <div className="lista-aniversariantes">
+                {aniversariantesDaSemana.map((pessoa) => (
+                  <div className="item-aniversariante" key={pessoa.id}>
+                    <div>
+                      <strong>{pessoa.nome}</strong>
+                      <p>
+                        {pessoa.tipo} • {pessoa.detalhe}
+                      </p>
+                    </div>
+                    <span>
+                      {formatarDataNascimento(pessoa.dataNascimento)} • {descreverAniversario(pessoa.dias)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="texto-sem-aniversariantes">
+                Nenhum aniversário cadastrado para os próximos 7 dias.
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="grade-resumos-comerciais">
           <div className="resumo resumo-comercial">
@@ -2167,6 +2665,20 @@ function App() {
               />
             </label>
 
+            <label>
+              Data de nascimento
+              <input
+                type="date"
+                value={novoAluno.dataNascimento}
+                onChange={(event) =>
+                  setNovoAluno({
+                    ...novoAluno,
+                    dataNascimento: event.target.value,
+                  })
+                }
+              />
+            </label>
+
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
                 {alunoEditandoId ? 'Salvar alterações' : 'Salvar aluno'}
@@ -2228,6 +2740,9 @@ function App() {
                 <h3>{aluno.nome}</h3>
                 <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
                 {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
+                {aluno.dataNascimento && (
+                  <p>Nascimento: {formatarDataNascimento(aluno.dataNascimento)}</p>
+                )}
               </div>
 
               {podeGerenciarCadastros() && (
@@ -2254,10 +2769,286 @@ function App() {
     )
   }
 
+  function renderizarUsuarios() {
+    if (!usuarioEhSecretaria()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>O cadastro de usuários é gerenciado pela secretaria.</p>
+        </section>
+      )
+    }
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Usuários</h2>
+            <p>
+              Cadastre secretarias e professores da igreja. O login precisa existir
+              primeiro em Authentication no Supabase.
+            </p>
+          </div>
+
+          {!mostrarFormularioPerfil && (
+            <button className="botao-principal" onClick={abrirNovoPerfil}>
+              Novo usuário
+            </button>
+          )}
+        </div>
+
+        <div className="aviso aviso-usuarios">
+          <p>
+            <strong>Importante:</strong> primeiro crie o usuário em
+            Supabase → Authentication → Users. Depois copie o User UID e cadastre
+            aqui para vincular o perfil, a classe e a data de nascimento.
+          </p>
+        </div>
+
+        {mostrarFormularioPerfil && (
+          <form className="formulario" onSubmit={salvarPerfilUsuario}>
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                User UID do Supabase
+                <input
+                  type="text"
+                  value={novoPerfil.userId}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, userId: event.target.value })
+                  }
+                  placeholder="Ex: 5fd49a5b-b331-4d66-aace-e458384f2f51"
+                />
+              </label>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={novoPerfil.nome}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, nome: event.target.value })
+                  }
+                  placeholder="Ex: Leandro Silva"
+                />
+              </label>
+
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  value={novoPerfil.email}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, email: event.target.value })
+                  }
+                  placeholder="Ex: professor@igreja.com"
+                />
+              </label>
+
+              <label>
+                Perfil
+                <select
+                  value={novoPerfil.perfil}
+                  onChange={(event) =>
+                    setNovoPerfil({
+                      ...novoPerfil,
+                      perfil: event.target.value,
+                      classeIds:
+                        event.target.value === 'secretaria'
+                          ? []
+                          : novoPerfil.classeIds,
+                    })
+                  }
+                >
+                  <option value="professor">Professor</option>
+                  <option value="secretaria">Secretaria</option>
+                </select>
+              </label>
+
+              {novoPerfil.perfil === 'professor' && (
+                <div className="campo-classes-professor">
+                  <span>Classes do professor</span>
+                  <div className="lista-checkboxes-classes">
+                    {classes.map((classe) => {
+                      const classeIdTexto = String(classe.id)
+                      const selecionada = novoPerfil.classeIds.includes(classeIdTexto)
+
+                      return (
+                        <label key={classe.id} className="checkbox-classe-professor">
+                          <input
+                            type="checkbox"
+                            checked={selecionada}
+                            onChange={(event) => {
+                              const novasClasses = event.target.checked
+                                ? [...novoPerfil.classeIds, classeIdTexto]
+                                : novoPerfil.classeIds.filter((id) => id !== classeIdTexto)
+
+                              setNovoPerfil({
+                                ...novoPerfil,
+                                classeIds: novasClasses,
+                              })
+                            }}
+                          />
+                          <span>{classe.nome}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <label>
+                Data de nascimento
+                <input
+                  type="date"
+                  value={novoPerfil.dataNascimento}
+                  onChange={(event) =>
+                    setNovoPerfil({
+                      ...novoPerfil,
+                      dataNascimento: event.target.value,
+                    })
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {perfilEditandoId ? 'Salvar alterações' : 'Salvar usuário'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={cancelarFormularioPerfil}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="lista">
+          {perfisIgreja.map((perfil) => (
+            <div className="item-lista item-com-acoes" key={perfil.id}>
+              <div>
+                <h3>{perfil.nome || perfil.email}</h3>
+                <p>E-mail: {perfil.email}</p>
+                <p>
+                  Perfil:{' '}
+                  {perfil.perfil === 'professor' ? 'Professor' : 'Secretaria'}
+                </p>
+                {perfil.perfil === 'professor' && (
+                  <p>
+                    Classes:{' '}
+                    {buscarNomesClassesDoProfessor(perfil.id, perfil.classe_id) ||
+                      'Nenhuma classe vinculada'}
+                  </p>
+                )}
+                {perfil.data_nascimento && (
+                  <p>
+                    Nascimento: {formatarDataNascimento(perfil.data_nascimento)}
+                  </p>
+                )}
+              </div>
+
+              <div className="acoes-item">
+                <button
+                  className="botao-editar"
+                  onClick={() => editarPerfil(perfil)}
+                >
+                  Editar
+                </button>
+
+                <button
+                  className="botao-excluir"
+                  onClick={() => excluirPerfilUsuario(perfil)}
+                >
+                  Remover perfil
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  async function salvarChamadaProfessores() {
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode salvar a chamada dos professores.')
+      return
+    }
+
+    const professores = buscarProfessoresDaIgreja()
+
+    if (professores.length === 0) {
+      alert('Ainda não há professores cadastrados em Usuários.')
+      return
+    }
+
+    const professoresSemMarcacao = professores.filter(
+      (professor) => !presencasProfessores[professor.id]
+    )
+
+    if (professoresSemMarcacao.length > 0) {
+      alert('Marque Presente, Faltou ou Justificou para todos os professores.')
+      return
+    }
+
+    const totalPresentes = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'presente'
+    ).length
+
+    const totalFaltas = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'faltou'
+    ).length
+
+    const totalJustificadas = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'justificou'
+    ).length
+
+    const chamadaBanco = {
+      id: Date.now(),
+      igreja_id: buscarIgrejaIdAtual(),
+      data: buscarDataAtual(),
+      total_professores: professores.length,
+      total_presentes: totalPresentes,
+      total_faltas: totalFaltas,
+      total_justificadas: totalJustificadas,
+      observacoes: observacoesChamadaProfessores.trim(),
+      registros: professores.map((professor) => ({
+        perfilId: professor.id,
+        userId: professor.user_id,
+        nome: professor.nome || professor.email,
+        email: professor.email,
+        status: presencasProfessores[professor.id],
+        classes: buscarNomesClassesDoProfessor(professor.id, professor.classe_id),
+      })),
+    }
+
+    const { error } = await supabase
+      .from('chamadas_professores')
+      .insert(chamadaBanco)
+
+    if (error) {
+      console.error(error)
+      alert(error?.message || 'Erro ao salvar chamada dos professores.')
+      return
+    }
+
+    await buscarTodosOsDados()
+
+    setPresencasProfessores({})
+    setObservacoesChamadaProfessores('')
+
+    alert('Chamada dos professores salva com sucesso!')
+  }
+
   function renderizarChamada() {
     const alunosDaClasse = alunos.filter(
       (aluno) => aluno.classeId === Number(classeChamadaId)
     )
+    const professoresDaIgreja = buscarProfessoresDaIgreja()
 
     return (
       <section className="conteudo">
@@ -2266,161 +3057,293 @@ function App() {
             <h2>Chamada</h2>
             <p>
               {usuarioEhProfessor()
-                ? 'Faça a chamada da sua classe vinculada.'
-                : 'Marque a presença dos alunos e informe os dados extras.'}
+                ? 'Faça a chamada das classes vinculadas pela secretaria.'
+                : 'Registre a chamada dos alunos e a chamada separada dos professores.'}
             </p>
           </div>
         </div>
 
-        <div className="formulario">
-          <label>
-            Classe
-            <select
-              value={classeChamadaId}
-              disabled={usuarioEhProfessor()}
-              onChange={(event) => {
-                setClasseChamadaId(event.target.value)
-                setPresencas({})
-                setDadosExtrasChamada({
-                  visitantes: '',
-                  biblias: '',
-                  revistas: '',
-                  ofertas: '',
-                })
-              }}
+        {usuarioEhSecretaria() && (
+          <div className="abas-chamada">
+            <button
+              className={tipoChamada === 'alunos' ? 'ativo' : ''}
+              type="button"
+              onClick={() => setTipoChamada('alunos')}
             >
-              <option value="">Selecione uma classe</option>
+              Chamada dos alunos
+            </button>
 
-              {classes.map((classe) => (
-                <option key={classe.id} value={classe.id}>
-                  {classe.nome}
-                </option>
-              ))}
-            </select>
-            {usuarioEhProfessor() && (
-              <small className="texto-ajuda-campo">
-                Sua chamada fica limitada à classe definida pela secretaria.
-              </small>
-            )}
-          </label>
-
-          {classeChamadaId && (
-            <div className="grade-campos">
-              <label>
-                Visitantes
-                <input
-                  type="number"
-                  min="0"
-                  value={dadosExtrasChamada.visitantes}
-                  onChange={(event) =>
-                    alterarDadosExtras('visitantes', event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                Bíblias
-                <input
-                  type="number"
-                  min="0"
-                  value={dadosExtrasChamada.biblias}
-                  onChange={(event) =>
-                    alterarDadosExtras('biblias', event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                Revistas
-                <input
-                  type="number"
-                  min="0"
-                  value={dadosExtrasChamada.revistas}
-                  onChange={(event) =>
-                    alterarDadosExtras('revistas', event.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                Ofertas R$
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={dadosExtrasChamada.ofertas}
-                  onChange={(event) =>
-                    alterarDadosExtras('ofertas', event.target.value)
-                  }
-                  placeholder="Ex: 25.50"
-                />
-              </label>
-            </div>
-          )}
-        </div>
-
-        {classeChamadaId && alunosDaClasse.length === 0 && (
-          <div className="aviso">
-            <p>Essa classe ainda não possui alunos cadastrados.</p>
+            <button
+              className={tipoChamada === 'professores' ? 'ativo' : ''}
+              type="button"
+              onClick={() => setTipoChamada('professores')}
+            >
+              Chamada dos professores
+            </button>
           </div>
         )}
 
-        {alunosDaClasse.length > 0 && (
+        {(tipoChamada === 'alunos' || usuarioEhProfessor()) && (
           <>
-            <div className="resumo-chamada">
-              <p>
-                <strong>Matrícula:</strong> {alunosDaClasse.length}
-              </p>
+            <div className="formulario">
+              <label>
+                Classe
+                <select
+                  value={classeChamadaId}
+                  onChange={(event) => {
+                    setClasseChamadaId(event.target.value)
+                    setPresencas({})
+                    setDadosExtrasChamada({
+                      visitantes: '',
+                      biblias: '',
+                      revistas: '',
+                      ofertas: '',
+                    })
+                  }}
+                >
+                  <option value="">Selecione uma classe</option>
 
-              <p>
-                <strong>Visitantes:</strong>{' '}
-                {converterNumero(dadosExtrasChamada.visitantes)}
-              </p>
+                  {classes.map((classe) => (
+                    <option key={classe.id} value={classe.id}>
+                      {classe.nome}
+                    </option>
+                  ))}
+                </select>
+                {usuarioEhProfessor() && (
+                  <small className="texto-ajuda-campo">
+                    Você só verá as classes vinculadas pela secretaria.
+                  </small>
+                )}
+              </label>
 
-              <p>
-                <strong>Ofertas:</strong>{' '}
-                {formatarMoeda(dadosExtrasChamada.ofertas)}
-              </p>
-            </div>
-
-            <div className="lista">
-              {alunosDaClasse.map((aluno) => (
-                <div className="item-lista item-chamada" key={aluno.id}>
-                  <div>
-                    <h3>{aluno.nome}</h3>
-                    <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
-                  </div>
-
-                  <div className="acoes-chamada">
-                    <button
-                      className={
-                        presencas[aluno.id] === 'presente'
-                          ? 'botao-presenca ativo-presente'
-                          : 'botao-presenca'
+              {classeChamadaId && (
+                <div className="grade-campos">
+                  <label>
+                    Visitantes
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.visitantes}
+                      onChange={(event) =>
+                        alterarDadosExtras('visitantes', event.target.value)
                       }
-                      onClick={() => alterarPresenca(aluno.id, 'presente')}
-                    >
-                      Presente
-                    </button>
+                    />
+                  </label>
 
-                    <button
-                      className={
-                        presencas[aluno.id] === 'faltou'
-                          ? 'botao-falta ativo-falta'
-                          : 'botao-falta'
+                  <label>
+                    Bíblias
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.biblias}
+                      onChange={(event) =>
+                        alterarDadosExtras('biblias', event.target.value)
                       }
-                      onClick={() => alterarPresenca(aluno.id, 'faltou')}
-                    >
-                      Faltou
-                    </button>
-                  </div>
+                    />
+                  </label>
+
+                  <label>
+                    Revistas
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.revistas}
+                      onChange={(event) =>
+                        alterarDadosExtras('revistas', event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Ofertas R$
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={dadosExtrasChamada.ofertas}
+                      onChange={(event) =>
+                        alterarDadosExtras('ofertas', event.target.value)
+                      }
+                      placeholder="Ex: 25.50"
+                    />
+                  </label>
                 </div>
-              ))}
+              )}
             </div>
 
-            <button className="botao-principal" onClick={salvarChamada}>
-              Salvar chamada
-            </button>
+            {classeChamadaId && alunosDaClasse.length === 0 && (
+              <div className="aviso">
+                <p>Essa classe ainda não possui alunos cadastrados.</p>
+              </div>
+            )}
+
+            {alunosDaClasse.length > 0 && (
+              <>
+                <div className="resumo-chamada">
+                  <p>
+                    <strong>Matrícula:</strong> {alunosDaClasse.length}
+                  </p>
+
+                  <p>
+                    <strong>Visitantes:</strong>{' '}
+                    {converterNumero(dadosExtrasChamada.visitantes)}
+                  </p>
+
+                  <p>
+                    <strong>Ofertas:</strong>{' '}
+                    {formatarMoeda(dadosExtrasChamada.ofertas)}
+                  </p>
+                </div>
+
+                <div className="lista">
+                  {alunosDaClasse.map((aluno) => (
+                    <div className="item-lista item-chamada" key={aluno.id}>
+                      <div>
+                        <h3>{aluno.nome}</h3>
+                        <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
+                      </div>
+
+                      <div className="acoes-chamada">
+                        <button
+                          className={
+                            presencas[aluno.id] === 'presente'
+                              ? 'botao-presenca ativo-presente'
+                              : 'botao-presenca'
+                          }
+                          onClick={() => alterarPresenca(aluno.id, 'presente')}
+                        >
+                          Presente
+                        </button>
+
+                        <button
+                          className={
+                            presencas[aluno.id] === 'faltou'
+                              ? 'botao-falta ativo-falta'
+                              : 'botao-falta'
+                          }
+                          onClick={() => alterarPresenca(aluno.id, 'faltou')}
+                        >
+                          Faltou
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="botao-principal" onClick={salvarChamada}>
+                  Salvar chamada dos alunos
+                </button>
+              </>
+            )}
+          </>
+        )}
+
+        {usuarioEhSecretaria() && tipoChamada === 'professores' && (
+          <>
+            <div className="resumo-chamada resumo-professores">
+              <p>
+                <strong>Professores cadastrados:</strong> {professoresDaIgreja.length}
+              </p>
+              <p>
+                <strong>Última chamada:</strong> {buscarDataUltimaChamadaProfessores()}
+              </p>
+              <p>
+                <strong>Chamadas salvas:</strong> {chamadasProfessores.length}
+              </p>
+            </div>
+
+            {professoresDaIgreja.length === 0 && (
+              <div className="aviso">
+                <p>
+                  Nenhum professor cadastrado. Vá em Usuários, cadastre ou edite
+                  um usuário com perfil Professor e vincule as classes dele.
+                </p>
+              </div>
+            )}
+
+            {professoresDaIgreja.length > 0 && (
+              <>
+                <div className="lista">
+                  {professoresDaIgreja.map((professor) => (
+                    <div className="item-lista item-chamada" key={professor.id}>
+                      <div>
+                        <h3>{professor.nome || professor.email}</h3>
+                        <p>{professor.email}</p>
+                        <p>
+                          Classes:{' '}
+                          {buscarNomesClassesDoProfessor(
+                            professor.id,
+                            professor.classe_id
+                          ) || 'Nenhuma classe vinculada'}
+                        </p>
+                      </div>
+
+                      <div className="acoes-chamada acoes-chamada-professores">
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'presente'
+                              ? 'botao-presenca ativo-presente'
+                              : 'botao-presenca'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'presente')
+                          }
+                        >
+                          Presente
+                        </button>
+
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'faltou'
+                              ? 'botao-falta ativo-falta'
+                              : 'botao-falta'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'faltou')
+                          }
+                        >
+                          Faltou
+                        </button>
+
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'justificou'
+                              ? 'botao-justificou ativo-justificou'
+                              : 'botao-justificou'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'justificou')
+                          }
+                        >
+                          Justificou
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="formulario formulario-observacao-professores">
+                  <label>
+                    Observações da chamada dos professores
+                    <input
+                      type="text"
+                      value={observacoesChamadaProfessores}
+                      onChange={(event) =>
+                        setObservacoesChamadaProfessores(event.target.value)
+                      }
+                      placeholder="Ex: troca de professor, viagem, justificativa geral..."
+                    />
+                  </label>
+                </div>
+
+                <button
+                  className="botao-principal"
+                  onClick={salvarChamadaProfessores}
+                >
+                  Salvar chamada dos professores
+                </button>
+              </>
+            )}
           </>
         )}
       </section>
@@ -2479,6 +3402,17 @@ function App() {
             <h3>Frequência geral</h3>
             <p>{calcularFrequenciaGeral()}%</p>
           </div>
+
+          {usuarioEhSecretaria() && (
+            <div className="card">
+              <h3>Professores</h3>
+              <p>
+                {calcularTotalProfessoresPresentes()} presenças •{' '}
+                {calcularTotalProfessoresFaltas()} faltas •{' '}
+                {calcularTotalProfessoresJustificadas()} justificadas
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="relatorio-folha">
@@ -2726,13 +3660,14 @@ function App() {
   }
 
   function renderizarPagina() {
-    if (!usuarioEhSecretaria() && ['classes', 'configuracoes'].includes(paginaAtual)) {
+    if (!usuarioEhSecretaria() && ['classes', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
       return renderizarPainel()
     }
 
     if (paginaAtual === 'painel') return renderizarPainel()
     if (paginaAtual === 'classes') return renderizarClasses()
     if (paginaAtual === 'alunos') return renderizarAlunos()
+    if (paginaAtual === 'usuarios') return renderizarUsuarios()
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
     if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
