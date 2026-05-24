@@ -1532,7 +1532,9 @@ function App() {
 
                 <a
                   className="botao-secundario link-botao-publico"
-                  href="mailto:contato@ebdfiel.com.br?subject=Solicitar acesso ao EBD Fiel"
+                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20acesso%20ao%20EBD%20Fiel."
+                  target="_blank"
+                  rel="noreferrer"
                 >
                   Solicitar acesso
                 </a>
@@ -1655,7 +1657,9 @@ function App() {
               <div className="acoes-publicas">
                 <a
                   className="botao-principal link-botao-publico"
-                  href="mailto:contato@ebdfiel.com.br?subject=Quero conhecer o EBD Fiel"
+                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20EBD%20Fiel%20e%20solicitar%20mais%20informa%C3%A7%C3%B5es."
+                  target="_blank"
+                  rel="noreferrer"
                 >
                   Quero conhecer
                 </a>
