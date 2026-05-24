@@ -710,6 +710,14 @@ function App() {
               border-bottom: 2px dotted #000;
             }
 
+            .logo-relatorio {
+              width: 76px;
+              height: 76px;
+              object-fit: contain;
+              display: block;
+              margin: 0 auto 8px;
+            }
+
             .cabecalho-relatorio h3 {
               margin: 0 0 6px 0;
               font-size: 20px;
@@ -1335,7 +1343,11 @@ function App() {
         <section className="painel-apresentacao">
           <div className="marca-login">
             <div className="logo-simbolo">
-              <Icone nome="igreja" className="icone-logo" />
+              <img
+                src="/logo-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
             </div>
             <div>
               <h1>EBD Fiel</h1>
@@ -1370,7 +1382,11 @@ function App() {
         <section className="painel-apresentacao">
           <div className="marca-login">
             <div className="logo-simbolo">
-              <Icone nome="igreja" className="icone-logo" />
+              <img
+                src="/logo-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
             </div>
             <div>
               <h1>EBD Fiel</h1>
@@ -1462,7 +1478,11 @@ function App() {
         <section className="painel-apresentacao">
           <div className="marca-login">
             <div className="logo-simbolo">
-              <Icone nome="igreja" className="icone-logo" />
+              <img
+                src="/logo-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
             </div>
             <div>
               <h1>EBD Fiel</h1>
@@ -1488,7 +1508,11 @@ function App() {
         <section className="painel-apresentacao">
           <div className="marca-login">
             <div className="logo-simbolo">
-              <Icone nome="igreja" className="icone-logo" />
+              <img
+                src="/logo-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
             </div>
             <div>
               <h1>EBD Fiel</h1>
@@ -2051,6 +2075,11 @@ function App() {
 
         <div className="relatorio-folha">
           <div className="cabecalho-relatorio">
+            <img
+              src="/logo-ebd-fiel.png"
+              alt="Logo EBD Fiel"
+              className="logo-relatorio"
+            />
             <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
             {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
             {configuracaoIgreja.pastor_dirigente && (
@@ -2295,7 +2324,11 @@ function App() {
       <aside className="menu-lateral">
         <div className="marca-sidebar">
           <div className="logo-simbolo logo-simbolo-sidebar">
-            <Icone nome="igreja" className="icone-logo" />
+            <img
+              src="/logo-ebd-fiel.png"
+              alt="Logo EBD Fiel"
+              className="logo-imagem"
+            />
           </div>
           <div>
             <h1>EBD Fiel</h1>
