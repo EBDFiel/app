@@ -331,7 +331,7 @@ function App() {
       setEmailLogin('')
       setSenhaLogin('')
 
-      await carregarDadosOnline()
+      await carregarDadosOnline(data.session)
     } catch (error) {
       console.error('Erro ao entrar:', error)
       setErroLogin('E-mail ou senha inválidos.')
@@ -359,12 +359,12 @@ function App() {
     limparDadosDoSistema()
   }
 
-  async function carregarDadosOnline() {
+  async function carregarDadosOnline(sessaoAtual = sessao) {
     setCarregando(true)
     setErroSistema('')
 
     try {
-      await buscarTodosOsDados()
+      await buscarTodosOsDados(sessaoAtual)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
       setErroSistema(
@@ -376,7 +376,7 @@ function App() {
     }
   }
 
-  async function inserirDadosIniciais(igrejaAtualId) {
+  async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
     if (!igrejaAtualId) {
       throw new Error('Igreja não identificada para criar os dados iniciais.')
     }
@@ -384,7 +384,7 @@ function App() {
     const classesParaSalvar = classesIniciais.map((classe) => ({
       id: classe.id,
       igreja_id: igrejaAtualId,
-      user_id: sessao?.user?.id,
+      user_id: sessaoAtual?.user?.id,
       nome: classe.nome,
       professor: classe.professor,
     }))
@@ -392,7 +392,7 @@ function App() {
     const alunosParaSalvar = alunosIniciais.map((aluno) => ({
       id: aluno.id,
       igreja_id: igrejaAtualId,
-      user_id: sessao?.user?.id,
+      user_id: sessaoAtual?.user?.id,
       nome: aluno.nome,
       classe_id: aluno.classeId,
       telefone: aluno.telefone,
@@ -439,15 +439,15 @@ function App() {
     return !item.apenasSecretaria || usuarioEhSecretaria()
   }
 
-  async function buscarTodosOsDados() {
-    if (!sessao?.user?.id) {
+  async function buscarTodosOsDados(sessaoAtual = sessao) {
+    if (!sessaoAtual?.user?.id) {
       throw new Error('Usuário não identificado. Faça login novamente.')
     }
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
       .select('*')
-      .eq('user_id', sessao.user.id)
+      .eq('user_id', sessaoAtual.user.id)
       .maybeSingle()
 
     if (erroPerfil) {
@@ -488,7 +488,7 @@ function App() {
     }
 
     if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
-      await inserirDadosIniciais(igrejaAtualId)
+      await inserirDadosIniciais(igrejaAtualId, sessaoAtual)
 
       let novaConsultaClasses = supabase
         .from('classes')
@@ -1405,7 +1405,7 @@ function App() {
         })
       }
 
-      await buscarTodosOsDados()
+      await buscarTodosOsDados(sessaoAtual)
       alert('Configurações da igreja salvas com sucesso!')
     } catch (error) {
       console.error('Erro ao salvar configurações da igreja:', error)
