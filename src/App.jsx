@@ -11,9 +11,9 @@ const classesIniciais = [
 ]
 
 const alunosIniciais = [
-  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '' },
-  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '' },
-  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '' },
+  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
 ]
 
 
@@ -210,6 +210,7 @@ function App() {
     classeId: '',
     telefone: '',
     dataNascimento: '',
+    tipoPessoa: 'aluno',
   })
 
   const [buscaAluno, setBuscaAluno] = useState('')
@@ -315,7 +316,7 @@ function App() {
     setClasseEditandoId(null)
     setAlunoEditandoId(null)
     setNovaClasse({ nome: '', professor: '' })
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
     setMostrarFormularioPerfil(false)
     setPerfilEditandoId(null)
     setNovoPerfil({
@@ -448,6 +449,7 @@ function App() {
       classe_id: aluno.classeId,
       telefone: aluno.telefone,
       data_nascimento: aluno.dataNascimento || null,
+      tipo_pessoa: aluno.tipoPessoa || 'aluno',
     }))
 
     const { error: erroClasses } = await supabase
@@ -733,6 +735,7 @@ function App() {
         classeId: Number(aluno.classe_id),
         telefone: aluno.telefone || '',
         dataNascimento: aluno.data_nascimento || '',
+        tipoPessoa: aluno.tipo_pessoa || 'aluno',
       }))
     )
 
@@ -861,8 +864,20 @@ function App() {
       .join(' - ')
   }
 
+  function alunosSomente() {
+    return alunos.filter((aluno) => (aluno.tipoPessoa || 'aluno') === 'aluno')
+  }
+
+  function professoresSomente() {
+    return alunos.filter((aluno) => aluno.tipoPessoa === 'professor')
+  }
+
   function calcularMatriculaDaClasse(classeId) {
-    return alunos.filter((aluno) => aluno.classeId === Number(classeId)).length
+    return alunos.filter(
+      (aluno) =>
+        aluno.classeId === Number(classeId) &&
+        (aluno.tipoPessoa || 'aluno') === 'aluno'
+    ).length
   }
 
   function formatarMoeda(valor) {
@@ -1304,7 +1319,7 @@ function App() {
   }
 
   function abrirNovoAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(true)
   }
@@ -1315,13 +1330,14 @@ function App() {
       classeId: String(aluno.classeId),
       telefone: aluno.telefone,
       dataNascimento: aluno.dataNascimento || '',
+      tipoPessoa: aluno.tipoPessoa || 'aluno',
     })
     setAlunoEditandoId(aluno.id)
     setMostrarFormularioAluno(true)
   }
 
   function cancelarFormularioAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
     setAlunoEditandoId(null)
     setMostrarFormularioAluno(false)
   }
@@ -1344,6 +1360,7 @@ function App() {
       classe_id: Number(novoAluno.classeId),
       telefone: novoAluno.telefone,
       data_nascimento: novoAluno.dataNascimento || null,
+      tipo_pessoa: novoAluno.tipoPessoa || 'aluno',
     }
 
     if (alunoEditandoId) {
@@ -1417,9 +1434,9 @@ function App() {
   }
 
   function buscarProfessoresDaIgreja() {
-    return perfisIgreja
-      .filter((perfil) => perfil.perfil === 'professor')
-      .sort((a, b) => (a.nome || a.email || '').localeCompare(b.nome || b.email || ''))
+    return alunos
+      .filter((pessoa) => pessoa.tipoPessoa === 'professor')
+      .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
   }
 
   function alterarPresencaProfessor(perfilId, status) {
@@ -2173,7 +2190,7 @@ function App() {
       .map((aluno) => ({
         id: `aluno-${aluno.id}`,
         nome: aluno.nome,
-        tipo: 'Aluno',
+        tipo: aluno.tipoPessoa === 'professor' ? 'Professor' : 'Aluno',
         detalhe: buscarNomeClasse(aluno.classeId),
         dataNascimento: aluno.dataNascimento,
         dias: calcularDiasAteAniversario(aluno.dataNascimento),
@@ -2407,7 +2424,8 @@ function App() {
             <p>Dados sincronizados automaticamente no Supabase.</p>
             <ul>
               <li>{classes.length} classes ativas</li>
-              <li>{alunos.length} alunos cadastrados</li>
+              <li>{alunosSomente().length} alunos cadastrados</li>
+              <li>{professoresSomente().length} professores cadastrados</li>
               <li>{chamadasSalvas.length} chamadas registradas</li>
               <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
@@ -2427,6 +2445,13 @@ function App() {
             valor={alunos.length}
             descricao="Participantes cadastrados no sistema."
           />
+          <CardResumo
+            icone="usuarios"
+            titulo="Professores"
+            valor={professoresSomente().length}
+            descricao="Participantes da chamada dos professores."
+          />
+
           <CardResumo
             icone="chamada"
             titulo="Chamadas"
@@ -2606,17 +2631,17 @@ function App() {
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>Alunos</h2>
+            <h2>Alunos e Professores</h2>
             <p>
               {usuarioEhProfessor()
                 ? 'Veja os alunos vinculados à sua classe.'
-                : 'Cadastre, edite, busque e organize os alunos por classe.'}
+                : 'Cadastre alunos e professores. O tipo escolhido define em qual chamada a pessoa aparece.'}
             </p>
           </div>
 
           {podeGerenciarCadastros() && !mostrarFormularioAluno && (
             <button className="botao-principal" onClick={abrirNovoAluno}>
-              Novo aluno
+              Novo cadastro
             </button>
           )}
         </div>
@@ -2624,7 +2649,7 @@ function App() {
         {mostrarFormularioAluno && (
           <form className="formulario" onSubmit={salvarAluno}>
             <label>
-              Nome do aluno
+              Nome
               <input
                 type="text"
                 value={novoAluno.nome}
@@ -2636,7 +2661,20 @@ function App() {
             </label>
 
             <label>
-              Classe
+              Tipo
+              <select
+                value={novoAluno.tipoPessoa}
+                onChange={(event) =>
+                  setNovoAluno({ ...novoAluno, tipoPessoa: event.target.value })
+                }
+              >
+                <option value="aluno">Aluno</option>
+                <option value="professor">Professor</option>
+              </select>
+            </label>
+
+            <label>
+              Classe de referência
               <select
                 value={novoAluno.classeId}
                 onChange={(event) =>
@@ -2651,6 +2689,9 @@ function App() {
                   </option>
                 ))}
               </select>
+              <small className="texto-ajuda-campo">
+                Aluno entra na chamada dos alunos. Professor entra na chamada dos professores.
+              </small>
             </label>
 
             <label>
@@ -2681,7 +2722,7 @@ function App() {
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {alunoEditandoId ? 'Salvar alterações' : 'Salvar aluno'}
+                {alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
               </button>
 
               <button
@@ -2730,7 +2771,7 @@ function App() {
         </div>
 
         <p className="contador-resultados">
-          Mostrando {alunosFiltrados.length} de {alunos.length} alunos
+          Mostrando {alunosFiltrados.length} de {alunos.length} cadastros
         </p>
 
         <div className="lista">
@@ -2738,7 +2779,10 @@ function App() {
             <div className="item-lista item-com-acoes" key={aluno.id}>
               <div>
                 <h3>{aluno.nome}</h3>
-                <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
+                <p>
+                  Tipo: {(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}
+                </p>
+                <p>Classe de referência: {buscarNomeClasse(aluno.classeId)}</p>
                 {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
                 {aluno.dataNascimento && (
                   <p>Nascimento: {formatarDataNascimento(aluno.dataNascimento)}</p>
@@ -3017,12 +3061,11 @@ function App() {
       total_justificadas: totalJustificadas,
       observacoes: observacoesChamadaProfessores.trim(),
       registros: professores.map((professor) => ({
-        perfilId: professor.id,
-        userId: professor.user_id,
-        nome: professor.nome || professor.email,
-        email: professor.email,
+        pessoaId: professor.id,
+        nome: professor.nome,
+        telefone: professor.telefone || '',
         status: presencasProfessores[professor.id],
-        classes: buscarNomesClassesDoProfessor(professor.id, professor.classe_id),
+        classeReferencia: buscarNomeClasse(professor.classeId),
       })),
     }
 
@@ -3046,7 +3089,9 @@ function App() {
 
   function renderizarChamada() {
     const alunosDaClasse = alunos.filter(
-      (aluno) => aluno.classeId === Number(classeChamadaId)
+      (aluno) =>
+        aluno.classeId === Number(classeChamadaId) &&
+        (aluno.tipoPessoa || 'aluno') === 'aluno'
     )
     const professoresDaIgreja = buscarProfessoresDaIgreja()
 
@@ -3255,8 +3300,8 @@ function App() {
             {professoresDaIgreja.length === 0 && (
               <div className="aviso">
                 <p>
-                  Nenhum professor cadastrado. Vá em Usuários, cadastre ou edite
-                  um usuário com perfil Professor e vincule as classes dele.
+                  Nenhum professor cadastrado. Vá em Alunos e Professores,
+                  cadastre uma pessoa com tipo Professor.
                 </p>
               </div>
             )}
@@ -3267,15 +3312,9 @@ function App() {
                   {professoresDaIgreja.map((professor) => (
                     <div className="item-lista item-chamada" key={professor.id}>
                       <div>
-                        <h3>{professor.nome || professor.email}</h3>
-                        <p>{professor.email}</p>
-                        <p>
-                          Classes:{' '}
-                          {buscarNomesClassesDoProfessor(
-                            professor.id,
-                            professor.classe_id
-                          ) || 'Nenhuma classe vinculada'}
-                        </p>
+                        <h3>{professor.nome}</h3>
+                        {professor.telefone && <p>Telefone: {professor.telefone}</p>}
+                        <p>Classe de referência: {buscarNomeClasse(professor.classeId)}</p>
                       </div>
 
                       <div className="acoes-chamada acoes-chamada-professores">
@@ -3390,7 +3429,7 @@ function App() {
 
           <div className="card">
             <h3>Alunos</h3>
-            <p>{alunos.length} cadastrados</p>
+            <p>{alunosSomente().length} cadastrados</p>
           </div>
 
           <div className="card">
@@ -3406,6 +3445,7 @@ function App() {
           {usuarioEhSecretaria() && (
             <div className="card">
               <h3>Professores</h3>
+              <p>{professoresSomente().length} cadastrados</p>
               <p>
                 {calcularTotalProfessoresPresentes()} presenças •{' '}
                 {calcularTotalProfessoresFaltas()} faltas •{' '}
