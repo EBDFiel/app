@@ -31,6 +31,20 @@ function App() {
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
+  const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
+    id: null,
+    nome_igreja: '',
+    congregacao: '',
+    pastor_dirigente: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    telefone: '',
+    email: '',
+  })
+  const [salvandoConfiguracaoIgreja, setSalvandoConfiguracaoIgreja] = useState(false)
+
 
   const [mostrarFormularioClasse, setMostrarFormularioClasse] = useState(false)
   const [classeEditandoId, setClasseEditandoId] = useState(null)
@@ -65,6 +79,7 @@ function App() {
     { id: 'alunos', nome: 'Alunos' },
     { id: 'chamada', nome: 'Chamada' },
     { id: 'relatorios', nome: 'Relatórios' },
+    { id: 'configuracoes', nome: 'Configurações' },
   ]
 
   useEffect(() => {
@@ -116,6 +131,18 @@ function App() {
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
+    setConfiguracaoIgreja({
+      id: null,
+      nome_igreja: '',
+      congregacao: '',
+      pastor_dirigente: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      telefone: '',
+      email: '',
+    })
     setPaginaAtual('painel')
     setMostrarFormularioClasse(false)
     setMostrarFormularioAluno(false)
@@ -277,6 +304,16 @@ function App() {
       throw erroChamadas
     }
 
+    const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
+      .from('configuracoes_igreja')
+      .select('*')
+      .eq('user_id', sessao?.user?.id)
+      .order('created_at', { ascending: true })
+
+    if (erroConfiguracoes) {
+      throw erroConfiguracoes
+    }
+
     setClasses(
       classesBanco.map((classe) => ({
         id: Number(classe.id),
@@ -310,6 +347,21 @@ function App() {
         registros: Array.isArray(chamada.registros) ? chamada.registros : [],
       }))
     )
+
+    const configuracaoAtual = configuracoesBanco?.[0]
+
+    setConfiguracaoIgreja({
+      id: configuracaoAtual?.id || null,
+      nome_igreja: configuracaoAtual?.nome_igreja || '',
+      congregacao: configuracaoAtual?.congregacao || '',
+      pastor_dirigente: configuracaoAtual?.pastor_dirigente || '',
+      cidade: configuracaoAtual?.cidade || '',
+      estado: configuracaoAtual?.estado || '',
+      bairro: configuracaoAtual?.bairro || '',
+      endereco: configuracaoAtual?.endereco || '',
+      telefone: configuracaoAtual?.telefone || '',
+      email: configuracaoAtual?.email || '',
+    })
   }
 
   function converterNumero(valor) {
@@ -367,6 +419,21 @@ function App() {
     })
 
     return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1)
+  }
+
+  function buscarNomeIgrejaParaExibicao() {
+    return configuracaoIgreja.nome_igreja.trim() || 'EBD Fiel'
+  }
+
+  function montarEnderecoIgreja() {
+    return [
+      configuracaoIgreja.endereco,
+      configuracaoIgreja.bairro,
+      configuracaoIgreja.cidade,
+      configuracaoIgreja.estado,
+    ]
+      .filter((valor) => valor && valor.trim())
+      .join(' - ')
   }
 
   function calcularMatriculaDaClasse(classeId) {
@@ -984,6 +1051,82 @@ function App() {
     alert('Chamada salva com sucesso!')
   }
 
+  function alterarConfiguracaoIgreja(campo, valor) {
+    setConfiguracaoIgreja({
+      ...configuracaoIgreja,
+      [campo]: valor,
+    })
+  }
+
+  async function salvarConfiguracaoIgreja(event) {
+    event.preventDefault()
+
+    if (!sessao?.user?.id) {
+      alert('Usuário não identificado. Faça login novamente.')
+      return
+    }
+
+    setSalvandoConfiguracaoIgreja(true)
+
+    const dadosConfiguracao = {
+      user_id: sessao.user.id,
+      nome_igreja: configuracaoIgreja.nome_igreja.trim(),
+      congregacao: configuracaoIgreja.congregacao.trim(),
+      pastor_dirigente: configuracaoIgreja.pastor_dirigente.trim(),
+      cidade: configuracaoIgreja.cidade.trim(),
+      estado: configuracaoIgreja.estado.trim(),
+      bairro: configuracaoIgreja.bairro.trim(),
+      endereco: configuracaoIgreja.endereco.trim(),
+      telefone: configuracaoIgreja.telefone.trim(),
+      email: configuracaoIgreja.email.trim(),
+      updated_at: new Date().toISOString(),
+    }
+
+    try {
+      if (configuracaoIgreja.id) {
+        const { error } = await supabase
+          .from('configuracoes_igreja')
+          .update(dadosConfiguracao)
+          .eq('id', configuracaoIgreja.id)
+
+        if (error) {
+          throw error
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('configuracoes_igreja')
+          .insert(dadosConfiguracao)
+          .select()
+          .single()
+
+        if (error) {
+          throw error
+        }
+
+        setConfiguracaoIgreja({
+          id: data.id,
+          nome_igreja: data.nome_igreja || '',
+          congregacao: data.congregacao || '',
+          pastor_dirigente: data.pastor_dirigente || '',
+          cidade: data.cidade || '',
+          estado: data.estado || '',
+          bairro: data.bairro || '',
+          endereco: data.endereco || '',
+          telefone: data.telefone || '',
+          email: data.email || '',
+        })
+      }
+
+      await buscarTodosOsDados()
+      alert('Configurações da igreja salvas com sucesso!')
+    } catch (error) {
+      console.error('Erro ao salvar configurações da igreja:', error)
+      alert(error?.message || 'Erro ao salvar configurações da igreja.')
+    } finally {
+      setSalvandoConfiguracaoIgreja(false)
+    }
+  }
+
   function montarRelatorioPorClasse() {
     return classes.map((classe, indice) => {
       const chamadasDaClasse = chamadasSalvas.filter(
@@ -1163,7 +1306,7 @@ function App() {
     return (
       <section className="conteudo">
         <h2>Painel</h2>
-        <p>Bem-vindo ao painel do EBD Fiel.</p>
+        <p>Bem-vindo ao painel do {buscarNomeIgrejaParaExibicao()}.</p>
 
         <div className="cards">
           <div className="card">
@@ -1183,8 +1326,11 @@ function App() {
         </div>
 
         <div className="resumo">
-          <h3>Banco online conectado</h3>
+          <h3>{buscarNomeIgrejaParaExibicao()}</h3>
           <p>Os dados são carregados e salvos automaticamente no Supabase.</p>
+          {!configuracaoIgreja.nome_igreja && (
+            <p>Preencha os dados da igreja em Configurações para personalizar os relatórios.</p>
+          )}
         </div>
       </section>
     )
@@ -1642,7 +1788,19 @@ function App() {
 
         <div className="relatorio-folha">
           <div className="cabecalho-relatorio">
-            <h3>Relatório do Domingo</h3>
+            <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
+            {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
+            {configuracaoIgreja.pastor_dirigente && (
+              <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
+            )}
+            {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
+            {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
+              <p>
+                {[configuracaoIgreja.telefone, configuracaoIgreja.email]
+                  .filter(Boolean)
+                  .join(' | ')}
+              </p>
+            )}
             <p>{dataRelatorioFormatada}</p>
           </div>
 
@@ -1705,12 +1863,166 @@ function App() {
     )
   }
 
+  function renderizarConfiguracoes() {
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Configurações da Igreja</h2>
+            <p>Preencha os dados que aparecerão nos relatórios e PDFs.</p>
+          </div>
+        </div>
+
+        <form className="formulario" onSubmit={salvarConfiguracaoIgreja}>
+          <div className="grade-campos grade-campos-configuracoes">
+            <label>
+              Nome da igreja
+              <input
+                type="text"
+                value={configuracaoIgreja.nome_igreja}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('nome_igreja', event.target.value)
+                }
+                placeholder="Ex: Assembleia de Deus Ministério..."
+              />
+            </label>
+
+            <label>
+              Congregação / departamento
+              <input
+                type="text"
+                value={configuracaoIgreja.congregacao}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('congregacao', event.target.value)
+                }
+                placeholder="Ex: Escola Bíblica Dominical"
+              />
+            </label>
+
+            <label>
+              Pastor ou dirigente
+              <input
+                type="text"
+                value={configuracaoIgreja.pastor_dirigente}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja(
+                    'pastor_dirigente',
+                    event.target.value
+                  )
+                }
+                placeholder="Ex: Pr. João Silva"
+              />
+            </label>
+
+            <label>
+              Telefone / WhatsApp
+              <input
+                type="text"
+                value={configuracaoIgreja.telefone}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('telefone', event.target.value)
+                }
+                placeholder="Ex: (11) 99999-0000"
+              />
+            </label>
+
+            <label>
+              E-mail
+              <input
+                type="email"
+                value={configuracaoIgreja.email}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('email', event.target.value)
+                }
+                placeholder="Ex: contato@igreja.com.br"
+              />
+            </label>
+
+            <label>
+              Endereço
+              <input
+                type="text"
+                value={configuracaoIgreja.endereco}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('endereco', event.target.value)
+                }
+                placeholder="Ex: Rua das Flores, 123"
+              />
+            </label>
+
+            <label>
+              Bairro
+              <input
+                type="text"
+                value={configuracaoIgreja.bairro}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('bairro', event.target.value)
+                }
+                placeholder="Ex: Centro"
+              />
+            </label>
+
+            <label>
+              Cidade
+              <input
+                type="text"
+                value={configuracaoIgreja.cidade}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('cidade', event.target.value)
+                }
+                placeholder="Ex: São Paulo"
+              />
+            </label>
+
+            <label>
+              Estado
+              <input
+                type="text"
+                value={configuracaoIgreja.estado}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('estado', event.target.value)
+                }
+                placeholder="Ex: SP"
+                maxLength="2"
+              />
+            </label>
+          </div>
+
+          <div className="grupo-botoes">
+            <button
+              className="botao-principal"
+              type="submit"
+              disabled={salvandoConfiguracaoIgreja}
+            >
+              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configurações'}
+            </button>
+          </div>
+        </form>
+
+        <div className="resumo">
+          <h3>Prévia do cabeçalho</h3>
+          <p>
+            <strong>{buscarNomeIgrejaParaExibicao()}</strong>
+          </p>
+          {configuracaoIgreja.congregacao && (
+            <p>{configuracaoIgreja.congregacao}</p>
+          )}
+          {configuracaoIgreja.pastor_dirigente && (
+            <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
+          )}
+          {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
+        </div>
+      </section>
+    )
+  }
+
   function renderizarPagina() {
     if (paginaAtual === 'painel') return renderizarPainel()
     if (paginaAtual === 'classes') return renderizarClasses()
     if (paginaAtual === 'alunos') return renderizarAlunos()
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
+    if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
 
     return renderizarPainel()
   }
