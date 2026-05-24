@@ -2582,3 +2582,277 @@ input:disabled {
     font-size: 38px;
   }
 }
+
+
+/* Página principal ultra moderna e mais colorida */
+.pagina-publica {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 8% 7%, rgba(37, 99, 235, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at 15% 76%, rgba(34, 197, 94, 0.12), transparent 30%),
+    radial-gradient(circle at 84% 86%, rgba(249, 115, 22, 0.11), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #eef6ff 42%, #f8fbff 100%);
+}
+
+.pagina-publica::before,
+.pagina-publica::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.pagina-publica::before {
+  width: 360px;
+  height: 360px;
+  left: -160px;
+  top: 190px;
+  background: rgba(37, 99, 235, 0.10);
+}
+
+.pagina-publica::after {
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  top: 520px;
+  background: rgba(14, 165, 233, 0.10);
+}
+
+.topo-publico,
+.hero-publico,
+.secao-publica {
+  position: relative;
+  z-index: 1;
+}
+
+.topo-publico {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.82));
+  border: 1px solid rgba(191, 219, 254, 0.9);
+}
+
+.menu-publico button,
+.acoes-publicas .botao-principal {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
+}
+
+.hero-publico {
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+}
+
+.hero-publico h1 {
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #0891b2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.selo-publico {
+  background: linear-gradient(135deg, #dbeafe 0%, #cffafe 100%);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+}
+
+.hero-publico-card {
+  transform: perspective(900px) rotateY(-3deg) rotateX(2deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-publico-card:hover {
+  transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+  box-shadow: 0 42px 90px rgba(37, 99, 235, 0.28);
+}
+
+.mini-dashboard {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.96);
+}
+
+.mini-dashboard-topo strong {
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mini-grid div:nth-child(1) {
+  border-color: #bfdbfe;
+}
+
+.mini-grid div:nth-child(2) {
+  border-color: #bbf7d0;
+}
+
+.mini-grid div:nth-child(3) {
+  border-color: #fed7aa;
+}
+
+.mini-grid div:nth-child(4) {
+  border-color: #ddd6fe;
+}
+
+.metricas-publicas div:nth-child(1) {
+  border-color: #bfdbfe;
+}
+
+.metricas-publicas div:nth-child(2) {
+  border-color: #ddd6fe;
+}
+
+.metricas-publicas div:nth-child(3) {
+  border-color: #bbf7d0;
+}
+
+.secao-impacto-publica {
+  align-items: stretch;
+}
+
+.impacto-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.impacto-card::after {
+  content: "";
+  position: absolute;
+  right: -44px;
+  bottom: -44px;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.07);
+}
+
+.impacto-card:nth-child(3)::after {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.impacto-card:nth-child(4)::after {
+  background: rgba(249, 115, 22, 0.09);
+}
+
+.secao-experiencia-publica {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 32px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.18), transparent 28%),
+    linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0e7490 100%);
+  color: #ffffff;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.18);
+}
+
+.cabecalho-experiencia-publica .selo-publico {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cabecalho-experiencia-publica h2 {
+  margin: 16px 0 12px;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cabecalho-experiencia-publica p {
+  margin: 0;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.75;
+  font-size: 17px;
+}
+
+.grade-experiencia-publica {
+  display: grid;
+  gap: 16px;
+}
+
+.experiencia-card {
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.experiencia-card strong {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.experiencia-card h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.experiencia-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.65;
+}
+
+.experiencia-azul {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.36), rgba(14, 165, 233, 0.20));
+}
+
+.experiencia-verde {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.28), rgba(20, 184, 166, 0.18));
+}
+
+.experiencia-laranja {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.28), rgba(234, 179, 8, 0.16));
+}
+
+.grade-recursos-publicos article:nth-child(1) {
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+}
+
+.grade-recursos-publicos article:nth-child(2) {
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.grade-recursos-publicos article:nth-child(3) {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+}
+
+.grade-recursos-publicos article:nth-child(4) {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+}
+
+.cartao-plano-publico {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.22), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(37, 99, 235, 0.28), transparent 34%),
+    linear-gradient(135deg, #020617 0%, #172554 58%, #0e7490 100%);
+}
+
+.cartao-plano-publico .botao-principal {
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+}
+
+@media (max-width: 1000px) {
+  .hero-publico-card {
+    transform: none;
+  }
+
+  .secao-experiencia-publica {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2094,7 +2094,7 @@ function App() {
           <section className="hero-publico">
             <div className="hero-publico-texto">
               <span className="selo-publico">Sistema online para igrejas</span>
-              <h1>Gestão moderna para uma Escola Bíblica Dominical mais organizada, presente e fiel.</h1>
+              <h1>Uma nova experiência para organizar sua Escola Bíblica Dominical.</h1>
               <p>
                 O EBD Fiel ajuda igrejas a controlar classes, alunos, chamadas,
                 frequência, relatórios e PDFs em uma plataforma moderna, acessível
@@ -2236,7 +2236,38 @@ function App() {
             </div>
           </section>
 
-          <section className="secao-publica secao-beneficios-publica" id="beneficios">
+          <section className="secao-publica secao-experiencia-publica">
+        <div className="cabecalho-experiencia-publica">
+          <span className="selo-publico">Experiência moderna</span>
+          <h2>Uma plataforma com visual de produto profissional.</h2>
+          <p>
+            O EBD Fiel foi pensado para causar uma boa primeira impressão e facilitar
+            o uso no dia a dia da secretaria, professores e liderança.
+          </p>
+        </div>
+
+        <div className="grade-experiencia-publica">
+          <article className="experiencia-card experiencia-azul">
+            <strong>01</strong>
+            <h3>Painel visual</h3>
+            <p>Indicadores claros para acompanhar classes, alunos, professores e chamadas.</p>
+          </article>
+
+          <article className="experiencia-card experiencia-verde">
+            <strong>02</strong>
+            <h3>Rotina simplificada</h3>
+            <p>Cadastros, chamadas, aniversários e relatórios em um fluxo fácil de entender.</p>
+          </article>
+
+          <article className="experiencia-card experiencia-laranja">
+            <strong>03</strong>
+            <h3>Apresentação bonita</h3>
+            <p>Um sistema com aparência moderna para apresentar com confiança aos clientes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="secao-publica secao-beneficios-publica" id="beneficios">
             <div>
               <span className="selo-publico">Por que usar</span>
               <h2>Mais organização, menos papel e dados sempre disponíveis.</h2>
@@ -2270,14 +2301,14 @@ function App() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Quero conhecer
+                  Ver apresentação
                 </a>
                 <button
                   className="botao-secundario"
                   type="button"
                   onClick={() => setTelaPublica('login')}
                 >
-                  Já sou cliente
+                  Acessar sistema
                 </button>
               </div>
             </div>
