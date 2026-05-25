@@ -7114,3 +7114,84 @@ button.botao-principal {
     width: 100%;
   }
 }
+
+
+/* Teste fechado - sem solicitação pública de acesso */
+.aviso-teste-fechado {
+  display: inline-flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  color: #003B66;
+  font-weight: 900;
+  line-height: 1.45;
+  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.06);
+}
+
+.aviso-teste-fechado-centro {
+  justify-content: center;
+  text-align: center;
+}
+
+.acoes-hero-oficial .botao-principal,
+.acoes-teste-oficial .botao-principal,
+.cta-final-oficial .botao-principal {
+  min-height: 56px;
+  border-radius: 18px;
+}
+
+@media (max-width: 760px) {
+  .aviso-teste-fechado {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+
+/* Cadastro de igrejas AD: sede, congregação e endereço completo */
+.campo-sede-filiada {
+  grid-column: span 2;
+}
+
+.dados-igreja-admin {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.dados-igreja-admin p {
+  margin: 0 !important;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.dados-igreja-admin strong {
+  color: #003B66;
+}
+
+.formulario-admin-igreja select,
+.formulario-admin-igreja input {
+  min-height: 48px;
+}
+
+@media (max-width: 760px) {
+  .campo-sede-filiada {
+    grid-column: span 1;
+  }
+
+  .dados-igreja-admin {
+    padding: 12px;
+  }
+}
