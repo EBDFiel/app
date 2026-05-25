@@ -179,6 +179,19 @@ function App() {
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
   const [igrejasAdmin, setIgrejasAdmin] = useState([])
+  const [acessosAdmin, setAcessosAdmin] = useState([])
+  const [buscaAcessoAdmin, setBuscaAcessoAdmin] = useState('')
+  const [mostrarFormularioAcessoAdmin, setMostrarFormularioAcessoAdmin] = useState(false)
+  const [acessoAdminEditandoUserId, setAcessoAdminEditandoUserId] = useState(null)
+  const [novoAcessoAdmin, setNovoAcessoAdmin] = useState({
+    userId: '',
+    nome: '',
+    email: '',
+    perfil: 'secretaria',
+    igrejaId: '',
+    classeId: '',
+    dataNascimento: '',
+  })
   const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
   const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
   const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
@@ -669,6 +682,196 @@ function App() {
     setMostrarFormularioIgrejaAdmin(true)
   }
 
+  function limparFormularioAcessoAdmin() {
+    setNovoAcessoAdmin({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'secretaria',
+      igrejaId: '',
+      classeId: '',
+      dataNascimento: '',
+    })
+    setAcessoAdminEditandoUserId(null)
+    setMostrarFormularioAcessoAdmin(false)
+  }
+
+  function abrirNovoAcessoAdmin(igreja = null) {
+    setNovoAcessoAdmin({
+      userId: '',
+      nome: igreja?.responsavel_nome || '',
+      email: igreja?.responsavel_email || '',
+      perfil: 'secretaria',
+      igrejaId: igreja?.id ? String(igreja.id) : '',
+      classeId: '',
+      dataNascimento: '',
+    })
+    setAcessoAdminEditandoUserId(null)
+    setMostrarFormularioAcessoAdmin(true)
+  }
+
+  function editarAcessoAdmin(acesso) {
+    setNovoAcessoAdmin({
+      userId: acesso.user_id || '',
+      nome: acesso.nome || '',
+      email: acesso.email || '',
+      perfil: acesso.perfil || 'secretaria',
+      igrejaId: acesso.igreja_id ? String(acesso.igreja_id) : '',
+      classeId: acesso.classe_id ? String(acesso.classe_id) : '',
+      dataNascimento: acesso.data_nascimento || '',
+    })
+    setAcessoAdminEditandoUserId(acesso.user_id)
+    setMostrarFormularioAcessoAdmin(true)
+  }
+
+  function buscarNomeIgrejaAdmin(igrejaBuscaId) {
+    const igreja = igrejasAdmin.find((item) => Number(item.id) === Number(igrejaBuscaId))
+
+    return igreja?.nome_igreja || igreja?.nome || `Igreja ID ${igrejaBuscaId || '-'}`
+  }
+
+  function contarAcessosDaIgreja(igrejaBuscaId) {
+    return acessosAdmin.filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId)).length
+  }
+
+  function filtrarAcessosAdmin() {
+    const termo = buscaAcessoAdmin.toLowerCase()
+
+    return acessosAdmin.filter((acesso) => {
+      const igrejaNome = buscarNomeIgrejaAdmin(acesso.igreja_id).toLowerCase()
+
+      return (
+        String(acesso.nome || '').toLowerCase().includes(termo) ||
+        String(acesso.email || '').toLowerCase().includes(termo) ||
+        String(acesso.perfil || '').toLowerCase().includes(termo) ||
+        igrejaNome.includes(termo)
+      )
+    })
+  }
+
+  async function carregarAcessosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('perfis_usuarios')
+      .select('*')
+      .order('nome', { ascending: true })
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setAcessosAdmin(data || [])
+  }
+
+  async function salvarAcessoAdmin(event) {
+    event.preventDefault()
+
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem gerenciar acessos.')
+      return
+    }
+
+    if (!novoAcessoAdmin.userId.trim()) {
+      alert('Informe o User UID do Supabase Authentication.')
+      return
+    }
+
+    if (!novoAcessoAdmin.nome.trim()) {
+      alert('Informe o nome do usuário.')
+      return
+    }
+
+    if (!novoAcessoAdmin.email.trim()) {
+      alert('Informe o e-mail do usuário.')
+      return
+    }
+
+    if (!novoAcessoAdmin.igrejaId) {
+      alert('Selecione a igreja vinculada.')
+      return
+    }
+
+    const dadosAcesso = {
+      user_id: novoAcessoAdmin.userId.trim(),
+      nome: novoAcessoAdmin.nome.trim(),
+      email: novoAcessoAdmin.email.trim().toLowerCase(),
+      perfil: novoAcessoAdmin.perfil,
+      igreja_id: Number(novoAcessoAdmin.igrejaId),
+      classe_id: novoAcessoAdmin.classeId ? Number(novoAcessoAdmin.classeId) : null,
+      data_nascimento: novoAcessoAdmin.dataNascimento || null,
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .upsert(dadosAcesso, { onConflict: 'user_id' })
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível salvar o acesso.')
+      return
+    }
+
+    await carregarAcessosAdmin()
+    limparFormularioAcessoAdmin()
+    alert('Acesso salvo com sucesso!')
+  }
+
+  async function removerAcessoAdmin(acesso) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem remover acessos.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuário continuará existindo no Authentication, mas ficará sem vínculo no sistema.`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .delete()
+      .eq('user_id', acesso.user_id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível remover o acesso.')
+      return
+    }
+
+    await carregarAcessosAdmin()
+  }
+
+  async function enviarRecuperacaoSenhaAdmin(email) {
+    if (!email) {
+      alert('Este usuário não possui e-mail cadastrado.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Enviar link de recuperação de senha para ${email}?`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin,
+    })
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível enviar o link de recuperação de senha.')
+      return
+    }
+
+    alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
+  }
+
   async function carregarIgrejasAdmin() {
     if (!usuarioEhAdminSistema()) {
       return
@@ -685,6 +888,7 @@ function App() {
     }
 
     setIgrejasAdmin(data || [])
+    await carregarAcessosAdmin()
     await carregarFeedbacksAdmin()
   }
 
@@ -5072,6 +5276,227 @@ function App() {
     )
   }
 
+  function renderizarAcessosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return null
+    }
+
+    const acessosFiltrados = filtrarAcessosAdmin()
+    const totalSecretarias = acessosAdmin.filter((acesso) => acesso.perfil === 'secretaria').length
+    const totalProfessores = acessosAdmin.filter((acesso) => acesso.perfil === 'professor').length
+
+    return (
+      <div className="admin-acessos-bloco">
+        <div className="admin-acessos-topo">
+          <div>
+            <span className="selo-admin">Igrejas e acessos</span>
+            <h3>Controle comercial de usuários</h3>
+            <p>
+              Vincule secretarias e professores às igrejas cadastradas. Para criar o login,
+              primeiro crie o usuário em Supabase → Authentication → Users e cole o User UID aqui.
+            </p>
+          </div>
+
+          <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin()}>
+            Novo acesso
+          </button>
+        </div>
+
+        <div className="admin-acessos-resumo">
+          <div>
+            <strong>{acessosAdmin.length}</strong>
+            <span>acessos vinculados</span>
+          </div>
+
+          <div>
+            <strong>{totalSecretarias}</strong>
+            <span>secretarias</span>
+          </div>
+
+          <div>
+            <strong>{totalProfessores}</strong>
+            <span>professores</span>
+          </div>
+        </div>
+
+        {mostrarFormularioAcessoAdmin && (
+          <form className="formulario formulario-admin-acesso" onSubmit={salvarAcessoAdmin}>
+            <div className="topo-formulario-inline">
+              <div>
+                <h3>{acessoAdminEditandoUserId ? 'Editar acesso' : 'Novo acesso'}</h3>
+                <p>
+                  Este vínculo define qual igreja o usuário acessa e qual perfil ele terá no sistema.
+                </p>
+              </div>
+            </div>
+
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                Igreja
+                <select
+                  value={novoAcessoAdmin.igrejaId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, igrejaId: event.target.value })
+                  }
+                >
+                  <option value="">Selecione uma igreja</option>
+                  {igrejasAdmin.map((igreja) => (
+                    <option value={igreja.id} key={igreja.id}>
+                      {igreja.nome_igreja || igreja.nome} {igreja.congregacao ? `- ${igreja.congregacao}` : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Perfil
+                <select
+                  value={novoAcessoAdmin.perfil}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, perfil: event.target.value })
+                  }
+                >
+                  <option value="secretaria">Secretaria</option>
+                  <option value="professor">Professor</option>
+                  <option value="admin">Administrador local</option>
+                </select>
+              </label>
+
+              <label>
+                User UID do Supabase
+                <input
+                  type="text"
+                  value={novoAcessoAdmin.userId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, userId: event.target.value })
+                  }
+                  placeholder="Ex: 9a764fab-2000-4fb4-8ee0-9275a139e0f6"
+                />
+              </label>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={novoAcessoAdmin.nome}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, nome: event.target.value })
+                  }
+                  placeholder="Ex: Secretaria da igreja"
+                />
+              </label>
+
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  value={novoAcessoAdmin.email}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, email: event.target.value })
+                  }
+                  placeholder="Ex: secretaria@igreja.com"
+                />
+              </label>
+
+              <label>
+                ID da classe
+                <input
+                  type="number"
+                  value={novoAcessoAdmin.classeId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, classeId: event.target.value })
+                  }
+                  placeholder="Opcional, normalmente só para professor"
+                />
+              </label>
+
+              <label>
+                Data de nascimento
+                <input
+                  type="date"
+                  value={novoAcessoAdmin.dataNascimento}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({
+                      ...novoAcessoAdmin,
+                      dataNascimento: event.target.value,
+                    })
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                Salvar acesso
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={limparFormularioAcessoAdmin}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="filtros filtros-admin-acessos">
+          <label>
+            Buscar acesso
+            <input
+              type="text"
+              value={buscaAcessoAdmin}
+              onChange={(event) => setBuscaAcessoAdmin(event.target.value)}
+              placeholder="Buscar por nome, e-mail, perfil ou igreja"
+            />
+          </label>
+
+          <button className="botao-secundario" onClick={carregarAcessosAdmin}>
+            Atualizar acessos
+          </button>
+        </div>
+
+        <div className="lista-acessos-admin">
+          {acessosFiltrados.map((acesso) => (
+            <article className="acesso-admin-card" key={acesso.user_id}>
+              <div>
+                <div className="linha-acesso-admin">
+                  <h4>{acesso.nome || acesso.email}</h4>
+                  <span>{acesso.perfil}</span>
+                </div>
+
+                <p>{acesso.email}</p>
+                <p>Igreja: {buscarNomeIgrejaAdmin(acesso.igreja_id)}</p>
+                <small>User UID: {acesso.user_id}</small>
+              </div>
+
+              <div className="acoes-acesso-admin">
+                <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
+                  Enviar recuperação
+                </button>
+
+                <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
+                  Editar
+                </button>
+
+                <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
+                  Remover
+                </button>
+              </div>
+            </article>
+          ))}
+
+          {acessosFiltrados.length === 0 && (
+            <div className="aviso">
+              <p>Nenhum acesso encontrado.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   function renderizarAdministracao() {
     if (!usuarioEhAdminSistema()) {
       return (
@@ -5092,9 +5517,9 @@ function App() {
         <div className="topo-pagina topo-admin-sistema">
           <div>
             <span className="selo-admin">Administração do sistema</span>
-            <h2>Igrejas do piloto</h2>
+            <h2>Administração comercial</h2>
             <p>
-              Cadastre e acompanhe as igrejas que participarão dos testes do EBD Fiel.
+              Gerencie igrejas, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
             </p>
           </div>
 
@@ -5132,6 +5557,8 @@ function App() {
         </div>
 
         {renderizarAlertasFeedbackAdmin()}
+
+        {renderizarAcessosAdmin()}
 
         {mostrarFormularioIgrejaAdmin && (
           <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
@@ -5451,6 +5878,7 @@ function App() {
                 {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
+                <p>Acessos vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
                     Piloto: {igreja.data_inicio_piloto || 'sem início'} até{' '}
@@ -5460,6 +5888,10 @@ function App() {
               </div>
 
               <div className="acoes-item">
+                <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
+                  Vincular acesso
+                </button>
+
                 <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
                   Editar
                 </button>
@@ -5539,7 +5971,7 @@ function App() {
           <p className="titulo-usuario-sidebar">Logado como</p>
           <strong>{sessao?.user?.email}</strong>
           <span className="selo-perfil-sidebar">
-            {usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
+            {usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
           </span>
 
           <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
