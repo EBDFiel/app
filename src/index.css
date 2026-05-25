@@ -6481,3 +6481,717 @@ button.botao-principal {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* Feedback do teste piloto */
+.feedback-piloto-card,
+.admin-feedback-alertas {
+  margin-top: 24px;
+  padding: 26px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  box-shadow: 0 22px 52px rgba(0, 59, 102, 0.10);
+}
+
+.feedback-piloto-topo,
+.admin-feedback-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.feedback-piloto-topo h3,
+.admin-feedback-topo h3 {
+  margin: 10px 0 6px;
+  color: #003B66;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.05;
+}
+
+.feedback-piloto-topo p,
+.admin-feedback-topo p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.admin-feedback-topo > strong {
+  display: grid;
+  place-items: center;
+  min-width: 74px;
+  min-height: 74px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #F0442E, #FFD200);
+  color: #ffffff;
+  font-size: 34px;
+  box-shadow: 0 18px 36px rgba(240, 68, 46, 0.20);
+}
+
+.feedback-piloto-form {
+  display: grid;
+  gap: 14px;
+}
+
+.feedback-piloto-form textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.feedbacks-recentes-igreja {
+  margin-top: 22px;
+  display: grid;
+  gap: 10px;
+}
+
+.feedbacks-recentes-igreja h4 {
+  margin: 0;
+  color: #003B66;
+}
+
+.feedback-recente-item,
+.feedback-admin-item {
+  padding: 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #DDE7EF;
+}
+
+.feedback-recente-item strong {
+  color: #006BB6;
+  text-transform: capitalize;
+}
+
+.feedback-recente-item p,
+.feedback-admin-item p {
+  margin: 6px 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.feedback-recente-item span,
+.feedback-admin-item small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.lista-feedbacks-admin {
+  display: grid;
+  gap: 12px;
+}
+
+.feedback-admin-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.feedback-novo {
+  border-color: rgba(240, 68, 46, 0.30);
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.16), transparent 34%),
+    #ffffff;
+}
+
+.feedback-lido {
+  opacity: 0.78;
+}
+
+.linha-feedback-admin {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.linha-feedback-admin strong {
+  color: #003B66;
+  font-size: 18px;
+}
+
+.linha-feedback-admin span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #E7F8EF;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.feedback-novo .linha-feedback-admin span {
+  background: #FFE8E2;
+  color: #b91c1c;
+}
+
+.texto-sem-feedback {
+  margin: 0;
+  color: #64748b;
+  font-weight: 800;
+}
+
+/* Professores dentro da mesma tabela do relatório */
+.linha-professores-titulo td {
+  background:
+    linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  letter-spacing: 0.02em;
+}
+
+.linha-professores-cabecalho td {
+  background: #FFF3B8 !important;
+  color: #003B66 !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.linha-professor-relatorio td {
+  background: #ffffff !important;
+  color: #071827 !important;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .feedback-piloto-card,
+  .admin-feedback-alertas {
+    padding: 20px;
+  }
+
+  .feedback-piloto-topo,
+  .admin-feedback-topo,
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .admin-feedback-topo > strong {
+    width: 100%;
+  }
+
+  .linha-professores-titulo td,
+  .linha-professores-cabecalho td,
+  .linha-professor-relatorio td {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .linha-professores-cabecalho {
+    display: none !important;
+  }
+
+  .linha-professor-relatorio td::before {
+    content: none !important;
+  }
+}
+
+@media print {
+  .feedback-piloto-card,
+  .admin-feedback-alertas {
+    display: none !important;
+  }
+
+  .linha-professores-titulo td {
+    background: #e5e7eb !important;
+    color: #000000 !important;
+  }
+
+  .linha-professores-cabecalho td {
+    background: #f3f4f6 !important;
+    color: #000000 !important;
+  }
+}
+
+
+/* Feedback piloto - formulário largo, moderno e profissional */
+.feedback-piloto-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(22px, 3vw, 34px) !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 95% 0%, rgba(255, 210, 0, 0.30), transparent 34%),
+    radial-gradient(circle at 0% 100%, rgba(0, 174, 239, 0.18), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%) !important;
+  border: 1px solid rgba(0, 174, 239, 0.24) !important;
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.12) !important;
+}
+
+.feedback-piloto-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.feedback-piloto-topo {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px !important;
+}
+
+.feedback-piloto-topo h3 {
+  max-width: 980px;
+  margin-top: 12px !important;
+  color: #003B66 !important;
+  font-size: clamp(28px, 3.4vw, 44px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em;
+}
+
+.feedback-piloto-topo p {
+  max-width: 980px;
+  color: #334155 !important;
+  font-size: 16px;
+}
+
+.feedback-piloto-form-moderno {
+  position: relative;
+  z-index: 1;
+  display: grid !important;
+  gap: 18px !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+.feedback-form-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.feedback-campo {
+  display: grid !important;
+  gap: 9px !important;
+  width: 100% !important;
+  color: #003B66 !important;
+  font-weight: 900 !important;
+}
+
+.feedback-campo > span,
+.feedback-label-linha span {
+  color: #003B66;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+}
+
+.feedback-campo select,
+.feedback-campo textarea {
+  width: 100% !important;
+  display: block !important;
+  border: 1px solid rgba(0, 174, 239, 0.28) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #071827 !important;
+  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.05);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.feedback-campo select {
+  min-height: 54px;
+  padding: 0 16px !important;
+  border-radius: 18px !important;
+  font-weight: 800;
+}
+
+.feedback-campo textarea {
+  min-height: 220px !important;
+  padding: 18px 20px !important;
+  border-radius: 24px !important;
+  resize: vertical;
+  line-height: 1.65;
+  font-size: 16px;
+}
+
+.feedback-campo textarea::placeholder {
+  color: #64748b;
+}
+
+.feedback-campo select:focus,
+.feedback-campo textarea:focus {
+  outline: none !important;
+  border-color: #00AEEF !important;
+  box-shadow:
+    0 0 0 5px rgba(0, 174, 239, 0.14),
+    0 18px 36px rgba(0, 59, 102, 0.10) !important;
+}
+
+.feedback-dica {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-height: 76px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 36%),
+    linear-gradient(135deg, rgba(0, 174, 239, 0.10), rgba(0, 166, 81, 0.08));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.feedback-dica strong {
+  color: #003B66;
+  font-size: 16px;
+}
+
+.feedback-dica span {
+  color: #475569;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.feedback-label-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feedback-label-linha small {
+  color: #64748b;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.feedback-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.botao-feedback-enviar {
+  min-height: 58px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 16px;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.30);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-feedback-enviar strong {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.botao-feedback-enviar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 52px rgba(0, 174, 239, 0.38);
+  filter: saturate(1.08);
+}
+
+.botao-feedback-enviar:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+  transform: none;
+}
+
+.feedback-acoes p {
+  max-width: 520px;
+  margin: 0;
+  color: #64748b;
+  line-height: 1.55;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.feedbacks-recentes-igreja {
+  margin-top: 26px !important;
+  padding-top: 22px;
+  border-top: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.feedbacks-recentes-igreja h4 {
+  color: #003B66 !important;
+  font-size: 18px;
+}
+
+.feedback-recente-item {
+  border-radius: 20px !important;
+  border-color: rgba(0, 174, 239, 0.18) !important;
+  box-shadow: 0 12px 26px rgba(0, 59, 102, 0.05);
+}
+
+@media (max-width: 760px) {
+  .feedback-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-campo textarea {
+    min-height: 240px !important;
+  }
+
+  .feedback-acoes,
+  .botao-feedback-enviar {
+    width: 100%;
+  }
+
+  .feedback-acoes {
+    display: grid;
+  }
+}
+
+
+/* Administração comercial definitiva */
+.admin-acessos-bloco {
+  margin: 24px 0;
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.14), transparent 36%),
+    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.24);
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
+}
+
+.admin-acessos-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.admin-acessos-topo h3 {
+  margin: 10px 0 6px;
+  color: #003B66;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.admin-acessos-topo p {
+  max-width: 900px;
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.admin-acessos-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.admin-acessos-resumo div {
+  padding: 18px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
+}
+
+.admin-acessos-resumo strong,
+.admin-acessos-resumo span {
+  display: block;
+}
+
+.admin-acessos-resumo strong {
+  color: #003B66;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.admin-acessos-resumo span {
+  margin-top: 6px;
+  color: #64748b;
+  font-weight: 900;
+}
+
+.formulario-admin-acesso {
+  background:
+    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 34%),
+    #ffffff !important;
+  border-color: rgba(0, 166, 81, 0.22) !important;
+}
+
+.filtros-admin-acessos {
+  margin: 18px 0;
+  align-items: end;
+}
+
+.lista-acessos-admin {
+  display: grid;
+  gap: 12px;
+}
+
+.acesso-admin-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
+}
+
+.linha-acesso-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.linha-acesso-admin h4 {
+  margin: 0;
+  color: #003B66;
+  font-size: 20px;
+}
+
+.linha-acesso-admin span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #E7F8EF;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.acesso-admin-card p {
+  margin: 6px 0 0;
+  color: #334155;
+  font-weight: 700;
+}
+
+.acesso-admin-card small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  word-break: break-all;
+}
+
+.acoes-acesso-admin {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.acoes-acesso-admin button {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .admin-acessos-topo,
+  .acesso-admin-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .admin-acessos-resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-acesso-admin {
+    width: 100%;
+  }
+}
+
+
+/* Teste fechado - sem solicitação pública de acesso */
+.aviso-teste-fechado {
+  display: inline-flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  color: #003B66;
+  font-weight: 900;
+  line-height: 1.45;
+  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.06);
+}
+
+.aviso-teste-fechado-centro {
+  justify-content: center;
+  text-align: center;
+}
+
+.acoes-hero-oficial .botao-principal,
+.acoes-teste-oficial .botao-principal,
+.cta-final-oficial .botao-principal {
+  min-height: 56px;
+  border-radius: 18px;
+}
+
+@media (max-width: 760px) {
+  .aviso-teste-fechado {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+
+/* Cadastro de igrejas AD: sede, congregação e endereço completo */
+.campo-sede-filiada {
+  grid-column: span 2;
+}
+
+.dados-igreja-admin {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.dados-igreja-admin p {
+  margin: 0 !important;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.dados-igreja-admin strong {
+  color: #003B66;
+}
+
+.formulario-admin-igreja select,
+.formulario-admin-igreja input {
+  min-height: 48px;
+}
+
+@media (max-width: 760px) {
+  .campo-sede-filiada {
+    grid-column: span 1;
+  }
+
+  .dados-igreja-admin {
+    padding: 12px;
+  }
+}
