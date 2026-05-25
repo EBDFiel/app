@@ -3334,37 +3334,56 @@ function App() {
           </div>
         </div>
 
-        <form className="feedback-piloto-form" onSubmit={enviarFeedbackPiloto}>
-          <label>
-            Tipo de feedback
-            <select
-              value={feedbackPiloto.tipo}
-              onChange={(event) =>
-                setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
-              }
-            >
-              <option value="sugestao">Sugestão</option>
-              <option value="erro">Erro encontrado</option>
-              <option value="duvida">Dúvida</option>
-              <option value="elogio">Elogio</option>
-            </select>
-          </label>
+        <form className="feedback-piloto-form feedback-piloto-form-moderno" onSubmit={enviarFeedbackPiloto}>
+          <div className="feedback-form-grid">
+            <label className="feedback-campo feedback-campo-tipo">
+              <span>Tipo de feedback</span>
+              <select
+                value={feedbackPiloto.tipo}
+                onChange={(event) =>
+                  setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
+                }
+              >
+                <option value="sugestao">Sugestão</option>
+                <option value="erro">Erro encontrado</option>
+                <option value="duvida">Dúvida</option>
+                <option value="elogio">Elogio</option>
+              </select>
+            </label>
 
-          <label>
-            Mensagem
+            <div className="feedback-dica">
+              <strong>Ajude a melhorar o piloto</strong>
+              <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
+            </div>
+          </div>
+
+          <label className="feedback-campo feedback-campo-mensagem">
+            <div className="feedback-label-linha">
+              <span>Mensagem</span>
+              <small>{feedbackPiloto.mensagem.length}/1000</small>
+            </div>
+
             <textarea
               value={feedbackPiloto.mensagem}
+              maxLength="1000"
               onChange={(event) =>
                 setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
               }
-              placeholder="Ex: Na chamada dos professores, senti falta de..."
-              rows="4"
+              placeholder="Ex: Na chamada dos professores, senti falta de visualizar todos os professores cadastrados antes de salvar..."
+              rows="7"
             />
           </label>
 
-          <button className="botao-principal" type="submit" disabled={carregandoFeedback}>
-            {carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}
-          </button>
+          <div className="feedback-acoes">
+            <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
+              <span>{carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}</span>
+              <strong>→</strong>
+            </button>
+
+            <p>
+              Seu feedback fica registrado para os administradores do EBD Fiel acompanharem.
+            </p>
+          </div>
         </form>
 
         {feedbacksIgreja.length > 0 && (
