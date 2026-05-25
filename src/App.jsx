@@ -1200,6 +1200,10 @@ function App() {
   }
 
   function usuarioEhSecretaria() {
+    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id) {
+      return false
+    }
+
     return perfilUsuario?.perfil !== 'professor'
   }
 
@@ -1273,6 +1277,67 @@ function App() {
     }
 
     if (!perfilBanco?.igreja_id) {
+      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+      const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
+
+      if (ehAdminSessaoAtual) {
+        const perfilAdminSistema = {
+          id: null,
+          user_id: sessaoAtual.user.id,
+          nome: 'Administrador do sistema',
+          email: emailSessaoAtual,
+          perfil: 'admin',
+          igreja_id: null,
+          classe_id: null,
+        }
+
+        setPerfilUsuario(perfilAdminSistema)
+        setIgrejaId(null)
+        setClasses([])
+        setAlunos([])
+        setChamadasSalvas([])
+        setChamadasProfessores([])
+        setVinculosProfessores([])
+        setPaginaAtual('administracao')
+
+        const { data: igrejasAdminBanco, error: erroIgrejasAdmin } = await supabase
+          .from('igrejas')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (erroIgrejasAdmin) {
+          throw erroIgrejasAdmin
+        }
+
+        setIgrejasAdmin(igrejasAdminBanco || [])
+
+        const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .order('nome', { ascending: true })
+
+        if (erroAcessosAdmin) {
+          console.error(erroAcessosAdmin)
+        } else {
+          setAcessosAdmin(acessosAdminBanco || [])
+        }
+
+        const { data: feedbacksAdminBanco, error: erroFeedbacksAdmin } = await supabase
+          .from('feedbacks_piloto')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(80)
+
+        if (erroFeedbacksAdmin) {
+          console.error(erroFeedbacksAdmin)
+        } else {
+          setFeedbacksAdmin(feedbacksAdminBanco || [])
+        }
+
+        setCarregando(false)
+        return
+      }
+
       throw new Error(
         'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
       )
@@ -6040,6 +6105,10 @@ function App() {
   function renderizarPagina() {
     if (paginaAtual === 'administracao' && !usuarioEhAdminSistema()) {
       return renderizarPainel()
+    }
+
+    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id && paginaAtual !== 'administracao') {
+      return renderizarAdministracao()
     }
 
     if (!usuarioEhSecretaria() && ['classes', 'professores', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
