@@ -1725,6 +1725,18 @@ function App() {
     setMostrarFormularioAluno(true)
   }
 
+  function abrirNovoAlunoDaClasse(classeId) {
+    setNovoAluno({
+      nome: '',
+      classeId: String(classeId),
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa: 'aluno',
+    })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(true)
+  }
+
   function abrirNovoProfessorDaClasse(classeId) {
     setNovoAluno({
       nome: '',
@@ -3211,14 +3223,6 @@ function App() {
         )}
 
         <div className="grade-resumos-comerciais">
-          <div className="resumo resumo-comercial">
-            <h3>Visual pronto para comercialização</h3>
-            <p>
-              O sistema agora possui aparência mais profissional, menu com ícones e área
-              de configurações para personalizar os dados de cada igreja.
-            </p>
-          </div>
-
           <div className="resumo resumo-comercial resumo-alerta-claro">
             <h3>Personalização da igreja</h3>
             <p>
@@ -3233,17 +3237,29 @@ function App() {
   }
 
   function renderizarFormularioProfessorClasse() {
-    if (!mostrarFormularioAluno || novoAluno.tipoPessoa !== 'professor') {
+    if (!mostrarFormularioAluno || !['professor', 'aluno'].includes(novoAluno.tipoPessoa)) {
       return null
     }
 
+    const formularioProfessor = novoAluno.tipoPessoa === 'professor'
+
     return (
-      <form className="formulario formulario-professor-classe" onSubmit={salvarAluno}>
+      <form className="formulario formulario-professor-classe formulario-pessoa-classe" onSubmit={salvarAluno}>
         <div className="topo-formulario-inline">
           <div>
-            <h3>{alunoEditandoId ? 'Editar professor' : 'Novo professor'}</h3>
+            <h3>
+              {alunoEditandoId
+                ? formularioProfessor
+                  ? 'Editar professor'
+                  : 'Editar aluno'
+                : formularioProfessor
+                  ? 'Novo professor'
+                  : 'Novo aluno'}
+            </h3>
             <p>
-              Este cadastro também aparece no menu Professores e na Chamada dos professores.
+              {formularioProfessor
+                ? 'Este cadastro também aparece no menu Professores e na Chamada dos professores.'
+                : 'Este aluno será cadastrado diretamente na classe selecionada e aparecerá na chamada dos alunos.'}
             </p>
           </div>
         </div>
@@ -3257,7 +3273,7 @@ function App() {
               onChange={(event) =>
                 setNovoAluno({ ...novoAluno, nome: event.target.value })
               }
-              placeholder="Ex: Leandro Silva"
+              placeholder={formularioProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
             />
           </label>
 
@@ -3308,7 +3324,11 @@ function App() {
 
         <div className="grupo-botoes">
           <button className="botao-principal" type="submit">
-            {alunoEditandoId ? 'Salvar alterações' : 'Salvar professor'}
+            {alunoEditandoId
+              ? 'Salvar alterações'
+              : formularioProfessor
+                ? 'Salvar professor'
+                : 'Salvar aluno'}
           </button>
 
           <button
@@ -3338,7 +3358,7 @@ function App() {
         <div className="topo-pagina">
           <div>
             <h2>Classes</h2>
-            <p>Gerencie as classes e também cadastre, edite ou exclua professores vinculados a cada classe.</p>
+            <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
           </div>
 
           {!mostrarFormularioClasse && (
@@ -3352,8 +3372,7 @@ function App() {
           <form className="formulario" onSubmit={salvarClasse}>
             <div className="aviso aviso-edicao-classe">
               <p>
-                Edite o nome da classe aqui. Para editar professores, use os botões
-                Editar/Excluir na lista de professores da própria classe.
+                Edite o nome da classe aqui. Alunos e professores podem ser cadastrados diretamente no cartão de cada classe.
               </p>
             </div>
 
@@ -3387,10 +3406,9 @@ function App() {
 
         {renderizarFormularioProfessorClasse()}
 
-        <div className="aviso aviso-classes-professores">
+        <div className="aviso aviso-classes-professores aviso-classes-moderno">
           <p>
-            Você pode gerenciar professores por aqui ou pelo menu <strong>Professores</strong>.
-            Os professores antigos cadastrados nas classes serão puxados automaticamente para o cadastro de professores ao carregar o sistema.
+            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrícula de cada turma.
           </p>
         </div>
 
@@ -3399,11 +3417,31 @@ function App() {
             const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
 
             return (
-            <div className="item-lista item-com-acoes" key={classe.id}>
-              <div>
-                <h3>{classe.nome}</h3>
-                <p>Professores: {buscarTextoProfessoresDaClasse(classe.id)}</p>
-                <p>Matrícula: {calcularMatriculaDaClasse(classe.id)} alunos</p>
+            <div className="item-lista item-com-acoes classe-card-moderno" key={classe.id}>
+              <div className="classe-card-conteudo">
+                <div className="classe-card-cabecalho">
+                  <div>
+                    <span className="classe-card-selo">Classe</span>
+                    <h3>{classe.nome}</h3>
+                  </div>
+
+                  <strong className="classe-card-matricula">
+                    {calcularMatriculaDaClasse(classe.id)}
+                    <span>alunos</span>
+                  </strong>
+                </div>
+
+                <div className="classe-card-info">
+                  <p>
+                    <strong>Professores</strong>
+                    <span>{buscarTextoProfessoresDaClasse(classe.id)}</span>
+                  </p>
+
+                  <p>
+                    <strong>Matrícula</strong>
+                    <span>{calcularMatriculaDaClasse(classe.id)} alunos</span>
+                  </p>
+                </div>
 
                 <div className="professores-na-classe">
                   {professoresDaClasse.length > 0 ? (
@@ -3436,9 +3474,16 @@ function App() {
                 </div>
               </div>
 
-              <div className="acoes-item">
+              <div className="acoes-item acoes-classe-card">
                 <button
                   className="botao-principal botao-sem-margem"
+                  onClick={() => abrirNovoAlunoDaClasse(classe.id)}
+                >
+                  Novo aluno
+                </button>
+
+                <button
+                  className="botao-principal botao-verde"
                   onClick={() => abrirNovoProfessorDaClasse(classe.id)}
                 >
                   Novo professor
