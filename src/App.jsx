@@ -166,6 +166,14 @@ function App() {
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
   const [chamadasProfessores, setChamadasProfessores] = useState([])
+  const [igrejaAtualPiloto, setIgrejaAtualPiloto] = useState(null)
+  const [feedbackPiloto, setFeedbackPiloto] = useState({
+    tipo: 'sugestao',
+    mensagem: '',
+  })
+  const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
+  const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
+  const [carregandoFeedback, setCarregandoFeedback] = useState(false)
   const [perfilUsuario, setPerfilUsuario] = useState(null)
   const [perfisIgreja, setPerfisIgreja] = useState([])
   const [vinculosProfessores, setVinculosProfessores] = useState([])
@@ -677,6 +685,7 @@ function App() {
     }
 
     setIgrejasAdmin(data || [])
+    await carregarFeedbacksAdmin()
   }
 
   async function salvarIgrejaAdmin(event) {
@@ -826,6 +835,140 @@ function App() {
   function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
     console.error(erro)
     alert(traduzirErroSistema(erro, mensagemPadrao))
+  }
+
+  function igrejaEstaEmTestePiloto() {
+    return igrejaAtualPiloto?.status_piloto === 'teste'
+  }
+
+  function formatarDataHoraFeedback(valor) {
+    if (!valor) {
+      return ''
+    }
+
+    try {
+      return new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(valor))
+    } catch {
+      return valor
+    }
+  }
+
+  async function carregarFeedbacksDaIgreja(igrejaAtualId = buscarIgrejaIdAtual()) {
+    if (!igrejaAtualId) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('feedbacks_piloto')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setFeedbacksIgreja(data || [])
+  }
+
+  async function carregarFeedbacksAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('feedbacks_piloto')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(80)
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setFeedbacksAdmin(data || [])
+  }
+
+  async function enviarFeedbackPiloto(event) {
+    event.preventDefault()
+
+    if (!igrejaEstaEmTestePiloto()) {
+      alert('A área de feedback está disponível para igrejas em teste piloto.')
+      return
+    }
+
+    if (!feedbackPiloto.mensagem.trim()) {
+      alert('Escreva seu feedback antes de enviar.')
+      return
+    }
+
+    setCarregandoFeedback(true)
+
+    const { error } = await supabase.from('feedbacks_piloto').insert({
+      igreja_id: buscarIgrejaIdAtual(),
+      user_id: sessao?.user?.id || null,
+      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'Usuário',
+      email_usuario: perfilUsuario?.email || sessao?.user?.email || '',
+      perfil_usuario: perfilUsuario?.perfil || '',
+      tipo: feedbackPiloto.tipo,
+      mensagem: feedbackPiloto.mensagem.trim(),
+      lido: false,
+    })
+
+    setCarregandoFeedback(false)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível enviar o feedback.')
+      return
+    }
+
+    setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
+    await carregarFeedbacksDaIgreja()
+    alert('Feedback enviado com sucesso. Obrigado por ajudar no teste piloto!')
+  }
+
+  async function marcarFeedbackComoLido(feedbackId) {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('feedbacks_piloto')
+      .update({ lido: true, lido_em: new Date().toISOString() })
+      .eq('id', feedbackId)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível marcar o feedback como lido.')
+      return
+    }
+
+    await carregarFeedbacksAdmin()
+  }
+
+  function buscarNomeIgrejaFeedback(feedback) {
+    const igreja = igrejasAdmin.find(
+      (item) => Number(item.id) === Number(feedback.igreja_id)
+    )
+
+    return (
+      igreja?.nome_igreja ||
+      igreja?.nome ||
+      feedback.nome_igreja ||
+      `Igreja ID ${feedback.igreja_id}`
+    )
+  }
+
+  function contarFeedbacksNaoLidos() {
+    return feedbacksAdmin.filter((feedback) => !feedback.lido).length
   }
 
   function usuarioEhSecretaria() {
@@ -1097,6 +1240,24 @@ function App() {
 
     if (erroConfiguracoes) {
       throw erroConfiguracoes
+    }
+
+    const { data: igrejaPilotoBanco, error: erroIgrejaPiloto } = await supabase
+      .from('igrejas')
+      .select('id,nome,nome_igreja,congregacao,status_piloto')
+      .eq('id', igrejaAtualId)
+      .maybeSingle()
+
+    if (erroIgrejaPiloto) {
+      console.error(erroIgrejaPiloto)
+    }
+
+    setIgrejaAtualPiloto(igrejaPilotoBanco || null)
+
+    if (igrejaPilotoBanco?.status_piloto === 'teste') {
+      await carregarFeedbacksDaIgreja(igrejaAtualId)
+    } else {
+      setFeedbacksIgreja([])
     }
 
     setClasses(
@@ -3155,6 +3316,74 @@ function App() {
     await buscarTodosOsDados()
   }
 
+  function renderizarFeedbackPiloto() {
+    if (!igrejaEstaEmTestePiloto()) {
+      return null
+    }
+
+    return (
+      <div className="feedback-piloto-card">
+        <div className="feedback-piloto-topo">
+          <div>
+            <span className="hero-tag">Teste piloto</span>
+            <h3>Enviar feedback para a equipe EBD Fiel</h3>
+            <p>
+              Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
+              O administrador do sistema receberá um alerta na área Administração.
+            </p>
+          </div>
+        </div>
+
+        <form className="feedback-piloto-form" onSubmit={enviarFeedbackPiloto}>
+          <label>
+            Tipo de feedback
+            <select
+              value={feedbackPiloto.tipo}
+              onChange={(event) =>
+                setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
+              }
+            >
+              <option value="sugestao">Sugestão</option>
+              <option value="erro">Erro encontrado</option>
+              <option value="duvida">Dúvida</option>
+              <option value="elogio">Elogio</option>
+            </select>
+          </label>
+
+          <label>
+            Mensagem
+            <textarea
+              value={feedbackPiloto.mensagem}
+              onChange={(event) =>
+                setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
+              }
+              placeholder="Ex: Na chamada dos professores, senti falta de..."
+              rows="4"
+            />
+          </label>
+
+          <button className="botao-principal" type="submit" disabled={carregandoFeedback}>
+            {carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}
+          </button>
+        </form>
+
+        {feedbacksIgreja.length > 0 && (
+          <div className="feedbacks-recentes-igreja">
+            <h4>Últimos feedbacks enviados</h4>
+
+            {feedbacksIgreja.slice(0, 4).map((feedback) => (
+              <div className="feedback-recente-item" key={feedback.id}>
+                <strong>{feedback.tipo}</strong>
+                <p>{feedback.mensagem}</p>
+                <span>{formatarDataHoraFeedback(feedback.created_at)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   function renderizarPainel() {
     const aniversariantesDaSemana = buscarAniversariantesDaSemana()
 
@@ -3270,6 +3499,8 @@ function App() {
             )}
           </div>
         )}
+
+        {renderizarFeedbackPiloto()}
 
         <div className="grade-resumos-comerciais">
           <div className="resumo resumo-comercial resumo-alerta-claro">
@@ -4549,38 +4780,52 @@ function App() {
                 <tr className="linha-domingo-anterior">
                   <td colSpan="11">DOMINGO anterior</td>
                 </tr>
+
+                {usuarioEhSecretaria() && (
+                  <>
+                    <tr className="linha-professores-titulo">
+                      <td colSpan="11">
+                        CHAMADA DOS PROFESSORES • Total: {resumoProfessores.totalProfessores} •
+                        Presentes: {resumoProfessores.presentes} • Faltaram:{' '}
+                        {resumoProfessores.faltaram} • Justificaram:{' '}
+                        {resumoProfessores.justificaram} • Frequência:{' '}
+                        {percentualProfessores}%
+                      </td>
+                    </tr>
+
+                    <tr className="linha-professores-cabecalho">
+                      <td>Nº</td>
+                      <td>Professor</td>
+                      <td colSpan="3">Classe de referência</td>
+                      <td colSpan="3">Status</td>
+                      <td colSpan="3">Data</td>
+                    </tr>
+
+                    {resumoProfessores.registros.length > 0 ? (
+                      resumoProfessores.registros.map((registro, indice) => (
+                        <tr
+                          className="linha-professor-relatorio"
+                          key={`${registro.nome}-${indice}`}
+                        >
+                          <td>{indice + 1}</td>
+                          <td>{registro.nome}</td>
+                          <td colSpan="3">
+                            {registro.classeReferencia || registro.classes || '-'}
+                          </td>
+                          <td colSpan="3">{traduzirStatusProfessor(registro.status)}</td>
+                          <td colSpan="3">{formatarDataRelatorio(resumoProfessores.data)}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="linha-professor-relatorio">
+                        <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
+                      </tr>
+                    )}
+                  </>
+                )}
               </tbody>
             </table>
           </div>
-
-          {usuarioEhSecretaria() && (
-            <div className="relatorio-professores-integrado">
-              <div className="titulo-integrado-professores">
-                <strong>Professores</strong>
-                <span>
-                  Total: {resumoProfessores.totalProfessores} • Presentes:{' '}
-                  {resumoProfessores.presentes} • Faltaram:{' '}
-                  {resumoProfessores.faltaram} • Justificaram:{' '}
-                  {resumoProfessores.justificaram}
-                </span>
-              </div>
-
-              {resumoProfessores.registros.length > 0 && (
-                <div className="professores-integrados-lista">
-                  {resumoProfessores.registros.map((registro, indice) => (
-                    <div
-                      className="professor-integrado-item"
-                      key={`${registro.nome}-${indice}`}
-                    >
-                      <span>{indice + 1}. {registro.nome}</span>
-                      <span>{registro.classeReferencia || registro.classes || '-'}</span>
-                      <strong>{traduzirStatusProfessor(registro.status)}</strong>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </section>
     )
@@ -4748,6 +4993,66 @@ function App() {
     )
   }
 
+  function renderizarAlertasFeedbackAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return null
+    }
+
+    const feedbacksNaoLidos = feedbacksAdmin.filter((feedback) => !feedback.lido)
+
+    return (
+      <div className="admin-feedback-alertas">
+        <div className="admin-feedback-topo">
+          <div>
+            <span className="selo-admin">Alertas do piloto</span>
+            <h3>Feedbacks recebidos</h3>
+            <p>
+              Toda mensagem enviada pelas igrejas em teste aparece aqui para acompanhamento.
+            </p>
+          </div>
+
+          <strong>{feedbacksNaoLidos.length}</strong>
+        </div>
+
+        {feedbacksAdmin.length === 0 ? (
+          <p className="texto-sem-feedback">Nenhum feedback recebido ainda.</p>
+        ) : (
+          <div className="lista-feedbacks-admin">
+            {feedbacksAdmin.slice(0, 12).map((feedback) => (
+              <article
+                className={`feedback-admin-item ${feedback.lido ? 'feedback-lido' : 'feedback-novo'}`}
+                key={feedback.id}
+              >
+                <div>
+                  <div className="linha-feedback-admin">
+                    <strong>{buscarNomeIgrejaFeedback(feedback)}</strong>
+                    <span>{feedback.lido ? 'Lido' : 'Novo'}</span>
+                  </div>
+
+                  <p>{feedback.mensagem}</p>
+
+                  <small>
+                    {feedback.tipo} • {feedback.nome_usuario || feedback.email_usuario || 'Usuário'} •{' '}
+                    {formatarDataHoraFeedback(feedback.created_at)}
+                  </small>
+                </div>
+
+                {!feedback.lido && (
+                  <button
+                    className="botao-secundario"
+                    onClick={() => marcarFeedbackComoLido(feedback.id)}
+                  >
+                    Marcar como lido
+                  </button>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   function renderizarAdministracao() {
     if (!usuarioEhAdminSistema()) {
       return (
@@ -4806,6 +5111,8 @@ function App() {
             <p>aguardando retorno</p>
           </div>
         </div>
+
+        {renderizarAlertasFeedbackAdmin()}
 
         {mostrarFormularioIgrejaAdmin && (
           <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
