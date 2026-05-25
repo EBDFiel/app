@@ -203,6 +203,11 @@ function App() {
     estado: '',
     bairro: '',
     endereco: '',
+    cep: '',
+    tipo_igreja: 'congregacao',
+    sede_filiada_nome: '',
+    sede_filiada_endereco: '',
+    sede_filiada_cep: '',
     telefone: '',
     email: '',
     status_piloto: 'teste',
@@ -667,6 +672,11 @@ function App() {
       estado: igreja.estado || '',
       bairro: igreja.bairro || '',
       endereco: igreja.endereco || '',
+      cep: igreja.cep || '',
+      tipo_igreja: igreja.tipo_igreja || 'congregacao',
+      sede_filiada_nome: igreja.sede_filiada_nome || '',
+      sede_filiada_endereco: igreja.sede_filiada_endereco || '',
+      sede_filiada_cep: igreja.sede_filiada_cep || '',
       telefone: igreja.telefone || '',
       email: igreja.email || '',
       status_piloto: igreja.status_piloto || 'teste',
@@ -913,6 +923,20 @@ function App() {
       estado: novaIgrejaAdmin.estado.trim(),
       bairro: novaIgrejaAdmin.bairro.trim(),
       endereco: novaIgrejaAdmin.endereco.trim(),
+      cep: novaIgrejaAdmin.cep.trim(),
+      tipo_igreja: novaIgrejaAdmin.tipo_igreja,
+      sede_filiada_nome:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_nome.trim()
+          : '',
+      sede_filiada_endereco:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_endereco.trim()
+          : '',
+      sede_filiada_cep:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_cep.trim()
+          : '',
       telefone: novaIgrejaAdmin.telefone.trim(),
       email: novaIgrejaAdmin.email.trim(),
       status_piloto: novaIgrejaAdmin.status_piloto,
@@ -2777,22 +2801,17 @@ function App() {
               </p>
 
               <div className="acoes-publicas acoes-hero-oficial">
-                <a
-                  className="botao-principal link-botao-publico"
-                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20uma%20demonstra%C3%A7%C3%A3o%20do%20EBD%20Fiel."
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Solicitar demonstração
-                </a>
-
                 <button
-                  className="botao-secundario"
+                  className="botao-principal"
                   type="button"
                   onClick={() => setTelaPublica('login')}
                 >
-                  Acessar área de teste
+                  Entrar no sistema
                 </button>
+
+                <span className="aviso-teste-fechado">
+                  Teste piloto fechado para participantes do grupo de WhatsApp da EBD Fiel.
+                </span>
               </div>
 
               <div className="selos-confianca-hero">
@@ -3041,17 +3060,17 @@ function App() {
           <section className="secao-publica teste-piloto-oficial" id="planos">
             <div className="cabecalho-secao-publica">
               <span className="selo-publico">Teste piloto</span>
-              <h2>Teste o EBD Fiel na sua igreja</h2>
+              <h2>Teste fechado para participantes do grupo</h2>
               <p>
-                Estamos preparando igrejas para testar o sistema e validar o uso real
-                na secretaria, nas classes e nos relatórios da EBD.
+                O acesso ao piloto será liberado manualmente apenas para participantes
+                do grupo de WhatsApp da EBD Fiel.
               </p>
             </div>
 
             <div className="cards-planos-oficiais">
               <article>
                 <h3>Teste piloto</h3>
-                <p>Para igrejas que desejam experimentar a plataforma.</p>
+                <p>Para igrejas do grupo selecionadas para experimentar a plataforma.</p>
               </article>
 
               <article>
@@ -3066,23 +3085,17 @@ function App() {
             </div>
 
             <div className="acoes-publicas acoes-teste-oficial">
-              <a
-                className="botao-principal link-botao-publico"
-                href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20participar%20do%20teste%20piloto%20do%20EBD%20Fiel."
-                target="_blank"
-                rel="noreferrer"
-              >
-                Quero participar do teste
-              </a>
+              <button
+                  className="botao-principal"
+                  type="button"
+                  onClick={() => setTelaPublica('login')}
+                >
+                  Entrar no sistema
+                </button>
 
-              <a
-                className="botao-secundario link-botao-publico"
-                href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20falar%20sobre%20o%20EBD%20Fiel."
-                target="_blank"
-                rel="noreferrer"
-              >
-                Falar pelo WhatsApp
-              </a>
+              <span className="aviso-teste-fechado aviso-teste-fechado-centro">
+                Sem cadastro público. A liberação é feita manualmente pelo administrador.
+              </span>
             </div>
           </section>
 
@@ -3125,12 +3138,12 @@ function App() {
 
               <details>
                 <summary>Como funciona o teste piloto?</summary>
-                <p>Algumas igrejas são cadastradas para testar o sistema e enviar feedback.</p>
+                <p>O teste piloto é fechado para participantes do grupo da EBD Fiel, com acesso liberado manualmente.</p>
               </details>
 
               <details>
-                <summary>Como posso solicitar uma demonstração?</summary>
-                <p>Basta clicar no botão de demonstração e falar pelo WhatsApp.</p>
+                <summary>Como consigo acesso ao teste?</summary>
+                <p>O acesso é liberado manualmente para participantes do grupo de WhatsApp da EBD Fiel.</p>
               </details>
             </div>
           </section>
@@ -3139,18 +3152,17 @@ function App() {
             <span className="selo-publico">EBD Fiel</span>
             <h2>Fiel à Palavra, organizado para servir melhor.</h2>
             <p>
-              Uma plataforma para ajudar igrejas a organizarem a Escola Bíblica
+              Uma plataforma em teste fechado para ajudar igrejas a organizarem a Escola Bíblica
               Dominical com mais clareza, simplicidade e responsabilidade.
             </p>
 
-            <a
-              className="botao-principal link-botao-publico"
-              href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20uma%20demonstra%C3%A7%C3%A3o%20do%20EBD%20Fiel."
-              target="_blank"
-              rel="noreferrer"
-            >
-              Solicitar demonstração
-            </a>
+            <button
+                  className="botao-principal"
+                  type="button"
+                  onClick={() => setTelaPublica('login')}
+                >
+                  Entrar no sistema
+                </button>
           </section>
         </main>
         <footer className="rodape-publico" id="contato">
@@ -3202,7 +3214,7 @@ function App() {
           target="_blank"
           rel="noreferrer"
         >
-          Solicitar demonstração
+          Entrar no sistema
         </a>
       </div>
     )
@@ -5519,7 +5531,7 @@ function App() {
             <span className="selo-admin">Administração do sistema</span>
             <h2>Administração comercial</h2>
             <p>
-              Gerencie igrejas, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
+              Gerencie igrejas, sedes, congregações, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
             </p>
           </div>
 
@@ -5566,8 +5578,8 @@ function App() {
               <div>
                 <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja do piloto'}</h3>
                 <p>
-                  Depois de cadastrar a igreja aqui, crie o usuário da secretaria em
-                  Supabase → Authentication → Users e vincule o perfil na tabela perfis_usuarios.
+                  Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
+                  Depois crie o usuário em Supabase → Authentication → Users e vincule o acesso.
                 </p>
               </div>
             </div>
@@ -5680,7 +5692,7 @@ function App() {
               </label>
 
               <label>
-                Endereço
+                Endereço completo da igreja
                 <input
                   type="text"
                   value={novaIgrejaAdmin.endereco}
@@ -5690,8 +5702,89 @@ function App() {
                       endereco: event.target.value,
                     })
                   }
+                  placeholder="Ex: Rua, número, complemento"
                 />
               </label>
+
+              <label>
+                CEP da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.cep}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      cep: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 36000-000"
+                />
+              </label>
+
+              <label>
+                Tipo de igreja
+                <select
+                  value={novaIgrejaAdmin.tipo_igreja}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      tipo_igreja: event.target.value,
+                    })
+                  }
+                >
+                  <option value="sede">Sede</option>
+                  <option value="congregacao">Congregação</option>
+                </select>
+              </label>
+
+              {novaIgrejaAdmin.tipo_igreja === 'congregacao' && (
+                <>
+                  <label>
+                    Sede filiada
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_nome}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_nome: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: Assembleia de Deus Sede"
+                    />
+                  </label>
+
+                  <label className="campo-sede-filiada">
+                    Endereço completo da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_endereco}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_endereco: event.target.value,
+                        })
+                      }
+                      placeholder="Rua, número, bairro, cidade e estado"
+                    />
+                  </label>
+
+                  <label>
+                    CEP da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_cep}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_cep: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 36000-000"
+                    />
+                  </label>
+                </>
+              )}
 
               <label>
                 Telefone da igreja
@@ -5869,12 +5962,43 @@ function App() {
 
                 {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
                 {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
-                {(igreja.cidade || igreja.estado) && (
+                <div className="dados-igreja-admin">
                   <p>
-                    Local: {igreja.cidade}
-                    {igreja.estado ? `/${igreja.estado}` : ''}
+                    Tipo:{' '}
+                    <strong>
+                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
+                    </strong>
                   </p>
-                )}
+
+                  {(igreja.cidade || igreja.estado) && (
+                    <p>
+                      Local: {igreja.cidade}
+                      {igreja.estado ? `/${igreja.estado}` : ''}
+                    </p>
+                  )}
+
+                  {(igreja.endereco || igreja.bairro || igreja.cep) && (
+                    <p>
+                      Endereço: {igreja.endereco}
+                      {igreja.bairro ? `, ${igreja.bairro}` : ''}
+                      {igreja.cep ? ` • CEP ${igreja.cep}` : ''}
+                    </p>
+                  )}
+
+                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_nome && (
+                    <p>
+                      Sede filiada: <strong>{igreja.sede_filiada_nome}</strong>
+                    </p>
+                  )}
+
+                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
+                    <p>
+                      Endereço da sede: {igreja.sede_filiada_endereco}
+                      {igreja.sede_filiada_cep ? ` • CEP ${igreja.sede_filiada_cep}` : ''}
+                    </p>
+                  )}
+                </div>
+
                 {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
