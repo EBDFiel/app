@@ -4225,3 +4225,147 @@ html {
 .menu-navegacao button:last-child {
   margin-top: 8px;
 }
+
+
+/* Tela cheia no PC: página pública e área logada */
+@media (min-width: 1024px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .pagina-publica {
+    width: 100%;
+    max-width: none;
+  }
+
+  .topo-publico,
+  .hero-publico,
+  .secao-publica,
+  .rodape-publico {
+    width: min(100% - 72px, 1440px) !important;
+    max-width: 1440px !important;
+  }
+
+  .hero-publico {
+    min-height: calc(100vh - 110px);
+    padding-top: 42px;
+    padding-bottom: 42px;
+  }
+
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    background:
+      radial-gradient(circle at 15% 8%, rgba(37, 99, 235, 0.08), transparent 28%),
+      linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  }
+
+  .menu-lateral {
+    width: 280px;
+    min-width: 280px;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: start;
+  }
+
+  .area-principal {
+    width: 100%;
+    min-width: 0;
+    padding: 28px 34px;
+  }
+
+  .conteudo,
+  main.conteudo,
+  .area-conteudo,
+  .painel-conteudo {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .conteudo > section,
+  .conteudo > div,
+  .topo-pagina,
+  .formulario,
+  .filtros,
+  .lista,
+  .cards,
+  .cards-estatisticas,
+  .relatorios-dashboard,
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    max-width: none !important;
+  }
+
+  .cards,
+  .cards-estatisticas,
+  .cards-admin-sistema {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .lista {
+    width: 100%;
+  }
+
+  .item-lista {
+    width: 100%;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+  }
+}
+
+/* Em telas muito grandes, deixa a landing mais elegante sem ficar estreita */
+@media (min-width: 1500px) {
+  .topo-publico,
+  .hero-publico,
+  .secao-publica,
+  .rodape-publico {
+    width: min(100% - 96px, 1560px) !important;
+    max-width: 1560px !important;
+  }
+
+  .hero-publico h1 {
+    font-size: clamp(58px, 5vw, 86px);
+  }
+
+  .area-principal {
+    padding: 34px 42px;
+  }
+}
+
+/* No celular mantém layout em coluna, sem forçar largura de PC */
+@media (max-width: 1023px) {
+  .app {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    min-width: 0;
+    position: relative;
+  }
+
+  .area-principal {
+    width: 100%;
+    padding: 18px 10px;
+  }
+}
