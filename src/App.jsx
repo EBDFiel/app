@@ -2398,37 +2398,27 @@ function App() {
         </header>
 
         <main>
-          <section className="hero-publico hero-modelo-sistema-ebd" id="inicio">
-            <div className="hero-publico-texto hero-modelo-texto">
-              <div className="logo-faixa-modelo">
-                <img
-                  src="/logo-oficial-ebd-fiel.png"
-                  alt="Logo EBD Fiel"
-                  className="logo-faixa-imagem"
-                />
-                <div>
-                  <strong>EBD Fiel</strong>
-                  <span>Sistema online para Escola Bíblica Dominical</span>
-                </div>
-              </div>
+          <section className="hero-publico hero-ebd-oficial" id="inicio">
+            <div className="hero-publico-texto hero-ebd-texto">
+              <span className="selo-publico selo-ebd-oficial">
+                Sistema online para Escola Bíblica Dominical
+              </span>
 
-              <span className="selo-publico selo-modelo">Gestão completa para EBD</span>
-
-              <h1>Organize sua Escola Bíblica Dominical com clareza, presença e propósito.</h1>
+              <h1>Organize sua Escola Bíblica Dominical sem planilhas e sem retrabalho</h1>
 
               <p>
-                Controle classes, alunos, professores, chamadas e relatórios em uma
-                plataforma simples, online e pronta para a rotina da igreja.
+                Cadastre classes, alunos e professores, registre chamadas e gere
+                relatórios em PDF em uma plataforma simples para igrejas.
               </p>
 
-              <div className="acoes-publicas acoes-modelo">
+              <div className="acoes-publicas acoes-hero-oficial">
                 <a
                   className="botao-principal link-botao-publico"
-                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20saber%20mais%20sobre%20o%20EBD%20Fiel."
+                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20uma%20demonstra%C3%A7%C3%A3o%20do%20EBD%20Fiel."
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Quero saber mais
+                  Solicitar demonstração
                 </a>
 
                 <button
@@ -2436,237 +2426,302 @@ function App() {
                   type="button"
                   onClick={() => setTelaPublica('login')}
                 >
-                  Acessar sistema
-                </button>
-              </div>
-
-              <div className="selos-download-modelo">
-                <div>
-                  <strong>Online</strong>
-                  <span>acesso pelo navegador</span>
-                </div>
-
-                <div>
-                  <strong>PDF</strong>
-                  <span>relatórios prontos</span>
-                </div>
-
-                <div>
-                  <strong>Multiusuário</strong>
-                  <span>secretaria e professores</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="hero-video-modelo">
-              <div className="manual-card-modelo">
-                <div className="manual-topo-modelo">
-                  <div>
-                    <span>Manual interativo</span>
-                    <strong>Como começar no EBD Fiel</strong>
-                  </div>
-                  <Icone nome="relatorios" className="icone-svg" />
-                </div>
-
-                <div className="manual-passos-modelo">
-                  <details open>
-                    <summary>
-                      <span>1</span>
-                      Cadastre as classes
-                    </summary>
-                    <p>Crie as turmas da EBD e organize cada classe por nome e referência.</p>
-                  </details>
-
-                  <details>
-                    <summary>
-                      <span>2</span>
-                      Adicione alunos e professores
-                    </summary>
-                    <p>Inclua participantes, datas de nascimento e professores vinculados.</p>
-                  </details>
-
-                  <details>
-                    <summary>
-                      <span>3</span>
-                      Faça a chamada semanal
-                    </summary>
-                    <p>Registre presença, faltas e justificativas de alunos e professores.</p>
-                  </details>
-
-                  <details>
-                    <summary>
-                      <span>4</span>
-                      Gere relatórios
-                    </summary>
-                    <p>Acompanhe frequência, totais e exporte relatórios para PDF.</p>
-                  </details>
-                </div>
-
-                <button
-                  type="button"
-                  className="botao-manual-modelo"
-                  onClick={() => setTelaPublica('login')}
-                >
                   Acessar área de teste
                 </button>
               </div>
 
-              <div className="mini-dashboard mini-dashboard-modelo">
-                <div className="mini-dashboard-topo">
-                  <div>
-                    <span>Painel inteligente</span>
-                    <strong>Campo EBD</strong>
-                  </div>
-                  <Icone nome="painel" className="icone-svg" />
-                </div>
-
-                <div className="mini-grid">
-                  <div>
-                    <Icone nome="classes" className="icone-svg" />
-                    <strong>Classes</strong>
-                    <span>organizadas</span>
-                  </div>
-
-                  <div>
-                    <Icone nome="alunos" className="icone-svg" />
-                    <strong>Alunos</strong>
-                    <span>cadastrados</span>
-                  </div>
-
-                  <div>
-                    <Icone nome="chamada" className="icone-svg" />
-                    <strong>Chamada</strong>
-                    <span>digital</span>
-                  </div>
-
-                  <div>
-                    <Icone nome="relatorios" className="icone-svg" />
-                    <strong>Relatórios</strong>
-                    <span>PDF</span>
-                  </div>
-                </div>
-
-                <div className="linha-progresso-publica">
-                  <span>Presença semanal</span>
-                  <strong>87%</strong>
-                </div>
+              <div className="selos-confianca-hero">
+                <span>Chamada digital</span>
+                <span>Relatórios em PDF</span>
+                <span>Dados separados por igreja</span>
+                <span>Funciona no celular</span>
               </div>
             </div>
-          </section>
 
-          <section className="secao-publica secao-caracteristicas-modelo" id="recursos">
-            <div className="cabecalho-secao-publica">
-              <span className="selo-publico">Características do sistema</span>
-              <h2>Veja como o EBD Fiel pode ajudar sua igreja.</h2>
-              <p>
-                Uma solução pensada para quem quer ganhar tempo, organizar informações
-                e acompanhar a EBD com mais clareza.
-              </p>
-            </div>
-
-            <div className="grade-caracteristicas-modelo">
-              <article>
-                <div className="icone-caracteristica-modelo">
-                  <Icone nome="chamada" className="icone-svg" />
+            <div className="mockup-sistema-oficial">
+              <div className="mockup-sistema-topo">
+                <div>
+                  <span>Painel inteligente</span>
+                  <strong>EBD Fiel</strong>
                 </div>
-                <h3>Rápido</h3>
-                <p>Registre chamadas e acompanhe os dados da EBD de forma prática.</p>
-              </article>
+                <Icone nome="painel" className="icone-svg" />
+              </div>
 
-              <article>
-                <div className="icone-caracteristica-modelo">
+              <div className="mockup-presenca">
+                <span>Presença semanal</span>
+                <strong>87%</strong>
+              </div>
+
+              <div className="mockup-grid-oficial">
+                <article>
+                  <Icone nome="classes" className="icone-svg" />
+                  <span>Classes</span>
+                  <strong>12</strong>
+                </article>
+
+                <article>
                   <Icone nome="alunos" className="icone-svg" />
+                  <span>Alunos</span>
+                  <strong>248</strong>
+                </article>
+
+                <article>
+                  <Icone nome="professores" className="icone-svg" />
+                  <span>Professores</span>
+                  <strong>32</strong>
+                </article>
+
+                <article>
+                  <Icone nome="relatorios" className="icone-svg" />
+                  <span>Relatórios</span>
+                  <strong>PDF</strong>
+                </article>
+              </div>
+
+              <div className="mockup-chamada-oficial">
+                <div>
+                  <strong>Chamada digital</strong>
+                  <span>Alunos e professores no mesmo sistema</span>
                 </div>
-                <h3>Intuitivo</h3>
-                <p>Interface simples para secretaria, professores e liderança.</p>
+                <span className="status-online-oficial">Online</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="barra-confianca-oficial">
+            <span>Plataforma online</span>
+            <span>Uso no celular</span>
+            <span>Secretaria e professores</span>
+            <span>Relatórios para liderança</span>
+          </section>
+
+          <section className="secao-publica secao-manual-oficial">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Manual interativo</span>
+              <h2>Como começar no EBD Fiel</h2>
+              <p>
+                Um caminho simples para a secretaria organizar a rotina da Escola
+                Bíblica Dominical desde o primeiro acesso.
+              </p>
+            </div>
+
+            <div className="manual-interativo-oficial">
+              <details open>
+                <summary>
+                  <span>1</span>
+                  Cadastre as classes
+                </summary>
+                <p>Crie as turmas da EBD e organize cada classe por nome e referência.</p>
+              </details>
+
+              <details>
+                <summary>
+                  <span>2</span>
+                  Adicione alunos e professores
+                </summary>
+                <p>Inclua participantes, datas de nascimento e professores vinculados.</p>
+              </details>
+
+              <details>
+                <summary>
+                  <span>3</span>
+                  Faça a chamada semanal
+                </summary>
+                <p>Registre presença, faltas e justificativas de alunos e professores.</p>
+              </details>
+
+              <details>
+                <summary>
+                  <span>4</span>
+                  Gere relatórios
+                </summary>
+                <p>Acompanhe frequência, totais e exporte relatórios para PDF.</p>
+              </details>
+            </div>
+
+            <button
+              className="botao-principal botao-manual-oficial"
+              type="button"
+              onClick={() => setTelaPublica('login')}
+            >
+              Acessar área de teste
+            </button>
+          </section>
+
+          <section className="secao-publica problema-solucao-oficial">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Problema e solução</span>
+              <h2>Chega de planilhas, papéis e relatórios manuais</h2>
+              <p>
+                O EBD Fiel ajuda sua igreja a sair do controle espalhado para uma
+                rotina mais clara, simples e organizada.
+              </p>
+            </div>
+
+            <div className="comparativo-oficial">
+              <article className="antes-oficial">
+                <h3>Antes</h3>
+                <ul>
+                  <li>Listas de presença em papel.</li>
+                  <li>Dados espalhados.</li>
+                  <li>Relatórios feitos manualmente.</li>
+                  <li>Dificuldade para acompanhar frequência.</li>
+                </ul>
               </article>
 
-              <article>
-                <div className="icone-caracteristica-modelo">
-                  <Icone nome="relatorios" className="icone-svg" />
-                </div>
-                <h3>Completo</h3>
-                <p>Cadastros, frequência, aniversariantes e relatórios em PDF.</p>
+              <article className="depois-oficial">
+                <h3>Depois com o EBD Fiel</h3>
+                <ul>
+                  <li>Chamada digital.</li>
+                  <li>Classes e alunos organizados.</li>
+                  <li>Relatórios prontos em PDF.</li>
+                  <li>Acompanhamento simples da presença.</li>
+                </ul>
               </article>
             </div>
           </section>
 
-          <section className="secao-publica secao-tempo-modelo">
-            <div className="tempo-ilustracao-modelo">
-              <div className="circulo-tempo-modelo">
-                <Icone nome="relatorios" className="icone-svg" />
-              </div>
+          <section className="secao-publica recursos-oficiais" id="recursos">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Recursos principais</span>
+              <h2>Como o EBD Fiel ajuda sua igreja</h2>
+              <p>
+                Funções práticas para secretaria, professores e liderança trabalharem
+                com mais organização.
+              </p>
             </div>
 
-            <div>
-              <span className="selo-publico">Não perca mais tempo</span>
-              <h2>Relatórios prontos, dados organizados e menos trabalho manual.</h2>
-              <p>
-                Já parou para pensar quanto tempo a secretaria perde fechando relatórios
-                de classes e alunos? Com a ferramenta certa, sua equipe ganha tempo para
-                focar no ensino da Palavra.
-              </p>
+            <div className="grade-recursos-oficiais">
+              <article>
+                <Icone nome="chamada" className="icone-svg" />
+                <h3>Chamada digital simples</h3>
+                <p>Registre a presença dos alunos e professores pelo computador ou celular.</p>
+              </article>
 
+              <article>
+                <Icone nome="relatorios" className="icone-svg" />
+                <h3>Relatórios prontos em PDF</h3>
+                <p>A secretaria gera relatórios organizados sem montar tudo manualmente.</p>
+              </article>
+
+              <article>
+                <Icone nome="classes" className="icone-svg" />
+                <h3>Gestão de classes e alunos</h3>
+                <p>Cadastre turmas, alunos, professores e acompanhe tudo em um só lugar.</p>
+              </article>
+
+              <article>
+                <Icone nome="usuarios" className="icone-svg" />
+                <h3>Dados separados por igreja</h3>
+                <p>Cada igreja tem suas próprias informações organizadas com segurança.</p>
+              </article>
+
+              <article>
+                <Icone nome="painel" className="icone-svg" />
+                <h3>Acesso online</h3>
+                <p>Use o sistema pelo navegador, sem instalação complicada.</p>
+              </article>
+
+              <article>
+                <Icone nome="configuracoes" className="icone-svg" />
+                <h3>Apoio para liderança</h3>
+                <p>Acompanhe frequência, organização e evolução da EBD com mais clareza.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="secao-publica publico-oficial" id="beneficios">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Benefícios</span>
+              <h2>Feito para quem cuida da EBD</h2>
+            </div>
+
+            <div className="grade-publico-oficial">
+              <article>
+                <strong>Secretaria</strong>
+                <p>Organiza cadastros, classes, relatórios e informações gerais.</p>
+              </article>
+
+              <article>
+                <strong>Professores</strong>
+                <p>Fazem chamada, acompanham suas turmas e ajudam na organização semanal.</p>
+              </article>
+
+              <article>
+                <strong>Liderança</strong>
+                <p>Visualiza dados importantes para cuidar melhor da Escola Bíblica Dominical.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="secao-publica seguranca-oficial">
+            <div>
+              <span className="selo-publico">Segurança e organização</span>
+              <h2>Seus dados organizados com responsabilidade</h2>
+              <p>
+                O EBD Fiel foi pensado para manter as informações da sua igreja
+                organizadas, separadas e acessíveis apenas para quem precisa usar.
+              </p>
+            </div>
+
+            <div className="lista-seguranca-oficial">
+              <span>Dados separados por igreja</span>
+              <span>Acesso por usuário</span>
+              <span>Plataforma online</span>
+              <span>Classes, alunos e professores</span>
+              <span>Atendimento pelo WhatsApp</span>
+            </div>
+          </section>
+
+          <section className="secao-publica teste-piloto-oficial" id="planos">
+            <div className="cabecalho-secao-publica">
+              <span className="selo-publico">Teste piloto</span>
+              <h2>Teste o EBD Fiel na sua igreja</h2>
+              <p>
+                Estamos preparando igrejas para testar o sistema e validar o uso real
+                na secretaria, nas classes e nos relatórios da EBD.
+              </p>
+            </div>
+
+            <div className="cards-planos-oficiais">
+              <article>
+                <h3>Teste piloto</h3>
+                <p>Para igrejas que desejam experimentar a plataforma.</p>
+              </article>
+
+              <article>
+                <h3>Plano Igreja</h3>
+                <p>Para uso completo na rotina da Escola Bíblica Dominical.</p>
+              </article>
+
+              <article>
+                <h3>Plano Personalizado</h3>
+                <p>Para igrejas com necessidades específicas.</p>
+              </article>
+            </div>
+
+            <div className="acoes-publicas acoes-teste-oficial">
               <a
                 className="botao-principal link-botao-publico"
-                href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20saber%20como%20o%20EBD%20Fiel%20pode%20ajudar%20minha%20igreja."
+                href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20participar%20do%20teste%20piloto%20do%20EBD%20Fiel."
                 target="_blank"
                 rel="noreferrer"
               >
-                Quero saber como
+                Quero participar do teste
+              </a>
+
+              <a
+                className="botao-secundario link-botao-publico"
+                href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20falar%20sobre%20o%20EBD%20Fiel."
+                target="_blank"
+                rel="noreferrer"
+              >
+                Falar pelo WhatsApp
               </a>
             </div>
           </section>
 
-          <section className="secao-publica secao-funcoes-modelo" id="beneficios">
-            <div>
-              <span className="selo-publico">Confira algumas funções</span>
-              <h2>Recursos para a rotina completa da Escola Bíblica Dominical.</h2>
-
-              <ul className="lista-funcoes-modelo">
-                <li>Chamada digital de alunos e professores.</li>
-                <li>Cadastro de classes, alunos, professores e secretarias.</li>
-                <li>Relatórios semanais para impressão ou PDF.</li>
-                <li>Controle de aniversariantes da semana.</li>
-                <li>Dados separados por igreja para o piloto.</li>
-                <li>Acesso online pelo computador ou celular.</li>
-              </ul>
-
-              <strong className="frase-muito-mais">E muito mais!</strong>
-            </div>
-
-            <div className="mockup-funcoes-modelo">
-              <div className="mockup-barra-modelo">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-
-              <div className="mockup-lista-modelo">
-                <div>
-                  <Icone nome="classes" className="icone-svg" />
-                  <span>Classes organizadas</span>
-                </div>
-
-                <div>
-                  <Icone nome="chamada" className="icone-svg" />
-                  <span>Chamada digital</span>
-                </div>
-
-                <div>
-                  <Icone nome="professores" className="icone-svg" />
-                  <span>Professores vinculados</span>
-                </div>
-
-                <div>
-                  <Icone nome="relatorios" className="icone-svg" />
-                  <span>Relatórios em PDF</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="secao-publica secao-faq-modelo">
+          <section className="secao-publica faq-oficial" id="faq">
             <div className="cabecalho-secao-publica">
               <span className="selo-publico">FAQ</span>
               <h2>Perguntas frequentes</h2>
@@ -2675,68 +2730,62 @@ function App() {
             <div className="faq-modelo-lista">
               <details>
                 <summary>O que é o EBD Fiel?</summary>
-                <p>
-                  É um sistema online para gestão da Escola Bíblica Dominical,
-                  com cadastros, chamadas e relatórios.
-                </p>
+                <p>É um sistema online para gestão da Escola Bíblica Dominical.</p>
               </details>
 
               <details>
                 <summary>O sistema funciona no celular?</summary>
-                <p>
-                  Sim. O EBD Fiel pode ser acessado pelo navegador do celular,
-                  tablet ou computador.
-                </p>
+                <p>Sim. Ele funciona pelo navegador do celular, tablet ou computador.</p>
+              </details>
+
+              <details>
+                <summary>Preciso instalar alguma coisa?</summary>
+                <p>Não. O acesso é online, pelo navegador.</p>
               </details>
 
               <details>
                 <summary>Os dados ficam separados por igreja?</summary>
-                <p>
-                  Sim. Cada igreja possui seus próprios dados, usuários e relatórios.
-                </p>
+                <p>Sim. Cada igreja possui seus próprios dados e usuários.</p>
               </details>
 
               <details>
-                <summary>Professores também entram na chamada?</summary>
-                <p>
-                  Sim. O sistema possui chamada separada para alunos e professores.
-                </p>
+                <summary>Professores também conseguem fazer chamada?</summary>
+                <p>Sim. Professores podem fazer chamada conforme suas permissões.</p>
+              </details>
+
+              <details>
+                <summary>É possível gerar relatórios em PDF?</summary>
+                <p>Sim. O sistema possui relatórios organizados para impressão e PDF.</p>
+              </details>
+
+              <details>
+                <summary>Como funciona o teste piloto?</summary>
+                <p>Algumas igrejas são cadastradas para testar o sistema e enviar feedback.</p>
+              </details>
+
+              <details>
+                <summary>Como posso solicitar uma demonstração?</summary>
+                <p>Basta clicar no botão de demonstração e falar pelo WhatsApp.</p>
               </details>
             </div>
           </section>
 
-          <section className="secao-publica" id="planos">
-            <div className="cartao-plano-publico cartao-modelo-final">
-              <span className="selo-publico">Teste piloto</span>
-              <h2>Quer testar o EBD Fiel em sua igreja?</h2>
-              <p>
-                Estamos preparando igrejas para testar o sistema e validar o uso real
-                na secretaria, nas classes e nos relatórios da EBD.
-              </p>
+          <section className="secao-publica cta-final-oficial">
+            <span className="selo-publico">EBD Fiel</span>
+            <h2>Fiel à Palavra, organizado para servir melhor.</h2>
+            <p>
+              Uma plataforma para ajudar igrejas a organizarem a Escola Bíblica
+              Dominical com mais clareza, simplicidade e responsabilidade.
+            </p>
 
-              <div className="acoes-publicas">
-                <a
-                  className="botao-principal link-botao-publico"
-                  href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20participar%20do%20teste%20do%20EBD%20Fiel."
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Quero participar do teste
-                </a>
-
-                <button
-                  className="botao-secundario"
-                  type="button"
-                  onClick={() => setTelaPublica('login')}
-                >
-                  Já tenho acesso
-                </button>
-              </div>
-
-              <p className="frase-confianca-cta">
-                Atendimento pelo WhatsApp • Plataforma online • Dados separados por igreja
-              </p>
-            </div>
+            <a
+              className="botao-principal link-botao-publico"
+              href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20uma%20demonstra%C3%A7%C3%A3o%20do%20EBD%20Fiel."
+              target="_blank"
+              rel="noreferrer"
+            >
+              Solicitar demonstração
+            </a>
           </section>
         </main>
         <footer className="rodape-publico" id="contato">
