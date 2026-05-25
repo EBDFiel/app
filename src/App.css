@@ -5338,3 +5338,609 @@ html {
     padding-left: 16px;
   }
 }
+
+
+/* Área interna modernizada com cores da logo oficial */
+:root {
+  --logo-azul: #12A8E0;
+  --logo-amarelo: #FFCB05;
+  --logo-vermelho: #EF3E23;
+  --logo-verde: #009B4E;
+  --logo-azul-escuro: #073B63;
+  --logo-fundo: #F4FBFF;
+}
+
+.app {
+  background:
+    radial-gradient(circle at 16% 8%, rgba(18, 168, 224, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(255, 203, 5, 0.16), transparent 25%),
+    radial-gradient(circle at 82% 86%, rgba(0, 155, 78, 0.10), transparent 30%),
+    linear-gradient(180deg, #f7fcff 0%, #eef7ff 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(255, 203, 5, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 30%, rgba(18, 168, 224, 0.18), transparent 32%),
+    linear-gradient(180deg, #05283F 0%, #061B2E 100%) !important;
+}
+
+.marca-sidebar h1,
+.marca-sidebar strong {
+  color: #ffffff !important;
+}
+
+.marca-sidebar p,
+.marca-sidebar span {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.menu-navegacao button.ativo,
+.menu-lateral nav button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde)) !important;
+  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.28) !important;
+}
+
+.menu-navegacao button:hover,
+.menu-lateral nav button:hover,
+.sidebar nav button:hover {
+  background: rgba(255, 255, 255, 0.11) !important;
+}
+
+.usuario-logado,
+.card-usuario,
+.bloco-usuario {
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.08), transparent 28%),
+    rgba(255, 255, 255, 0.08) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 92% 6%, rgba(255, 203, 5, 0.08), transparent 26%),
+    radial-gradient(circle at 8% 92%, rgba(18, 168, 224, 0.08), transparent 26%) !important;
+}
+
+.topo-pagina {
+  padding: 24px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.14), transparent 28%),
+    #ffffff;
+  border: 1px solid rgba(18, 168, 224, 0.18);
+  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.08);
+}
+
+.topo-pagina h2 {
+  color: var(--logo-azul-escuro) !important;
+  font-size: clamp(34px, 4vw, 52px) !important;
+  line-height: 1;
+}
+
+.topo-pagina p {
+  color: #475569 !important;
+}
+
+.card,
+.resumo,
+.item-lista,
+.formulario,
+.filtros,
+.aviso,
+.secao-configuracoes {
+  border-color: rgba(18, 168, 224, 0.16) !important;
+}
+
+.botao-principal,
+button.botao-principal {
+  background: linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.botao-verde {
+  background: linear-gradient(135deg, var(--logo-verde), #16a34a) !important;
+  color: #ffffff !important;
+}
+
+.botao-editar {
+  border-color: var(--logo-azul) !important;
+  color: #075985 !important;
+  background: #ffffff !important;
+}
+
+.botao-excluir {
+  border-color: var(--logo-vermelho) !important;
+  color: #b91c1c !important;
+  background: #ffffff !important;
+}
+
+.resumo::after,
+.card::after {
+  background: rgba(255, 203, 5, 0.11) !important;
+}
+
+/* Classes em destaque */
+.aviso-classes-moderno {
+  background:
+    linear-gradient(135deg, rgba(18, 168, 224, 0.09), rgba(255, 203, 5, 0.13)),
+    #ffffff !important;
+  border-color: rgba(18, 168, 224, 0.20) !important;
+}
+
+.classe-card-moderno {
+  position: relative;
+  overflow: hidden;
+  align-items: stretch !important;
+  gap: 24px !important;
+  padding: 26px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%) !important;
+  border: 1px solid rgba(18, 168, 224, 0.20) !important;
+  box-shadow: 0 20px 48px rgba(7, 59, 99, 0.09) !important;
+}
+
+.classe-card-moderno::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22px;
+  bottom: 22px;
+  width: 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--logo-azul), var(--logo-verde), var(--logo-amarelo));
+}
+
+.classe-card-conteudo {
+  width: 100%;
+}
+
+.classe-card-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.classe-card-selo {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.classe-card-cabecalho h3 {
+  margin: 0 !important;
+  color: var(--logo-azul-escuro) !important;
+  font-size: clamp(30px, 4vw, 46px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.04em;
+}
+
+.classe-card-matricula {
+  display: grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 86px;
+  padding: 14px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde));
+  color: #ffffff;
+  font-size: 34px;
+  line-height: 1;
+  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.22);
+}
+
+.classe-card-matricula span {
+  margin-top: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.classe-card-info {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.classe-card-info p {
+  margin: 0;
+  padding: 14px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+}
+
+.classe-card-info strong,
+.classe-card-info span {
+  display: block;
+}
+
+.classe-card-info strong {
+  color: #64748b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.classe-card-info span {
+  margin-top: 5px;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.professores-na-classe {
+  border-radius: 20px !important;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+}
+
+.professor-classe-linha {
+  border-radius: 16px !important;
+  background: #ffffff !important;
+}
+
+.acoes-classe-card {
+  min-width: 190px;
+  display: grid !important;
+  align-content: start;
+}
+
+.acoes-classe-card button {
+  width: 100%;
+}
+
+.formulario-pessoa-classe {
+  border-color: rgba(0, 155, 78, 0.22) !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 155, 78, 0.08), transparent 30%),
+    #ffffff !important;
+}
+
+.formulario-pessoa-classe h3 {
+  color: var(--logo-azul-escuro);
+}
+
+@media (max-width: 900px) {
+  .classe-card-cabecalho,
+  .classe-card-info {
+    grid-template-columns: 1fr;
+  }
+
+  .classe-card-cabecalho {
+    display: grid;
+  }
+
+  .classe-card-matricula {
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .acoes-classe-card {
+    width: 100%;
+  }
+}
+
+
+/* Cores mais fortes e destaque maior para nomes das classes */
+:root {
+  --logo-azul: #00AEEF;
+  --logo-azul-forte: #006BB6;
+  --logo-amarelo: #FFD200;
+  --logo-vermelho: #F0442E;
+  --logo-verde: #00A651;
+  --logo-verde-forte: #008C44;
+  --logo-azul-escuro: #003B66;
+}
+
+/* Página inicial com cores mais vivas */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 6% 7%, rgba(255, 210, 0, 0.34), transparent 25%),
+    radial-gradient(circle at 92% 10%, rgba(0, 174, 239, 0.34), transparent 28%),
+    radial-gradient(circle at 12% 78%, rgba(0, 166, 81, 0.22), transparent 29%),
+    radial-gradient(circle at 86% 86%, rgba(240, 68, 46, 0.18), transparent 27%),
+    linear-gradient(180deg, #fff8d8 0%, #e8f8ff 42%, #ffffff 100%) !important;
+}
+
+.hero-modelo-texto h1 {
+  background: linear-gradient(
+    135deg,
+    #003B66 0%,
+    #006BB6 34%,
+    #00AEEF 58%,
+    #00A651 78%,
+    #F0442E 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.selo-publico,
+.selo-modelo {
+  background: linear-gradient(135deg, rgba(255, 210, 0, 0.52), rgba(0, 174, 239, 0.22)) !important;
+  border-color: rgba(0, 174, 239, 0.36) !important;
+  color: #003B66 !important;
+  box-shadow: 0 12px 28px rgba(0, 107, 182, 0.10);
+}
+
+.manual-card-modelo,
+.video-card-modelo,
+.cartao-modelo-final {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 210, 0, 0.35), transparent 30%),
+    radial-gradient(circle at 90% 18%, rgba(0, 174, 239, 0.34), transparent 32%),
+    radial-gradient(circle at 18% 92%, rgba(0, 166, 81, 0.22), transparent 30%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 55%, #008C44 100%) !important;
+}
+
+.botao-principal,
+.acoes-publicas .botao-principal,
+.cartao-plano-publico .botao-principal,
+.botao-manual-modelo {
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%) !important;
+  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.36) !important;
+}
+
+.acoes-publicas .botao-secundario {
+  border: 2px solid var(--logo-amarelo) !important;
+  color: var(--logo-azul-escuro) !important;
+}
+
+/* Área interna com cores mais fortes */
+.app {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(255, 210, 0, 0.26), transparent 28%),
+    radial-gradient(circle at 84% 90%, rgba(0, 166, 81, 0.16), transparent 30%),
+    linear-gradient(180deg, #eefaff 0%, #f7fbff 52%, #ffffff 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 210, 0, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.30), transparent 32%),
+    radial-gradient(circle at 20% 86%, rgba(0, 166, 81, 0.20), transparent 32%),
+    linear-gradient(180deg, #002E50 0%, #031A2E 100%) !important;
+}
+
+.menu-navegacao button.ativo,
+.menu-lateral nav button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
+  box-shadow: 0 22px 44px rgba(0, 174, 239, 0.38) !important;
+}
+
+.topo-pagina {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 210, 0, 0.25), transparent 30%),
+    radial-gradient(circle at 8% 92%, rgba(0, 174, 239, 0.16), transparent 30%),
+    #ffffff !important;
+  border: 1px solid rgba(0, 174, 239, 0.30) !important;
+}
+
+.topo-pagina h2 {
+  background: linear-gradient(135deg, #003B66, #006BB6, #00AEEF) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Novo destaque das classes */
+.classe-card-moderno {
+  padding: 0 !important;
+  border-radius: 34px !important;
+  overflow: hidden !important;
+  border: 2px solid rgba(0, 174, 239, 0.28) !important;
+  background: #ffffff !important;
+  box-shadow: 0 26px 60px rgba(0, 59, 102, 0.14) !important;
+}
+
+.classe-card-moderno::before {
+  display: none !important;
+}
+
+.classe-card-conteudo {
+  padding: 0 !important;
+}
+
+.classe-card-cabecalho {
+  position: relative;
+  margin: 0 !important;
+  padding: 30px 28px !important;
+  min-height: 190px;
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  align-items: center !important;
+  gap: 20px !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(255, 210, 0, 0.38), transparent 34%),
+    radial-gradient(circle at 12% 88%, rgba(0, 166, 81, 0.22), transparent 32%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 52%, #00AEEF 100%) !important;
+  color: #ffffff;
+}
+
+.classe-card-cabecalho::after {
+  content: "";
+  position: absolute;
+  right: -42px;
+  bottom: -42px;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: rgba(255, 210, 0, 0.20);
+}
+
+.classe-card-selo {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 14px !important;
+  padding: 8px 14px !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #ffffff !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.classe-card-cabecalho h3 {
+  position: relative;
+  z-index: 1;
+  color: #ffffff !important;
+  font-size: clamp(48px, 10vw, 82px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.07em !important;
+  text-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+.classe-card-matricula {
+  position: relative;
+  z-index: 1;
+  min-width: 128px !important;
+  min-height: 118px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.38), transparent 32%),
+    linear-gradient(135deg, #FFD200 0%, #00A651 100%) !important;
+  color: #ffffff !important;
+  font-size: 46px !important;
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18) !important;
+  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.classe-card-matricula span {
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900;
+}
+
+.classe-card-info {
+  padding: 22px 26px 0 !important;
+  margin-bottom: 16px !important;
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.classe-card-info p {
+  border-radius: 22px !important;
+  border: 1px solid rgba(0, 174, 239, 0.22) !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 30%),
+    #ffffff !important;
+  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.06);
+}
+
+.classe-card-info strong {
+  color: #006BB6 !important;
+}
+
+.classe-card-info span {
+  color: #0f172a !important;
+  font-size: 20px;
+}
+
+.professores-na-classe {
+  margin: 0 26px 22px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 30%),
+    #f8fcff !important;
+  border: 1px solid rgba(0, 174, 239, 0.18) !important;
+}
+
+.professor-classe-linha {
+  border: 1px solid rgba(0, 174, 239, 0.15) !important;
+  box-shadow: 0 12px 24px rgba(0, 59, 102, 0.05);
+}
+
+.acoes-classe-card {
+  padding: 0 26px 26px !important;
+  min-width: 220px !important;
+}
+
+.acoes-classe-card button {
+  min-height: 54px;
+  border-radius: 18px !important;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.acoes-classe-card .botao-principal {
+  background: linear-gradient(135deg, #003B66, #00AEEF) !important;
+}
+
+.acoes-classe-card .botao-verde {
+  background: linear-gradient(135deg, #008C44, #00A651) !important;
+}
+
+.item-lista:hover.classe-card-moderno {
+  transform: translateY(-4px);
+  box-shadow: 0 34px 72px rgba(0, 59, 102, 0.18) !important;
+}
+
+/* Cards e formulários mais vivos */
+.card,
+.resumo,
+.formulario,
+.filtros,
+.aviso,
+.item-lista:not(.classe-card-moderno) {
+  border-color: rgba(0, 174, 239, 0.24) !important;
+  box-shadow: 0 20px 45px rgba(0, 59, 102, 0.08) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00AEEF !important;
+  box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.14) !important;
+}
+
+@media (max-width: 900px) {
+  .classe-card-cabecalho {
+    grid-template-columns: 1fr !important;
+    min-height: auto;
+    padding: 30px 24px !important;
+  }
+
+  .classe-card-cabecalho h3 {
+    font-size: clamp(52px, 15vw, 76px) !important;
+  }
+
+  .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 86px !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  .classe-card-info {
+    grid-template-columns: 1fr !important;
+    padding: 20px 20px 0 !important;
+  }
+
+  .professores-na-classe {
+    margin: 0 20px 20px !important;
+  }
+
+  .acoes-classe-card {
+    padding: 0 20px 24px !important;
+  }
+}
