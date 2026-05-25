@@ -2402,7 +2402,7 @@ function App() {
 
               <span className="selo-publico selo-modelo">Gestão completa para EBD</span>
 
-              <h1>A gestão da EBD na palma da mão.</h1>
+              <h1>Organize sua Escola Bíblica Dominical com clareza, presença e propósito.</h1>
 
               <p>
                 Controle classes, alunos, professores, chamadas e relatórios em uma
@@ -2447,20 +2447,56 @@ function App() {
             </div>
 
             <div className="hero-video-modelo">
-              <div className="video-card-modelo">
-                <div className="video-topo-modelo">
-                  <span>Demonstração do sistema</span>
-                  <Icone nome="painel" className="icone-svg" />
+              <div className="manual-card-modelo">
+                <div className="manual-topo-modelo">
+                  <div>
+                    <span>Manual interativo</span>
+                    <strong>Como começar no EBD Fiel</strong>
+                  </div>
+                  <Icone nome="relatorios" className="icone-svg" />
                 </div>
 
-                <div className="play-modelo">
-                  <span>▶</span>
+                <div className="manual-passos-modelo">
+                  <details open>
+                    <summary>
+                      <span>1</span>
+                      Cadastre as classes
+                    </summary>
+                    <p>Crie as turmas da EBD e organize cada classe por nome e referência.</p>
+                  </details>
+
+                  <details>
+                    <summary>
+                      <span>2</span>
+                      Adicione alunos e professores
+                    </summary>
+                    <p>Inclua participantes, datas de nascimento e professores vinculados.</p>
+                  </details>
+
+                  <details>
+                    <summary>
+                      <span>3</span>
+                      Faça a chamada semanal
+                    </summary>
+                    <p>Registre presença, faltas e justificativas de alunos e professores.</p>
+                  </details>
+
+                  <details>
+                    <summary>
+                      <span>4</span>
+                      Gere relatórios
+                    </summary>
+                    <p>Acompanhe frequência, totais e exporte relatórios para PDF.</p>
+                  </details>
                 </div>
 
-                <h3>Veja como organizar sua Escola Bíblica Dominical</h3>
-                <p>
-                  Cadastros, chamada digital, professores e relatórios em poucos cliques.
-                </p>
+                <button
+                  type="button"
+                  className="botao-manual-modelo"
+                  onClick={() => setTelaPublica('login')}
+                >
+                  Acessar área de teste
+                </button>
               </div>
 
               <div className="mini-dashboard mini-dashboard-modelo">
