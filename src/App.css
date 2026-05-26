@@ -1023,7 +1023,7 @@ button:disabled {
 
 
 
-/* Logo oficial da marca na área pública */
+/* Logo oficial da marca na Ã¡rea pÃºblica */
 .marca-login .logo-simbolo,
 .marca-publica .logo-publica {
   background: #ffffff;
@@ -1212,7 +1212,7 @@ button:disabled {
   }
 }
 
-/* Landing page pública */
+/* Landing page pÃºblica */
 .pagina-publica {
   min-height: 100vh;
   background:
@@ -1783,7 +1783,7 @@ button:disabled {
   min-height: auto !important;
 }
 
-/* Cadastro de usuários */
+/* Cadastro de usuÃ¡rios */
 .aviso-usuarios {
   background: #eff6ff;
   border-color: #bfdbfe;
@@ -1877,7 +1877,7 @@ button:disabled {
   }
 }
 
-/* Perfis de usuário */
+/* Perfis de usuÃ¡rio */
 .linha-tags-painel {
   display: flex;
   gap: 10px;
@@ -1917,7 +1917,7 @@ input:disabled {
 }
 
 
-/* Ajuste para estrutura multiusuário por igreja */
+/* Ajuste para estrutura multiusuÃ¡rio por igreja */
 .aviso-perfil {
   margin-top: 18px;
   padding: 14px 16px;
@@ -1947,7 +1947,7 @@ input:disabled {
 }
 
 
-/* Professores também gerenciados pela tela de Classes */
+/* Professores tambÃ©m gerenciados pela tela de Classes */
 .formulario-professor-classe {
   margin-bottom: 22px;
   background: #ffffff;
@@ -2021,7 +2021,7 @@ input:disabled {
 }
 
 
-/* Migração automática de professores das classes */
+/* MigraÃ§Ã£o automÃ¡tica de professores das classes */
 .aviso-edicao-classe {
   margin-top: 0;
   background: #f8fbff;
@@ -2034,7 +2034,7 @@ input:disabled {
 }
 
 
-/* Relatórios modernos */
+/* RelatÃ³rios modernos */
 .relatorios-dashboard {
   margin-top: 24px;
   display: grid;
@@ -2288,7 +2288,7 @@ input:disabled {
 }
 
 
-/* Página pública premium */
+/* PÃ¡gina pÃºblica premium */
 .pagina-publica {
   background:
     radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
@@ -2519,7 +2519,7 @@ input:disabled {
 }
 
 .lista-beneficios-publicos li::before {
-  content: "✓";
+  content: "âœ“";
   display: grid;
   width: 24px;
   height: 24px;
@@ -2584,7 +2584,7 @@ input:disabled {
 }
 
 
-/* Página principal ultra moderna e mais colorida */
+/* PÃ¡gina principal ultra moderna e mais colorida */
 .pagina-publica {
   position: relative;
   overflow-x: hidden;
@@ -2858,7 +2858,7 @@ input:disabled {
 }
 
 
-/* Redesign estratégico inspirado em plataforma SaaS */
+/* Redesign estratÃ©gico inspirado em plataforma SaaS */
 :root {
   --landing-primary: #0B3B5F;
   --landing-primary-light: #2B5C8A;
@@ -3170,7 +3170,7 @@ input:disabled {
 }
 
 
-/* Ajustes finais da página pública: contraste, CTA, mockup e seções */
+/* Ajustes finais da pÃ¡gina pÃºblica: contraste, CTA, mockup e seÃ§Ãµes */
 .hero-publico-card {
   transform: perspective(1000px) rotateY(-4deg) rotateX(2deg) scale(1.04);
   box-shadow: 0 44px 100px rgba(11, 59, 95, 0.34);
@@ -3395,7 +3395,7 @@ input:disabled {
 }
 
 
-/* Correção do bloco escuro: texto claro e melhor contraste */
+/* CorreÃ§Ã£o do bloco escuro: texto claro e melhor contraste */
 .impacto-card-principal h2,
 .impacto-card-principal h3,
 .impacto-card-principal strong {
@@ -3424,7 +3424,7 @@ input:disabled {
 }
 
 
-/* Repaginação moderna da área interna */
+/* RepaginaÃ§Ã£o moderna da Ã¡rea interna */
 .aplicacao,
 .app,
 .layout-app {
@@ -3672,7 +3672,7 @@ textarea:focus {
 }
 
 
-/* Relatório responsivo e professores integrados */
+/* RelatÃ³rio responsivo e professores integrados */
 .area-relatorio,
 .relatorio,
 .relatorio-ebd,
@@ -3906,7 +3906,7 @@ textarea:focus {
 }
 
 
-/* Relatório em formato vertical no celular */
+/* RelatÃ³rio em formato vertical no celular */
 @media (max-width: 760px) {
   .tabela-container,
   .tabela-relatorio-wrapper {
@@ -3985,17 +3985,17 @@ textarea:focus {
 
   .tabela-ebd td:nth-child(2)::before,
   .tabela td:nth-child(2)::before {
-    content: "Matrícula";
+    content: "MatrÃ­cula";
   }
 
   .tabela-ebd td:nth-child(3)::before,
   .tabela td:nth-child(3)::before {
-    content: "Ausência";
+    content: "AusÃªncia";
   }
 
   .tabela-ebd td:nth-child(4)::before,
   .tabela td:nth-child(4)::before {
-    content: "Presença";
+    content: "PresenÃ§a";
   }
 
   .tabela-ebd td:nth-child(5)::before,
@@ -4010,7 +4010,7 @@ textarea:focus {
 
   .tabela-ebd td:nth-child(7)::before,
   .tabela td:nth-child(7)::before {
-    content: "Bíblia";
+    content: "BÃ­blia";
   }
 
   .tabela-ebd td:nth-child(8)::before,
@@ -4062,7 +4062,7 @@ textarea:focus {
 }
 
 
-/* Navegação mobile: ao escolher uma opção, a página abre no topo */
+/* NavegaÃ§Ã£o mobile: ao escolher uma opÃ§Ã£o, a pÃ¡gina abre no topo */
 html {
   scroll-behavior: smooth;
 }
@@ -4077,7 +4077,7 @@ html {
 }
 
 
-/* Correção definitiva: menu mobile rola para a área principal */
+/* CorreÃ§Ã£o definitiva: menu mobile rola para a Ã¡rea principal */
 html {
   scroll-behavior: smooth;
 }
@@ -4093,7 +4093,7 @@ html {
 }
 
 
-/* Administração do sistema */
+/* AdministraÃ§Ã£o do sistema */
 .selo-admin {
   display: inline-flex;
   width: fit-content;
@@ -4204,7 +4204,7 @@ html {
 }
 
 
-/* Correção do logo no menu lateral */
+/* CorreÃ§Ã£o do logo no menu lateral */
 .marca-sidebar h1,
 .menu-lateral .marca-sidebar h1,
 .sidebar .marca-sidebar h1 {
@@ -4221,13 +4221,13 @@ html {
   color: #ffffff;
 }
 
-/* Destacar melhor a Administração quando aparecer */
+/* Destacar melhor a AdministraÃ§Ã£o quando aparecer */
 .menu-navegacao button:last-child {
   margin-top: 8px;
 }
 
 
-/* Tela cheia no PC: página pública e área logada */
+/* Tela cheia no PC: pÃ¡gina pÃºblica e Ã¡rea logada */
 @media (min-width: 1024px) {
   html,
   body,
@@ -4350,7 +4350,7 @@ html {
   }
 }
 
-/* No celular mantém layout em coluna, sem forçar largura de PC */
+/* No celular mantÃ©m layout em coluna, sem forÃ§ar largura de PC */
 @media (max-width: 1023px) {
   .app {
     display: block;
@@ -4371,7 +4371,7 @@ html {
 }
 
 
-/* Correção da página inicial no celular */
+/* CorreÃ§Ã£o da pÃ¡gina inicial no celular */
 @media (max-width: 760px) {
   .pagina-publica {
     overflow-x: hidden;
@@ -4588,7 +4588,7 @@ html {
 }
 
 
-/* Página pública inspirada no modelo Sistema EBD */
+/* PÃ¡gina pÃºblica inspirada no modelo Sistema EBD */
 .hero-modelo-sistema-ebd {
   position: relative;
   align-items: center;
@@ -5135,7 +5135,7 @@ html {
   color: var(--logo-azul-escuro) !important;
 }
 
-/* Manual interativo no lugar do vídeo */
+/* Manual interativo no lugar do vÃ­deo */
 .manual-card-modelo {
   position: relative;
   overflow: hidden;
@@ -5340,7 +5340,7 @@ html {
 }
 
 
-/* Área interna modernizada com cores da logo oficial */
+/* Ãrea interna modernizada com cores da logo oficial */
 :root {
   --logo-azul: #12A8E0;
   --logo-amarelo: #FFCB05;
@@ -5649,7 +5649,7 @@ button.botao-principal {
   --logo-azul-escuro: #003B66;
 }
 
-/* Página inicial com cores mais vivas */
+/* PÃ¡gina inicial com cores mais vivas */
 .pagina-publica {
   background:
     radial-gradient(circle at 6% 7%, rgba(255, 210, 0, 0.34), transparent 25%),
@@ -5704,7 +5704,7 @@ button.botao-principal {
   color: var(--logo-azul-escuro) !important;
 }
 
-/* Área interna com cores mais fortes */
+/* Ãrea interna com cores mais fortes */
 .app {
   background:
     radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
@@ -5894,7 +5894,7 @@ button.botao-principal {
   box-shadow: 0 34px 72px rgba(0, 59, 102, 0.18) !important;
 }
 
-/* Cards e formulários mais vivos */
+/* Cards e formulÃ¡rios mais vivos */
 .card,
 .resumo,
 .formulario,
@@ -6371,7 +6371,7 @@ textarea:focus {
   line-height: 1.75;
 }
 
-/* Área interna refinada */
+/* Ãrea interna refinada */
 .app {
   background:
     radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
@@ -6635,7 +6635,7 @@ button.botao-principal {
   font-weight: 800;
 }
 
-/* Professores dentro da mesma tabela do relatório */
+/* Professores dentro da mesma tabela do relatÃ³rio */
 .linha-professores-titulo td {
   background:
     linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
@@ -6709,7 +6709,7 @@ button.botao-principal {
 }
 
 
-/* Feedback piloto - formulário largo, moderno e profissional */
+/* Feedback piloto - formulÃ¡rio largo, moderno e profissional */
 .feedback-piloto-card {
   position: relative;
   overflow: hidden;
@@ -6956,7 +6956,7 @@ button.botao-principal {
 }
 
 
-/* Administração comercial definitiva */
+/* AdministraÃ§Ã£o comercial definitiva */
 .admin-acessos-bloco {
   margin: 24px 0;
   padding: clamp(22px, 3vw, 32px);
@@ -7116,7 +7116,7 @@ button.botao-principal {
 }
 
 
-/* Teste fechado - sem solicitação pública de acesso */
+/* Teste fechado - sem solicitaÃ§Ã£o pÃºblica de acesso */
 .aviso-teste-fechado {
   display: inline-flex;
   align-items: center;
@@ -7154,7 +7154,7 @@ button.botao-principal {
 }
 
 
-/* Cadastro de igrejas AD: sede, congregação e endereço completo */
+/* Cadastro de igrejas AD: sede, congregaÃ§Ã£o e endereÃ§o completo */
 .campo-sede-filiada {
   grid-column: span 2;
 }
@@ -7298,7 +7298,7 @@ button.botao-principal {
 }
 
 
-/* Recuperação de senha */
+/* RecuperaÃ§Ã£o de senha */
 .tela-recuperacao-senha {
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
 }
@@ -7337,7 +7337,7 @@ button.botao-principal {
 }
 
 
-/* Aprovação rápida de igrejas no painel administrativo */
+/* AprovaÃ§Ã£o rÃ¡pida de igrejas no painel administrativo */
 .acoes-aprovacao-igreja {
   gap: 10px !important;
 }
@@ -7405,7 +7405,7 @@ button.botao-principal {
 }
 
 
-/* Mensagem pós-cadastro e aviso de aprovação */
+/* Mensagem pÃ³s-cadastro e aviso de aprovaÃ§Ã£o */
 .tela-cadastro-enviado {
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
 }
@@ -7602,7 +7602,7 @@ button.botao-principal {
 }
 
 
-/* Manual do usuário */
+/* Manual do usuÃ¡rio */
 .botao-manual-painel {
   border-color: rgba(255, 255, 255, 0.50) !important;
 }
@@ -7799,7 +7799,7 @@ button.botao-principal {
 }
 
 
-/* Endereço com número separado */
+/* EndereÃ§o com nÃºmero separado */
 .formulario-cadastro-piloto .campo-cadastro-piloto-largo,
 .formulario-admin-igreja .campo-sede-filiada {
   min-width: 0;
@@ -7977,7 +7977,7 @@ button.botao-principal {
   }
 }
 
-/* Compactação extra para qualquer card de classe com o visual atual */
+/* CompactaÃ§Ã£o extra para qualquer card de classe com o visual atual */
 @media (min-width: 761px) {
   .lista-classes .item-lista,
   .classes-lista .item-lista {
@@ -8062,7 +8062,7 @@ button.botao-principal {
   --classe-fundo-suave: #f3fbff;
 }
 
-/* Deixa a área de classes mais limpa */
+/* Deixa a Ã¡rea de classes mais limpa */
 .conteudo:has(.lista-classes),
 .conteudo:has(.classes-lista) {
   background:
@@ -8102,7 +8102,7 @@ button.botao-principal {
   z-index: 4 !important;
 }
 
-/* Cabeçalho dos cards */
+/* CabeÃ§alho dos cards */
 .classe-card .classe-header,
 .classe-card-moderna .classe-header,
 .classe-destaque-card .classe-header,
@@ -8135,7 +8135,7 @@ button.botao-principal {
   filter: blur(0.2px) !important;
 }
 
-/* Título da classe */
+/* TÃ­tulo da classe */
 .classe-card h3,
 .card-classe h3,
 .item-classe h3,
@@ -8198,7 +8198,7 @@ button.botao-principal {
   box-shadow: 0 14px 28px rgba(6, 43, 73, 0.06) !important;
 }
 
-/* Títulos internos */
+/* TÃ­tulos internos */
 .classe-card strong,
 .classe-card-moderna strong,
 .classe-destaque-card strong,
@@ -8235,7 +8235,7 @@ button.botao-principal {
   box-shadow: 0 10px 24px rgba(6, 43, 73, 0.06) !important;
 }
 
-/* Botões dos cards */
+/* BotÃµes dos cards */
 .acoes-classe-card .botao-principal,
 .classe-card .acoes-item .botao-principal,
 .classe-card-moderna .acoes-item .botao-principal,
@@ -8624,7 +8624,7 @@ button.botao-principal {
 }
 
 
-/* Formulário claro para editar o nome da classe */
+/* FormulÃ¡rio claro para editar o nome da classe */
 .formulario-editar-classe {
   position: relative;
   overflow: hidden;
@@ -8763,7 +8763,7 @@ button.botao-principal {
   white-space: nowrap;
 }
 
-/* Visual comercial impactante - página principal */
+/* Visual comercial impactante - pÃ¡gina principal */
 .pagina-publica {
   background:
     radial-gradient(circle at 7% 7%, rgba(255, 210, 0, 0.44), transparent 24%),
@@ -8972,11 +8972,517 @@ button.botao-principal {
 }
 
 
-/* Botão Alterar nome da classe */
+/* BotÃ£o Alterar nome da classe */
 .lista-classes-modernas .acoes-classe-card .botao-editar,
 .acoes-classe-card .botao-editar {
   white-space: normal !important;
   line-height: 1.15 !important;
   padding-left: 10px !important;
   padding-right: 10px !important;
+}
+
+
+/* =========================================================
+   MODELO COMERCIAL DOURADO - Inspirado no modelo enviado
+   PÃ¡gina inicial + parte interna
+   ========================================================= */
+
+:root {
+  --ebd-gold: #D4AF37;
+  --ebd-gold-light: #F5A623;
+  --ebd-gold-dark: #B8860B;
+  --ebd-cyan: #00BCD4;
+  --ebd-cyan-dark: #0097A7;
+  --ebd-red: #FF5722;
+  --ebd-red-dark: #E64A19;
+  --ebd-green: #4CAF50;
+  --ebd-green-dark: #2E7D32;
+  --ebd-dark: #1A1A1A;
+  --ebd-dark-2: #2D2D2D;
+  --ebd-gray: #4A4A4A;
+  --ebd-light: #F8F9FA;
+  --ebd-white: #FFFFFF;
+  --ebd-gradient-gold: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
+  --ebd-gradient-cyan: linear-gradient(135deg, #00BCD4, #0097A7);
+  --ebd-gradient-red: linear-gradient(135deg, #FF5722, #E64A19);
+  --ebd-gradient-green: linear-gradient(135deg, #4CAF50, #2E7D32);
+  --ebd-shadow-gold: 0 18px 42px rgba(212, 175, 55, 0.28);
+  --ebd-shadow-dark: 0 24px 70px rgba(26, 26, 26, 0.18);
+}
+
+/* PÃGINA PRINCIPAL */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 6%, rgba(212, 175, 55, 0.30), transparent 24%),
+    radial-gradient(circle at 92% 10%, rgba(0, 188, 212, 0.26), transparent 26%),
+    radial-gradient(circle at 14% 82%, rgba(76, 175, 80, 0.18), transparent 24%),
+    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.topo-publico {
+  position: sticky !important;
+  top: 12px !important;
+  z-index: 50 !important;
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  margin: 12px auto 0 !important;
+  padding: 12px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  box-shadow: 0 8px 28px rgba(26, 26, 26, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.marca-publica strong,
+.marca-login h1,
+.marca-sidebar h1 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  letter-spacing: 0.02em !important;
+  background: var(--ebd-gradient-gold) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.logo-simbolo,
+.logo-publica,
+.logo-simbolo-sidebar {
+  background: var(--ebd-gradient-gold) !important;
+  border: 2px solid rgba(0, 188, 212, 0.35) !important;
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.32) !important;
+}
+
+.menu-publico a {
+  color: var(--ebd-gray) !important;
+  font-weight: 700 !important;
+}
+
+.menu-publico a:hover {
+  color: var(--ebd-gold-dark) !important;
+}
+
+.menu-publico button,
+.acoes-publicas .botao-principal,
+.acoes-hero-oficial .botao-principal,
+.botao-manual-oficial {
+  color: var(--ebd-dark) !important;
+  background: var(--ebd-gradient-gold) !important;
+  border: none !important;
+  box-shadow: var(--ebd-shadow-gold) !important;
+}
+
+.hero-publico,
+.hero-ebd-oficial {
+  position: relative !important;
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  min-height: 720px !important;
+  margin: 18px auto 34px !important;
+  padding: clamp(40px, 6vw, 84px) !important;
+  border-radius: 42px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 16% 42%, rgba(212, 175, 55, 0.14), transparent 36%),
+    radial-gradient(circle at 92% 18%, rgba(0, 188, 212, 0.13), transparent 26%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 52%, #1A1A1A 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.24) !important;
+  box-shadow: var(--ebd-shadow-dark) !important;
+}
+
+.hero-publico::after,
+.hero-ebd-oficial::after {
+  content: "âœ" !important;
+  position: absolute !important;
+  right: 28px !important;
+  bottom: 12px !important;
+  color: var(--ebd-gold) !important;
+  opacity: 0.06 !important;
+  font-size: clamp(90px, 13vw, 190px) !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  line-height: 1 !important;
+}
+
+.hero-publico-texto,
+.hero-ebd-texto,
+.mockup-sistema-oficial {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.selo-publico,
+.selo-ebd-oficial,
+.selo-apresentacao {
+  color: var(--ebd-gold-light) !important;
+  background: rgba(212, 175, 55, 0.14) !important;
+  border: 1px solid rgba(212, 175, 55, 0.30) !important;
+  box-shadow: none !important;
+}
+
+.hero-publico h1,
+.hero-ebd-texto h1 {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  max-width: 850px !important;
+  font-size: clamp(40px, 6.2vw, 82px) !important;
+  line-height: 1.06 !important;
+  letter-spacing: -0.065em !important;
+}
+
+.hero-publico p,
+.hero-ebd-texto p {
+  max-width: 720px !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: clamp(17px, 1.6vw, 21px) !important;
+  line-height: 1.7 !important;
+}
+
+.aviso-teste-fechado,
+.selos-confianca-hero span,
+.barra-confianca-oficial span {
+  color: rgba(255, 255, 255, 0.78) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.26) !important;
+}
+
+.mockup-sistema-oficial {
+  background: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.34) !important;
+  overflow: hidden !important;
+}
+
+.mockup-sistema-topo {
+  background: var(--ebd-dark) !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+.mockup-grid-oficial article:nth-child(1) {
+  background: linear-gradient(135deg, #FFFFFF, #FFF8E1) !important;
+  border-bottom: 3px solid var(--ebd-gold) !important;
+}
+.mockup-grid-oficial article:nth-child(2) {
+  background: linear-gradient(135deg, #FFFFFF, #E0F7FA) !important;
+  border-bottom: 3px solid var(--ebd-cyan) !important;
+}
+.mockup-grid-oficial article:nth-child(3) {
+  background: linear-gradient(135deg, #FFFFFF, #FBE9E7) !important;
+  border-bottom: 3px solid var(--ebd-red) !important;
+}
+.mockup-grid-oficial article:nth-child(4) {
+  background: linear-gradient(135deg, #FFFFFF, #E8F5E9) !important;
+  border-bottom: 3px solid var(--ebd-green) !important;
+}
+
+.secao-publica {
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  border-radius: 34px !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 18px 54px rgba(26, 26, 26, 0.08) !important;
+}
+
+.cabecalho-secao-publica h2 {
+  background: var(--ebd-gradient-gold) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-size: clamp(34px, 4.5vw, 62px) !important;
+  letter-spacing: -0.055em !important;
+}
+
+.grade-recursos-oficiais article,
+.grade-publico-oficial article,
+.cards-planos-oficiais article,
+.manual-interativo-oficial details,
+.faq-modelo-lista details {
+  background: #ffffff !important;
+  border-radius: 26px !important;
+  border: 1px solid rgba(212, 175, 55, 0.14) !important;
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.055) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.grade-recursos-oficiais article:hover,
+.grade-publico-oficial article:hover,
+.cards-planos-oficiais article:hover,
+.manual-interativo-oficial details:hover,
+.faq-modelo-lista details:hover {
+  transform: translateY(-7px) !important;
+  box-shadow: 0 22px 44px rgba(26, 26, 26, 0.10) !important;
+}
+
+.grade-recursos-oficiais article:nth-child(1),
+.grade-recursos-oficiais article:nth-child(5) { border-bottom: 4px solid var(--ebd-gold) !important; }
+.grade-recursos-oficiais article:nth-child(2),
+.grade-recursos-oficiais article:nth-child(6) { border-bottom: 4px solid var(--ebd-cyan) !important; }
+.grade-recursos-oficiais article:nth-child(3) { border-bottom: 4px solid var(--ebd-red) !important; }
+.grade-recursos-oficiais article:nth-child(4) { border-bottom: 4px solid var(--ebd-green) !important; }
+
+.antes-oficial {
+  background: linear-gradient(135deg, #FFF5F5, #FFE0E0) !important;
+  border-left: 5px solid var(--ebd-red) !important;
+}
+.depois-oficial {
+  background: linear-gradient(135deg, #F0FFF4, #E0FFE8) !important;
+  border-left: 5px solid var(--ebd-green) !important;
+}
+
+.cta-final-oficial,
+.rodape-publico {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(212, 175, 55, 0.12), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 54%, #1A1A1A 100%) !important;
+  color: #ffffff !important;
+}
+
+.cta-final-oficial h2 {
+  color: var(--ebd-gold) !important;
+}
+
+/* LOGIN / CADASTRO */
+.tela-login {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.26), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(0, 188, 212, 0.18), transparent 30%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 48%, #F8F9FA 48%, #E8ECF1 100%) !important;
+}
+
+.painel-apresentacao {
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.12), transparent 44%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+}
+
+.painel-apresentacao h2,
+.apresentacao-texto h2 { color: #ffffff !important; }
+
+.painel-apresentacao p,
+.apresentacao-texto p { color: rgba(255, 255, 255, 0.76) !important; }
+
+.cartao-login {
+  border-radius: 34px !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 0 28px 70px rgba(26, 26, 26, 0.16) !important;
+}
+
+.topo-cartao-icone {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.botao-cadastrar-igreja,
+.botao-principal,
+.cartao-login .botao-principal {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  box-shadow: var(--ebd-shadow-gold) !important;
+  border: none !important;
+}
+
+/* PARTE INTERNA */
+.app {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(212, 175, 55, 0.22), transparent 24%),
+    radial-gradient(circle at 92% 12%, rgba(0, 188, 212, 0.18), transparent 28%),
+    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 20% 8%, rgba(212, 175, 55, 0.16), transparent 28%),
+    linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 55%, #111111 100%) !important;
+  border-right: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 18px 0 55px rgba(26, 26, 26, 0.18) !important;
+}
+
+.menu-navegacao button {
+  color: rgba(255, 255, 255, 0.78) !important;
+  border-radius: 18px !important;
+}
+
+.menu-navegacao button:hover {
+  color: #ffffff !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+  transform: translateX(5px) !important;
+}
+
+.menu-navegacao button.ativo {
+  color: var(--ebd-dark) !important;
+  background: var(--ebd-gradient-gold) !important;
+  box-shadow: 0 14px 34px rgba(212, 175, 55, 0.30) !important;
+}
+
+.icone-menu {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--ebd-gold) !important;
+}
+
+.menu-navegacao button.ativo .icone-menu {
+  background: rgba(26, 26, 26, 0.10) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+}
+
+.cartao-usuario-sidebar strong { color: #ffffff !important; }
+
+.selo-perfil-sidebar {
+  background: rgba(212, 175, 55, 0.14) !important;
+  color: var(--ebd-gold-light) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(212, 175, 55, 0.12), transparent 24%),
+    radial-gradient(circle at 6% 18%, rgba(0, 188, 212, 0.10), transparent 25%) !important;
+}
+
+.topo-pagina {
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(212, 175, 55, 0.18), transparent 28%),
+    #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+  box-shadow: 0 16px 46px rgba(26, 26, 26, 0.08) !important;
+}
+
+.topo-pagina h2 {
+  color: var(--ebd-dark) !important;
+  font-size: clamp(34px, 4.5vw, 64px) !important;
+  letter-spacing: -0.055em !important;
+}
+
+.card,
+.item-lista,
+.formulario,
+.manual-card,
+.card-admin {
+  border-color: rgba(212, 175, 55, 0.16) !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 34px rgba(26, 26, 26, 0.07) !important;
+}
+
+.card-estatistica .card-icone,
+.card-icone {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.cards .card:nth-child(4n + 1),
+.cards-admin-sistema .card:nth-child(4n + 1) { border-bottom: 4px solid var(--ebd-gold) !important; }
+.cards .card:nth-child(4n + 2),
+.cards-admin-sistema .card:nth-child(4n + 2) { border-bottom: 4px solid var(--ebd-cyan) !important; }
+.cards .card:nth-child(4n + 3),
+.cards-admin-sistema .card:nth-child(4n + 3) { border-bottom: 4px solid var(--ebd-red) !important; }
+.cards .card:nth-child(4n + 4),
+.cards-admin-sistema .card:nth-child(4n + 4) { border-bottom: 4px solid var(--ebd-green) !important; }
+
+.lista-classes-modernas .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.34), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 56%, #B8860B 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #0097A7 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #FF5722 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2E7D32 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-principal,
+.lista-classes-modernas .acoes-classe-card .botao-verde,
+.botao-acessar-igreja,
+.botao-aprovar-igreja {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  border: none !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-editar,
+.botao-editar {
+  background: #ffffff !important;
+  color: var(--ebd-gold-dark) !important;
+  border: 1px solid rgba(212, 175, 55, 0.38) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-excluir,
+.botao-excluir {
+  background: #fff7f4 !important;
+  color: var(--ebd-red-dark) !important;
+  border: 1px solid rgba(255, 87, 34, 0.30) !important;
+}
+
+.banner-modo-suporte {
+  background:
+    radial-gradient(circle at 92% 20%, rgba(212, 175, 55, 0.24), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 58%, #B8860B 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.24) !important;
+}
+
+.botao-sair-suporte {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  border: none !important;
+}
+
+.manual-hero,
+.manual-final {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(212, 175, 55, 0.22), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.20) !important;
+}
+
+.manual-hero h2,
+.manual-final h3 { color: var(--ebd-gold) !important; }
+
+.manual-hero p,
+.manual-final p { color: rgba(255, 255, 255, 0.78) !important; }
+
+.manual-numero {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.manual-card::before {
+  background: linear-gradient(180deg, var(--ebd-gold), var(--ebd-cyan), var(--ebd-green)) !important;
+}
+
+@media (max-width: 900px) {
+  .topo-publico { border-radius: 24px !important; }
+  .hero-publico,
+  .hero-ebd-oficial {
+    min-height: auto !important;
+    border-radius: 30px !important;
+  }
+  .tela-login {
+    background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 45%, #F8F9FA 45%, #E8ECF1 100%) !important;
+  }
 }
