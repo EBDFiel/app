@@ -220,6 +220,17 @@ function App() {
   const [perfisIgreja, setPerfisIgreja] = useState([])
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
+  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(() => {
+    if (typeof window === 'undefined') {
+      return null
+    }
+
+    try {
+      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
+    } catch {
+      return null
+    }
+  })
   const [igrejasAdmin, setIgrejasAdmin] = useState([])
   const [acessosAdmin, setAcessosAdmin] = useState([])
   const [buscaAcessoAdmin, setBuscaAcessoAdmin] = useState('')
@@ -407,6 +418,12 @@ function App() {
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
+    setIgrejaSuporteAdmin(null)
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    }
+
     setConfiguracaoIgreja({
       id: null,
       nome_igreja: '',
@@ -992,6 +1009,82 @@ function App() {
 
   function usuarioEhAdminSistema() {
     return emailsAdminSistema.includes(String(sessao?.user?.email || '').toLowerCase())
+  }
+
+  function buscarIgrejaSuporteAdminSalva() {
+    if (igrejaSuporteAdmin?.id) {
+      return igrejaSuporteAdmin
+    }
+
+    if (typeof window === 'undefined') {
+      return null
+    }
+
+    try {
+      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
+    } catch {
+      return null
+    }
+  }
+
+  async function acessarIgrejaComoSuporte(igreja) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
+      return
+    }
+
+    const igrejaSelecionada = {
+      id: Number(igreja.id),
+      nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
+      congregacao: igreja.congregacao || '',
+      status_piloto: igreja.status_piloto || '',
+    }
+
+    setIgrejaSuporteAdmin(igrejaSelecionada)
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        'ebdfiel_igreja_suporte_admin',
+        JSON.stringify(igrejaSelecionada)
+      )
+    }
+
+    setPaginaAtual('painel')
+    await buscarTodosOsDados(sessao, igrejaSelecionada)
+  }
+
+  async function sairDoModoSuporteAdmin() {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    }
+
+    setIgrejaSuporteAdmin(null)
+    setClasses([])
+    setAlunos([])
+    setChamadasSalvas([])
+    setChamadasProfessores([])
+    setVinculosProfessores([])
+    setIgrejaId(null)
+    setIgrejaAtualPiloto(null)
+
+    const emailSessaoAtual = String(sessao?.user?.email || '').toLowerCase()
+
+    setPerfilUsuario({
+      id: null,
+      user_id: sessao?.user?.id,
+      nome: 'Administrador do sistema',
+      email: emailSessaoAtual,
+      perfil: 'admin',
+      igreja_id: null,
+      classe_id: null,
+    })
+
+    setPaginaAtual('administracao')
+    await carregarIgrejasAdmin()
+  }
+
+  function modoSuporteAdminAtivo() {
+    return usuarioEhAdminSistema() && Boolean(perfilUsuario?.modo_suporte_admin || igrejaSuporteAdmin?.id)
   }
 
   function limparFormularioIgrejaAdmin() {
@@ -1747,7 +1840,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     return true
   }
 
-  async function buscarTodosOsDados(sessaoAtual = sessao) {
+  async function buscarTodosOsDados(sessaoAtual = sessao, igrejaSuporteForcada = null) {
     if (!sessaoAtual?.user?.id) {
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
@@ -1762,11 +1855,26 @@ Qualquer dificuldade, pode me chamar por aqui.`
       throw erroPerfil
     }
 
-    if (!perfilBanco?.igreja_id) {
-      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-      const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
+    let perfilAtual = perfilBanco
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+    const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
+    const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
 
-      if (ehAdminSessaoAtual) {
+    if (!perfilBanco?.igreja_id) {
+      if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+        perfilAtual = {
+          id: null,
+          user_id: sessaoAtual.user.id,
+          nome: 'Administrador do sistema',
+          email: emailSessaoAtual,
+          perfil: 'secretaria',
+          igreja_id: Number(igrejaSuporteSelecionada.id),
+          classe_id: null,
+          modo_suporte_admin: true,
+        }
+
+        setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+      } else if (ehAdminSessaoAtual) {
         const perfilAdminSistema = {
           id: null,
           user_id: sessaoAtual.user.id,
@@ -1822,14 +1930,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         setCarregando(false)
         return
+      } else {
+        throw new Error(
+          'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
+        )
       }
-
-      throw new Error(
-        'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
-      )
     }
 
-    const perfilAtual = perfilBanco
     const igrejaAtualId = Number(perfilAtual.igreja_id)
 
     setPerfilUsuario(perfilAtual)
@@ -2023,7 +2130,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     const { data: igrejaPilotoBanco, error: erroIgrejaPiloto } = await supabase
       .from('igrejas')
-      .select('id,nome,nome_igreja,congregacao,status_piloto')
+      .select('*')
       .eq('id', igrejaAtualId)
       .maybeSingle()
 
@@ -2099,15 +2206,20 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     setConfiguracaoIgreja({
       id: configuracaoAtual?.id || null,
-      nome_igreja: configuracaoAtual?.nome_igreja || '',
-      congregacao: configuracaoAtual?.congregacao || '',
-      pastor_dirigente: configuracaoAtual?.pastor_dirigente || '',
-      cidade: configuracaoAtual?.cidade || '',
-      estado: configuracaoAtual?.estado || '',
-      bairro: configuracaoAtual?.bairro || '',
-      endereco: configuracaoAtual?.endereco || '',
-      telefone: configuracaoAtual?.telefone || '',
-      email: configuracaoAtual?.email || '',
+      nome_igreja:
+        configuracaoAtual?.nome_igreja ||
+        igrejaPilotoBanco?.nome_igreja ||
+        igrejaPilotoBanco?.nome ||
+        '',
+      congregacao: configuracaoAtual?.congregacao || igrejaPilotoBanco?.congregacao || '',
+      pastor_dirigente:
+        configuracaoAtual?.pastor_dirigente || igrejaPilotoBanco?.pastor_dirigente || '',
+      cidade: configuracaoAtual?.cidade || igrejaPilotoBanco?.cidade || '',
+      estado: configuracaoAtual?.estado || igrejaPilotoBanco?.estado || '',
+      bairro: configuracaoAtual?.bairro || igrejaPilotoBanco?.bairro || '',
+      endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
+      telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
+      email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
     })
   }
 
@@ -5268,7 +5380,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   className="botao-editar"
                   onClick={() => editarClasse(classe)}
                 >
-                  Alterar nome da Classe
+                  Editar nome
                 </button>
 
                 <button
@@ -7394,6 +7506,10 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </div>
                 )}
 
+                <button className="botao-acessar-igreja" onClick={() => acessarIgrejaComoSuporte(igreja)}>
+                  Acessar igreja
+                </button>
+
                 <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
                   Vincular acesso
                 </button>
@@ -7605,7 +7721,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <p className="titulo-usuario-sidebar">Logado como</p>
           <strong>{sessao?.user?.email}</strong>
           <span className="selo-perfil-sidebar">
-            {usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
+            {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
           </span>
 
           <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
@@ -7615,7 +7731,28 @@ Qualquer dificuldade, pode me chamar por aqui.`
         </div>
       </aside>
 
-      <main className="area-principal">{renderizarPagina()}</main>
+      <main className="area-principal">
+        {modoSuporteAdminAtivo() && (
+          <div className="banner-modo-suporte">
+            <div>
+              <span>Modo suporte ativo</span>
+              <strong>
+                Você está visualizando a igreja{' '}
+                {igrejaSuporteAdmin?.nome_igreja ||
+                  igrejaAtualPiloto?.nome_igreja ||
+                  buscarNomeIgrejaParaExibicao()}
+              </strong>
+              <p>Você continua logado como administrador do sistema.</p>
+            </div>
+
+            <button className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
+              Sair do modo suporte
+            </button>
+          </div>
+        )}
+
+        {renderizarPagina()}
+      </main>
     </div>
   )
 }
