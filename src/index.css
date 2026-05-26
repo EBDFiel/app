@@ -7195,3 +7195,408 @@ button.botao-principal {
     padding: 12px;
   }
 }
+
+
+/* Cadastro do piloto fechado */
+.tela-cadastro-piloto {
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.35fr);
+}
+
+.painel-cadastro-piloto {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-piloto {
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.formulario-cadastro-piloto {
+  gap: 20px;
+}
+
+.grupo-cadastro-piloto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 34%),
+    #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.05);
+}
+
+.grupo-cadastro-piloto h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #003B66;
+  font-size: 22px;
+}
+
+.campo-cadastro-piloto-largo {
+  grid-column: 1 / -1;
+}
+
+.bloco-criar-piloto {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(0, 174, 239, 0.08), rgba(0, 166, 81, 0.07));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.bloco-criar-piloto p {
+  margin: 0 0 12px;
+  color: #003B66;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.aviso-cadastro-piloto {
+  border-color: rgba(240, 68, 46, 0.28) !important;
+  background: #FFE8E2 !important;
+  color: #991b1b !important;
+}
+
+.aviso-sucesso-cadastro {
+  border-color: rgba(0, 166, 81, 0.28) !important;
+  background: #E7F8EF !important;
+  color: #166534 !important;
+}
+
+.status-pendente {
+  background: #fff3b8;
+  color: #92400e;
+}
+
+.contato-fechado-publico {
+  display: inline-flex;
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .grupo-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-cadastro-piloto-largo {
+    grid-column: span 1;
+  }
+}
+
+
+/* Recuperação de senha */
+.tela-recuperacao-senha {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
+}
+
+.painel-recuperacao-senha {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-recuperacao-senha {
+  justify-content: center;
+}
+
+.botao-link-login {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #003B66;
+  font-weight: 900;
+  margin-top: 4px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.botao-link-login:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .tela-recuperacao-senha {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Aprovação rápida de igrejas no painel administrativo */
+.acoes-aprovacao-igreja {
+  gap: 10px !important;
+}
+
+.grupo-aprovacao-rapida {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 36%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.20);
+}
+
+.botao-aprovar-igreja,
+.botao-nao-aprovar-igreja {
+  min-height: 48px;
+  border-radius: 16px;
+  padding: 0 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 900;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-aprovar-igreja {
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.22);
+}
+
+.botao-nao-aprovar-igreja {
+  background: #ffffff;
+  color: #b91c1c;
+  border: 1px solid rgba(240, 68, 46, 0.42);
+}
+
+.botao-aprovar-igreja:hover,
+.botao-nao-aprovar-igreja:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08);
+}
+
+.selo-aguardando-aprovacao {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff3b8;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 760px) {
+  .grupo-aprovacao-rapida {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Mensagem pós-cadastro e aviso de aprovação */
+.tela-cadastro-enviado {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
+}
+
+.painel-cadastro-enviado {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-enviado {
+  justify-content: center;
+}
+
+.mensagem-status-sucesso {
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 166, 81, 0.22);
+}
+
+.resumo-cadastro-enviado {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.resumo-cadastro-enviado span {
+  color: #003B66;
+  font-weight: 900;
+}
+
+.aviso-aprovacao-cadastro {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background: #E7F8EF;
+  border: 1px solid rgba(0, 166, 81, 0.22);
+}
+
+.aviso-aprovacao-cadastro strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #008C44;
+}
+
+.aviso-aprovacao-cadastro p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.grupo-aviso-aprovacao {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 211, 102, 0.16), transparent 36%),
+    #ffffff;
+  border: 1px solid rgba(0, 166, 81, 0.18);
+}
+
+.botao-whatsapp-admin,
+.botao-copiar-admin {
+  min-height: 46px;
+  border-radius: 16px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-whatsapp-admin {
+  border: none;
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(0, 166, 81, 0.20);
+}
+
+.botao-copiar-admin {
+  background: #ffffff;
+  color: #003B66;
+  border: 1px solid rgba(0, 174, 239, 0.26);
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-enviado {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Destaque para cadastro do piloto na tela de login */
+.aviso-login-aprovado {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.bloco-cadastro-destaque {
+  position: relative;
+  margin-top: 22px !important;
+  padding: 24px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.34), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.22), transparent 36%),
+    linear-gradient(135deg, #ffffff 0%, #ecfff6 100%) !important;
+  border: 1px solid rgba(0, 166, 81, 0.26) !important;
+  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.14);
+  overflow: hidden;
+}
+
+.bloco-cadastro-destaque::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.selo-primeiro-acesso {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0, 174, 239, 0.12);
+  color: #003B66;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bloco-cadastro-destaque h3 {
+  margin: 12px 0 8px;
+  color: #003B66;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.bloco-cadastro-destaque p {
+  margin: 0 0 18px !important;
+  color: #334155 !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+}
+
+.botao-cadastrar-igreja {
+  min-height: 60px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 950;
+  font-size: 16px;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 22px 46px rgba(0, 174, 239, 0.32);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-cadastrar-igreja:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 60px rgba(0, 174, 239, 0.42);
+  filter: saturate(1.08);
+}
+
+@media (max-width: 760px) {
+  .bloco-cadastro-destaque {
+    padding: 22px !important;
+  }
+
+  .botao-cadastrar-igreja {
+    min-height: 58px;
+  }
+}
