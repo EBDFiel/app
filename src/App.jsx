@@ -523,6 +523,18 @@ function App() {
     setCarregandoCadastroPiloto(true)
 
     try {
+      const { data: vagasDisponiveis, error: erroVagasDisponiveis } = await supabase.rpc(
+        'vagas_piloto_disponiveis'
+      )
+
+      if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
+        setErroCadastroPiloto(
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+        )
+        setCarregandoCadastroPiloto(false)
+        return
+      }
+
       const { data: cadastroAuth, error: erroCadastroAuth } = await supabase.auth.signUp({
         email: emailCadastro,
         password: cadastroPiloto.senha,
@@ -630,9 +642,19 @@ function App() {
       await supabase.auth.signOut()
     } catch (error) {
       console.error(error)
-      setErroCadastroPiloto(
-        traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
-      )
+
+      if (
+        String(error?.message || '').includes('limite_piloto_atingido') ||
+        String(error?.details || '').includes('limite_piloto_atingido')
+      ) {
+        setErroCadastroPiloto(
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+        )
+      } else {
+        setErroCadastroPiloto(
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
+        )
+      }
     } finally {
       setCarregandoCadastroPiloto(false)
     }
