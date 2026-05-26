@@ -170,6 +170,11 @@ function App() {
   const [carregandoCadastroPiloto, setCarregandoCadastroPiloto] = useState(false)
   const [erroCadastroPiloto, setErroCadastroPiloto] = useState('')
   const [sucessoCadastroPiloto, setSucessoCadastroPiloto] = useState('')
+  const [ultimoCadastroPilotoEnviado, setUltimoCadastroPilotoEnviado] = useState({
+    nomeIgreja: '',
+    responsavel: '',
+    email: '',
+  })
   const [cadastroPiloto, setCadastroPiloto] = useState({
     nomeResponsavel: '',
     cargoResponsavel: 'secretario',
@@ -409,6 +414,11 @@ function App() {
     setTelaPublica('landing')
     setErroCadastroPiloto('')
     setSucessoCadastroPiloto('')
+    setUltimoCadastroPilotoEnviado({
+      nomeIgreja: '',
+      responsavel: '',
+      email: '',
+    })
     setCadastroPiloto({
       nomeResponsavel: '',
       cargoResponsavel: 'secretario',
@@ -612,11 +622,16 @@ function App() {
       }
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Seu acesso ficará aguardando aprovação do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
       )
+      setUltimoCadastroPilotoEnviado({
+        nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
+        responsavel: cadastroPiloto.nomeResponsavel.trim(),
+        email: emailCadastro,
+      })
       setEmailLogin(emailCadastro)
       setSenhaLogin('')
-      setTelaPublica('login')
+      setTelaPublica('cadastroEnviado')
       await supabase.auth.signOut()
     } catch (error) {
       console.error(error)
@@ -1353,7 +1368,13 @@ function App() {
     await carregarIgrejasAdmin()
 
     if (novoStatus === 'teste') {
-      alert('Igreja aprovada para o teste piloto.')
+      const avisarAgora = window.confirm(
+        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
+      )
+
+      if (avisarAgora) {
+        abrirWhatsAppAprovacao({ ...igreja, status_piloto: 'teste' })
+      }
     }
 
     if (novoStatus === 'cancelada') {
@@ -1367,6 +1388,51 @@ function App() {
 
   async function naoAprovarIgrejaPiloto(igreja) {
     await alterarStatusIgrejaAdmin(igreja, 'cancelada')
+  }
+
+  function gerarMensagemAprovacaoIgreja(igreja) {
+    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'sua igreja'
+
+    return `Paz do Senhor!
+
+O cadastro da ${nomeIgreja} no teste piloto do EBD Fiel foi aprovado.
+
+Agora você já pode acessar o sistema pelo link:
+
+https://app.ebdfiel.com.br
+
+Entre com o e-mail e a senha cadastrados no momento da inscrição.
+
+Qualquer dificuldade, pode me chamar por aqui.`
+  }
+
+  function limparNumeroWhatsApp(numero) {
+    return String(numero || '').replace(/\D/g, '')
+  }
+
+  function abrirWhatsAppAprovacao(igreja) {
+    const numeroLimpo = limparNumeroWhatsApp(igreja.responsavel_whatsapp)
+    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
+    const texto = encodeURIComponent(mensagem)
+
+    if (!numeroLimpo) {
+      alert('Esta igreja não possui WhatsApp cadastrado. Use o botão “Copiar mensagem”.')
+      return
+    }
+
+    const numeroComPais = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`
+    window.open(`https://wa.me/${numeroComPais}?text=${texto}`, '_blank', 'noopener,noreferrer')
+  }
+
+  async function copiarMensagemAprovacao(igreja) {
+    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
+
+    try {
+      await navigator.clipboard.writeText(mensagem)
+      alert('Mensagem de aprovação copiada.')
+    } catch {
+      window.prompt('Copie a mensagem abaixo:', mensagem)
+    }
   }
 
   function filtrarIgrejasAdmin() {
@@ -3249,6 +3315,77 @@ function App() {
     )
   }
 
+  if (!sessao && telaPublica === 'cadastroEnviado') {
+    return (
+      <div className="tela-login tela-cadastro-enviado">
+        <section className="painel-apresentacao painel-cadastro-enviado">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Cadastro recebido com sucesso.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Aguardando aprovação</span>
+            <h2>Sua solicitação foi enviada.</h2>
+            <p>
+              O administrador vai conferir os dados da igreja e liberar o acesso para
+              o teste piloto.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-cadastro-enviado">
+          <div className="mensagem-status-icone mensagem-status-sucesso">
+            <Icone nome="check" className="icone-status" />
+          </div>
+
+          <h2>Cadastro enviado!</h2>
+
+          <p>
+            {ultimoCadastroPilotoEnviado.nomeIgreja
+              ? `Recebemos o cadastro da igreja ${ultimoCadastroPilotoEnviado.nomeIgreja}.`
+              : 'Recebemos o cadastro da sua igreja.'}
+          </p>
+
+          <div className="resumo-cadastro-enviado">
+            {ultimoCadastroPilotoEnviado.responsavel && (
+              <span>Responsável: {ultimoCadastroPilotoEnviado.responsavel}</span>
+            )}
+            {ultimoCadastroPilotoEnviado.email && (
+              <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
+            )}
+            <span>Status: aguardando aprovação</span>
+          </div>
+
+          <div className="aviso-aprovacao-cadastro">
+            <strong>O que acontece agora?</strong>
+            <p>
+              Aguarde a aprovação do administrador. Após a liberação, você poderá
+              entrar normalmente com o e-mail e a senha cadastrados.
+            </p>
+          </div>
+
+          <button
+            className="botao-principal botao-largura-total"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            Voltar para login
+          </button>
+        </section>
+      </div>
+    )
+  }
+
   if (!sessao && telaPublica === 'cadastroPiloto') {
     return (
       <div className="tela-login tela-cadastro-piloto">
@@ -3672,9 +3809,13 @@ function App() {
               <Icone nome="usuarios" className="icone-status" />
             </div>
             <div>
-              <h2>Acesso restrito</h2>
+              <h2>Já foi aprovado?</h2>
               <p>Entre com seu e-mail e senha para acessar o sistema.</p>
             </div>
+          </div>
+
+          <div className="aviso-login-aprovado">
+            Use o login abaixo somente se sua igreja já foi aprovada.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -3711,14 +3852,20 @@ function App() {
             </button>
           </form>
 
-          <div className="bloco-criar-piloto">
-            <p>Participa do grupo da EBD Fiel e recebeu o código do piloto?</p>
+          <div className="bloco-criar-piloto bloco-cadastro-destaque">
+            <span className="selo-primeiro-acesso">Primeiro acesso?</span>
+            <h3>Cadastrar minha igreja</h3>
+            <p>
+              Se você recebeu o código do piloto, cadastre sua igreja para análise
+              e aprovação do administrador.
+            </p>
+
             <button
-              className="botao-secundario botao-largura-total"
+              className="botao-cadastrar-igreja botao-largura-total"
               type="button"
               onClick={() => setTelaPublica('cadastroPiloto')}
             >
-              Criar acesso do piloto
+              Cadastrar minha igreja
             </button>
           </div>
         </section>
@@ -7049,6 +7196,24 @@ function App() {
                   >
                     Aprovar para teste
                   </button>
+                )}
+
+                {igreja.status_piloto === 'teste' && (
+                  <div className="grupo-aviso-aprovacao">
+                    <button
+                      className="botao-whatsapp-admin"
+                      onClick={() => abrirWhatsAppAprovacao(igreja)}
+                    >
+                      Avisar WhatsApp
+                    </button>
+
+                    <button
+                      className="botao-copiar-admin"
+                      onClick={() => copiarMensagemAprovacao(igreja)}
+                    >
+                      Copiar mensagem
+                    </button>
+                  </div>
                 )}
 
                 <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
