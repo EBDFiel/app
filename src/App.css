@@ -8047,3 +8047,294 @@ button.botao-principal {
     border-radius: 16px !important;
   }
 }
+
+
+/* Visual moderno e mais atraente para cards de classes */
+:root {
+  --classe-azul-profundo: #062b49;
+  --classe-azul-vivo: #0476d9;
+  --classe-ciano: #00b7e8;
+  --classe-verde: #00a651;
+  --classe-amarelo: #ffd43b;
+  --classe-laranja: #ff7a18;
+  --classe-vermelho: #ef4444;
+  --classe-roxo: #6d5dfc;
+  --classe-fundo-suave: #f3fbff;
+}
+
+/* Deixa a área de classes mais limpa */
+.conteudo:has(.lista-classes),
+.conteudo:has(.classes-lista) {
+  background:
+    radial-gradient(circle at 8% 4%, rgba(0, 183, 232, 0.14), transparent 28%),
+    radial-gradient(circle at 90% 12%, rgba(255, 212, 59, 0.16), transparent 30%),
+    linear-gradient(180deg, #f8fdff 0%, #eefaff 100%);
+}
+
+/* Cards principais */
+.lista-classes .item-lista,
+.classes-lista .item-lista,
+.item-lista.item-com-acoes.classe-card,
+.item-lista.item-com-acoes.classe-card-moderna,
+.item-lista.item-com-acoes.classe-destaque-card {
+  position: relative !important;
+  border: 1px solid rgba(0, 183, 232, 0.26) !important;
+  border-radius: 30px !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(246, 252, 255, 0.96)) !important;
+  box-shadow:
+    0 22px 55px rgba(6, 43, 73, 0.10),
+    0 0 0 1px rgba(255, 255, 255, 0.80) inset !important;
+  overflow: hidden !important;
+}
+
+/* Faixa lateral colorida */
+.lista-classes .item-lista::before,
+.classes-lista .item-lista::before,
+.item-lista.item-com-acoes.classe-card::before,
+.item-lista.item-com-acoes.classe-card-moderna::before,
+.item-lista.item-com-acoes.classe-destaque-card::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  width: 9px !important;
+  background: linear-gradient(180deg, var(--classe-ciano), var(--classe-verde), var(--classe-amarelo)) !important;
+  z-index: 4 !important;
+}
+
+/* Cabeçalho dos cards */
+.classe-card .classe-header,
+.classe-card-moderna .classe-header,
+.classe-destaque-card .classe-header,
+.classe-topo,
+.classe-hero,
+.classe-card-cabecalho {
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(255, 212, 59, 0.35), transparent 24%),
+    radial-gradient(circle at 20% 0%, rgba(0, 183, 232, 0.30), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #0567b1 42%, #00a651 100%) !important;
+  box-shadow: 0 18px 42px rgba(4, 118, 217, 0.18) !important;
+}
+
+.classe-card .classe-header::after,
+.classe-card-moderna .classe-header::after,
+.classe-destaque-card .classe-header::after,
+.classe-topo::after,
+.classe-hero::after,
+.classe-card-cabecalho::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -46px !important;
+  top: 34px !important;
+  width: 154px !important;
+  height: 154px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 212, 59, 0.30) !important;
+  filter: blur(0.2px) !important;
+}
+
+/* Título da classe */
+.classe-card h3,
+.card-classe h3,
+.item-classe h3,
+.classe-card-moderna h3,
+.classe-destaque-card h3,
+.lista-classes .item-lista h3,
+.classes-lista .item-lista h3 {
+  color: #ffffff !important;
+  text-shadow: 0 12px 34px rgba(0, 0, 0, 0.24) !important;
+  letter-spacing: -0.055em !important;
+}
+
+/* Selo CLASSE */
+.classe-card .badge,
+.classe-card-moderna .badge,
+.classe-destaque-card .badge,
+.classe-selo,
+.selo-classe {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Contador de alunos */
+.classe-card .contador-alunos,
+.classe-card-moderna .contador-alunos,
+.classe-destaque-card .contador-alunos,
+.classe-total-alunos,
+.classe-bolha-alunos {
+  background: linear-gradient(135deg, #ffd43b 0%, #7ed321 52%, #00a651 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 18px 38px rgba(0, 166, 81, 0.26),
+    0 0 0 8px rgba(255, 212, 59, 0.14) !important;
+}
+
+/* Caixas internas */
+.classe-card .classe-info,
+.classe-card-moderna .classe-info,
+.classe-destaque-card .classe-info,
+.classe-info-box,
+.classe-resumo-item,
+.dados-classe-card > div,
+.lista-classes .item-lista p,
+.classes-lista .item-lista p {
+  border-color: rgba(0, 183, 232, 0.20) !important;
+}
+
+.classe-card .classe-info,
+.classe-card-moderna .classe-info,
+.classe-destaque-card .classe-info,
+.classe-info-box,
+.classe-resumo-item {
+  background:
+    radial-gradient(circle at top right, rgba(255, 212, 59, 0.18), transparent 36%),
+    linear-gradient(135deg, #ffffff, #f4fbff) !important;
+  box-shadow: 0 14px 28px rgba(6, 43, 73, 0.06) !important;
+}
+
+/* Títulos internos */
+.classe-card strong,
+.classe-card-moderna strong,
+.classe-destaque-card strong,
+.classe-info-box strong,
+.classe-resumo-item strong {
+  color: var(--classe-azul-profundo) !important;
+}
+
+.classe-card span,
+.classe-card-moderna span,
+.classe-destaque-card span,
+.classe-info-box span,
+.classe-resumo-item span {
+  color: #0476d9;
+}
+
+/* Lista de professores */
+.classe-card .professores-lista,
+.classe-card-moderna .professores-lista,
+.classe-destaque-card .professores-lista,
+.professor-classe-lista,
+.professores-classe-lista {
+  background:
+    linear-gradient(135deg, rgba(0, 183, 232, 0.09), rgba(0, 166, 81, 0.06)) !important;
+  border: 1px solid rgba(0, 183, 232, 0.20) !important;
+}
+
+.classe-card .professor-classe-linha,
+.classe-card-moderna .professor-classe-linha,
+.classe-destaque-card .professor-classe-linha,
+.professor-classe-linha {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 183, 232, 0.16) !important;
+  box-shadow: 0 10px 24px rgba(6, 43, 73, 0.06) !important;
+}
+
+/* Botões dos cards */
+.acoes-classe-card .botao-principal,
+.classe-card .acoes-item .botao-principal,
+.classe-card-moderna .acoes-item .botao-principal,
+.classe-destaque-card .acoes-item .botao-principal {
+  background: linear-gradient(135deg, #062b49 0%, #00b7e8 58%, #00a651 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 16px 34px rgba(0, 183, 232, 0.25) !important;
+}
+
+.acoes-classe-card .botao-verde,
+.classe-card .acoes-item .botao-verde,
+.classe-card-moderna .acoes-item .botao-verde,
+.classe-destaque-card .acoes-item .botao-verde {
+  background: linear-gradient(135deg, #007a3d, #00a651) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.23) !important;
+}
+
+.acoes-classe-card .botao-editar,
+.classe-card .acoes-item .botao-editar,
+.classe-card-moderna .acoes-item .botao-editar,
+.classe-destaque-card .acoes-item .botao-editar {
+  background: #ffffff !important;
+  color: #062b49 !important;
+  border: 1px solid rgba(0, 183, 232, 0.42) !important;
+  box-shadow: 0 12px 26px rgba(6, 43, 73, 0.06) !important;
+}
+
+.acoes-classe-card .botao-excluir,
+.classe-card .acoes-item .botao-excluir,
+.classe-card-moderna .acoes-item .botao-excluir,
+.classe-destaque-card .acoes-item .botao-excluir {
+  background: #ffffff !important;
+  color: #d92d20 !important;
+  border: 1px solid rgba(239, 68, 68, 0.40) !important;
+  box-shadow: 0 12px 26px rgba(239, 68, 68, 0.05) !important;
+}
+
+.acoes-classe-card button:hover,
+.classe-card .acoes-item button:hover,
+.classe-card-moderna .acoes-item button:hover,
+.classe-destaque-card .acoes-item button:hover {
+  transform: translateY(-2px) !important;
+  filter: saturate(1.08) !important;
+}
+
+/* Alterna cores dos cards para ficar mais vivo */
+.lista-classes .item-lista:nth-child(2n) .classe-header,
+.classes-lista .item-lista:nth-child(2n) .classe-header,
+.lista-classes .item-lista:nth-child(2n) .classe-topo,
+.classes-lista .item-lista:nth-child(2n) .classe-topo,
+.lista-classes .item-lista:nth-child(2n) .classe-hero,
+.classes-lista .item-lista:nth-child(2n) .classe-hero {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
+    radial-gradient(circle at 18% 4%, rgba(109, 93, 252, 0.26), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #6d5dfc 48%, #00b7e8 100%) !important;
+}
+
+.lista-classes .item-lista:nth-child(3n) .classe-header,
+.classes-lista .item-lista:nth-child(3n) .classe-header,
+.lista-classes .item-lista:nth-child(3n) .classe-topo,
+.classes-lista .item-lista:nth-child(3n) .classe-topo,
+.lista-classes .item-lista:nth-child(3n) .classe-hero,
+.classes-lista .item-lista:nth-child(3n) .classe-hero {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
+    radial-gradient(circle at 18% 4%, rgba(255, 122, 24, 0.24), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #0476d9 48%, #ff7a18 100%) !important;
+}
+
+/* Responsivo */
+@media (max-width: 760px) {
+  .lista-classes .item-lista,
+  .classes-lista .item-lista,
+  .item-lista.item-com-acoes.classe-card,
+  .item-lista.item-com-acoes.classe-card-moderna,
+  .item-lista.item-com-acoes.classe-destaque-card {
+    border-radius: 26px !important;
+  }
+
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    border-radius: 26px 26px 0 0 !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    box-shadow:
+      0 12px 28px rgba(0, 166, 81, 0.22),
+      0 0 0 6px rgba(255, 212, 59, 0.13) !important;
+  }
+}
