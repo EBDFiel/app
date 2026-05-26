@@ -7758,3 +7758,4 @@ Qualquer dificuldade, pode me chamar por aqui.`
 }
 
 export default App
+
