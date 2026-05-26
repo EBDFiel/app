@@ -7403,3 +7403,421 @@ button.botao-principal {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Mensagem pós-cadastro e aviso de aprovação */
+.tela-cadastro-enviado {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
+}
+
+.painel-cadastro-enviado {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-enviado {
+  justify-content: center;
+}
+
+.mensagem-status-sucesso {
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 166, 81, 0.22);
+}
+
+.resumo-cadastro-enviado {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.resumo-cadastro-enviado span {
+  color: #003B66;
+  font-weight: 900;
+}
+
+.aviso-aprovacao-cadastro {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background: #E7F8EF;
+  border: 1px solid rgba(0, 166, 81, 0.22);
+}
+
+.aviso-aprovacao-cadastro strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #008C44;
+}
+
+.aviso-aprovacao-cadastro p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.grupo-aviso-aprovacao {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 211, 102, 0.16), transparent 36%),
+    #ffffff;
+  border: 1px solid rgba(0, 166, 81, 0.18);
+}
+
+.botao-whatsapp-admin,
+.botao-copiar-admin {
+  min-height: 46px;
+  border-radius: 16px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-whatsapp-admin {
+  border: none;
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(0, 166, 81, 0.20);
+}
+
+.botao-copiar-admin {
+  background: #ffffff;
+  color: #003B66;
+  border: 1px solid rgba(0, 174, 239, 0.26);
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-enviado {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Destaque para cadastro do piloto na tela de login */
+.aviso-login-aprovado {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.bloco-cadastro-destaque {
+  position: relative;
+  margin-top: 22px !important;
+  padding: 24px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.34), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.22), transparent 36%),
+    linear-gradient(135deg, #ffffff 0%, #ecfff6 100%) !important;
+  border: 1px solid rgba(0, 166, 81, 0.26) !important;
+  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.14);
+  overflow: hidden;
+}
+
+.bloco-cadastro-destaque::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.selo-primeiro-acesso {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0, 174, 239, 0.12);
+  color: #003B66;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bloco-cadastro-destaque h3 {
+  margin: 12px 0 8px;
+  color: #003B66;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.bloco-cadastro-destaque p {
+  margin: 0 0 18px !important;
+  color: #334155 !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+}
+
+.botao-cadastrar-igreja {
+  min-height: 60px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 950;
+  font-size: 16px;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 22px 46px rgba(0, 174, 239, 0.32);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-cadastrar-igreja:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 60px rgba(0, 174, 239, 0.42);
+  filter: saturate(1.08);
+}
+
+@media (max-width: 760px) {
+  .bloco-cadastro-destaque {
+    padding: 22px !important;
+  }
+
+  .botao-cadastrar-igreja {
+    min-height: 58px;
+  }
+}
+
+
+/* Manual do usuário */
+.botao-manual-painel {
+  border-color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.manual-usuario-pagina {
+  display: grid;
+  gap: 22px;
+}
+
+.manual-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 22px;
+  padding: clamp(24px, 4vw, 42px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.28), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.18), transparent 36%),
+    linear-gradient(135deg, #ffffff 0%, #f7fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
+}
+
+.selo-manual {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  color: #003B66;
+  background: rgba(0, 174, 239, 0.12);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.manual-hero h2 {
+  margin: 12px 0 10px;
+  color: #003B66;
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.manual-hero p {
+  max-width: 820px;
+  margin: 0;
+  color: #475569;
+  font-size: 18px;
+  line-height: 1.65;
+  font-weight: 700;
+}
+
+.manual-alerta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: #E7F8EF;
+  border: 1px solid rgba(0, 166, 81, 0.22);
+  color: #334155;
+  line-height: 1.5;
+}
+
+.manual-alerta strong {
+  color: #008C44;
+}
+
+.manual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.manual-card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  min-height: 250px;
+  padding: 22px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 36%),
+    #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+  box-shadow: 0 18px 44px rgba(0, 59, 102, 0.07);
+  overflow: hidden;
+}
+
+.manual-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.manual-numero {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #003B66, #00AEEF);
+  font-weight: 950;
+  font-size: 18px;
+  box-shadow: 0 14px 28px rgba(0, 174, 239, 0.22);
+}
+
+.manual-local {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+}
+
+.manual-card h3 {
+  margin: 0 0 8px;
+  color: #003B66;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.manual-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.manual-final {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 24px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.15), transparent 34%),
+    linear-gradient(135deg, #003B66, #006BB6);
+  color: #ffffff;
+  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.18);
+}
+
+.manual-final h3 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.manual-final p {
+  max-width: 760px;
+  margin: 0;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 700;
+}
+
+.manual-final .botao-secundario {
+  background: #ffffff;
+  color: #003B66;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 1100px) {
+  .manual-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .manual-hero,
+  .manual-final {
+    display: grid;
+  }
+}
+
+@media (max-width: 720px) {
+  .manual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manual-alerta {
+    display: grid;
+  }
+
+  .manual-card {
+    min-height: auto;
+  }
+}
+
+
+/* Endereço com número separado */
+.formulario-cadastro-piloto .campo-cadastro-piloto-largo,
+.formulario-admin-igreja .campo-sede-filiada {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .formulario-cadastro-piloto .campo-cadastro-piloto-largo {
+    grid-column: span 2 !important;
+  }
+
+  .formulario-admin-igreja .campo-sede-filiada {
+    grid-column: span 2 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .formulario-cadastro-piloto .campo-cadastro-piloto-largo,
+  .formulario-admin-igreja .campo-sede-filiada {
+    grid-column: span 1 !important;
+  }
+}
