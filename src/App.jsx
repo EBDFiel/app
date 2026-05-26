@@ -4139,16 +4139,16 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         <div className={`mobile-menu ${menuPublicoAberto ? 'active' : ''}`}>
           <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>
-            ðŸ“± Recursos
+            CH Recursos
           </a>
           <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>
-            â­ BenefÃ­cios
+            BenefÃ­cios
           </a>
           <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
-            ðŸ’° Planos
+            Planos
           </a>
           <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            â“ FAQ
+            FAQ
           </a>
           <button
             className="btn-nav-mobile"
@@ -4158,7 +4158,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               setTelaPublica('login')
             }}
           >
-            ðŸšª Entrar no sistema
+            Entrar no sistema
           </button>
         </div>
 
@@ -4239,37 +4239,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
               <div className="features-grid">
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸ“±</div>
+                  <div className="feature-icon">CH</div>
                   <h3>Chamada digital simples</h3>
                   <p>Registre a presenÃ§a dos alunos e professores pelo computador ou celular.</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸ—„ï¸</div>
+                  <div className="feature-icon">BD</div>
                   <h3>Dados separados por igreja</h3>
                   <p>Cada igreja tem suas prÃ³prias informaÃ§Ãµes organizadas com seguranÃ§a.</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸ“„</div>
+                  <div className="feature-icon">PDF</div>
                   <h3>RelatÃ³rios prontos em PDF</h3>
                   <p>A secretaria gera relatÃ³rios organizados sem montar tudo manualmente.</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸŒ</div>
+                  <div className="feature-icon">ON</div>
                   <h3>Acesso online</h3>
                   <p>Use o sistema pelo navegador, sem instalaÃ§Ã£o complicada.</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸ‘¨â€ðŸ«</div>
+                  <div className="feature-icon">CL</div>
                   <h3>GestÃ£o de classes e alunos</h3>
                   <p>Cadastre turmas, alunos, professores e acompanhe tudo em um sÃ³ lugar.</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ðŸ“Š</div>
+                  <div className="feature-icon">GR</div>
                   <h3>Apoio para lideranÃ§a</h3>
                   <p>Acompanhe frequÃªncia, organizaÃ§Ã£o e evoluÃ§Ã£o da EBD com mais clareza.</p>
                 </article>
@@ -4284,7 +4284,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <div className="comparison">
                 <div className="comparison-grid">
                   <article className="comparison-card before">
-                    <div className="comparison-icon">â˜¹</div>
+                    <div className="comparison-icon">!</div>
                     <h3>Antes</h3>
                     <ul>
                       <li>âŒ Listas de presenÃ§a em papel</li>
@@ -4294,7 +4294,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </article>
 
                   <article className="comparison-card after">
-                    <div className="comparison-icon">â˜º</div>
+                    <div className="comparison-icon">OK</div>
                     <h3>Depois com o EBD Fiel</h3>
                     <ul>
                       <li>âœ… Chamada digital</li>
@@ -4313,19 +4313,19 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
               <div className="personas-grid">
                 <article className="persona-card">
-                  <div className="persona-avatar">ðŸ“‚</div>
+                  <div className="persona-avatar">SEC</div>
                   <h3>Secretaria</h3>
                   <p>Organiza cadastros, classes, relatÃ³rios e informaÃ§Ãµes gerais.</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">ðŸ§‘â€ðŸ«</div>
+                  <div className="persona-avatar">PROF</div>
                   <h3>Professores</h3>
                   <p>Fazem chamada, acompanham suas turmas e ajudam na organizaÃ§Ã£o semanal.</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">ðŸ‘‘</div>
+                  <div className="persona-avatar">LID</div>
                   <h3>LideranÃ§a</h3>
                   <p>Visualiza dados importantes para cuidar melhor da Escola BÃ­blica Dominical.</p>
                 </article>
