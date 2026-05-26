@@ -7821,3 +7821,229 @@ button.botao-principal {
     grid-column: span 1 !important;
   }
 }
+
+
+/* Cards de classes em modo compacto */
+@media (min-width: 761px) {
+  .classe-card,
+  .card-classe,
+  .item-classe,
+  .classe-card-moderna,
+  .classe-destaque-card {
+    min-height: auto !important;
+  }
+
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    min-height: 132px !important;
+    padding: 24px 28px !important;
+    border-radius: 28px 28px 0 0 !important;
+  }
+
+  .classe-card h3,
+  .card-classe h3,
+  .item-classe h3,
+  .classe-card-moderna h3,
+  .classe-destaque-card h3 {
+    font-size: clamp(34px, 3.6vw, 58px) !important;
+    line-height: 0.98 !important;
+    margin: 0 !important;
+  }
+
+  .classe-card .badge,
+  .classe-card-moderna .badge,
+  .classe-destaque-card .badge,
+  .classe-selo,
+  .selo-classe {
+    transform: scale(0.92);
+    transform-origin: left center;
+    margin-bottom: 10px !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    width: 104px !important;
+    height: 88px !important;
+    min-width: 104px !important;
+    min-height: 88px !important;
+    border-radius: 22px !important;
+    right: 24px !important;
+    top: 28px !important;
+  }
+
+  .classe-card .contador-alunos strong,
+  .classe-card-moderna .contador-alunos strong,
+  .classe-destaque-card .contador-alunos strong,
+  .classe-total-alunos strong,
+  .classe-bolha-alunos strong {
+    font-size: 36px !important;
+    line-height: 1 !important;
+  }
+
+  .classe-card .contador-alunos span,
+  .classe-card-moderna .contador-alunos span,
+  .classe-destaque-card .contador-alunos span,
+  .classe-total-alunos span,
+  .classe-bolha-alunos span {
+    font-size: 11px !important;
+  }
+
+  .classe-card .classe-corpo,
+  .classe-card-moderna .classe-corpo,
+  .classe-destaque-card .classe-corpo,
+  .classe-conteudo,
+  .classe-card-body {
+    padding: 18px 24px !important;
+    gap: 14px !important;
+  }
+
+  .classe-card .classe-info-grid,
+  .classe-card-moderna .classe-info-grid,
+  .classe-destaque-card .classe-info-grid,
+  .classe-resumo-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    gap: 12px !important;
+  }
+
+  .classe-card .classe-info,
+  .classe-card-moderna .classe-info,
+  .classe-destaque-card .classe-info,
+  .classe-info-box,
+  .classe-resumo-item {
+    min-height: 72px !important;
+    padding: 14px 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .classe-card .professores-lista,
+  .classe-card-moderna .professores-lista,
+  .classe-destaque-card .professores-lista,
+  .professor-classe-lista,
+  .professores-classe-lista {
+    padding: 12px !important;
+    border-radius: 20px !important;
+    gap: 8px !important;
+  }
+
+  .classe-card .professor-classe-linha,
+  .classe-card-moderna .professor-classe-linha,
+  .classe-destaque-card .professor-classe-linha,
+  .professor-classe-linha {
+    min-height: 50px !important;
+    padding: 10px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .classe-card .acoes-item,
+  .classe-card-moderna .acoes-item,
+  .classe-destaque-card .acoes-item,
+  .acoes-classe-card {
+    align-self: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    min-width: 170px !important;
+    padding: 0 !important;
+  }
+
+  .classe-card .acoes-item button,
+  .classe-card-moderna .acoes-item button,
+  .classe-destaque-card .acoes-item button,
+  .acoes-classe-card button {
+    min-height: 48px !important;
+    padding: 0 16px !important;
+    border-radius: 16px !important;
+    font-size: 15px !important;
+  }
+
+  .item-lista.item-com-acoes.classe-card,
+  .item-lista.item-com-acoes.classe-card-moderna,
+  .item-lista.item-com-acoes.classe-destaque-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 180px !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Compactação extra para qualquer card de classe com o visual atual */
+@media (min-width: 761px) {
+  .lista-classes .item-lista,
+  .classes-lista .item-lista {
+    margin-bottom: 18px !important;
+  }
+
+  .lista-classes .item-lista > div:first-child,
+  .classes-lista .item-lista > div:first-child {
+    min-width: 0;
+  }
+
+  .lista-classes .item-lista h3,
+  .classes-lista .item-lista h3 {
+    font-size: clamp(32px, 3.4vw, 56px) !important;
+  }
+
+  .lista-classes .item-lista .acoes-item,
+  .classes-lista .item-lista .acoes-item {
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    min-height: 116px !important;
+    padding: 22px !important;
+  }
+
+  .classe-card h3,
+  .card-classe h3,
+  .item-classe h3,
+  .classe-card-moderna h3,
+  .classe-destaque-card h3 {
+    font-size: clamp(38px, 12vw, 56px) !important;
+    line-height: 1 !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    width: 96px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    border-radius: 22px !important;
+  }
+
+  .classe-card .classe-corpo,
+  .classe-card-moderna .classe-corpo,
+  .classe-destaque-card .classe-corpo,
+  .classe-conteudo,
+  .classe-card-body {
+    padding: 16px !important;
+  }
+
+  .classe-card .acoes-item button,
+  .classe-card-moderna .acoes-item button,
+  .classe-destaque-card .acoes-item button,
+  .acoes-classe-card button {
+    min-height: 50px !important;
+    border-radius: 16px !important;
+  }
+}
