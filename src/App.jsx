@@ -636,11 +636,8 @@ function App() {
           'Este e-mail já possui um cadastro vinculado. Use “Esqueci minha senha” ou fale com o administrador.'
         )
       } else {
-        const mensagemTecnica =
-          error?.message || error?.details || error?.hint || 'Erro não identificado.'
-
         setErroCadastroPiloto(
-          `Não foi possível criar o acesso do piloto. Detalhe técnico: ${mensagemTecnica}`
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
         )
       }
     } finally {
@@ -1321,6 +1318,55 @@ function App() {
     }
 
     await carregarIgrejasAdmin()
+  }
+
+  async function alterarStatusIgrejaAdmin(igreja, novoStatus) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem alterar o status da igreja.')
+      return
+    }
+
+    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
+    const textoAcao =
+      novoStatus === 'teste'
+        ? 'aprovar esta igreja para o teste piloto'
+        : novoStatus === 'cancelada'
+          ? 'não aprovar esta igreja'
+          : `alterar o status para ${novoStatus}`
+
+    const confirmar = window.confirm(`Deseja ${textoAcao}: ${nomeIgreja}?`)
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('igrejas')
+      .update({ status_piloto: novoStatus })
+      .eq('id', igreja.id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível alterar o status da igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+
+    if (novoStatus === 'teste') {
+      alert('Igreja aprovada para o teste piloto.')
+    }
+
+    if (novoStatus === 'cancelada') {
+      alert('Igreja marcada como não aprovada.')
+    }
+  }
+
+  async function aprovarIgrejaPiloto(igreja) {
+    await alterarStatusIgrejaAdmin(igreja, 'teste')
+  }
+
+  async function naoAprovarIgrejaPiloto(igreja) {
+    await alterarStatusIgrejaAdmin(igreja, 'cancelada')
   }
 
   function filtrarIgrejasAdmin() {
@@ -6919,6 +6965,11 @@ function App() {
                   <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
                     {igreja.status_piloto || 'teste'}
                   </span>
+                  {igreja.status_piloto === 'pendente' && (
+                    <span className="selo-aguardando-aprovacao">
+                      aguardando decisão
+                    </span>
+                  )}
                 </div>
 
                 {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
@@ -6972,13 +7023,40 @@ function App() {
                 )}
               </div>
 
-              <div className="acoes-item">
+              <div className="acoes-item acoes-aprovacao-igreja">
+                {igreja.status_piloto === 'pendente' && (
+                  <div className="grupo-aprovacao-rapida">
+                    <button
+                      className="botao-aprovar-igreja"
+                      onClick={() => aprovarIgrejaPiloto(igreja)}
+                    >
+                      Aprovar
+                    </button>
+
+                    <button
+                      className="botao-nao-aprovar-igreja"
+                      onClick={() => naoAprovarIgrejaPiloto(igreja)}
+                    >
+                      Não aprovar
+                    </button>
+                  </div>
+                )}
+
+                {igreja.status_piloto !== 'pendente' && igreja.status_piloto !== 'teste' && (
+                  <button
+                    className="botao-aprovar-igreja"
+                    onClick={() => aprovarIgrejaPiloto(igreja)}
+                  >
+                    Aprovar para teste
+                  </button>
+                )}
+
                 <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
                   Vincular acesso
                 </button>
 
                 <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
-                  Editar
+                  Editar dados
                 </button>
 
                 <button className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
