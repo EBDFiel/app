@@ -10609,3 +10609,107 @@ button.botao-principal {
   color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.24) !important;
 }
+
+
+/* CorreÃ§Ãµes: portuguÃªs legÃ­vel, sÃ­mbolos com sentido e contraste */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar {
+  font-family: Inter, system-ui, sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.03em !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+}
+
+.modelo-exato-ebd .feature-icon {
+  font-size: 1.15rem !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  font-size: 1.05rem !important;
+}
+
+.modelo-exato-ebd .comparison-icon {
+  width: 48px !important;
+  height: 48px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 950 !important;
+}
+
+.modelo-exato-ebd .comparison-card.before .comparison-icon {
+  background: linear-gradient(135deg, #FF5722, #E64A19) !important;
+}
+
+.modelo-exato-ebd .comparison-card.after .comparison-icon {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32) !important;
+}
+
+.modelo-exato-ebd .hero .btn-primary span {
+  color: #ffffff !important;
+}
+
+.modelo-exato-ebd .feature-card h3,
+.modelo-exato-ebd .persona-card h3,
+.modelo-exato-ebd .plan-card h3,
+.modelo-exato-ebd .comparison-card h3 {
+  color: #1A1A1A !important;
+}
+
+/* MantÃ©m legibilidade em fundos escuros */
+.modelo-exato-ebd .hero,
+.modelo-exato-ebd .footer,
+.menu-lateral,
+.banner-modo-suporte,
+.manual-hero,
+.manual-final,
+.painel-apresentacao {
+  color: #ffffff !important;
+}
+
+.modelo-exato-ebd .hero h1,
+.modelo-exato-ebd .hero h1 span,
+.modelo-exato-ebd .hero p,
+.modelo-exato-ebd .footer h4,
+.modelo-exato-ebd .footer p,
+.modelo-exato-ebd .footer a,
+.modelo-exato-ebd .footer span,
+.menu-lateral h1,
+.menu-lateral p,
+.menu-lateral span,
+.menu-lateral button,
+.banner-modo-suporte *,
+.manual-hero *,
+.manual-final *,
+.painel-apresentacao * {
+  color: inherit;
+}
+
+.modelo-exato-ebd .hero p,
+.modelo-exato-ebd .footer p,
+.modelo-exato-ebd .footer a,
+.modelo-exato-ebd .footer span,
+.menu-lateral p,
+.menu-lateral span,
+.banner-modo-suporte p,
+.manual-hero p,
+.manual-final p,
+.painel-apresentacao p {
+  color: rgba(255, 255, 255, 0.86) !important;
+}
+
+
+/* CorreÃ§Ã£o definitiva de legibilidade dos textos */
+.modelo-exato-ebd,
+.modelo-exato-ebd * {
+  text-rendering: geometricPrecision;
+}
+
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-weight: 900 !important;
+}
