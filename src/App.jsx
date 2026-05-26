@@ -5182,12 +5182,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
           </p>
         </div>
 
-        <div className="lista">
-          {classes.map((classe) => {
+        <div className="lista lista-classes-modernas">
+          {classes.map((classe, indiceClasse) => {
             const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
 
             return (
-            <div className="item-lista item-com-acoes classe-card-moderno" key={classe.id}>
+            <div className={`item-lista item-com-acoes classe-card-moderno classe-cor-${(indiceClasse % 4) + 1}`} key={classe.id}>
               <div className="classe-card-conteudo">
                 <div className="classe-card-cabecalho">
                   <div>
