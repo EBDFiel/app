@@ -7195,3 +7195,143 @@ button.botao-principal {
     padding: 12px;
   }
 }
+
+
+/* Cadastro do piloto fechado */
+.tela-cadastro-piloto {
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.35fr);
+}
+
+.painel-cadastro-piloto {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-piloto {
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.formulario-cadastro-piloto {
+  gap: 20px;
+}
+
+.grupo-cadastro-piloto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 34%),
+    #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.05);
+}
+
+.grupo-cadastro-piloto h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #003B66;
+  font-size: 22px;
+}
+
+.campo-cadastro-piloto-largo {
+  grid-column: 1 / -1;
+}
+
+.bloco-criar-piloto {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(0, 174, 239, 0.08), rgba(0, 166, 81, 0.07));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.bloco-criar-piloto p {
+  margin: 0 0 12px;
+  color: #003B66;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.aviso-cadastro-piloto {
+  border-color: rgba(240, 68, 46, 0.28) !important;
+  background: #FFE8E2 !important;
+  color: #991b1b !important;
+}
+
+.aviso-sucesso-cadastro {
+  border-color: rgba(0, 166, 81, 0.28) !important;
+  background: #E7F8EF !important;
+  color: #166534 !important;
+}
+
+.status-pendente {
+  background: #fff3b8;
+  color: #92400e;
+}
+
+.contato-fechado-publico {
+  display: inline-flex;
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .grupo-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-cadastro-piloto-largo {
+    grid-column: span 1;
+  }
+}
+
+
+/* Recuperação de senha */
+.tela-recuperacao-senha {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
+}
+
+.painel-recuperacao-senha {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-recuperacao-senha {
+  justify-content: center;
+}
+
+.botao-link-login {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #003B66;
+  font-weight: 900;
+  margin-top: 4px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.botao-link-login:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .tela-recuperacao-senha {
+    grid-template-columns: 1fr;
+  }
+}
