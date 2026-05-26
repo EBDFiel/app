@@ -636,8 +636,11 @@ function App() {
           'Este e-mail já possui um cadastro vinculado. Use “Esqueci minha senha” ou fale com o administrador.'
         )
       } else {
+        const mensagemTecnica =
+          error?.message || error?.details || error?.hint || 'Erro não identificado.'
+
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
+          `Não foi possível criar o acesso do piloto. Detalhe técnico: ${mensagemTecnica}`
         )
       }
     } finally {
