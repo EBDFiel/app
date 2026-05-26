@@ -5268,7 +5268,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   className="botao-editar"
                   onClick={() => editarClasse(classe)}
                 >
-                  Editar nome
+                  Alterar nome da Classe
                 </button>
 
                 <button
