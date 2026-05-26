@@ -158,6 +158,39 @@ function App() {
   const [verificandoSessao, setVerificandoSessao] = useState(true)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
+  const [emailRecuperacao, setEmailRecuperacao] = useState('')
+  const [carregandoRecuperacao, setCarregandoRecuperacao] = useState(false)
+  const [mensagemRecuperacao, setMensagemRecuperacao] = useState('')
+  const [erroRecuperacao, setErroRecuperacao] = useState('')
+  const [novaSenhaRecuperacao, setNovaSenhaRecuperacao] = useState('')
+  const [confirmarNovaSenhaRecuperacao, setConfirmarNovaSenhaRecuperacao] = useState('')
+  const [carregandoNovaSenha, setCarregandoNovaSenha] = useState(false)
+  const [erroNovaSenha, setErroNovaSenha] = useState('')
+  const codigoPilotoOficial = 'EBDFIEL2026'
+  const [carregandoCadastroPiloto, setCarregandoCadastroPiloto] = useState(false)
+  const [erroCadastroPiloto, setErroCadastroPiloto] = useState('')
+  const [sucessoCadastroPiloto, setSucessoCadastroPiloto] = useState('')
+  const [cadastroPiloto, setCadastroPiloto] = useState({
+    nomeResponsavel: '',
+    cargoResponsavel: 'secretario',
+    email: '',
+    senha: '',
+    confirmarSenha: '',
+    codigoPiloto: '',
+    nomeIgreja: '',
+    tipoIgreja: 'congregacao',
+    congregacao: '',
+    sedeFiliadaNome: '',
+    sedeFiliadaEndereco: '',
+    sedeFiliadaCep: '',
+    pastorDirigente: '',
+    telefone: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    cep: '',
+  })
   const [carregandoLogin, setCarregandoLogin] = useState(false)
   const [erroLogin, setErroLogin] = useState('')
   const [telaPublica, setTelaPublica] = useState('landing')
@@ -304,8 +337,15 @@ function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSessao(session)
+
+      if (event === 'PASSWORD_RECOVERY') {
+        setTelaPublica('novaSenha')
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
 
       if (!session) {
         limparDadosDoSistema()
@@ -367,6 +407,29 @@ function App() {
     })
     navegarParaPagina('painel')
     setTelaPublica('landing')
+    setErroCadastroPiloto('')
+    setSucessoCadastroPiloto('')
+    setCadastroPiloto({
+      nomeResponsavel: '',
+      cargoResponsavel: 'secretario',
+      email: '',
+      senha: '',
+      confirmarSenha: '',
+      codigoPiloto: '',
+      nomeIgreja: '',
+      tipoIgreja: 'congregacao',
+      congregacao: '',
+      sedeFiliadaNome: '',
+      sedeFiliadaEndereco: '',
+      sedeFiliadaCep: '',
+      pastorDirigente: '',
+      telefone: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      cep: '',
+    })
     setMostrarFormularioClasse(false)
     setMostrarFormularioAluno(false)
     setClasseEditandoId(null)
@@ -396,6 +459,262 @@ function App() {
       revistas: '',
       ofertas: '',
     })
+  }
+
+  function criarSlugPiloto(texto) {
+    return String(texto || 'igreja')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .slice(0, 60)
+  }
+
+  async function cadastrarAcessoPiloto(event) {
+    event.preventDefault()
+
+    setErroCadastroPiloto('')
+    setSucessoCadastroPiloto('')
+
+    const codigoInformado = cadastroPiloto.codigoPiloto.trim().toUpperCase()
+    const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
+
+    if (codigoInformado !== codigoPilotoOficial) {
+      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
+      return
+    }
+
+    if (!cadastroPiloto.nomeResponsavel.trim()) {
+      setErroCadastroPiloto('Informe seu nome.')
+      return
+    }
+
+    if (!emailCadastro) {
+      setErroCadastroPiloto('Informe seu e-mail.')
+      return
+    }
+
+    if (cadastroPiloto.senha.length < 6) {
+      setErroCadastroPiloto('A senha precisa ter pelo menos 6 caracteres.')
+      return
+    }
+
+    if (cadastroPiloto.senha !== cadastroPiloto.confirmarSenha) {
+      setErroCadastroPiloto('A confirmação de senha não confere.')
+      return
+    }
+
+    if (!cadastroPiloto.nomeIgreja.trim()) {
+      setErroCadastroPiloto('Informe o nome da igreja.')
+      return
+    }
+
+    if (!cadastroPiloto.cidade.trim() || !cadastroPiloto.estado.trim()) {
+      setErroCadastroPiloto('Informe cidade e estado.')
+      return
+    }
+
+    if (cadastroPiloto.tipoIgreja === 'congregacao' && !cadastroPiloto.sedeFiliadaNome.trim()) {
+      setErroCadastroPiloto('Informe a sede à qual a congregação é filiada.')
+      return
+    }
+
+    setCarregandoCadastroPiloto(true)
+
+    try {
+      const { data: cadastroAuth, error: erroCadastroAuth } = await supabase.auth.signUp({
+        email: emailCadastro,
+        password: cadastroPiloto.senha,
+      })
+
+      if (erroCadastroAuth) {
+        throw erroCadastroAuth
+      }
+
+      let sessaoCadastro = cadastroAuth.session
+      let usuarioCadastro = cadastroAuth.user
+
+      if (!sessaoCadastro) {
+        const { data: loginCadastro, error: erroLoginCadastro } =
+          await supabase.auth.signInWithPassword({
+            email: emailCadastro,
+            password: cadastroPiloto.senha,
+          })
+
+        if (erroLoginCadastro) {
+          setSucessoCadastroPiloto(
+            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
+          )
+          return
+        }
+
+        sessaoCadastro = loginCadastro.session
+        usuarioCadastro = loginCadastro.user
+      }
+
+      if (!usuarioCadastro?.id || !sessaoCadastro) {
+        setSucessoCadastroPiloto(
+          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
+        )
+        return
+      }
+
+      const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
+      const dadosIgrejaPiloto = {
+        nome: cadastroPiloto.nomeIgreja.trim(),
+        slug: `${slugBase}-${Date.now()}`,
+        nome_igreja: cadastroPiloto.nomeIgreja.trim(),
+        congregacao: cadastroPiloto.congregacao.trim(),
+        pastor_dirigente: cadastroPiloto.pastorDirigente.trim(),
+        cidade: cadastroPiloto.cidade.trim(),
+        estado: cadastroPiloto.estado.trim().toUpperCase(),
+        bairro: cadastroPiloto.bairro.trim(),
+        endereco: cadastroPiloto.endereco.trim(),
+        cep: cadastroPiloto.cep.trim(),
+        telefone: cadastroPiloto.telefone.trim(),
+        email: emailCadastro,
+        tipo_igreja: cadastroPiloto.tipoIgreja,
+        sede_filiada_nome:
+          cadastroPiloto.tipoIgreja === 'congregacao'
+            ? cadastroPiloto.sedeFiliadaNome.trim()
+            : '',
+        sede_filiada_endereco:
+          cadastroPiloto.tipoIgreja === 'congregacao'
+            ? cadastroPiloto.sedeFiliadaEndereco.trim()
+            : '',
+        sede_filiada_cep:
+          cadastroPiloto.tipoIgreja === 'congregacao'
+            ? cadastroPiloto.sedeFiliadaCep.trim()
+            : '',
+        status_piloto: 'pendente',
+        responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
+        responsavel_email: emailCadastro,
+        responsavel_whatsapp: cadastroPiloto.telefone.trim(),
+        cargo_responsavel: cadastroPiloto.cargoResponsavel,
+        observacoes_piloto:
+          'Cadastro criado pela própria igreja usando o código do piloto fechado.',
+        limite_usuarios: 10,
+      }
+
+      const { data: igrejaCriada, error: erroIgrejaCriada } = await supabase
+        .from('igrejas')
+        .insert(dadosIgrejaPiloto)
+        .select('id')
+        .single()
+
+      if (erroIgrejaCriada) {
+        throw erroIgrejaCriada
+      }
+
+      const { error: erroPerfilCriado } = await supabase.from('perfis_usuarios').insert({
+        user_id: usuarioCadastro.id,
+        nome: cadastroPiloto.nomeResponsavel.trim(),
+        email: emailCadastro,
+        perfil: 'secretaria',
+        igreja_id: igrejaCriada.id,
+        classe_id: null,
+        data_nascimento: null,
+      })
+
+      if (erroPerfilCriado) {
+        throw erroPerfilCriado
+      }
+
+      setSucessoCadastroPiloto(
+        'Cadastro enviado com sucesso! Seu acesso ficará aguardando aprovação do administrador.'
+      )
+      setEmailLogin(emailCadastro)
+      setSenhaLogin('')
+      setTelaPublica('login')
+      await supabase.auth.signOut()
+    } catch (error) {
+      console.error(error)
+      setErroCadastroPiloto(
+        traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
+      )
+    } finally {
+      setCarregandoCadastroPiloto(false)
+    }
+  }
+
+  async function enviarLinkRecuperacaoSenha(event) {
+    event.preventDefault()
+
+    const email = emailRecuperacao.trim().toLowerCase()
+
+    setErroRecuperacao('')
+    setMensagemRecuperacao('')
+
+    if (!email) {
+      setErroRecuperacao('Informe seu e-mail para receber o link de recuperação.')
+      return
+    }
+
+    setCarregandoRecuperacao(true)
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setMensagemRecuperacao(
+        'Link de recuperação enviado. Confira sua caixa de entrada e também a pasta de spam.'
+      )
+    } catch (error) {
+      console.error(error)
+      setErroRecuperacao(
+        traduzirErroSistema(error, 'Não foi possível enviar o link de recuperação.')
+      )
+    } finally {
+      setCarregandoRecuperacao(false)
+    }
+  }
+
+  async function salvarNovaSenhaRecuperacao(event) {
+    event.preventDefault()
+
+    setErroNovaSenha('')
+
+    if (novaSenhaRecuperacao.length < 6) {
+      setErroNovaSenha('A nova senha precisa ter pelo menos 6 caracteres.')
+      return
+    }
+
+    if (novaSenhaRecuperacao !== confirmarNovaSenhaRecuperacao) {
+      setErroNovaSenha('A confirmação da nova senha não confere.')
+      return
+    }
+
+    setCarregandoNovaSenha(true)
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: novaSenhaRecuperacao,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setNovaSenhaRecuperacao('')
+      setConfirmarNovaSenhaRecuperacao('')
+      alert('Senha atualizada com sucesso. Entre novamente com sua nova senha.')
+      await supabase.auth.signOut()
+      setSessao(null)
+      setTelaPublica('login')
+    } catch (error) {
+      console.error(error)
+      setErroNovaSenha(
+        traduzirErroSistema(error, 'Não foi possível atualizar a senha.')
+      )
+    } finally {
+      setCarregandoNovaSenha(false)
+    }
   }
 
   async function entrarComEmailSenha(event) {
@@ -2719,6 +3038,523 @@ function App() {
     )
   }
 
+  if (sessao && telaPublica === 'novaSenha') {
+    return (
+      <div className="tela-login tela-recuperacao-senha">
+        <section className="painel-apresentacao painel-recuperacao-senha">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Redefinição segura de senha.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Nova senha</span>
+            <h2>Crie uma nova senha de acesso.</h2>
+            <p>
+              Digite uma nova senha para continuar usando o sistema com segurança.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-recuperacao-senha">
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Definir nova senha</h2>
+              <p>Sua nova senha precisa ter pelo menos 6 caracteres.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-login" onSubmit={salvarNovaSenhaRecuperacao}>
+            <label>
+              Nova senha
+              <input
+                type="password"
+                value={novaSenhaRecuperacao}
+                onChange={(event) => setNovaSenhaRecuperacao(event.target.value)}
+                placeholder="Digite a nova senha"
+                autoComplete="new-password"
+              />
+            </label>
+
+            <label>
+              Confirmar nova senha
+              <input
+                type="password"
+                value={confirmarNovaSenhaRecuperacao}
+                onChange={(event) =>
+                  setConfirmarNovaSenhaRecuperacao(event.target.value)
+                }
+                placeholder="Digite a nova senha novamente"
+                autoComplete="new-password"
+              />
+            </label>
+
+            {erroNovaSenha && <div className="aviso aviso-cadastro-piloto">{erroNovaSenha}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoNovaSenha}
+            >
+              {carregandoNovaSenha ? 'Salvando...' : 'Salvar nova senha'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'recuperarSenha') {
+    return (
+      <div className="tela-login tela-recuperacao-senha">
+        <section className="painel-apresentacao painel-recuperacao-senha">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Recuperação de acesso.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Esqueci minha senha</span>
+            <h2>Receba um link para redefinir sua senha.</h2>
+            <p>
+              Informe o e-mail usado no cadastro. O sistema enviará um link seguro para
+              você criar uma nova senha.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-recuperacao-senha">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            ← Voltar para login
+          </button>
+
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Recuperar senha</h2>
+              <p>Digite seu e-mail para receber o link de recuperação.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-login" onSubmit={enviarLinkRecuperacaoSenha}>
+            <label>
+              E-mail cadastrado
+              <input
+                type="email"
+                value={emailRecuperacao}
+                onChange={(event) => setEmailRecuperacao(event.target.value)}
+                placeholder="seuemail@exemplo.com"
+                autoComplete="email"
+              />
+            </label>
+
+            {erroRecuperacao && <div className="aviso aviso-cadastro-piloto">{erroRecuperacao}</div>}
+            {mensagemRecuperacao && (
+              <div className="aviso aviso-sucesso-cadastro">{mensagemRecuperacao}</div>
+            )}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoRecuperacao}
+            >
+              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperação'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'cadastroPiloto') {
+    return (
+      <div className="tela-login tela-cadastro-piloto">
+        <section className="painel-apresentacao painel-cadastro-piloto">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Cadastro do teste piloto fechado.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Exclusivo para o grupo</span>
+            <h2>Crie o acesso da sua igreja para avaliação.</h2>
+            <p>
+              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
+              testar classes, alunos, professores, chamadas, relatórios e feedbacks.
+            </p>
+          </div>
+
+          <div className="beneficios-login">
+            <div className="beneficio-item">
+              <Icone nome="check" className="icone-beneficio" />
+              <span>Código do piloto obrigatório</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="igreja" className="icone-beneficio" />
+              <span>Sede ou congregação</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="usuarios" className="icone-beneficio" />
+              <span>Secretaria ou superintendência</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="relatorios" className="icone-beneficio" />
+              <span>Aprovação pelo administrador</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-cadastro-piloto">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            ← Voltar para login
+          </button>
+
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="igreja" className="icone-status" />
+            </div>
+            <div>
+              <h2>Criar acesso do piloto</h2>
+              <p>Preencha seus dados e os dados da igreja participante.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-cadastro-piloto" onSubmit={cadastrarAcessoPiloto}>
+            <div className="grupo-cadastro-piloto">
+              <h3>Responsável</h3>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={cadastroPiloto.nomeResponsavel}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      nomeResponsavel: event.target.value,
+                    })
+                  }
+                  placeholder="Seu nome completo"
+                />
+              </label>
+
+              <label>
+                Cargo
+                <select
+                  value={cadastroPiloto.cargoResponsavel}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      cargoResponsavel: event.target.value,
+                    })
+                  }
+                >
+                  <option value="secretario">Secretário(a)</option>
+                  <option value="superintendente">Superintendente</option>
+                </select>
+              </label>
+
+              <label>
+                E-mail de acesso
+                <input
+                  type="email"
+                  value={cadastroPiloto.email}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, email: event.target.value })
+                  }
+                  placeholder="seuemail@exemplo.com"
+                  autoComplete="email"
+                />
+              </label>
+
+              <label>
+                WhatsApp
+                <input
+                  type="text"
+                  value={cadastroPiloto.telefone}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, telefone: event.target.value })
+                  }
+                  placeholder="Ex: 27 99999-9999"
+                />
+              </label>
+
+              <label>
+                Senha
+                <input
+                  type="password"
+                  value={cadastroPiloto.senha}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, senha: event.target.value })
+                  }
+                  placeholder="Mínimo 6 caracteres"
+                  autoComplete="new-password"
+                />
+              </label>
+
+              <label>
+                Confirmar senha
+                <input
+                  type="password"
+                  value={cadastroPiloto.confirmarSenha}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      confirmarSenha: event.target.value,
+                    })
+                  }
+                  placeholder="Digite a senha novamente"
+                  autoComplete="new-password"
+                />
+              </label>
+
+              <label>
+                Código do piloto
+                <input
+                  type="text"
+                  value={cadastroPiloto.codigoPiloto}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      codigoPiloto: event.target.value,
+                    })
+                  }
+                  placeholder="Código informado no grupo"
+                />
+              </label>
+            </div>
+
+            <div className="grupo-cadastro-piloto">
+              <h3>Dados da igreja</h3>
+
+              <label>
+                Nome da igreja
+                <input
+                  type="text"
+                  value={cadastroPiloto.nomeIgreja}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      nomeIgreja: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Assembleia de Deus..."
+                />
+              </label>
+
+              <label>
+                Tipo
+                <select
+                  value={cadastroPiloto.tipoIgreja}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      tipoIgreja: event.target.value,
+                    })
+                  }
+                >
+                  <option value="sede">Sede</option>
+                  <option value="congregacao">Congregação</option>
+                </select>
+              </label>
+
+              <label>
+                Congregação
+                <input
+                  type="text"
+                  value={cadastroPiloto.congregacao}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      congregacao: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Sede, Betel, Vila Nova..."
+                />
+              </label>
+
+              <label>
+                Pastor/Dirigente
+                <input
+                  type="text"
+                  value={cadastroPiloto.pastorDirigente}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      pastorDirigente: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Pr. João Silva"
+                />
+              </label>
+
+              <label>
+                Cidade
+                <input
+                  type="text"
+                  value={cadastroPiloto.cidade}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, cidade: event.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Estado
+                <input
+                  type="text"
+                  value={cadastroPiloto.estado}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, estado: event.target.value })
+                  }
+                  placeholder="Ex: MG"
+                />
+              </label>
+
+              <label>
+                Bairro
+                <input
+                  type="text"
+                  value={cadastroPiloto.bairro}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, bairro: event.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Endereço completo
+                <input
+                  type="text"
+                  value={cadastroPiloto.endereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Rua, número e complemento"
+                />
+              </label>
+
+              <label>
+                CEP
+                <input
+                  type="text"
+                  value={cadastroPiloto.cep}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, cep: event.target.value })
+                  }
+                  placeholder="Ex: 36000-000"
+                />
+              </label>
+
+              {cadastroPiloto.tipoIgreja === 'congregacao' && (
+                <>
+                  <label>
+                    Sede filiada
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaNome}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaNome: event.target.value,
+                        })
+                      }
+                      placeholder="Nome da igreja sede"
+                    />
+                  </label>
+
+                  <label className="campo-cadastro-piloto-largo">
+                    Endereço completo da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaEndereco}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaEndereco: event.target.value,
+                        })
+                      }
+                      placeholder="Rua, número, bairro, cidade e estado"
+                    />
+                  </label>
+
+                  <label>
+                    CEP da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaCep}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaCep: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 36000-000"
+                    />
+                  </label>
+                </>
+              )}
+            </div>
+
+            {erroCadastroPiloto && <div className="aviso aviso-cadastro-piloto">{erroCadastroPiloto}</div>}
+            {sucessoCadastroPiloto && <div className="aviso aviso-sucesso-cadastro">{sucessoCadastroPiloto}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoCadastroPiloto}
+            >
+              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovação'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
   if (!sessao && telaPublica === 'login') {
     return (
       <div className="tela-login">
@@ -2818,6 +3654,17 @@ function App() {
               {carregandoLogin ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
+
+          <div className="bloco-criar-piloto">
+            <p>Participa do grupo da EBD Fiel e recebeu o código do piloto?</p>
+            <button
+              className="botao-secundario botao-largura-total"
+              type="button"
+              onClick={() => setTelaPublica('cadastroPiloto')}
+            >
+              Criar acesso do piloto
+            </button>
+          </div>
         </section>
       </div>
     )
@@ -3260,28 +4107,14 @@ function App() {
 
           <div>
             <h3>Contato</h3>
-            <a
-              href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20uma%20demonstra%C3%A7%C3%A3o%20do%20EBD%20Fiel."
-              target="_blank"
-              rel="noreferrer"
-            >
-              WhatsApp: (27) 92834-5844
-            </a>
+            <span className="contato-fechado-publico">Teste exclusivo para participantes do grupo</span>
             <button type="button" onClick={() => setTelaPublica('login')}>
               Já sou cliente
             </button>
           </div>
         </footer>
 
-        <a
-          className="botao-whatsapp-flutuante"
-          href="https://wa.me/5527928345844?text=Ol%C3%A1%21%20Quero%20solicitar%20uma%20demonstra%C3%A7%C3%A3o%20gratuita%20do%20EBD%20Fiel."
-          target="_blank"
-          rel="noreferrer"
-        >
-          Entrar no sistema
-        </a>
-      </div>
+        </div>
     )
   }
 
@@ -3310,6 +4143,51 @@ function App() {
           </div>
           <h2>Carregando...</h2>
           <p>Buscando dados da igreja, classes, alunos e chamadas.</p>
+        </section>
+      </div>
+    )
+  }
+
+  if (sessao && igrejaAtualPiloto?.status_piloto === 'pendente' && !usuarioEhAdminSistema()) {
+    return (
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>EBD Fiel</h1>
+              <p>Teste piloto fechado.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Cadastro recebido</span>
+            <h2>Seu acesso está aguardando aprovação.</h2>
+            <p>
+              A equipe administradora vai conferir os dados da igreja e liberar o uso
+              do sistema para o teste piloto.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="check" className="icone-status" />
+          </div>
+          <h2>Aguardando aprovação</h2>
+          <p>
+            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
+            os testes.
+          </p>
+          <button className="botao-secundario" onClick={sairDoSistema}>
+            Sair
+          </button>
         </section>
       </div>
     )
@@ -5585,6 +6463,7 @@ function App() {
     }
 
     const igrejasFiltradas = filtrarIgrejasAdmin()
+    const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente').length
     const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
     const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
     const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
@@ -5612,6 +6491,12 @@ function App() {
             <span>Total</span>
             <strong>{igrejasAdmin.length}</strong>
             <p>igrejas cadastradas</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Pendentes</span>
+            <strong>{igrejasPendentes}</strong>
+            <p>aguardando aprovação</p>
           </div>
 
           <div className="card card-admin">
@@ -5706,6 +6591,7 @@ function App() {
                     })
                   }
                 >
+                  <option value="pendente">Pendente</option>
                   <option value="teste">Teste</option>
                   <option value="ativa">Ativa</option>
                   <option value="pausada">Pausada</option>
