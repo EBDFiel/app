@@ -573,64 +573,42 @@ function App() {
       }
 
       const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
-      const dadosIgrejaPiloto = {
-        nome: cadastroPiloto.nomeIgreja.trim(),
-        slug: `${slugBase}-${Date.now()}`,
-        nome_igreja: cadastroPiloto.nomeIgreja.trim(),
-        congregacao: cadastroPiloto.congregacao.trim(),
-        pastor_dirigente: cadastroPiloto.pastorDirigente.trim(),
-        cidade: cadastroPiloto.cidade.trim(),
-        estado: cadastroPiloto.estado.trim().toUpperCase(),
-        bairro: cadastroPiloto.bairro.trim(),
-        endereco: cadastroPiloto.endereco.trim(),
-        cep: cadastroPiloto.cep.trim(),
-        telefone: cadastroPiloto.telefone.trim(),
-        email: emailCadastro,
-        tipo_igreja: cadastroPiloto.tipoIgreja,
-        sede_filiada_nome:
-          cadastroPiloto.tipoIgreja === 'congregacao'
-            ? cadastroPiloto.sedeFiliadaNome.trim()
-            : '',
-        sede_filiada_endereco:
-          cadastroPiloto.tipoIgreja === 'congregacao'
-            ? cadastroPiloto.sedeFiliadaEndereco.trim()
-            : '',
-        sede_filiada_cep:
-          cadastroPiloto.tipoIgreja === 'congregacao'
-            ? cadastroPiloto.sedeFiliadaCep.trim()
-            : '',
-        status_piloto: 'pendente',
-        responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
-        responsavel_email: emailCadastro,
-        responsavel_whatsapp: cadastroPiloto.telefone.trim(),
-        cargo_responsavel: cadastroPiloto.cargoResponsavel,
-        observacoes_piloto:
-          'Cadastro criado pela própria igreja usando o código do piloto fechado.',
-        limite_usuarios: 10,
-      }
 
-      const { data: igrejaCriada, error: erroIgrejaCriada } = await supabase
-        .from('igrejas')
-        .insert(dadosIgrejaPiloto)
-        .select('id')
-        .single()
+      const { data: igrejaCriadaId, error: erroCadastroPilotoRpc } = await supabase.rpc(
+        'criar_cadastro_piloto',
+        {
+          p_nome: cadastroPiloto.nomeIgreja.trim(),
+          p_slug: `${slugBase}-${Date.now()}`,
+          p_nome_igreja: cadastroPiloto.nomeIgreja.trim(),
+          p_congregacao: cadastroPiloto.congregacao.trim(),
+          p_pastor_dirigente: cadastroPiloto.pastorDirigente.trim(),
+          p_cidade: cadastroPiloto.cidade.trim(),
+          p_estado: cadastroPiloto.estado.trim().toUpperCase(),
+          p_bairro: cadastroPiloto.bairro.trim(),
+          p_endereco: cadastroPiloto.endereco.trim(),
+          p_cep: cadastroPiloto.cep.trim(),
+          p_telefone: cadastroPiloto.telefone.trim(),
+          p_tipo_igreja: cadastroPiloto.tipoIgreja,
+          p_sede_filiada_nome:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaNome.trim()
+              : '',
+          p_sede_filiada_endereco:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaEndereco.trim()
+              : '',
+          p_sede_filiada_cep:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaCep.trim()
+              : '',
+          p_responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
+          p_responsavel_whatsapp: cadastroPiloto.telefone.trim(),
+          p_cargo_responsavel: cadastroPiloto.cargoResponsavel,
+        }
+      )
 
-      if (erroIgrejaCriada) {
-        throw erroIgrejaCriada
-      }
-
-      const { error: erroPerfilCriado } = await supabase.from('perfis_usuarios').insert({
-        user_id: usuarioCadastro.id,
-        nome: cadastroPiloto.nomeResponsavel.trim(),
-        email: emailCadastro,
-        perfil: 'secretaria',
-        igreja_id: igrejaCriada.id,
-        classe_id: null,
-        data_nascimento: null,
-      })
-
-      if (erroPerfilCriado) {
-        throw erroPerfilCriado
+      if (erroCadastroPilotoRpc) {
+        throw erroCadastroPilotoRpc
       }
 
       setSucessoCadastroPiloto(
@@ -649,6 +627,13 @@ function App() {
       ) {
         setErroCadastroPiloto(
           'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+        )
+      } else if (
+        String(error?.message || '').includes('usuario_ja_possui_perfil') ||
+        String(error?.details || '').includes('usuario_ja_possui_perfil')
+      ) {
+        setErroCadastroPiloto(
+          'Este e-mail já possui um cadastro vinculado. Use “Esqueci minha senha” ou fale com o administrador.'
         )
       } else {
         setErroCadastroPiloto(
