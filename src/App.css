@@ -8970,3 +8970,13 @@ button.botao-principal {
     min-height: auto;
   }
 }
+
+
+/* Botão Alterar nome da classe */
+.lista-classes-modernas .acoes-classe-card .botao-editar,
+.acoes-classe-card .botao-editar {
+  white-space: normal !important;
+  line-height: 1.15 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
