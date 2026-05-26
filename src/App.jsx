@@ -187,6 +187,8 @@ function App() {
     congregacao: '',
     sedeFiliadaNome: '',
     sedeFiliadaEndereco: '',
+    sedeFiliadaNumero: '',
+    sedeFiliadaComplemento: '',
     sedeFiliadaCep: '',
     pastorDirigente: '',
     telefone: '',
@@ -194,6 +196,8 @@ function App() {
     estado: '',
     bairro: '',
     endereco: '',
+    numeroEndereco: '',
+    complementoEndereco: '',
     cep: '',
   })
   const [carregandoLogin, setCarregandoLogin] = useState(false)
@@ -241,10 +245,14 @@ function App() {
     estado: '',
     bairro: '',
     endereco: '',
+    numero_endereco: '',
+    complemento_endereco: '',
     cep: '',
     tipo_igreja: 'congregacao',
     sede_filiada_nome: '',
     sede_filiada_endereco: '',
+    sede_filiada_numero: '',
+    sede_filiada_complemento: '',
     sede_filiada_cep: '',
     telefone: '',
     email: '',
@@ -597,6 +605,8 @@ function App() {
           p_estado: cadastroPiloto.estado.trim().toUpperCase(),
           p_bairro: cadastroPiloto.bairro.trim(),
           p_endereco: cadastroPiloto.endereco.trim(),
+          p_numero_endereco: cadastroPiloto.numeroEndereco.trim(),
+          p_complemento_endereco: cadastroPiloto.complementoEndereco.trim(),
           p_cep: cadastroPiloto.cep.trim(),
           p_telefone: cadastroPiloto.telefone.trim(),
           p_tipo_igreja: cadastroPiloto.tipoIgreja,
@@ -607,6 +617,14 @@ function App() {
           p_sede_filiada_endereco:
             cadastroPiloto.tipoIgreja === 'congregacao'
               ? cadastroPiloto.sedeFiliadaEndereco.trim()
+              : '',
+          p_sede_filiada_numero:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaNumero.trim()
+              : '',
+          p_sede_filiada_complemento:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaComplemento.trim()
               : '',
           p_sede_filiada_cep:
             cadastroPiloto.tipoIgreja === 'congregacao'
@@ -1014,10 +1032,14 @@ function App() {
       estado: igreja.estado || '',
       bairro: igreja.bairro || '',
       endereco: igreja.endereco || '',
+      numero_endereco: igreja.numero_endereco || '',
+      complemento_endereco: igreja.complemento_endereco || '',
       cep: igreja.cep || '',
       tipo_igreja: igreja.tipo_igreja || 'congregacao',
       sede_filiada_nome: igreja.sede_filiada_nome || '',
       sede_filiada_endereco: igreja.sede_filiada_endereco || '',
+      sede_filiada_numero: igreja.sede_filiada_numero || '',
+      sede_filiada_complemento: igreja.sede_filiada_complemento || '',
       sede_filiada_cep: igreja.sede_filiada_cep || '',
       telefone: igreja.telefone || '',
       email: igreja.email || '',
@@ -1265,6 +1287,8 @@ function App() {
       estado: novaIgrejaAdmin.estado.trim(),
       bairro: novaIgrejaAdmin.bairro.trim(),
       endereco: novaIgrejaAdmin.endereco.trim(),
+      numero_endereco: novaIgrejaAdmin.numero_endereco.trim(),
+      complemento_endereco: novaIgrejaAdmin.complemento_endereco.trim(),
       cep: novaIgrejaAdmin.cep.trim(),
       tipo_igreja: novaIgrejaAdmin.tipo_igreja,
       sede_filiada_nome:
@@ -1274,6 +1298,14 @@ function App() {
       sede_filiada_endereco:
         novaIgrejaAdmin.tipo_igreja === 'congregacao'
           ? novaIgrejaAdmin.sede_filiada_endereco.trim()
+          : '',
+      sede_filiada_numero:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_numero.trim()
+          : '',
+      sede_filiada_complemento:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_complemento.trim()
           : '',
       sede_filiada_cep:
         novaIgrejaAdmin.tipo_igreja === 'congregacao'
@@ -3668,8 +3700,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 />
               </label>
 
-              <label>
-                Endereço completo
+              <label className="campo-cadastro-piloto-largo">
+                Endereço
                 <input
                   type="text"
                   value={cadastroPiloto.endereco}
@@ -3679,7 +3711,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       endereco: event.target.value,
                     })
                   }
-                  placeholder="Rua, número e complemento"
+                  placeholder="Rua ou avenida"
+                />
+              </label>
+
+              <label>
+                Número
+                <input
+                  type="text"
+                  value={cadastroPiloto.numeroEndereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      numeroEndereco: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 146"
+                />
+              </label>
+
+              <label className="campo-cadastro-piloto-largo">
+                Complemento
+                <input
+                  type="text"
+                  value={cadastroPiloto.complementoEndereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      complementoEndereco: event.target.value,
+                    })
+                  }
+                  placeholder="Opcional: sala, fundos, referência..."
                 />
               </label>
 
@@ -3713,7 +3775,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label className="campo-cadastro-piloto-largo">
-                    Endereço completo da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={cadastroPiloto.sedeFiliadaEndereco}
@@ -3723,7 +3785,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
                           sedeFiliadaEndereco: event.target.value,
                         })
                       }
-                      placeholder="Rua, número, bairro, cidade e estado"
+                      placeholder="Rua ou avenida da sede"
+                    />
+                  </label>
+
+                  <label>
+                    Número da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaNumero}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaNumero: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 100"
+                    />
+                  </label>
+
+                  <label className="campo-cadastro-piloto-largo">
+                    Complemento da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaComplemento}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaComplemento: event.target.value,
+                        })
+                      }
+                      placeholder="Opcional"
                     />
                   </label>
 
@@ -6862,8 +6954,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 />
               </label>
 
-              <label>
-                Endereço completo da igreja
+              <label className="campo-sede-filiada">
+                Endereço da igreja
                 <input
                   type="text"
                   value={novaIgrejaAdmin.endereco}
@@ -6873,7 +6965,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       endereco: event.target.value,
                     })
                   }
-                  placeholder="Ex: Rua, número, complemento"
+                  placeholder="Rua ou avenida"
+                />
+              </label>
+
+              <label>
+                Número
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.numero_endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      numero_endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 146"
+                />
+              </label>
+
+              <label className="campo-sede-filiada">
+                Complemento
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.complemento_endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      complemento_endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Opcional"
                 />
               </label>
 
@@ -6926,7 +7048,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label className="campo-sede-filiada">
-                    Endereço completo da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={novaIgrejaAdmin.sede_filiada_endereco}
@@ -6936,7 +7058,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
                           sede_filiada_endereco: event.target.value,
                         })
                       }
-                      placeholder="Rua, número, bairro, cidade e estado"
+                      placeholder="Rua ou avenida da sede"
+                    />
+                  </label>
+
+                  <label>
+                    Número da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_numero}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_numero: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 100"
+                    />
+                  </label>
+
+                  <label className="campo-sede-filiada">
+                    Complemento da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_complemento}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_complemento: event.target.value,
+                        })
+                      }
+                      placeholder="Opcional"
                     />
                   </label>
 
@@ -7156,6 +7308,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   {(igreja.endereco || igreja.bairro || igreja.cep) && (
                     <p>
                       Endereço: {igreja.endereco}
+                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
+                      {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
                       {igreja.bairro ? `, ${igreja.bairro}` : ''}
                       {igreja.cep ? ` • CEP ${igreja.cep}` : ''}
                     </p>
@@ -7170,6 +7324,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
                     <p>
                       Endereço da sede: {igreja.sede_filiada_endereco}
+                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
+                      {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
                       {igreja.sede_filiada_cep ? ` • CEP ${igreja.sede_filiada_cep}` : ''}
                     </p>
                   )}
