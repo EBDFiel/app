@@ -4106,9 +4106,9 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </div>
               <div>
                 <div className="logo-text">
-                  EBD <span>FIEL</span>
+                  {'EBD '}<span>{'Fiel'}</span>
                 </div>
-                <div className="logo-sub">ESCOLA BÃBLICA DOMINICAL</div>
+                <div className="logo-sub">{'ESCOLA B\u00cdBLICA DOMINICAL'}</div>
               </div>
             </div>
 
@@ -4126,12 +4126,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </button>
 
             <div className="nav-links">
-              <a href="#recursos">Recursos</a>
-              <a href="#beneficios">BenefÃ­cios</a>
-              <a href="#planos">Planos</a>
-              <a href="#faq">FAQ</a>
+              <a href="#recursos">{'Recursos'}</a>
+              <a href="#beneficios">{'Benef\u00edcios'}</a>
+              <a href="#planos">{'Planos'}</a>
+              <a href="#faq">{'FAQ'}</a>
               <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
-                Entrar no sistema
+                {'Entrar no sistema'}
               </button>
             </div>
           </div>
@@ -4139,16 +4139,16 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         <div className={`mobile-menu ${menuPublicoAberto ? 'active' : ''}`}>
           <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>
-            CH Recursos
+            {'Recursos'}
           </a>
           <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>
-            BenefÃ­cios
+            {'Benef\u00edcios'}
           </a>
           <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
-            Planos
+            {'Planos'}
           </a>
           <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            FAQ
+            {'FAQ'}
           </a>
           <button
             className="btn-nav-mobile"
@@ -4158,7 +4158,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               setTelaPublica('login')
             }}
           >
-            Entrar no sistema
+            {'Entrar no sistema'}
           </button>
         </div>
 
@@ -4175,34 +4175,34 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <section className="hero">
             <div className="hero-content">
               <div className="hero-copy">
-                <div className="hero-badge">âœ Teste piloto fechado âœ</div>
+                <div className="hero-badge">{'Teste piloto fechado'}</div>
 
                 <h1>
-                  Organize sua <span>Escola BÃ­blica Dominical</span> sem planilhas e
-                  sem retrabalho
+                  {'Organize sua '}
+                  <span>{'Escola B\u00edblica Dominical'}</span>
+                  {' sem planilhas e sem retrabalho'}
                 </h1>
 
                 <p>
-                  Cadastre classes, alunos e professores, registre chamadas e gere
-                  relatÃ³rios em PDF em uma plataforma simples para igrejas.
+                  {'Cadastre classes, alunos e professores, registre chamadas e gere relat\u00f3rios em PDF em uma plataforma simples para igrejas.'}
                 </p>
 
                 <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                  <span>â†’</span> Entrar no sistema
+                  <span>{'â†’'}</span> {'Entrar no sistema'}
                 </button>
 
                 <div className="hero-stats">
                   <div className="stat">
-                    <div className="stat-number">10</div>
-                    <div className="stat-label">Igrejas no piloto</div>
+                    <div className="stat-number">{'10'}</div>
+                    <div className="stat-label">{'Igrejas no piloto'}</div>
                   </div>
                   <div className="stat">
-                    <div className="stat-number">PDF</div>
-                    <div className="stat-label">RelatÃ³rios</div>
+                    <div className="stat-number">{'PDF'}</div>
+                    <div className="stat-label">{'Relat\u00f3rios'}</div>
                   </div>
                   <div className="stat">
-                    <div className="stat-number">24/7</div>
-                    <div className="stat-label">Online</div>
+                    <div className="stat-number">{'24/7'}</div>
+                    <div className="stat-label">{'Online'}</div>
                   </div>
                 </div>
               </div>
@@ -4215,15 +4215,15 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 </div>
 
                 <div className="mockup-body">
-                  <div className="mockup-check">âœ“</div>
-                  <h3>Chamada digital</h3>
-                  <p>PresenÃ§a registrada em tempo real</p>
+                  <div className="mockup-check">{'âœ“'}</div>
+                  <h3>{'Chamada digital'}</h3>
+                  <p>{'Presen\u00e7a registrada em tempo real'}</p>
 
                   <hr />
 
                   <div className="mockup-row">
-                    <span>ðŸ‘¥ 24 presentes</span>
-                    <span>ðŸ“ˆ 92% frequÃªncia</span>
+                    <span>{'24 presentes'}</span>
+                    <span>{'92% frequ\u00eancia'}</span>
                   </div>
                 </div>
               </div>
@@ -4232,46 +4232,46 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <section className="section" id="recursos">
             <div className="container">
-              <h2 className="section-title">Recursos que fazem a diferenÃ§a</h2>
+              <h2 className="section-title">{'Recursos que fazem a diferen\u00e7a'}</h2>
               <p className="section-subtitle">
-                Tudo o que sua igreja precisa para uma gestÃ£o eficiente da EBD.
+                {'Tudo o que sua igreja precisa para uma gest\u00e3o eficiente da EBD.'}
               </p>
 
               <div className="features-grid">
                 <article className="feature-card">
-                  <div className="feature-icon">CH</div>
-                  <h3>Chamada digital simples</h3>
-                  <p>Registre a presenÃ§a dos alunos e professores pelo computador ou celular.</p>
+                  <div className="feature-icon">{'CH'}</div>
+                  <h3>{'Chamada digital simples'}</h3>
+                  <p>{'Registre a presen\u00e7a dos alunos e professores pelo computador ou celular.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">BD</div>
-                  <h3>Dados separados por igreja</h3>
-                  <p>Cada igreja tem suas prÃ³prias informaÃ§Ãµes organizadas com seguranÃ§a.</p>
+                  <div className="feature-icon">{'BD'}</div>
+                  <h3>{'Dados separados por igreja'}</h3>
+                  <p>{'Cada igreja tem suas pr\u00f3prias informa\u00e7\u00f5es organizadas com seguran\u00e7a.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">PDF</div>
-                  <h3>RelatÃ³rios prontos em PDF</h3>
-                  <p>A secretaria gera relatÃ³rios organizados sem montar tudo manualmente.</p>
+                  <div className="feature-icon">{'PDF'}</div>
+                  <h3>{'Relat\u00f3rios prontos em PDF'}</h3>
+                  <p>{'A secretaria gera relat\u00f3rios organizados sem montar tudo manualmente.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">ON</div>
-                  <h3>Acesso online</h3>
-                  <p>Use o sistema pelo navegador, sem instalaÃ§Ã£o complicada.</p>
+                  <div className="feature-icon">{'ON'}</div>
+                  <h3>{'Acesso online'}</h3>
+                  <p>{'Use o sistema pelo navegador, sem instala\u00e7\u00e3o complicada.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">CL</div>
-                  <h3>GestÃ£o de classes e alunos</h3>
-                  <p>Cadastre turmas, alunos, professores e acompanhe tudo em um sÃ³ lugar.</p>
+                  <div className="feature-icon">{'CL'}</div>
+                  <h3>{'Gest\u00e3o de classes e alunos'}</h3>
+                  <p>{'Cadastre turmas, alunos, professores e acompanhe tudo em um s\u00f3 lugar.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">GR</div>
-                  <h3>Apoio para lideranÃ§a</h3>
-                  <p>Acompanhe frequÃªncia, organizaÃ§Ã£o e evoluÃ§Ã£o da EBD com mais clareza.</p>
+                  <div className="feature-icon">{'GR'}</div>
+                  <h3>{'Apoio para lideran\u00e7a'}</h3>
+                  <p>{'Acompanhe frequ\u00eancia, organiza\u00e7\u00e3o e evolu\u00e7\u00e3o da EBD com mais clareza.'}</p>
                 </article>
               </div>
             </div>
@@ -4279,27 +4279,27 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <section className="section section-soft">
             <div className="container">
-              <h2 className="section-title">Chega de planilhas, papÃ©is e relatÃ³rios manuais</h2>
+              <h2 className="section-title">{'Chega de planilhas, pap\u00e9is e relat\u00f3rios manuais'}</h2>
 
               <div className="comparison">
                 <div className="comparison-grid">
                   <article className="comparison-card before">
-                    <div className="comparison-icon">!</div>
-                    <h3>Antes</h3>
+                    <div className="comparison-icon">{'!'}</div>
+                    <h3>{'Antes'}</h3>
                     <ul>
-                      <li>âŒ Listas de presenÃ§a em papel</li>
-                      <li>âŒ Dados espalhados</li>
-                      <li>âŒ RelatÃ³rios feitos manualmente</li>
+                      <li>{'Listas de presen\u00e7a em papel'}</li>
+                      <li>{'Dados espalhados'}</li>
+                      <li>{'Relat\u00f3rios feitos manualmente'}</li>
                     </ul>
                   </article>
 
                   <article className="comparison-card after">
-                    <div className="comparison-icon">OK</div>
-                    <h3>Depois com o EBD Fiel</h3>
+                    <div className="comparison-icon">{'OK'}</div>
+                    <h3>{'Depois com o EBD Fiel'}</h3>
                     <ul>
-                      <li>âœ… Chamada digital</li>
-                      <li>âœ… Classes e alunos organizados</li>
-                      <li>âœ… RelatÃ³rios prontos em PDF</li>
+                      <li>{'Chamada digital'}</li>
+                      <li>{'Classes e alunos organizados'}</li>
+                      <li>{'Relat\u00f3rios prontos em PDF'}</li>
                     </ul>
                   </article>
                 </div>
@@ -4309,25 +4309,25 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <section className="section" id="beneficios">
             <div className="container">
-              <h2 className="section-title">Feito para quem cuida da EBD</h2>
+              <h2 className="section-title">{'Feito para quem cuida da EBD'}</h2>
 
               <div className="personas-grid">
                 <article className="persona-card">
-                  <div className="persona-avatar">SEC</div>
-                  <h3>Secretaria</h3>
-                  <p>Organiza cadastros, classes, relatÃ³rios e informaÃ§Ãµes gerais.</p>
+                  <div className="persona-avatar">{'SEC'}</div>
+                  <h3>{'Secretaria'}</h3>
+                  <p>{'Organiza cadastros, classes, relat\u00f3rios e informa\u00e7\u00f5es gerais.'}</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">PROF</div>
-                  <h3>Professores</h3>
-                  <p>Fazem chamada, acompanham suas turmas e ajudam na organizaÃ§Ã£o semanal.</p>
+                  <div className="persona-avatar">{'PROF'}</div>
+                  <h3>{'Professores'}</h3>
+                  <p>{'Fazem chamada, acompanham suas turmas e ajudam na organiza\u00e7\u00e3o semanal.'}</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">LID</div>
-                  <h3>LideranÃ§a</h3>
-                  <p>Visualiza dados importantes para cuidar melhor da Escola BÃ­blica Dominical.</p>
+                  <div className="persona-avatar">{'LID'}</div>
+                  <h3>{'Lideran\u00e7a'}</h3>
+                  <p>{'Visualiza dados importantes para cuidar melhor da Escola B\u00edblica Dominical.'}</p>
                 </article>
               </div>
             </div>
@@ -4335,68 +4335,68 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <section className="section section-plans" id="planos">
             <div className="container">
-              <h2 className="section-title">Teste piloto</h2>
+              <h2 className="section-title">{'Teste piloto'}</h2>
 
               <div className="plans-grid">
                 <article className="plan-card">
-                  <div className="plan-badge">Fechado</div>
-                  <h3>Teste piloto</h3>
-                  <div className="plan-price">Gratuito</div>
-                  <p>Para igrejas do grupo selecionadas.</p>
+                  <div className="plan-badge">{'Fechado'}</div>
+                  <h3>{'Teste piloto'}</h3>
+                  <div className="plan-price">{'Gratuito'}</div>
+                  <p>{'Para igrejas do grupo selecionadas.'}</p>
                   <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    Entrar
+                    {'Entrar'}
                   </button>
                 </article>
 
                 <article className="plan-card featured">
-                  <div className="plan-badge">Popular</div>
-                  <h3>Plano Igreja</h3>
-                  <div className="plan-price">Sob consulta</div>
-                  <p>Para uso completo na rotina da EBD.</p>
+                  <div className="plan-badge">{'Popular'}</div>
+                  <h3>{'Plano Igreja'}</h3>
+                  <div className="plan-price">{'Sob consulta'}</div>
+                  <p>{'Para uso completo na rotina da EBD.'}</p>
                   <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                    JÃ¡ sou cliente
+                    {'J\u00e1 sou cliente'}
                   </button>
                 </article>
 
                 <article className="plan-card">
-                  <h3>Plano Personalizado</h3>
-                  <div className="plan-price">Sob consulta</div>
-                  <p>Para igrejas com necessidades especÃ­ficas.</p>
+                  <h3>{'Plano Personalizado'}</h3>
+                  <div className="plan-price">{'Sob consulta'}</div>
+                  <p>{'Para igrejas com necessidades espec\u00edficas.'}</p>
                   <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    Acessar sistema
+                    {'Acessar sistema'}
                   </button>
                 </article>
               </div>
 
-              <p className="plans-note">ðŸ”’ Sem cadastro pÃºblico. LiberaÃ§Ã£o manual pelo administrador.</p>
+              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
             </div>
           </section>
 
           <section className="section" id="faq">
             <div className="container">
-              <h2 className="section-title">Perguntas frequentes</h2>
+              <h2 className="section-title">{'Perguntas frequentes'}</h2>
 
               <div className="faq-list">
                 <details className="faq-item">
-                  <summary>Como faÃ§o para participar do teste piloto?</summary>
+                  <summary>{'Como fa\u00e7o para participar do teste piloto?'}</summary>
                   <p>
-                    O teste piloto Ã© exclusivo para participantes do grupo de WhatsApp da EBD Fiel.
+                    {'O teste piloto \u00e9 exclusivo para participantes do grupo de WhatsApp da EBD Fiel.'}
                   </p>
                 </details>
 
                 <details className="faq-item">
-                  <summary>O sistema funciona no celular?</summary>
-                  <p>Sim. O EBD Fiel funciona no celular, tablet e computador.</p>
+                  <summary>{'O sistema funciona no celular?'}</summary>
+                  <p>{'Sim. O EBD Fiel funciona no celular, tablet e computador.'}</p>
                 </details>
 
                 <details className="faq-item">
-                  <summary>Os dados da minha igreja sÃ£o seguros?</summary>
-                  <p>Sim. Cada igreja tem seus dados separados e acesso controlado por usuÃ¡rio.</p>
+                  <summary>{'Os dados da minha igreja s\u00e3o seguros?'}</summary>
+                  <p>{'Sim. Cada igreja tem seus dados separados e acesso controlado por usu\u00e1rio.'}</p>
                 </details>
 
                 <details className="faq-item">
-                  <summary>Preciso instalar algum software?</summary>
-                  <p>NÃ£o. O EBD Fiel Ã© online e acessado pelo navegador.</p>
+                  <summary>{'Preciso instalar algum software?'}</summary>
+                  <p>{'N\u00e3o. O EBD Fiel \u00e9 online e acessado pelo navegador.'}</p>
                 </details>
               </div>
             </div>
@@ -4406,36 +4406,36 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <footer className="footer">
           <div className="footer-grid">
             <div>
-              <div className="footer-logo">EBD FIEL</div>
-              <p>Fiel Ã  Palavra, organizado para servir melhor.</p>
-              <p className="footer-gold">âœ Escola BÃ­blica Dominical</p>
+              <div className="footer-logo">{'EBD FIEL'}</div>
+              <p>{'Fiel \u00e0 Palavra, organizado para servir melhor.'}</p>
+              <p className="footer-gold">{'Escola B\u00edblica Dominical'}</p>
             </div>
 
             <div className="footer-col">
-              <h4>Mapa do site</h4>
-              <a href="#recursos">Recursos</a>
-              <a href="#beneficios">BenefÃ­cios</a>
-              <a href="#planos">Planos</a>
-              <a href="#faq">FAQ</a>
+              <h4>{'Mapa do site'}</h4>
+              <a href="#recursos">{'Recursos'}</a>
+              <a href="#beneficios">{'Benef\u00edcios'}</a>
+              <a href="#planos">{'Planos'}</a>
+              <a href="#faq">{'FAQ'}</a>
             </div>
 
             <div className="footer-col">
-              <h4>Contato</h4>
-              <span>WhatsApp</span>
-              <span>contato@ebdfiel.com.br</span>
+              <h4>{'Contato'}</h4>
+              <span>{'WhatsApp'}</span>
+              <span>{'contato@ebdfiel.com.br'}</span>
             </div>
 
             <div className="footer-col">
-              <h4>Teste exclusivo</h4>
-              <p>Grupo fechado para participantes</p>
+              <h4>{'Teste exclusivo'}</h4>
+              <p>{'Grupo fechado para participantes'}</p>
               <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('login')}>
-                JÃ¡ sou cliente
+                {'J\u00e1 sou cliente'}
               </button>
             </div>
           </div>
 
           <div className="footer-bottom">
-            <p>Â© 2026 EBD Fiel - Todos os direitos reservados.</p>
+            <p>{'\u00a9 2026 EBD Fiel - Todos os direitos reservados.'}</p>
           </div>
         </footer>
       </div>
