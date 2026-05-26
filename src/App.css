@@ -10632,3 +10632,19 @@ button.botao-principal {
 .modelo-exato-ebd .plans-note {
   font-weight: 700 !important;
 }
+
+
+/* Ãcones visuais nos cards da pÃ¡gina principal */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar,
+.modelo-exato-ebd .comparison-icon {
+  font-size: 1.35rem !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  font-size: 1.45rem !important;
+}
