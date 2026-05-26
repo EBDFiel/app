@@ -323,6 +323,7 @@ function App() {
     { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
     {
       id: 'configuracoes',
       nome: 'Configurações',
@@ -1397,11 +1398,23 @@ function App() {
 
 O cadastro da ${nomeIgreja} no teste piloto do EBD Fiel foi aprovado.
 
-Agora você já pode acessar o sistema pelo link:
+Acesse o sistema pelo link:
 
 https://app.ebdfiel.com.br
 
 Entre com o e-mail e a senha cadastrados no momento da inscrição.
+
+Manual rápido para começar:
+
+1. Confira os dados da igreja no painel.
+2. Vá em Classes e cadastre as turmas da EBD.
+3. Vá em Alunos ou entre em uma classe para cadastrar os alunos.
+4. Vá em Professores para cadastrar os professores da EBD.
+5. Vincule os professores às classes correspondentes.
+6. Vá em Chamada para registrar a presença dos alunos.
+7. Use Chamada dos professores para registrar a presença dos professores.
+8. Em Relatórios, gere o relatório da EBD em PDF.
+9. Durante o teste piloto, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -4793,6 +4806,10 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
                 Ver relatórios
               </button>
+
+              <button className="botao-secundario botao-manual-painel" onClick={() => navegarParaPagina('manual')}>
+                Abrir manual do usuário
+              </button>
             </div>
           </div>
 
@@ -7241,6 +7258,129 @@ Qualquer dificuldade, pode me chamar por aqui.`
     )
   }
 
+  function renderizarManualUsuario() {
+    const passosManual = [
+      {
+        numero: '01',
+        titulo: 'Confira os dados da igreja',
+        texto:
+          'Ao entrar no sistema, confira se o nome da igreja, congregação, dirigente, cidade e demais dados estão corretos.',
+        local: 'Painel ou Configurações',
+      },
+      {
+        numero: '02',
+        titulo: 'Cadastre as classes da EBD',
+        texto:
+          'Crie as turmas da Escola Bíblica Dominical. Exemplo: Crianças, Adolescentes, Jovens, Adultos, Novos Convertidos.',
+        local: 'Menu Classes',
+      },
+      {
+        numero: '03',
+        titulo: 'Cadastre os alunos',
+        texto:
+          'Inclua os alunos em suas respectivas classes. O cadastro pode ser feito pelo menu Alunos ou diretamente dentro da classe.',
+        local: 'Menu Alunos ou Classes',
+      },
+      {
+        numero: '04',
+        titulo: 'Cadastre os professores',
+        texto:
+          'Cadastre os professores da EBD e vincule cada professor à classe em que ele atua. Uma classe pode ter mais de um professor.',
+        local: 'Menu Professores ou Classes',
+      },
+      {
+        numero: '05',
+        titulo: 'Faça a chamada dos alunos',
+        texto:
+          'Na data da EBD, registre presença, falta, visitantes, Bíblias, revistas, ofertas e demais informações da chamada.',
+        local: 'Menu Chamada',
+      },
+      {
+        numero: '06',
+        titulo: 'Faça a chamada dos professores',
+        texto:
+          'Registre também a presença dos professores em uma chamada separada, facilitando o acompanhamento da equipe docente.',
+        local: 'Menu Chamada',
+      },
+      {
+        numero: '07',
+        titulo: 'Acompanhe aniversariantes',
+        texto:
+          'Use o painel para acompanhar aniversariantes cadastrados e facilitar os avisos da secretaria da EBD.',
+        local: 'Painel',
+      },
+      {
+        numero: '08',
+        titulo: 'Gere relatórios',
+        texto:
+          'Depois de registrar as chamadas, gere o relatório em PDF com os dados da EBD, incluindo alunos e professores.',
+        local: 'Menu Relatórios',
+      },
+      {
+        numero: '09',
+        titulo: 'Envie feedback do piloto',
+        texto:
+          'Durante o teste piloto, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
+        local: 'Painel',
+      },
+    ]
+
+    return (
+      <section className="conteudo manual-usuario-pagina">
+        <div className="manual-hero">
+          <div>
+            <span className="selo-manual">Primeiros passos</span>
+            <h2>Manual do usuário EBD Fiel</h2>
+            <p>
+              Siga este roteiro para configurar sua igreja e começar a usar o sistema
+              na rotina da Escola Bíblica Dominical.
+            </p>
+          </div>
+
+          <button className="botao-principal" onClick={() => navegarParaPagina('classes')}>
+            Começar pelas classes
+          </button>
+        </div>
+
+        <div className="manual-alerta">
+          <strong>Ordem recomendada:</strong>
+          <span>
+            primeiro confira os dados da igreja, depois cadastre classes, alunos,
+            professores, faça a chamada e gere os relatórios.
+          </span>
+        </div>
+
+        <div className="manual-grid">
+          {passosManual.map((passo) => (
+            <article className="manual-card" key={passo.numero}>
+              <div className="manual-numero">{passo.numero}</div>
+
+              <div>
+                <span className="manual-local">{passo.local}</span>
+                <h3>{passo.titulo}</h3>
+                <p>{passo.texto}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="manual-final">
+          <div>
+            <h3>Dica para o teste piloto</h3>
+            <p>
+              Use o sistema em uma rotina real da EBD e envie feedback sempre que
+              encontrar algo confuso, difícil ou que possa melhorar.
+            </p>
+          </div>
+
+          <button className="botao-secundario" onClick={() => navegarParaPagina('painel')}>
+            Voltar ao painel
+          </button>
+        </div>
+      </section>
+    )
+  }
+
   function renderizarPagina() {
     if (paginaAtual === 'administracao' && !usuarioEhAdminSistema()) {
       return renderizarPainel()
@@ -7261,6 +7401,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     if (paginaAtual === 'usuarios') return renderizarUsuarios()
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
+    if (paginaAtual === 'manual') return renderizarManualUsuario()
     if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
     if (paginaAtual === 'administracao') return renderizarAdministracao()
 
