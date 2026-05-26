@@ -4239,37 +4239,37 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
               <div className="features-grid">
                 <article className="feature-card">
-                  <div className="feature-icon">{'CH'}</div>
+                  <div className="feature-icon">{'\u2713'}</div>
                   <h3>{'Chamada digital simples'}</h3>
                   <p>{'Registre a presen\u00e7a dos alunos e professores pelo computador ou celular.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">{'BD'}</div>
+                  <div className="feature-icon">{'\u26EA'}</div>
                   <h3>{'Dados separados por igreja'}</h3>
                   <p>{'Cada igreja tem suas pr\u00f3prias informa\u00e7\u00f5es organizadas com seguran\u00e7a.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">{'PDF'}</div>
+                  <div className="feature-icon">{'\uD83D\uDCC4'}</div>
                   <h3>{'Relat\u00f3rios prontos em PDF'}</h3>
                   <p>{'A secretaria gera relat\u00f3rios organizados sem montar tudo manualmente.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">{'ON'}</div>
+                  <div className="feature-icon">{'\uD83C\uDF10'}</div>
                   <h3>{'Acesso online'}</h3>
                   <p>{'Use o sistema pelo navegador, sem instala\u00e7\u00e3o complicada.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">{'CL'}</div>
+                  <div className="feature-icon">{'\uD83D\uDC65'}</div>
                   <h3>{'Gest\u00e3o de classes e alunos'}</h3>
                   <p>{'Cadastre turmas, alunos, professores e acompanhe tudo em um s\u00f3 lugar.'}</p>
                 </article>
 
                 <article className="feature-card">
-                  <div className="feature-icon">{'GR'}</div>
+                  <div className="feature-icon">{'\uD83D\uDCCA'}</div>
                   <h3>{'Apoio para lideran\u00e7a'}</h3>
                   <p>{'Acompanhe frequ\u00eancia, organiza\u00e7\u00e3o e evolu\u00e7\u00e3o da EBD com mais clareza.'}</p>
                 </article>
@@ -4284,7 +4284,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <div className="comparison">
                 <div className="comparison-grid">
                   <article className="comparison-card before">
-                    <div className="comparison-icon">{'!'}</div>
+                    <div className="comparison-icon">{'\u26A0'}</div>
                     <h3>{'Antes'}</h3>
                     <ul>
                       <li>{'Listas de presen\u00e7a em papel'}</li>
@@ -4294,7 +4294,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </article>
 
                   <article className="comparison-card after">
-                    <div className="comparison-icon">{'OK'}</div>
+                    <div className="comparison-icon">{'\u2714'}</div>
                     <h3>{'Depois com o EBD Fiel'}</h3>
                     <ul>
                       <li>{'Chamada digital'}</li>
@@ -4313,19 +4313,19 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
               <div className="personas-grid">
                 <article className="persona-card">
-                  <div className="persona-avatar">{'SEC'}</div>
+                  <div className="persona-avatar">{'\uD83D\uDCCB'}</div>
                   <h3>{'Secretaria'}</h3>
                   <p>{'Organiza cadastros, classes, relat\u00f3rios e informa\u00e7\u00f5es gerais.'}</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">{'PROF'}</div>
+                  <div className="persona-avatar">{'\uD83D\uDC68\u200D\uD83C\uDFEB'}</div>
                   <h3>{'Professores'}</h3>
                   <p>{'Fazem chamada, acompanham suas turmas e ajudam na organiza\u00e7\u00e3o semanal.'}</p>
                 </article>
 
                 <article className="persona-card">
-                  <div className="persona-avatar">{'LID'}</div>
+                  <div className="persona-avatar">{'\u2605'}</div>
                   <h3>{'Lideran\u00e7a'}</h3>
                   <p>{'Visualiza dados importantes para cuidar melhor da Escola B\u00edblica Dominical.'}</p>
                 </article>
