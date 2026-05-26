@@ -5139,10 +5139,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
         </div>
 
         {mostrarFormularioClasse && (
-          <form className="formulario" onSubmit={salvarClasse}>
-            <div className="aviso aviso-edicao-classe">
+          <form className="formulario formulario-editar-classe" onSubmit={salvarClasse}>
+            <div className="cabecalho-formulario-editar-classe">
+              <span>{classeEditandoId ? 'Editar classe' : 'Nova classe'}</span>
+              <h3>{classeEditandoId ? 'Alterar nome da classe' : 'Cadastrar nova classe'}</h3>
               <p>
-                Edite o nome da classe aqui. Alunos e professores podem ser cadastrados diretamente no cartão de cada classe.
+                {classeEditandoId
+                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarão nesta mesma turma.'
+                  : 'Crie uma nova turma para organizar alunos, professores e chamadas da EBD.'}
               </p>
             </div>
 
@@ -5154,13 +5158,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 onChange={(event) =>
                   setNovaClasse({ ...novaClasse, nome: event.target.value })
                 }
-                placeholder="Ex: Adolescentes"
+                placeholder="Ex: Jovens, Adultos, Crianças..."
+                autoFocus
               />
             </label>
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {classeEditandoId ? 'Salvar alterações' : 'Salvar classe'}
+                {classeEditandoId ? 'Salvar novo nome da classe' : 'Salvar classe'}
               </button>
 
               <button
@@ -5263,7 +5268,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   className="botao-editar"
                   onClick={() => editarClasse(classe)}
                 >
-                  Editar classe
+                  Editar nome
                 </button>
 
                 <button
