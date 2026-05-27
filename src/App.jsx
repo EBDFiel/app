@@ -358,6 +358,104 @@ function App() {
     },
   ]
 
+
+  function corrigirMojibakeVisivel() {
+    if (typeof window === 'undefined' || typeof document === 'undefined' || !document.body) {
+      return
+    }
+
+    const trocas = [
+      ['\u00C3\u0081', '\u00C1'],
+      ['\u00C3\u0080', '\u00C0'],
+      ['\u00C3\u0082', '\u00C2'],
+      ['\u00C3\u0083', '\u00C3'],
+      ['\u00C3\u0089', '\u00C9'],
+      ['\u00C3\u008A', '\u00CA'],
+      ['\u00C3\u008D', '\u00CD'],
+      ['\u00C3\u0093', '\u00D3'],
+      ['\u00C3\u0094', '\u00D4'],
+      ['\u00C3\u0095', '\u00D5'],
+      ['\u00C3\u009A', '\u00DA'],
+      ['\u00C3\u0087', '\u00C7'],
+      ['\u00C3\u00A1', '\u00E1'],
+      ['\u00C3\u00A0', '\u00E0'],
+      ['\u00C3\u00A2', '\u00E2'],
+      ['\u00C3\u00A3', '\u00E3'],
+      ['\u00C3\u00A9', '\u00E9'],
+      ['\u00C3\u00AA', '\u00EA'],
+      ['\u00C3\u00AD', '\u00ED'],
+      ['\u00C3\u00B3', '\u00F3'],
+      ['\u00C3\u00B4', '\u00F4'],
+      ['\u00C3\u00B5', '\u00F5'],
+      ['\u00C3\u00BA', '\u00FA'],
+      ['\u00C3\u00A7', '\u00E7'],
+      ['\u00C2\u00BA', '\u00BA'],
+      ['\u00C2\u00AA', '\u00AA'],
+      ['\u00C2\u00B7', '\u00B7'],
+      ['\u00C2', ''],
+      ['\u00E2\u0086\u0092', '\u2192'],
+      ['\u00E2\u009C\u0093', '\u2713'],
+      ['\u00E2\u0080\u00A2', '\u2022'],
+    ]
+
+    function corrigirTexto(texto) {
+      if (!texto || typeof texto !== 'string') {
+        return texto
+      }
+
+      let corrigido = texto
+      trocas.forEach(([errado, certo]) => {
+        corrigido = corrigido.split(errado).join(certo)
+      })
+
+      return corrigido
+    }
+
+    const walker = document.createTreeWalker(document.body, 4)
+    const nos = []
+
+    while (walker.nextNode()) {
+      nos.push(walker.currentNode)
+    }
+
+    nos.forEach((no) => {
+      const novoTexto = corrigirTexto(no.nodeValue)
+      if (novoTexto !== no.nodeValue) {
+        no.nodeValue = novoTexto
+      }
+    })
+
+    document.querySelectorAll('input, textarea').forEach((campo) => {
+      if (campo.placeholder) {
+        campo.placeholder = corrigirTexto(campo.placeholder)
+      }
+    })
+
+    document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
+      ;['title', 'aria-label', 'alt'].forEach((atributo) => {
+        const valor = elemento.getAttribute(atributo)
+        if (valor) {
+          const novoValor = corrigirTexto(valor)
+          if (novoValor !== valor) {
+            elemento.setAttribute(atributo, novoValor)
+          }
+        }
+      })
+    })
+  }
+
+  useEffect(() => {
+    corrigirMojibakeVisivel()
+
+    if (typeof window === 'undefined') {
+      return undefined
+    }
+
+    const id = window.setInterval(corrigirMojibakeVisivel, 500)
+    return () => window.clearInterval(id)
+  }, [paginaAtual, telaPublica, carregando, verificandoSessao, igrejasAdmin, acessosAdmin, classes, alunos])
+
+
   useEffect(() => {
     iniciarAutenticacao()
 
@@ -4175,7 +4273,6 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <section className="hero">
             <div className="hero-content">
               <div className="hero-copy">
-                <div className="hero-badge">{'Teste piloto fechado'}</div>
 
                 <h1>
                   {'Organize sua '}
@@ -4486,7 +4583,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>Teste piloto fechado.</p>
+              <p>GestÃ£o da Escola BÃ­blica Dominical.</p>
             </div>
           </div>
 
