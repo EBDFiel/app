@@ -318,6 +318,8 @@ function App() {
     sedeFiliadaComplemento: '',
     sedeFiliadaCep: '',
     pastorDirigente: '',
+    telefoneDdd: '',
+    telefoneNumero: '',
     telefone: '',
     cidade: '',
     estado: '',
@@ -663,6 +665,20 @@ function App() {
       return
     }
 
+    const telefoneDdd = limparNumeroWhatsApp(cadastroPiloto.telefoneDdd).slice(0, 2)
+    const telefoneNumero = limparNumeroWhatsApp(cadastroPiloto.telefoneNumero)
+    const telefoneCompleto = `${telefoneDdd}${telefoneNumero}`
+
+    if (telefoneDdd.length !== 2) {
+      setErroCadastroPiloto('Informe o DDD com 2 nÃºmeros.')
+      return
+    }
+
+    if (telefoneNumero.length < 8) {
+      setErroCadastroPiloto('Informe o nÃºmero de telefone/WhatsApp.')
+      return
+    }
+
     if (!emailCadastro) {
       setErroCadastroPiloto('Informe seu e-mail.')
       return
@@ -713,12 +729,41 @@ function App() {
         password: cadastroPiloto.senha,
       })
 
-      if (erroCadastroAuth) {
-        throw erroCadastroAuth
-      }
+      let sessaoCadastro = cadastroAuth?.session || null
+      let usuarioCadastro = cadastroAuth?.user || null
+      let aproveitandoUsuarioExistente = false
 
-      let sessaoCadastro = cadastroAuth.session
-      let usuarioCadastro = cadastroAuth.user
+      if (erroCadastroAuth) {
+        const mensagemErroCadastro = String(erroCadastroAuth.message || '').toLowerCase()
+        const emailJaExiste =
+          mensagemErroCadastro.includes('already') ||
+          mensagemErroCadastro.includes('registered') ||
+          mensagemErroCadastro.includes('exists') ||
+          mensagemErroCadastro.includes('user already')
+
+        if (!emailJaExiste) {
+          throw erroCadastroAuth
+        }
+
+        aproveitandoUsuarioExistente = true
+
+        const { data: loginCadastroExistente, error: erroLoginCadastroExistente } =
+          await supabase.auth.signInWithPassword({
+            email: emailCadastro,
+            password: cadastroPiloto.senha,
+          })
+
+        if (erroLoginCadastroExistente) {
+          setErroCadastroPiloto(
+            'Este e-mail jÃ¡ iniciou um cadastro anteriormente. Para continuar, use a mesma senha cadastrada antes ou clique em â€œEsqueci minha senhaâ€.'
+          )
+          setCarregandoCadastroPiloto(false)
+          return
+        }
+
+        sessaoCadastro = loginCadastroExistente.session
+        usuarioCadastro = loginCadastroExistente.user
+      }
 
       if (!sessaoCadastro) {
         const { data: loginCadastro, error: erroLoginCadastro } =
@@ -762,7 +807,7 @@ function App() {
           p_numero_endereco: cadastroPiloto.numeroEndereco.trim(),
           p_complemento_endereco: cadastroPiloto.complementoEndereco.trim(),
           p_cep: cadastroPiloto.cep.trim(),
-          p_telefone: cadastroPiloto.telefone.trim(),
+          p_telefone: telefoneCompleto,
           p_tipo_igreja: cadastroPiloto.tipoIgreja,
           p_sede_filiada_nome:
             cadastroPiloto.tipoIgreja === 'congregacao'
@@ -785,7 +830,7 @@ function App() {
               ? cadastroPiloto.sedeFiliadaCep.trim()
               : '',
           p_responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
-          p_responsavel_whatsapp: cadastroPiloto.telefone.trim(),
+          p_responsavel_whatsapp: telefoneCompleto,
           p_cargo_responsavel: cadastroPiloto.cargoResponsavel,
         }
       )
@@ -795,7 +840,9 @@ function App() {
       }
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
+        aproveitandoUsuarioExistente
+          ? 'Cadastro recuperado e enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
+          : 'Cadastro enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -821,7 +868,7 @@ function App() {
         String(error?.details || '').includes('usuario_ja_possui_perfil')
       ) {
         setErroCadastroPiloto(
-          'Este e-mail jÃ¡ possui um cadastro vinculado. Use â€œEsqueci minha senhaâ€ ou fale com o administrador.'
+          'Este e-mail jÃ¡ possui um cadastro ativo no sistema. Use â€œEsqueci minha senhaâ€ para acessar ou fale com o administrador.'
         )
       } else {
         setErroCadastroPiloto(
@@ -4025,17 +4072,42 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                 />
               </label>
 
-              <label>
-                WhatsApp
-                <input
-                  type="text"
-                  value={cadastroPiloto.telefone}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, telefone: event.target.value })
-                  }
-                  placeholder="Ex: 27 99999-9999"
-                />
-              </label>
+              <div className="campo-telefone-cadastro">
+                <label>
+                  DDD
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength="2"
+                    value={cadastroPiloto.telefoneDdd}
+                    onChange={(event) =>
+                      setCadastroPiloto({
+                        ...cadastroPiloto,
+                        telefoneDdd: event.target.value.replace(/\D/g, '').slice(0, 2),
+                      })
+                    }
+                    placeholder="27"
+                    required
+                  />
+                </label>
+
+                <label>
+                  WhatsApp / telefone
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={cadastroPiloto.telefoneNumero}
+                    onChange={(event) =>
+                      setCadastroPiloto({
+                        ...cadastroPiloto,
+                        telefoneNumero: event.target.value.replace(/\D/g, ''),
+                      })
+                    }
+                    placeholder="999999999"
+                    required
+                  />
+                </label>
+              </div>
 
               <label>
                 Senha
@@ -4159,14 +4231,20 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
               <label>
                 Estado
-                <input
-                  type="text"
+                <select
                   value={cadastroPiloto.estado}
                   onChange={(event) =>
                     setCadastroPiloto({ ...cadastroPiloto, estado: event.target.value })
                   }
-                  placeholder="Ex: MG"
-                />
+                  required
+                >
+                  <option value="">Selecione o estado</option>
+                  {ESTADOS_BRASIL.map((estado) => (
+                    <option key={estado.sigla} value={estado.sigla}>
+                      {estado.sigla} - {estado.nome}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label>
@@ -6907,15 +6985,19 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
             <label>
               Estado
-              <input
-                type="text"
+              <select
                 value={configuracaoIgreja.estado}
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('estado', event.target.value)
                 }
-                placeholder="Ex: SP"
-                maxLength="2"
-              />
+              >
+                <option value="">Selecione o estado</option>
+                {ESTADOS_BRASIL.map((estado) => (
+                  <option key={estado.sigla} value={estado.sigla}>
+                    {estado.sigla} - {estado.nome}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
 
@@ -7510,8 +7592,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
               <label>
                 Estado
-                <input
-                  type="text"
+                <select
                   value={novaIgrejaAdmin.estado}
                   onChange={(event) =>
                     setNovaIgrejaAdmin({
@@ -7519,8 +7600,14 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                       estado: event.target.value,
                     })
                   }
-                  placeholder="Ex: MG"
-                />
+                >
+                  <option value="">Selecione o estado</option>
+                  {ESTADOS_BRASIL.map((estado) => (
+                    <option key={estado.sigla} value={estado.sigla}>
+                      {estado.sigla} - {estado.nome}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label>
