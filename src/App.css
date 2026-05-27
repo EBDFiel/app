@@ -10760,3 +10760,45 @@ button.botao-principal {
 .manual-final p {
   color: rgba(255, 255, 255, 0.88) !important;
 }
+
+
+/* Corretor visual definitivo */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar,
+.modelo-exato-ebd .comparison-icon {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 1.48rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-transform: none !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  font-size: 1.7rem !important;
+}
+
+.modelo-exato-ebd .comparison-card li::before {
+  content: "" !important;
+}
+
+.menu-lateral,
+.painel-apresentacao,
+.banner-modo-suporte,
+.manual-hero,
+.manual-final {
+  color: #ffffff !important;
+}
+
+.menu-lateral p,
+.menu-lateral span,
+.painel-apresentacao p,
+.painel-apresentacao span,
+.banner-modo-suporte p,
+.manual-hero p,
+.manual-final p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
