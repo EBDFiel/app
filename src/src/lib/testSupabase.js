@@ -1,15 +1,8 @@
- // src/lib/supabase.js
-import { createClient } from '@supabase/supabase-js'
+// src/lib/supabaseClient.js
 
-const supabaseUrl = 'https://hfaddngnpreoolhuibuq.supabase.co'
+import { createClient } from "@supabase/supabase-js";
 
-const supabasePublishableKey =
-  'sb_publishable_lKT40SwORQbT-DrCjVIkDA_j3tGfMX2'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log('Supabase URL carregada:', supabaseUrl)
-console.log(
-  'Supabase key carregada:',
-  supabasePublishableKey ? 'SIM' : 'NÃO'
-)
-
-export const supabase = createClient(supabaseUrl, supabasePublishableKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
