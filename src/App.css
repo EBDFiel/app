@@ -10842,3 +10842,33 @@ button.botao-principal {
     min-width: 0;
   }
 }
+
+
+/* Contato/WhatsApp na administraÃ§Ã£o */
+.contato-acesso-admin {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.contato-acesso-admin p {
+  margin: 3px 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lista-acessos-admin .acoes-acesso-admin {
+  align-self: stretch;
+}
+
+.lista-acessos-admin .acoes-acesso-admin button {
+  min-width: 150px;
+}
+
+.mockup-check {
+  font-weight: 950;
+  color: #10b981;
+}
