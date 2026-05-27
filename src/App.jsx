@@ -343,6 +343,9 @@ function App() {
   })
   const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
   const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
+  const [feedbackRespondendoId, setFeedbackRespondendoId] = useState(null)
+  const [respostaFeedbackAdmin, setRespostaFeedbackAdmin] = useState('')
+  const [enviandoRespostaFeedback, setEnviandoRespostaFeedback] = useState(false)
   const [carregandoFeedback, setCarregandoFeedback] = useState(false)
   const [perfilUsuario, setPerfilUsuario] = useState(null)
   const [perfisIgreja, setPerfisIgreja] = useState([])
@@ -1893,6 +1896,140 @@ Qualquer dificuldade, pode me chamar por aqui.`
     }
 
     await carregarFeedbacksAdmin()
+  }
+
+  function abrirRespostaFeedback(feedback) {
+    setFeedbackRespondendoId(feedback.id)
+    setRespostaFeedbackAdmin(feedback.resposta_admin || '')
+  }
+
+  function cancelarRespostaFeedback() {
+    setFeedbackRespondendoId(null)
+    setRespostaFeedbackAdmin('')
+  }
+
+  function buscarIgrejaDoFeedback(feedback) {
+    return igrejasAdmin.find(
+      (item) => Number(item.id) === Number(feedback.igreja_id)
+    )
+  }
+
+  function buscarWhatsAppFeedback(feedback) {
+    const igreja = buscarIgrejaDoFeedback(feedback)
+
+    return (
+      igreja?.responsavel_whatsapp ||
+      igreja?.telefone ||
+      feedback.whatsapp_usuario ||
+      ''
+    )
+  }
+
+  function montarMensagemRespostaFeedback(feedback) {
+    const nome = feedback.nome_usuario || 'irmÃ£o(Ã£)'
+    const resposta = feedback.resposta_admin || respostaFeedbackAdmin
+
+    return `Paz do Senhor, ${nome}!
+
+Obrigado pelo feedback enviado sobre o EBD Fiel.
+
+Resposta da equipe:
+${resposta}
+
+Seguimos Ã  disposiÃ§Ã£o para ajudar no teste piloto.
+
+EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
+  }
+
+  async function salvarRespostaFeedback(feedback) {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    if (!respostaFeedbackAdmin.trim()) {
+      alert('Escreva a resposta antes de salvar.')
+      return
+    }
+
+    setEnviandoRespostaFeedback(true)
+
+    const { error } = await supabase
+      .from('feedbacks_piloto')
+      .update({
+        resposta_admin: respostaFeedbackAdmin.trim(),
+        respondido_em: new Date().toISOString(),
+        respondido_por: sessao?.user?.email || 'Administrador',
+        lido: true,
+        lido_em: feedback.lido_em || new Date().toISOString(),
+      })
+      .eq('id', feedback.id)
+
+    setEnviandoRespostaFeedback(false)
+
+    if (error) {
+      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel salvar a resposta do feedback.')
+      return
+    }
+
+    setFeedbackRespondendoId(null)
+    setRespostaFeedbackAdmin('')
+    await carregarFeedbacksAdmin()
+    alert('Resposta salva. A igreja verÃ¡ a resposta na Ã¡rea de feedback.')
+  }
+
+  async function registrarNotificacaoFeedback(feedbackId) {
+    await supabase
+      .from('feedbacks_piloto')
+      .update({ notificado_em: new Date().toISOString() })
+      .eq('id', feedbackId)
+  }
+
+  async function copiarRespostaFeedback(feedback) {
+    const mensagem = montarMensagemRespostaFeedback(feedback)
+
+    try {
+      await navigator.clipboard.writeText(mensagem)
+      await registrarNotificacaoFeedback(feedback.id)
+      await carregarFeedbacksAdmin()
+      alert('Mensagem copiada. Agora cole no WhatsApp ou e-mail da pessoa.')
+    } catch {
+      alert(mensagem)
+    }
+  }
+
+  async function enviarRespostaEmailFeedback(feedback) {
+    const emailDestino = feedback.email_usuario
+
+    if (!emailDestino) {
+      alert('Este feedback nÃ£o possui e-mail vinculado.')
+      return
+    }
+
+    const assunto = encodeURIComponent('Resposta ao seu feedback no EBD Fiel')
+    const corpo = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
+
+    await registrarNotificacaoFeedback(feedback.id)
+    await carregarFeedbacksAdmin()
+
+    window.location.href = `mailto:${emailDestino}?subject=${assunto}&body=${corpo}`
+  }
+
+  async function enviarRespostaWhatsAppFeedback(feedback) {
+    const telefone = buscarWhatsAppFeedback(feedback)
+    const apenasNumeros = String(telefone || '').replace(/\D/g, '')
+
+    if (!apenasNumeros) {
+      alert('NÃ£o encontrei WhatsApp/telefone vinculado a este feedback. Use o botÃ£o copiar mensagem ou enviar e-mail.')
+      return
+    }
+
+    const telefoneComPais = apenasNumeros.length <= 11 ? `55${apenasNumeros}` : apenasNumeros
+    const mensagem = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
+
+    await registrarNotificacaoFeedback(feedback.id)
+    await carregarFeedbacksAdmin()
+
+    window.open(`https://wa.me/${telefoneComPais}?text=${mensagem}`, '_blank')
   }
 
   function buscarNomeIgrejaFeedback(feedback) {
@@ -5033,7 +5170,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </button>
 
             <p>
-              Seu feedback fica registrado para os administradores do EBD Fiel acompanharem.
+              Seu feedback fica registrado para os administradores acompanharem e responderem pela prÃ³pria plataforma.
             </p>
           </div>
         </form>
@@ -5043,10 +5180,25 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <h4>Ãšltimos feedbacks enviados</h4>
 
             {feedbacksIgreja.slice(0, 4).map((feedback) => (
-              <div className="feedback-recente-item" key={feedback.id}>
+              <div
+                className={`feedback-recente-item ${feedback.resposta_admin ? 'feedback-com-resposta' : ''}`}
+                key={feedback.id}
+              >
                 <strong>{feedback.tipo}</strong>
                 <p>{feedback.mensagem}</p>
                 <span>{formatarDataHoraFeedback(feedback.created_at)}</span>
+
+                {feedback.resposta_admin ? (
+                  <div className="feedback-resposta-igreja">
+                    <strong>Resposta da equipe EBD Fiel</strong>
+                    <p>{feedback.resposta_admin}</p>
+                    <small>{formatarDataHoraFeedback(feedback.respondido_em)}</small>
+                  </div>
+                ) : (
+                  <small className="feedback-aguardando-resposta">
+                    Aguardando resposta da equipe.
+                  </small>
+                )}
               </div>
             ))}
           </div>
@@ -6768,10 +6920,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 className={`feedback-admin-item ${feedback.lido ? 'feedback-lido' : 'feedback-novo'}`}
                 key={feedback.id}
               >
-                <div>
+                <div className="feedback-admin-conteudo">
                   <div className="linha-feedback-admin">
                     <strong>{buscarNomeIgrejaFeedback(feedback)}</strong>
-                    <span>{feedback.lido ? 'Lido' : 'Novo'}</span>
+                    <span>
+                      {feedback.resposta_admin ? 'Respondido' : feedback.lido ? 'Lido' : 'Novo'}
+                    </span>
                   </div>
 
                   <p>{feedback.mensagem}</p>
@@ -6780,16 +6934,97 @@ Qualquer dificuldade, pode me chamar por aqui.`
                     {feedback.tipo} â€¢ {feedback.nome_usuario || feedback.email_usuario || 'UsuÃ¡rio'} â€¢{' '}
                     {formatarDataHoraFeedback(feedback.created_at)}
                   </small>
+
+                  {feedback.resposta_admin && (
+                    <div className="feedback-resposta-admin">
+                      <strong>Resposta enviada:</strong>
+                      <p>{feedback.resposta_admin}</p>
+                      <small>
+                        Respondido por {feedback.respondido_por || 'administrador'} em{' '}
+                        {formatarDataHoraFeedback(feedback.respondido_em)}
+                        {feedback.notificado_em
+                          ? ` â€¢ Notificado em ${formatarDataHoraFeedback(feedback.notificado_em)}`
+                          : ''}
+                      </small>
+                    </div>
+                  )}
+
+                  {feedbackRespondendoId === feedback.id && (
+                    <div className="feedback-responder-box">
+                      <label>
+                        Resposta ao feedback
+                        <textarea
+                          value={respostaFeedbackAdmin}
+                          onChange={(event) => setRespostaFeedbackAdmin(event.target.value)}
+                          placeholder="Escreva a resposta que a igreja verÃ¡ na Ã¡rea de feedback..."
+                          rows="5"
+                        />
+                      </label>
+
+                      <div className="feedback-responder-acoes">
+                        <button
+                          type="button"
+                          className="botao-principal"
+                          disabled={enviandoRespostaFeedback}
+                          onClick={() => salvarRespostaFeedback(feedback)}
+                        >
+                          {enviandoRespostaFeedback ? 'Salvando...' : 'Salvar resposta'}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="botao-secundario"
+                          onClick={cancelarRespostaFeedback}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {!feedback.lido && (
+                <div className="acoes-feedback-admin">
+                  {!feedback.lido && (
+                    <button
+                      className="botao-secundario"
+                      onClick={() => marcarFeedbackComoLido(feedback.id)}
+                    >
+                      Marcar como lido
+                    </button>
+                  )}
+
                   <button
                     className="botao-secundario"
-                    onClick={() => marcarFeedbackComoLido(feedback.id)}
+                    onClick={() => abrirRespostaFeedback(feedback)}
                   >
-                    Marcar como lido
+                    {feedback.resposta_admin ? 'Editar resposta' : 'Responder'}
                   </button>
-                )}
+
+                  {feedback.resposta_admin && (
+                    <>
+                      <button
+                        className="botao-secundario"
+                        onClick={() => copiarRespostaFeedback(feedback)}
+                      >
+                        Copiar resposta
+                      </button>
+
+                      <button
+                        className="botao-secundario"
+                        onClick={() => enviarRespostaEmailFeedback(feedback)}
+                      >
+                        Enviar e-mail
+                      </button>
+
+                      <button
+                        className="botao-verde"
+                        onClick={() => enviarRespostaWhatsAppFeedback(feedback)}
+                      >
+                        WhatsApp
+                      </button>
+                    </>
+                  )}
+                </div>
               </article>
             ))}
           </div>
