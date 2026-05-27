@@ -7,13 +7,13 @@ import { supabase } from './lib/supabase'
 const classesIniciais = [
   { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
   { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
-  { id: 3, nome: 'CrianÃƒÂ§as', professor: 'IrmÃƒÂ£ Ana' },
+  { id: 3, nome: 'Crianças', professor: 'Irmã Ana' },
 ]
 
 const alunosIniciais = [
   { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
   { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
-  { id: 3, nome: 'JoÃƒÂ£o Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
 ]
 
 
@@ -148,6 +148,133 @@ function CardResumo({ icone, titulo, valor, descricao, destaque = false }) {
     </div>
   )
 }
+
+
+function iniciarCorrecaoGlobalDeAcentos() {
+  if (typeof window === 'undefined' || window.__ebdFielCorretorAcentosAtivo) {
+    return
+  }
+
+  window.__ebdFielCorretorAcentosAtivo = true
+
+  const c = (...codigos) => String.fromCharCode(...codigos)
+
+  const pares = [
+    [c(0x00C3, 0x0081), c(0x00C1)],
+    [c(0x00C3, 0x0080), c(0x00C0)],
+    [c(0x00C3, 0x0082), c(0x00C2)],
+    [c(0x00C3, 0x0083), c(0x00C3)],
+    [c(0x00C3, 0x0089), c(0x00C9)],
+    [c(0x00C3, 0x008A), c(0x00CA)],
+    [c(0x00C3, 0x008D), c(0x00CD)],
+    [c(0x00C3, 0x0093), c(0x00D3)],
+    [c(0x00C3, 0x0094), c(0x00D4)],
+    [c(0x00C3, 0x0095), c(0x00D5)],
+    [c(0x00C3, 0x009A), c(0x00DA)],
+    [c(0x00C3, 0x0087), c(0x00C7)],
+    [c(0x00C3, 0x00A1), c(0x00E1)],
+    [c(0x00C3, 0x00A0), c(0x00E0)],
+    [c(0x00C3, 0x00A2), c(0x00E2)],
+    [c(0x00C3, 0x00A3), c(0x00E3)],
+    [c(0x00C3, 0x00A9), c(0x00E9)],
+    [c(0x00C3, 0x00AA), c(0x00EA)],
+    [c(0x00C3, 0x00AD), c(0x00ED)],
+    [c(0x00C3, 0x00B3), c(0x00F3)],
+    [c(0x00C3, 0x00B4), c(0x00F4)],
+    [c(0x00C3, 0x00B5), c(0x00F5)],
+    [c(0x00C3, 0x00BA), c(0x00FA)],
+    [c(0x00C3, 0x00A7), c(0x00E7)],
+    [c(0x00C2, 0x00BA), c(0x00BA)],
+    [c(0x00C2, 0x00AA), c(0x00AA)],
+    [c(0x00C2, 0x00B7), c(0x00B7)],
+    [c(0x00C2), ''],
+    [c(0x00E2, 0x0086, 0x0092), c(0x2192)],
+    [c(0x00E2, 0x009C, 0x0093), c(0x2713)],
+    [c(0x00E2, 0x0080, 0x00A2), c(0x2022)],
+  ]
+
+  const palavras = [
+    ['B' + c(0x00C3, 0x00AD) + 'blica', 'B' + c(0x00ED) + 'blica'],
+    ['Gest' + c(0x00C3, 0x00A3) + 'o', 'Gest' + c(0x00E3) + 'o'],
+    ['Administra' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'Administra' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['Configura' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'Configura' + c(0x00E7) + c(0x00F5) + 'es'],
+    ['Relat' + c(0x00C3, 0x00B3) + 'rios', 'Relat' + c(0x00F3) + 'rios'],
+    ['usu' + c(0x00C3, 0x00A1) + 'rios', 'usu' + c(0x00E1) + 'rios'],
+    ['usu' + c(0x00C3, 0x00A1) + 'rio', 'usu' + c(0x00E1) + 'rio'],
+    ['aprova' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'aprova' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['recupera' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'recupera' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'congrega' + c(0x00E7) + c(0x00F5) + 'es'],
+    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'congrega' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['respons' + c(0x00C3, 0x00A1) + 'vel', 'respons' + c(0x00E1) + 'vel'],
+    ['Voc' + c(0x00C3, 0x00AA), 'Voc' + c(0x00EA)],
+    ['voc' + c(0x00C3, 0x00AA), 'voc' + c(0x00EA)],
+    ['c' + c(0x00C3, 0x00B3) + 'digo', 'c' + c(0x00F3) + 'digo'],
+    ['j' + c(0x00C3, 0x00A1), 'j' + c(0x00E1)],
+    ['J' + c(0x00C3, 0x00A1), 'J' + c(0x00E1)],
+  ]
+
+  function corrigir(texto) {
+    if (!texto || typeof texto !== 'string') {
+      return texto
+    }
+
+    let novo = texto
+
+    pares.forEach(([errado, certo]) => {
+      novo = novo.split(errado).join(certo)
+    })
+
+    palavras.forEach(([errado, certo]) => {
+      novo = novo.split(errado).join(certo)
+    })
+
+    return novo
+  }
+
+  function varrer() {
+    if (!document.body) {
+      return
+    }
+
+    const walker = document.createTreeWalker(document.body, 4)
+    const nodes = []
+
+    while (walker.nextNode()) {
+      nodes.push(walker.currentNode)
+    }
+
+    nodes.forEach((node) => {
+      const novo = corrigir(node.nodeValue)
+      if (novo !== node.nodeValue) {
+        node.nodeValue = novo
+      }
+    })
+
+    document.querySelectorAll('input, textarea').forEach((campo) => {
+      if (campo.placeholder) {
+        campo.placeholder = corrigir(campo.placeholder)
+      }
+    })
+
+    document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
+      ;['title', 'aria-label', 'alt'].forEach((atributo) => {
+        const valor = elemento.getAttribute(atributo)
+        if (valor) {
+          const novo = corrigir(valor)
+          if (novo !== valor) {
+            elemento.setAttribute(atributo, novo)
+          }
+        }
+      })
+    })
+  }
+
+  window.setInterval(varrer, 250)
+  window.addEventListener('load', varrer)
+  window.requestAnimationFrame(varrer)
+}
+
+iniciarCorrecaoGlobalDeAcentos()
 
 function App() {
   const [paginaAtual, setPaginaAtual] = useState('painel')
@@ -340,123 +467,27 @@ function App() {
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
     { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
-    { id: 'usuarios', nome: 'UsuÃƒÂ¡rios', icone: 'usuarios', apenasSecretaria: true },
+    { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
-    { id: 'relatorios', nome: 'RelatÃƒÂ³rios', icone: 'relatorios' },
-    { id: 'manual', nome: 'Manual do usuÃƒÂ¡rio', icone: 'relatorios' },
+    { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
     {
       id: 'configuracoes',
-      nome: 'ConfiguraÃƒÂ§ÃƒÂµes',
+      nome: 'Configurações',
       icone: 'configuracoes',
       apenasSecretaria: true,
     },
     {
       id: 'administracao',
-      nome: 'AdministraÃƒÂ§ÃƒÂ£o',
+      nome: 'Administração',
       icone: 'configuracoes',
       apenasAdminSistema: true,
     },
   ]
 
-
-  function corrigirMojibakeVisivel() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' || !document.body) {
-      return
-    }
-
-    const trocas = [
-      ['\u00C3\u0081', '\u00C1'],
-      ['\u00C3\u0080', '\u00C0'],
-      ['\u00C3\u0082', '\u00C2'],
-      ['\u00C3\u0083', '\u00C3'],
-      ['\u00C3\u0089', '\u00C9'],
-      ['\u00C3\u008A', '\u00CA'],
-      ['\u00C3\u008D', '\u00CD'],
-      ['\u00C3\u0093', '\u00D3'],
-      ['\u00C3\u0094', '\u00D4'],
-      ['\u00C3\u0095', '\u00D5'],
-      ['\u00C3\u009A', '\u00DA'],
-      ['\u00C3\u0087', '\u00C7'],
-      ['\u00C3\u00A1', '\u00E1'],
-      ['\u00C3\u00A0', '\u00E0'],
-      ['\u00C3\u00A2', '\u00E2'],
-      ['\u00C3\u00A3', '\u00E3'],
-      ['\u00C3\u00A9', '\u00E9'],
-      ['\u00C3\u00AA', '\u00EA'],
-      ['\u00C3\u00AD', '\u00ED'],
-      ['\u00C3\u00B3', '\u00F3'],
-      ['\u00C3\u00B4', '\u00F4'],
-      ['\u00C3\u00B5', '\u00F5'],
-      ['\u00C3\u00BA', '\u00FA'],
-      ['\u00C3\u00A7', '\u00E7'],
-      ['\u00C2\u00BA', '\u00BA'],
-      ['\u00C2\u00AA', '\u00AA'],
-      ['\u00C2\u00B7', '\u00B7'],
-      ['\u00C2', ''],
-      ['\u00E2\u0086\u0092', '\u2192'],
-      ['\u00E2\u009C\u0093', '\u2713'],
-      ['\u00E2\u0080\u00A2', '\u2022'],
-    ]
-
-    function corrigirTexto(texto) {
-      if (!texto || typeof texto !== 'string') {
-        return texto
-      }
-
-      let corrigido = texto
-      trocas.forEach(([errado, certo]) => {
-        corrigido = corrigido.split(errado).join(certo)
-      })
-
-      return corrigido
-    }
-
-    const walker = document.createTreeWalker(document.body, 4)
-    const nos = []
-
-    while (walker.nextNode()) {
-      nos.push(walker.currentNode)
-    }
-
-    nos.forEach((no) => {
-      const novoTexto = corrigirTexto(no.nodeValue)
-      if (novoTexto !== no.nodeValue) {
-        no.nodeValue = novoTexto
-      }
-    })
-
-    document.querySelectorAll('input, textarea').forEach((campo) => {
-      if (campo.placeholder) {
-        campo.placeholder = corrigirTexto(campo.placeholder)
-      }
-    })
-
-    document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
-      ;['title', 'aria-label', 'alt'].forEach((atributo) => {
-        const valor = elemento.getAttribute(atributo)
-        if (valor) {
-          const novoValor = corrigirTexto(valor)
-          if (novoValor !== valor) {
-            elemento.setAttribute(atributo, novoValor)
-          }
-        }
-      })
-    })
-  }
-
   useEffect(() => {
-    corrigirMojibakeVisivel()
+    iniciarCorrecaoGlobalDeAcentos()
 
-    if (typeof window === 'undefined') {
-      return undefined
-    }
-
-    const id = window.setInterval(corrigirMojibakeVisivel, 500)
-    return () => window.clearInterval(id)
-  }, [paginaAtual, telaPublica, carregando, verificandoSessao, igrejasAdmin, acessosAdmin, classes, alunos])
-
-
-  useEffect(() => {
     iniciarAutenticacao()
 
     const {
@@ -500,7 +531,7 @@ function App() {
         limparDadosDoSistema()
       }
     } catch (error) {
-      console.error('Erro ao verificar sessÃƒÂ£o:', error)
+      console.error('Erro ao verificar sessão:', error)
       setErroSistema('Erro ao verificar login.')
     } finally {
       setVerificandoSessao(false)
@@ -616,7 +647,7 @@ function App() {
     const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
 
     if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('CÃƒÂ³digo do piloto invÃƒÂ¡lido. Confira o cÃƒÂ³digo informado no grupo.')
+      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
       return
     }
 
@@ -636,7 +667,7 @@ function App() {
     }
 
     if (cadastroPiloto.senha !== cadastroPiloto.confirmarSenha) {
-      setErroCadastroPiloto('A confirmaÃƒÂ§ÃƒÂ£o de senha nÃƒÂ£o confere.')
+      setErroCadastroPiloto('A confirmação de senha não confere.')
       return
     }
 
@@ -651,7 +682,7 @@ function App() {
     }
 
     if (cadastroPiloto.tipoIgreja === 'congregacao' && !cadastroPiloto.sedeFiliadaNome.trim()) {
-      setErroCadastroPiloto('Informe a sede ÃƒÂ  qual a congregaÃƒÂ§ÃƒÂ£o ÃƒÂ© filiada.')
+      setErroCadastroPiloto('Informe a sede à qual a congregação é filiada.')
       return
     }
 
@@ -664,7 +695,7 @@ function App() {
 
       if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto jÃƒÂ¡ foi atingido. Aguarde a liberaÃƒÂ§ÃƒÂ£o de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
         setCarregandoCadastroPiloto(false)
         return
@@ -691,7 +722,7 @@ function App() {
 
         if (erroLoginCadastro) {
           setSucessoCadastroPiloto(
-            'Seu usuÃƒÂ¡rio foi criado. Confira seu e-mail para confirmar o cadastro e depois faÃƒÂ§a login.'
+            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
           )
           return
         }
@@ -702,7 +733,7 @@ function App() {
 
       if (!usuarioCadastro?.id || !sessaoCadastro) {
         setSucessoCadastroPiloto(
-          'Seu usuÃƒÂ¡rio foi criado. Confira seu e-mail para confirmar o cadastro e depois faÃƒÂ§a login.'
+          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
         )
         return
       }
@@ -757,7 +788,7 @@ function App() {
       }
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja estÃƒÂ¡ aguardando aprovaÃƒÂ§ÃƒÂ£o do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -776,18 +807,18 @@ function App() {
         String(error?.details || '').includes('limite_piloto_atingido')
       ) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto jÃƒÂ¡ foi atingido. Aguarde a liberaÃƒÂ§ÃƒÂ£o de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
       } else if (
         String(error?.message || '').includes('usuario_ja_possui_perfil') ||
         String(error?.details || '').includes('usuario_ja_possui_perfil')
       ) {
         setErroCadastroPiloto(
-          'Este e-mail jÃƒÂ¡ possui um cadastro vinculado. Use Ã¢â‚¬Å“Esqueci minha senhaÃ¢â‚¬Â ou fale com o administrador.'
+          'Este e-mail já possui um cadastro vinculado. Use “Esqueci minha senha” ou fale com o administrador.'
         )
       } else {
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel criar o acesso do piloto.')
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
         )
       }
     } finally {
@@ -804,7 +835,7 @@ function App() {
     setMensagemRecuperacao('')
 
     if (!email) {
-      setErroRecuperacao('Informe seu e-mail para receber o link de recuperaÃƒÂ§ÃƒÂ£o.')
+      setErroRecuperacao('Informe seu e-mail para receber o link de recuperação.')
       return
     }
 
@@ -820,12 +851,12 @@ function App() {
       }
 
       setMensagemRecuperacao(
-        'Link de recuperaÃƒÂ§ÃƒÂ£o enviado. Confira sua caixa de entrada e tambÃƒÂ©m a pasta de spam.'
+        'Link de recuperação enviado. Confira sua caixa de entrada e também a pasta de spam.'
       )
     } catch (error) {
       console.error(error)
       setErroRecuperacao(
-        traduzirErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel enviar o link de recuperaÃƒÂ§ÃƒÂ£o.')
+        traduzirErroSistema(error, 'Não foi possível enviar o link de recuperação.')
       )
     } finally {
       setCarregandoRecuperacao(false)
@@ -843,7 +874,7 @@ function App() {
     }
 
     if (novaSenhaRecuperacao !== confirmarNovaSenhaRecuperacao) {
-      setErroNovaSenha('A confirmaÃƒÂ§ÃƒÂ£o da nova senha nÃƒÂ£o confere.')
+      setErroNovaSenha('A confirmação da nova senha não confere.')
       return
     }
 
@@ -867,7 +898,7 @@ function App() {
     } catch (error) {
       console.error(error)
       setErroNovaSenha(
-        traduzirErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel atualizar a senha.')
+        traduzirErroSistema(error, 'Não foi possível atualizar a senha.')
       )
     } finally {
       setCarregandoNovaSenha(false)
@@ -902,7 +933,7 @@ function App() {
       await carregarDadosOnline(data.session)
     } catch (error) {
       console.error('Erro ao entrar:', error)
-      setErroLogin('E-mail ou senha invÃƒÂ¡lidos.')
+      setErroLogin('E-mail ou senha inválidos.')
     } finally {
       setCarregandoLogin(false)
     }
@@ -953,7 +984,7 @@ function App() {
       console.error('Erro ao carregar dados:', error)
       setErroSistema(
         error?.message ||
-          'NÃƒÂ£o foi possÃƒÂ­vel carregar os dados do Supabase.'
+          'Não foi possível carregar os dados do Supabase.'
       )
     } finally {
       setCarregando(false)
@@ -962,7 +993,7 @@ function App() {
 
   async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
     if (!igrejaAtualId) {
-      throw new Error('Igreja nÃƒÂ£o identificada para criar os dados iniciais.')
+      throw new Error('Igreja não identificada para criar os dados iniciais.')
     }
 
     const classesParaSalvar = classesIniciais.map((classe) => ({
@@ -1347,12 +1378,12 @@ function App() {
     }
 
     if (!novoAcessoAdmin.nome.trim()) {
-      alert('Informe o nome do usuÃƒÂ¡rio.')
+      alert('Informe o nome do usuário.')
       return
     }
 
     if (!novoAcessoAdmin.email.trim()) {
-      alert('Informe o e-mail do usuÃƒÂ¡rio.')
+      alert('Informe o e-mail do usuário.')
       return
     }
 
@@ -1376,7 +1407,7 @@ function App() {
       .upsert(dadosAcesso, { onConflict: 'user_id' })
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel salvar o acesso.')
+      mostrarErroSistema(error, 'Não foi possível salvar o acesso.')
       return
     }
 
@@ -1392,7 +1423,7 @@ function App() {
     }
 
     const confirmar = window.confirm(
-      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuÃƒÂ¡rio continuarÃƒÂ¡ existindo no Authentication, mas ficarÃƒÂ¡ sem vÃƒÂ­nculo no sistema.`
+      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuário continuará existindo no Authentication, mas ficará sem vínculo no sistema.`
     )
 
     if (!confirmar) {
@@ -1405,7 +1436,7 @@ function App() {
       .eq('user_id', acesso.user_id)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel remover o acesso.')
+      mostrarErroSistema(error, 'Não foi possível remover o acesso.')
       return
     }
 
@@ -1414,12 +1445,12 @@ function App() {
 
   async function enviarRecuperacaoSenhaAdmin(email) {
     if (!email) {
-      alert('Este usuÃƒÂ¡rio nÃƒÂ£o possui e-mail cadastrado.')
+      alert('Este usuário não possui e-mail cadastrado.')
       return
     }
 
     const confirmar = window.confirm(
-      `Enviar link de recuperaÃƒÂ§ÃƒÂ£o de senha para ${email}?`
+      `Enviar link de recuperação de senha para ${email}?`
     )
 
     if (!confirmar) {
@@ -1431,11 +1462,11 @@ function App() {
     })
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel enviar o link de recuperaÃƒÂ§ÃƒÂ£o de senha.')
+      mostrarErroSistema(error, 'Não foi possível enviar o link de recuperação de senha.')
       return
     }
 
-    alert('Link de recuperaÃƒÂ§ÃƒÂ£o enviado. PeÃƒÂ§a para o usuÃƒÂ¡rio conferir o e-mail.')
+    alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
   }
 
   async function carregarIgrejasAdmin() {
@@ -1543,7 +1574,7 @@ function App() {
     }
 
     const confirmar = window.confirm(
-      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta aÃƒÂ§ÃƒÂ£o pode apagar os dados vinculados.`
+      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta ação pode apagar os dados vinculados.`
     )
 
     if (!confirmar) {
@@ -1571,7 +1602,7 @@ function App() {
       novoStatus === 'teste'
         ? 'aprovar esta igreja para o teste piloto'
         : novoStatus === 'cancelada'
-          ? 'nÃƒÂ£o aprovar esta igreja'
+          ? 'não aprovar esta igreja'
           : `alterar o status para ${novoStatus}`
 
     const confirmar = window.confirm(`Deseja ${textoAcao}: ${nomeIgreja}?`)
@@ -1586,7 +1617,7 @@ function App() {
       .eq('id', igreja.id)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel alterar o status da igreja.')
+      mostrarErroSistema(error, 'Não foi possível alterar o status da igreja.')
       return
     }
 
@@ -1594,7 +1625,7 @@ function App() {
 
     if (novoStatus === 'teste') {
       const avisarAgora = window.confirm(
-        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsÃƒÂ¡vel?'
+        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
       )
 
       if (avisarAgora) {
@@ -1603,7 +1634,7 @@ function App() {
     }
 
     if (novoStatus === 'cancelada') {
-      alert('Igreja marcada como nÃƒÂ£o aprovada.')
+      alert('Igreja marcada como não aprovada.')
     }
   }
 
@@ -1626,19 +1657,19 @@ Acesse o sistema pelo link:
 
 https://app.ebdfiel.com.br
 
-Entre com o e-mail e a senha cadastrados no momento da inscriÃƒÂ§ÃƒÂ£o.
+Entre com o e-mail e a senha cadastrados no momento da inscrição.
 
-Manual rÃƒÂ¡pido para comeÃƒÂ§ar:
+Manual rápido para começar:
 
 1. Confira os dados da igreja no painel.
-2. VÃƒÂ¡ em Classes e cadastre as turmas da EBD.
-3. VÃƒÂ¡ em Alunos ou entre em uma classe para cadastrar os alunos.
-4. VÃƒÂ¡ em Professores para cadastrar os professores da EBD.
-5. Vincule os professores ÃƒÂ s classes correspondentes.
-6. VÃƒÂ¡ em Chamada para registrar a presenÃƒÂ§a dos alunos.
-7. Use Chamada dos professores para registrar a presenÃƒÂ§a dos professores.
-8. Em RelatÃƒÂ³rios, gere o relatÃƒÂ³rio da EBD em PDF.
-9. Durante o teste piloto, use a ÃƒÂ¡rea de Feedback para enviar sugestÃƒÂµes, dÃƒÂºvidas ou dificuldades.
+2. Vá em Classes e cadastre as turmas da EBD.
+3. Vá em Alunos ou entre em uma classe para cadastrar os alunos.
+4. Vá em Professores para cadastrar os professores da EBD.
+5. Vincule os professores às classes correspondentes.
+6. Vá em Chamada para registrar a presença dos alunos.
+7. Use Chamada dos professores para registrar a presença dos professores.
+8. Em Relatórios, gere o relatório da EBD em PDF.
+9. Durante o teste piloto, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -1653,7 +1684,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const texto = encodeURIComponent(mensagem)
 
     if (!numeroLimpo) {
-      alert('Esta igreja nÃƒÂ£o possui WhatsApp cadastrado. Use o botÃƒÂ£o Ã¢â‚¬Å“Copiar mensagemÃ¢â‚¬Â.')
+      alert('Esta igreja não possui WhatsApp cadastrado. Use o botão “Copiar mensagem”.')
       return
     }
 
@@ -1666,7 +1697,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     try {
       await navigator.clipboard.writeText(mensagem)
-      alert('Mensagem de aprovaÃƒÂ§ÃƒÂ£o copiada.')
+      alert('Mensagem de aprovação copiada.')
     } catch {
       window.prompt('Copie a mensagem abaixo:', mensagem)
     }
@@ -1685,7 +1716,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     })
   }
 
-  function traduzirErroSistema(erro, mensagemPadrao = 'NÃƒÂ£o foi possÃƒÂ­vel concluir a operaÃƒÂ§ÃƒÂ£o.') {
+  function traduzirErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
     const mensagemOriginal =
       typeof erro === 'string'
         ? erro
@@ -1697,48 +1728,48 @@ Qualquer dificuldade, pode me chamar por aqui.`
       const colunaEncontrada = String(mensagemOriginal).match(/'([^']+)' column/)
       const tabelaEncontrada = String(mensagemOriginal).match(/of '([^']+)'/)
 
-      const coluna = colunaEncontrada?.[1] || 'necessÃƒÂ¡ria'
+      const coluna = colunaEncontrada?.[1] || 'necessária'
       const tabela = tabelaEncontrada?.[1] || 'do banco de dados'
 
-      return `O campo "${coluna}" ainda nÃƒÂ£o existe na tabela "${tabela}" do Supabase. Rode o SQL de atualizaÃƒÂ§ÃƒÂ£o do banco, aguarde alguns segundos e tente novamente.`
+      return `O campo "${coluna}" ainda não existe na tabela "${tabela}" do Supabase. Rode o SQL de atualização do banco, aguarde alguns segundos e tente novamente.`
     }
 
     if (mensagem.includes('schema cache')) {
-      return 'O Supabase ainda estÃƒÂ¡ atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
+      return 'O Supabase ainda está atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
     }
 
     if (mensagem.includes('duplicate key') || mensagem.includes('already exists')) {
-      return 'Esse cadastro jÃƒÂ¡ existe. Verifique os dados informados e tente novamente.'
+      return 'Esse cadastro já existe. Verifique os dados informados e tente novamente.'
     }
 
     if (mensagem.includes('violates foreign key constraint')) {
-      return 'NÃƒÂ£o foi possÃƒÂ­vel salvar porque hÃƒÂ¡ uma ligaÃƒÂ§ÃƒÂ£o obrigatÃƒÂ³ria faltando no banco de dados. Verifique se a igreja, classe ou usuÃƒÂ¡rio vinculado existe.'
+      return 'Não foi possível salvar porque há uma ligação obrigatória faltando no banco de dados. Verifique se a igreja, classe ou usuário vinculado existe.'
     }
 
     if (mensagem.includes('violates row-level security') || mensagem.includes('row-level security')) {
-      return 'VocÃƒÂª nÃƒÂ£o tem permissÃƒÂ£o para realizar esta aÃƒÂ§ÃƒÂ£o. Verifique se estÃƒÂ¡ logado com o perfil correto.'
+      return 'Você não tem permissão para realizar esta ação. Verifique se está logado com o perfil correto.'
     }
 
     if (mensagem.includes('invalid input syntax')) {
-      return 'Algum campo foi preenchido com um formato invÃƒÂ¡lido. Confira nÃƒÂºmeros, datas e campos obrigatÃƒÂ³rios.'
+      return 'Algum campo foi preenchido com um formato inválido. Confira números, datas e campos obrigatórios.'
     }
 
     if (mensagem.includes('failed to fetch') || mensagem.includes('networkerror')) {
-      return 'NÃƒÂ£o foi possÃƒÂ­vel conectar ao servidor. Verifique sua internet e tente novamente.'
+      return 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
     }
 
     if (mensagem.includes('jwt') || mensagem.includes('token')) {
-      return 'Sua sessÃƒÂ£o expirou. Saia do sistema e entre novamente.'
+      return 'Sua sessão expirou. Saia do sistema e entre novamente.'
     }
 
     if (mensagem.includes('auth')) {
-      return 'NÃƒÂ£o foi possÃƒÂ­vel confirmar seu login. Saia do sistema e entre novamente.'
+      return 'Não foi possível confirmar seu login. Saia do sistema e entre novamente.'
     }
 
     return mensagemPadrao
   }
 
-  function mostrarErroSistema(erro, mensagemPadrao = 'NÃƒÂ£o foi possÃƒÂ­vel concluir a operaÃƒÂ§ÃƒÂ£o.') {
+  function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
     console.error(erro)
     alert(traduzirErroSistema(erro, mensagemPadrao))
   }
@@ -1808,7 +1839,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A ÃƒÂ¡rea de feedback estÃƒÂ¡ disponÃƒÂ­vel para igrejas em teste piloto.')
+      alert('A área de feedback está disponível para igrejas em teste piloto.')
       return
     }
 
@@ -1822,7 +1853,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const { error } = await supabase.from('feedbacks_piloto').insert({
       igreja_id: buscarIgrejaIdAtual(),
       user_id: sessao?.user?.id || null,
-      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'UsuÃƒÂ¡rio',
+      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'Usuário',
       email_usuario: perfilUsuario?.email || sessao?.user?.email || '',
       perfil_usuario: perfilUsuario?.perfil || '',
       tipo: feedbackPiloto.tipo,
@@ -1833,7 +1864,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     setCarregandoFeedback(false)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel enviar o feedback.')
+      mostrarErroSistema(error, 'Não foi possível enviar o feedback.')
       return
     }
 
@@ -1853,7 +1884,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       .eq('id', feedbackId)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃƒÂ£o foi possÃƒÂ­vel marcar o feedback como lido.')
+      mostrarErroSistema(error, 'Não foi possível marcar o feedback como lido.')
       return
     }
 
@@ -1941,7 +1972,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
   async function buscarTodosOsDados(sessaoAtual = sessao, igrejaSuporteForcada = null) {
     if (!sessaoAtual?.user?.id) {
-      throw new Error('NÃƒÂ£o foi possÃƒÂ­vel confirmar sua sessÃƒÂ£o. Saia e entre novamente no sistema.')
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
@@ -2031,7 +2062,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
         return
       } else {
         throw new Error(
-          'Perfil do usuÃƒÂ¡rio sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
+          'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
         )
       }
     }
@@ -2491,7 +2522,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const relatorio = document.querySelector('.relatorio-folha')
 
     if (!relatorio) {
-      alert('RelatÃƒÂ³rio nÃƒÂ£o encontrado para impressÃƒÂ£o.')
+      alert('Relatório não encontrado para impressão.')
       return
     }
 
@@ -2499,7 +2530,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     if (!janela) {
       alert(
-        'O navegador bloqueou a abertura da impressÃƒÂ£o. No celular, use o botÃƒÂ£o Baixar PDF.'
+        'O navegador bloqueou a abertura da impressão. No celular, use o botão Baixar PDF.'
       )
       return
     }
@@ -2511,7 +2542,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>RelatÃƒÂ³rio EBD Fiel</title>
+          <title>Relatório EBD Fiel</title>
 
           <style>
             * {
@@ -2672,7 +2703,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const relatorioOriginal = document.querySelector('.relatorio-folha')
 
     if (!relatorioOriginal) {
-      alert('RelatÃƒÂ³rio nÃƒÂ£o encontrado para gerar PDF.')
+      alert('Relatório não encontrado para gerar PDF.')
       return
     }
 
@@ -2761,7 +2792,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       pdf.save('relatorio-ebd-fiel.pdf')
     } catch (error) {
       console.error('Erro ao gerar PDF:', error)
-      alert('NÃƒÂ£o foi possÃƒÂ­vel gerar o PDF. Tente novamente.')
+      alert('Não foi possível gerar o PDF. Tente novamente.')
     }
   }
 
@@ -2810,7 +2841,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
       if (error) {
         console.error(error)
-        alert('Erro ao salvar alteraÃƒÂ§ÃƒÂµes da classe.')
+        alert('Erro ao salvar alterações da classe.')
         return
       }
     } else {
@@ -2843,7 +2874,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     )
 
     if (existemAlunos) {
-      alert('NÃƒÂ£o ÃƒÂ© possÃƒÂ­vel excluir essa classe porque existem alunos nela.')
+      alert('Não é possível excluir essa classe porque existem alunos nela.')
       return
     }
 
@@ -2958,7 +2989,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
       if (error) {
         console.error(error)
-        alert('Erro ao salvar alteraÃƒÂ§ÃƒÂµes do aluno.')
+        alert('Erro ao salvar alterações do aluno.')
         return
       }
     } else {
@@ -3109,7 +3140,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     if (status === 'presente') return 'Presente'
     if (status === 'faltou') return 'Faltou'
     if (status === 'justificou') return 'Justificou'
-    return 'Sem marcaÃƒÂ§ÃƒÂ£o'
+    return 'Sem marcação'
   }
 
   function calcularPercentualPresencaProfessores() {
@@ -3153,7 +3184,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     )
 
     if (alunosDaClasse.length === 0) {
-      alert('Essa classe ainda nÃƒÂ£o possui alunos cadastrados.')
+      alert('Essa classe ainda não possui alunos cadastrados.')
       return
     }
 
@@ -3232,17 +3263,17 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode alterar as configuraÃƒÂ§ÃƒÂµes da igreja.')
+      alert('Apenas a secretaria pode alterar as configurações da igreja.')
       return
     }
 
     if (!sessao?.user?.id) {
-      alert('NÃƒÂ£o foi possÃƒÂ­vel confirmar sua sessÃƒÂ£o. Saia e entre novamente no sistema.')
+      alert('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
       return
     }
 
     if (!buscarIgrejaIdAtual()) {
-      alert('Igreja nÃƒÂ£o identificada. Saia e entre novamente no sistema.')
+      alert('Igreja não identificada. Saia e entre novamente no sistema.')
       return
     }
 
@@ -3299,10 +3330,10 @@ Qualquer dificuldade, pode me chamar por aqui.`
       }
 
       await buscarTodosOsDados(sessao)
-      alert('ConfiguraÃƒÂ§ÃƒÂµes da igreja salvas com sucesso!')
+      alert('Configurações da igreja salvas com sucesso!')
     } catch (error) {
-      console.error('Erro ao salvar configuraÃƒÂ§ÃƒÂµes da igreja:', error)
-      alert(error?.message || 'Erro ao salvar configuraÃƒÂ§ÃƒÂµes da igreja.')
+      console.error('Erro ao salvar configurações da igreja:', error)
+      alert(error?.message || 'Erro ao salvar configurações da igreja.')
     } finally {
       setSalvandoConfiguracaoIgreja(false)
     }
@@ -3391,13 +3422,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃƒÂ£o inteligente para Escola BÃƒÂ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Sistema comercial pronto para igrejas</span>
-            <h2>Organize classes, alunos, chamadas e relatÃƒÂ³rios em um sÃƒÂ³ lugar.</h2>
+            <h2>Organize classes, alunos, chamadas e relatórios em um só lugar.</h2>
             <p>
               Acesse o painel para acompanhar os dados da sua EBD com uma interface
               moderna, simples e profissional.
@@ -3410,7 +3441,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <Icone nome="check" className="icone-status" />
           </div>
           <h2>Verificando acesso...</h2>
-          <p>Aguarde um momento enquanto conferimos sua sessÃƒÂ£o.</p>
+          <p>Aguarde um momento enquanto conferimos sua sessão.</p>
         </section>
       </div>
     )
@@ -3430,7 +3461,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>RedefiniÃƒÂ§ÃƒÂ£o segura de senha.</p>
+              <p>Redefinição segura de senha.</p>
             </div>
           </div>
 
@@ -3438,7 +3469,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <span className="selo-apresentacao">Nova senha</span>
             <h2>Crie uma nova senha de acesso.</h2>
             <p>
-              Digite uma nova senha para continuar usando o sistema com seguranÃƒÂ§a.
+              Digite uma nova senha para continuar usando o sistema com segurança.
             </p>
           </div>
         </section>
@@ -3508,7 +3539,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>RecuperaÃƒÂ§ÃƒÂ£o de acesso.</p>
+              <p>Recuperação de acesso.</p>
             </div>
           </div>
 
@@ -3516,8 +3547,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <span className="selo-apresentacao">Esqueci minha senha</span>
             <h2>Receba um link para redefinir sua senha.</h2>
             <p>
-              Informe o e-mail usado no cadastro. O sistema enviarÃƒÂ¡ um link seguro para
-              vocÃƒÂª criar uma nova senha.
+              Informe o e-mail usado no cadastro. O sistema enviará um link seguro para
+              você criar uma nova senha.
             </p>
           </div>
         </section>
@@ -3528,7 +3559,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             type="button"
             onClick={() => setTelaPublica('login')}
           >
-            Ã¢â€ Â Voltar para login
+            ← Voltar para login
           </button>
 
           <div className="topo-cartao-login">
@@ -3537,7 +3568,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h2>Recuperar senha</h2>
-              <p>Digite seu e-mail para receber o link de recuperaÃƒÂ§ÃƒÂ£o.</p>
+              <p>Digite seu e-mail para receber o link de recuperação.</p>
             </div>
           </div>
 
@@ -3563,7 +3594,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               type="submit"
               disabled={carregandoRecuperacao}
             >
-              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperaÃƒÂ§ÃƒÂ£o'}
+              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperação'}
             </button>
           </form>
         </section>
@@ -3590,8 +3621,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Aguardando aprovaÃƒÂ§ÃƒÂ£o</span>
-            <h2>Sua solicitaÃƒÂ§ÃƒÂ£o foi enviada.</h2>
+            <span className="selo-apresentacao">Aguardando aprovação</span>
+            <h2>Sua solicitação foi enviada.</h2>
             <p>
               O administrador vai conferir os dados da igreja e liberar o acesso para
               o teste piloto.
@@ -3614,18 +3645,18 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <div className="resumo-cadastro-enviado">
             {ultimoCadastroPilotoEnviado.responsavel && (
-              <span>ResponsÃƒÂ¡vel: {ultimoCadastroPilotoEnviado.responsavel}</span>
+              <span>Responsável: {ultimoCadastroPilotoEnviado.responsavel}</span>
             )}
             {ultimoCadastroPilotoEnviado.email && (
               <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
             )}
-            <span>Status: aguardando aprovaÃƒÂ§ÃƒÂ£o</span>
+            <span>Status: aguardando aprovação</span>
           </div>
 
           <div className="aviso-aprovacao-cadastro">
             <strong>O que acontece agora?</strong>
             <p>
-              Aguarde a aprovaÃƒÂ§ÃƒÂ£o do administrador. ApÃƒÂ³s a liberaÃƒÂ§ÃƒÂ£o, vocÃƒÂª poderÃƒÂ¡
+              Aguarde a aprovação do administrador. Após a liberação, você poderá
               entrar normalmente com o e-mail e a senha cadastrados.
             </p>
           </div>
@@ -3662,29 +3693,29 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Exclusivo para o grupo</span>
-            <h2>Crie o acesso da sua igreja para avaliaÃƒÂ§ÃƒÂ£o.</h2>
+            <h2>Crie o acesso da sua igreja para avaliação.</h2>
             <p>
-              O cadastro serÃƒÂ¡ enviado para aprovaÃƒÂ§ÃƒÂ£o. ApÃƒÂ³s a liberaÃƒÂ§ÃƒÂ£o, a igreja poderÃƒÂ¡
-              testar classes, alunos, professores, chamadas, relatÃƒÂ³rios e feedbacks.
+              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
+              testar classes, alunos, professores, chamadas, relatórios e feedbacks.
             </p>
           </div>
 
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="check" className="icone-beneficio" />
-              <span>CÃƒÂ³digo do piloto obrigatÃƒÂ³rio</span>
+              <span>Código do piloto obrigatório</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
-              <span>Sede ou congregaÃƒÂ§ÃƒÂ£o</span>
+              <span>Sede ou congregação</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="usuarios" className="icone-beneficio" />
-              <span>Secretaria ou superintendÃƒÂªncia</span>
+              <span>Secretaria ou superintendência</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>AprovaÃƒÂ§ÃƒÂ£o pelo administrador</span>
+              <span>Aprovação pelo administrador</span>
             </div>
           </div>
         </section>
@@ -3695,7 +3726,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             type="button"
             onClick={() => setTelaPublica('login')}
           >
-            Ã¢â€ Â Voltar para login
+            ← Voltar para login
           </button>
 
           <div className="topo-cartao-login">
@@ -3710,7 +3741,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           <form className="formulario formulario-cadastro-piloto" onSubmit={cadastrarAcessoPiloto}>
             <div className="grupo-cadastro-piloto">
-              <h3>ResponsÃƒÂ¡vel</h3>
+              <h3>Responsável</h3>
 
               <label>
                 Nome
@@ -3738,7 +3769,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                     })
                   }
                 >
-                  <option value="secretario">SecretÃƒÂ¡rio(a)</option>
+                  <option value="secretario">Secretário(a)</option>
                   <option value="superintendente">Superintendente</option>
                 </select>
               </label>
@@ -3776,7 +3807,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   onChange={(event) =>
                     setCadastroPiloto({ ...cadastroPiloto, senha: event.target.value })
                   }
-                  placeholder="MÃƒÂ­nimo 6 caracteres"
+                  placeholder="Mínimo 6 caracteres"
                   autoComplete="new-password"
                 />
               </label>
@@ -3798,7 +3829,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                CÃƒÂ³digo do piloto
+                Código do piloto
                 <input
                   type="text"
                   value={cadastroPiloto.codigoPiloto}
@@ -3808,7 +3839,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       codigoPiloto: event.target.value,
                     })
                   }
-                  placeholder="CÃƒÂ³digo informado no grupo"
+                  placeholder="Código informado no grupo"
                 />
               </label>
             </div>
@@ -3843,12 +3874,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   }
                 >
                   <option value="sede">Sede</option>
-                  <option value="congregacao">CongregaÃƒÂ§ÃƒÂ£o</option>
+                  <option value="congregacao">Congregação</option>
                 </select>
               </label>
 
               <label>
-                CongregaÃƒÂ§ÃƒÂ£o
+                Congregação
                 <input
                   type="text"
                   value={cadastroPiloto.congregacao}
@@ -3873,7 +3904,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       pastorDirigente: event.target.value,
                     })
                   }
-                  placeholder="Ex: Pr. JoÃƒÂ£o Silva"
+                  placeholder="Ex: Pr. João Silva"
                 />
               </label>
 
@@ -3912,7 +3943,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label className="campo-cadastro-piloto-largo">
-                EndereÃƒÂ§o
+                Endereço
                 <input
                   type="text"
                   value={cadastroPiloto.endereco}
@@ -3927,7 +3958,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                NÃƒÂºmero
+                Número
                 <input
                   type="text"
                   value={cadastroPiloto.numeroEndereco}
@@ -3952,7 +3983,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       complementoEndereco: event.target.value,
                     })
                   }
-                  placeholder="Opcional: sala, fundos, referÃƒÂªncia..."
+                  placeholder="Opcional: sala, fundos, referência..."
                 />
               </label>
 
@@ -3986,7 +4017,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label className="campo-cadastro-piloto-largo">
-                    EndereÃƒÂ§o da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={cadastroPiloto.sedeFiliadaEndereco}
@@ -4001,7 +4032,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label>
-                    NÃƒÂºmero da sede
+                    Número da sede
                     <input
                       type="text"
                       value={cadastroPiloto.sedeFiliadaNumero}
@@ -4056,7 +4087,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               type="submit"
               disabled={carregandoCadastroPiloto}
             >
-              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovaÃƒÂ§ÃƒÂ£o'}
+              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovação'}
             </button>
           </form>
         </section>
@@ -4078,16 +4109,16 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃƒÂ£o inteligente para Escola BÃƒÂ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">ÃƒÂrea segura do cliente</span>
+            <span className="selo-apresentacao">Área segura do cliente</span>
             <h2>Acesse o painel da sua igreja.</h2>
             <p>
               Entre com suas credenciais para gerenciar classes, alunos, chamadas,
-              configuraÃƒÂ§ÃƒÂµes e relatÃƒÂ³rios da Escola BÃƒÂ­blica Dominical.
+              configurações e relatórios da Escola Bíblica Dominical.
             </p>
           </div>
 
@@ -4106,7 +4137,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>RelatÃƒÂ³rios modernos</span>
+              <span>Relatórios modernos</span>
             </div>
           </div>
         </section>
@@ -4117,7 +4148,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             type="button"
             onClick={() => setTelaPublica('landing')}
           >
-            Ã¢â€ Â Voltar para apresentaÃƒÂ§ÃƒÂ£o
+            ← Voltar para apresentação
           </button>
 
           <div className="topo-cartao-login">
@@ -4125,13 +4156,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <Icone nome="usuarios" className="icone-status" />
             </div>
             <div>
-              <h2>JÃƒÂ¡ foi aprovado?</h2>
+              <h2>Já foi aprovado?</h2>
               <p>Entre com seu e-mail e senha para acessar o sistema.</p>
             </div>
           </div>
 
           <div className="aviso-login-aprovado">
-            Use o login abaixo somente se sua igreja jÃƒÂ¡ foi aprovada.
+            Use o login abaixo somente se sua igreja já foi aprovada.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -4167,22 +4198,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
               {carregandoLogin ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
-            <button
-              className="botao-voltar-publico"
-              type="button"
-              onClick={() => setTelaPublica('recuperarSenha')}
-              style={{ marginTop: '14px', width: '100%', justifyContent: 'center' }}
-            >
-              Esqueci minha senha
-            </button>
-
 
           <div className="bloco-criar-piloto bloco-cadastro-destaque">
             <span className="selo-primeiro-acesso">Primeiro acesso?</span>
             <h3>Cadastrar minha igreja</h3>
             <p>
-              Se vocÃƒÂª recebeu o cÃƒÂ³digo do piloto, cadastre sua igreja para anÃƒÂ¡lise
-              e aprovaÃƒÂ§ÃƒÂ£o do administrador.
+              Se você recebeu o código do piloto, cadastre sua igreja para análise
+              e aprovação do administrador.
             </p>
 
             <button
@@ -4294,7 +4316,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 </p>
 
                 <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                  <span>{'Ã¢â€ â€™'}</span> {'Entrar no sistema'}
+                  <span>{'→'}</span> {'Entrar no sistema'}
                 </button>
 
                 <div className="hero-stats">
@@ -4321,7 +4343,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 </div>
 
                 <div className="mockup-body">
-                  <div className="mockup-check">{'Ã¢Å“â€œ'}</div>
+                  <div className="mockup-check">{'✓'}</div>
                   <h3>{'Chamada digital'}</h3>
                   <p>{'Presen\u00e7a registrada em tempo real'}</p>
 
@@ -4562,7 +4584,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃƒÂ£o inteligente para Escola BÃƒÂ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
         </section>
@@ -4592,13 +4614,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃƒÂ£o da Escola BÃƒÂ­blica Dominical.</p>
+              <p>Gestão da Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Cadastro recebido</span>
-            <h2>Seu acesso estÃƒÂ¡ aguardando aprovaÃƒÂ§ÃƒÂ£o.</h2>
+            <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
               do sistema para o teste piloto.
@@ -4610,9 +4632,9 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <div className="mensagem-status-icone">
             <Icone nome="check" className="icone-status" />
           </div>
-          <h2>Aguardando aprovaÃƒÂ§ÃƒÂ£o</h2>
+          <h2>Aguardando aprovação</h2>
           <p>
-            Assim que sua igreja for aprovada, vocÃƒÂª poderÃƒÂ¡ entrar normalmente e comeÃƒÂ§ar
+            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
             os testes.
           </p>
           <button className="botao-secundario" onClick={sairDoSistema}>
@@ -4637,7 +4659,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃƒÂ£o inteligente para Escola BÃƒÂ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
         </section>
@@ -4745,7 +4767,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     }
 
     if (dias === 1) {
-      return 'AmanhÃƒÂ£'
+      return 'Amanhã'
     }
 
     return `Em ${dias} dias`
@@ -4797,17 +4819,17 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode cadastrar usuÃƒÂ¡rios.')
+      alert('Apenas a secretaria pode cadastrar usuários.')
       return
     }
 
     if (!novoPerfil.userId.trim()) {
-      alert('Informe o User UID do usuÃƒÂ¡rio criado no Supabase Auth.')
+      alert('Informe o User UID do usuário criado no Supabase Auth.')
       return
     }
 
     if (!novoPerfil.nome.trim() || !novoPerfil.email.trim()) {
-      alert('Informe o nome e o e-mail do usuÃƒÂ¡rio.')
+      alert('Informe o nome e o e-mail do usuário.')
       return
     }
 
@@ -4836,7 +4858,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       .single()
 
     if (error) {
-      mostrarErroSistema(error, 'Erro ao salvar usuÃƒÂ¡rio.')
+      mostrarErroSistema(error, 'Erro ao salvar usuário.')
       return
     }
 
@@ -4846,7 +4868,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       .eq('perfil_usuario_id', perfilSalvo.id)
 
     if (erroRemoverVinculos) {
-      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vÃƒÂ­nculos do professor.')
+      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vínculos do professor.')
       return
     }
 
@@ -4863,24 +4885,24 @@ Qualquer dificuldade, pode me chamar por aqui.`
         .insert(vinculosParaSalvar)
 
       if (erroInserirVinculos) {
-        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor ÃƒÂ s classes.')
+        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor às classes.')
         return
       }
     }
 
     await buscarTodosOsDados()
     cancelarFormularioPerfil()
-    alert('UsuÃƒÂ¡rio salvo com sucesso!')
+    alert('Usuário salvo com sucesso!')
   }
 
   async function excluirPerfilUsuario(perfil) {
     if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode excluir usuÃƒÂ¡rios.')
+      alert('Apenas a secretaria pode excluir usuários.')
       return
     }
 
     if (perfil.user_id === sessao?.user?.id) {
-      alert('VocÃƒÂª nÃƒÂ£o pode excluir o seu prÃƒÂ³prio perfil de secretaria.')
+      alert('Você não pode excluir o seu próprio perfil de secretaria.')
       return
     }
 
@@ -4918,7 +4940,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <h3>Enviar feedback para a equipe EBD Fiel</h3>
             <p>
               Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
-              O administrador do sistema receberÃƒÂ¡ um alerta na ÃƒÂ¡rea AdministraÃƒÂ§ÃƒÂ£o.
+              O administrador do sistema receberá um alerta na área Administração.
             </p>
           </div>
         </div>
@@ -4933,16 +4955,16 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
                 }
               >
-                <option value="sugestao">SugestÃƒÂ£o</option>
+                <option value="sugestao">Sugestão</option>
                 <option value="erro">Erro encontrado</option>
-                <option value="duvida">DÃƒÂºvida</option>
+                <option value="duvida">Dúvida</option>
                 <option value="elogio">Elogio</option>
               </select>
             </label>
 
             <div className="feedback-dica">
               <strong>Ajude a melhorar o piloto</strong>
-              <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que vocÃƒÂª esperava.</span>
+              <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
             </div>
           </div>
 
@@ -4966,7 +4988,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <div className="feedback-acoes">
             <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
               <span>{carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}</span>
-              <strong>Ã¢â€ â€™</strong>
+              <strong>→</strong>
             </button>
 
             <p>
@@ -4977,7 +4999,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         {feedbacksIgreja.length > 0 && (
           <div className="feedbacks-recentes-igreja">
-            <h4>ÃƒÅ¡ltimos feedbacks enviados</h4>
+            <h4>Últimos feedbacks enviados</h4>
 
             {feedbacksIgreja.slice(0, 4).map((feedback) => (
               <div className="feedback-recente-item" key={feedback.id}>
@@ -5007,8 +5029,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
             <h2>{buscarNomeIgrejaParaExibicao()}</h2>
             <p>
-              Controle classes, alunos, chamadas e relatÃƒÂ³rios da Escola BÃƒÂ­blica Dominical
-              com uma estrutura pronta para uso e comercializaÃƒÂ§ÃƒÂ£o.
+              Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
+              com uma estrutura pronta para uso e comercialização.
             </p>
 
             <div className="hero-acoes">
@@ -5018,11 +5040,11 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 </button>
               )}
               <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
-                Ver relatÃƒÂ³rios
+                Ver relatórios
               </button>
 
               <button className="botao-secundario botao-manual-painel" onClick={() => navegarParaPagina('manual')}>
-                Abrir manual do usuÃƒÂ¡rio
+                Abrir manual do usuário
               </button>
             </div>
           </div>
@@ -5031,14 +5053,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <div className="hero-icone-area">
               <Icone nome="biblia" className="icone-hero" />
             </div>
-            <h3>Resumo rÃƒÂ¡pido</h3>
+            <h3>Resumo rápido</h3>
             <p>Dados sincronizados automaticamente no Supabase.</p>
             <ul>
               <li>{classes.length} classes ativas</li>
               <li>{alunosSomente().length} alunos cadastrados</li>
               <li>{professoresSomente().length} professores cadastrados</li>
               <li>{chamadasSalvas.length} chamadas registradas</li>
-              <li>{calcularFrequenciaGeral()}% de frequÃƒÂªncia geral</li>
+              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
           </div>
         </div>
@@ -5067,13 +5089,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
             icone="chamada"
             titulo="Chamadas"
             valor={chamadasSalvas.length}
-            descricao="Registros salvos de presenÃƒÂ§a."
+            descricao="Registros salvos de presença."
           />
           <CardResumo
             icone="check"
-            titulo="FrequÃƒÂªncia geral"
+            titulo="Frequência geral"
             valor={`${calcularFrequenciaGeral()}%`}
-            descricao="MÃƒÂ©dia de presenÃƒÂ§a nas chamadas lanÃƒÂ§adas."
+            descricao="Média de presença nas chamadas lançadas."
             destaque
           />
         </div>
@@ -5095,18 +5117,18 @@ Qualquer dificuldade, pode me chamar por aqui.`
                     <div>
                       <strong>{pessoa.nome}</strong>
                       <p>
-                        {pessoa.tipo} Ã¢â‚¬Â¢ {pessoa.detalhe}
+                        {pessoa.tipo} • {pessoa.detalhe}
                       </p>
                     </div>
                     <span>
-                      {formatarDataNascimento(pessoa.dataNascimento)} Ã¢â‚¬Â¢ {descreverAniversario(pessoa.dias)}
+                      {formatarDataNascimento(pessoa.dataNascimento)} • {descreverAniversario(pessoa.dias)}
                     </span>
                   </div>
                 ))}
               </div>
             ) : (
               <p className="texto-sem-aniversariantes">
-                Nenhum aniversÃƒÂ¡rio cadastrado para os prÃƒÂ³ximos 7 dias.
+                Nenhum aniversário cadastrado para os próximos 7 dias.
               </p>
             )}
           </div>
@@ -5116,11 +5138,11 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         <div className="grade-resumos-comerciais">
           <div className="resumo resumo-comercial resumo-alerta-claro">
-            <h3>PersonalizaÃƒÂ§ÃƒÂ£o da igreja</h3>
+            <h3>Personalização da igreja</h3>
             <p>
               {configuracaoIgreja.nome_igreja
-                ? 'Os dados da igreja jÃƒÂ¡ estÃƒÂ£o configurados e serÃƒÂ£o usados nos relatÃƒÂ³rios e PDFs.'
-                : 'Preencha os dados da igreja em ConfiguraÃƒÂ§ÃƒÂµes para exibir nome, endereÃƒÂ§o e contatos nos relatÃƒÂ³rios.'}
+                ? 'Os dados da igreja já estão configurados e serão usados nos relatórios e PDFs.'
+                : 'Preencha os dados da igreja em Configurações para exibir nome, endereço e contatos nos relatórios.'}
             </p>
           </div>
         </div>
@@ -5150,8 +5172,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </h3>
             <p>
               {formularioProfessor
-                ? 'Este cadastro tambÃƒÂ©m aparece no menu Professores e na Chamada dos professores.'
-                : 'Este aluno serÃƒÂ¡ cadastrado diretamente na classe selecionada e aparecerÃƒÂ¡ na chamada dos alunos.'}
+                ? 'Este cadastro também aparece no menu Professores e na Chamada dos professores.'
+                : 'Este aluno será cadastrado diretamente na classe selecionada e aparecerá na chamada dos alunos.'}
             </p>
           </div>
         </div>
@@ -5170,7 +5192,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           </label>
 
           <label>
-            Classe de referÃƒÂªncia
+            Classe de referência
             <select
               value={novoAluno.classeId}
               onChange={(event) =>
@@ -5217,7 +5239,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <div className="grupo-botoes">
           <button className="botao-principal" type="submit">
             {alunoEditandoId
-              ? 'Salvar alteraÃƒÂ§ÃƒÂµes'
+              ? 'Salvar alterações'
               : formularioProfessor
                 ? 'Salvar professor'
                 : 'Salvar aluno'}
@@ -5240,7 +5262,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>O cadastro de classes ÃƒÂ© gerenciado pela secretaria.</p>
+          <p>O cadastro de classes é gerenciado pela secretaria.</p>
         </section>
       )
     }
@@ -5250,7 +5272,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <div className="topo-pagina">
           <div>
             <h2>Classes</h2>
-            <p>Organize as classes da EBD, veja matrÃƒÂ­culas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
+            <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
           </div>
 
           {!mostrarFormularioClasse && (
@@ -5267,7 +5289,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <h3>{classeEditandoId ? 'Alterar nome da classe' : 'Cadastrar nova classe'}</h3>
               <p>
                 {classeEditandoId
-                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarÃƒÂ£o nesta mesma turma.'
+                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarão nesta mesma turma.'
                   : 'Crie uma nova turma para organizar alunos, professores e chamadas da EBD.'}
               </p>
             </div>
@@ -5280,7 +5302,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 onChange={(event) =>
                   setNovaClasse({ ...novaClasse, nome: event.target.value })
                 }
-                placeholder="Ex: Jovens, Adultos, CrianÃƒÂ§as..."
+                placeholder="Ex: Jovens, Adultos, Crianças..."
                 autoFocus
               />
             </label>
@@ -5305,7 +5327,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
         <div className="aviso aviso-classes-professores aviso-classes-moderno">
           <p>
-            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrÃƒÂ­cula de cada turma.
+            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrícula de cada turma.
           </p>
         </div>
 
@@ -5335,7 +5357,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </p>
 
                   <p>
-                    <strong>MatrÃƒÂ­cula</strong>
+                    <strong>Matrícula</strong>
                     <span>{calcularMatriculaDaClasse(classe.id)} alunos</span>
                   </p>
                 </div>
@@ -5413,9 +5435,9 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
     const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
     const descricaoPagina = ehPaginaProfessor
-      ? 'Cadastre, edite e organize os professores. A classe de referÃƒÂªncia tambÃƒÂ©m atualiza a lista de professores em Classes.'
+      ? 'Cadastre, edite e organize os professores. A classe de referência também atualiza a lista de professores em Classes.'
       : usuarioEhProfessor()
-        ? 'Veja os alunos vinculados ÃƒÂ s suas classes.'
+        ? 'Veja os alunos vinculados às suas classes.'
         : 'Cadastre, edite, busque e organize os alunos por classe.'
 
     return (
@@ -5464,7 +5486,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </label>
 
             <label>
-              Classe de referÃƒÂªncia
+              Classe de referência
               <select
                 value={novoAluno.classeId}
                 onChange={(event) =>
@@ -5512,7 +5534,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {alunoEditandoId ? 'Salvar alteraÃƒÂ§ÃƒÂµes' : 'Salvar cadastro'}
+                {alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
               </button>
 
               <button
@@ -5574,7 +5596,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 <p>
                   Tipo: {(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}
                 </p>
-                <p>Classe de referÃƒÂªncia: {buscarNomeClasse(aluno.classeId)}</p>
+                <p>Classe de referência: {buscarNomeClasse(aluno.classeId)}</p>
                 {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
                 {aluno.dataNascimento && (
                   <p>Nascimento: {formatarDataNascimento(aluno.dataNascimento)}</p>
@@ -5618,7 +5640,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>O cadastro de usuÃƒÂ¡rios ÃƒÂ© gerenciado pela secretaria.</p>
+          <p>O cadastro de usuários é gerenciado pela secretaria.</p>
         </section>
       )
     }
@@ -5627,7 +5649,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>UsuÃƒÂ¡rios</h2>
+            <h2>Usuários</h2>
             <p>
               Cadastre secretarias e professores da igreja. O login precisa existir
               primeiro em Authentication no Supabase.
@@ -5636,15 +5658,15 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
           {!mostrarFormularioPerfil && (
             <button className="botao-principal" onClick={abrirNovoPerfil}>
-              Novo usuÃƒÂ¡rio
+              Novo usuário
             </button>
           )}
         </div>
 
         <div className="aviso aviso-usuarios">
           <p>
-            <strong>Importante:</strong> primeiro crie o usuÃƒÂ¡rio em
-            Supabase Ã¢â€ â€™ Authentication Ã¢â€ â€™ Users. Depois copie o User UID e cadastre
+            <strong>Importante:</strong> primeiro crie o usuário em
+            Supabase → Authentication → Users. Depois copie o User UID e cadastre
             aqui para vincular o perfil, a classe e a data de nascimento.
           </p>
         </div>
@@ -5757,7 +5779,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {perfilEditandoId ? 'Salvar alteraÃƒÂ§ÃƒÂµes' : 'Salvar usuÃƒÂ¡rio'}
+                {perfilEditandoId ? 'Salvar alterações' : 'Salvar usuário'}
               </button>
 
               <button
@@ -5826,7 +5848,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const professores = buscarProfessoresDaIgreja()
 
     if (professores.length === 0) {
-      alert('Ainda nÃƒÂ£o hÃƒÂ¡ professores cadastrados em UsuÃƒÂ¡rios.')
+      alert('Ainda não há professores cadastrados em Usuários.')
       return
     }
 
@@ -5901,7 +5923,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <h2>Chamada</h2>
             <p>
               {usuarioEhProfessor()
-                ? 'FaÃƒÂ§a a chamada das classes vinculadas pela secretaria.'
+                ? 'Faça a chamada das classes vinculadas pela secretaria.'
                 : 'Registre a chamada dos alunos e a chamada separada dos professores.'}
             </p>
           </div>
@@ -5955,7 +5977,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 </select>
                 {usuarioEhProfessor() && (
                   <small className="texto-ajuda-campo">
-                    VocÃƒÂª sÃƒÂ³ verÃƒÂ¡ as classes vinculadas pela secretaria.
+                    Você só verá as classes vinculadas pela secretaria.
                   </small>
                 )}
               </label>
@@ -5975,7 +5997,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label>
-                    BÃƒÂ­blias
+                    Bíblias
                     <input
                       type="number"
                       min="0"
@@ -6017,7 +6039,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
             {classeChamadaId && alunosDaClasse.length === 0 && (
               <div className="aviso">
-                <p>Essa classe ainda nÃƒÂ£o possui alunos cadastrados.</p>
+                <p>Essa classe ainda não possui alunos cadastrados.</p>
               </div>
             )}
 
@@ -6025,7 +6047,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <>
                 <div className="resumo-chamada">
                   <p>
-                    <strong>MatrÃƒÂ­cula:</strong> {alunosDaClasse.length}
+                    <strong>Matrícula:</strong> {alunosDaClasse.length}
                   </p>
 
                   <p>
@@ -6089,7 +6111,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 <strong>Professores cadastrados:</strong> {professoresDaIgreja.length}
               </p>
               <p>
-                <strong>ÃƒÅ¡ltima chamada:</strong> {buscarDataUltimaChamadaProfessores()}
+                <strong>Última chamada:</strong> {buscarDataUltimaChamadaProfessores()}
               </p>
               <p>
                 <strong>Chamadas salvas:</strong> {chamadasProfessores.length}
@@ -6099,7 +6121,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             {professoresDaIgreja.length === 0 && (
               <div className="aviso">
                 <p>
-                  Nenhum professor cadastrado. VÃƒÂ¡ em Alunos e Professores,
+                  Nenhum professor cadastrado. Vá em Alunos e Professores,
                   cadastre uma pessoa com tipo Professor.
                 </p>
               </div>
@@ -6113,7 +6135,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       <div>
                         <h3>{professor.nome}</h3>
                         {professor.telefone && <p>Telefone: {professor.telefone}</p>}
-                        <p>Classe de referÃƒÂªncia: {buscarNomeClasse(professor.classeId)}</p>
+                        <p>Classe de referência: {buscarNomeClasse(professor.classeId)}</p>
                       </div>
 
                       <div className="acoes-chamada acoes-chamada-professores">
@@ -6162,7 +6184,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
                 <div className="formulario formulario-observacao-professores">
                   <label>
-                    ObservaÃƒÂ§ÃƒÂµes da chamada dos professores
+                    Observações da chamada dos professores
                     <input
                       type="text"
                       value={observacoesChamadaProfessores}
@@ -6200,11 +6222,11 @@ Qualquer dificuldade, pode me chamar por aqui.`
       <section className="conteudo">
         <div className="topo-pagina no-print">
           <div>
-            <h2>RelatÃƒÂ³rios</h2>
+            <h2>Relatórios</h2>
             <p>
               {usuarioEhProfessor()
-                ? 'RelatÃƒÂ³rio da sua classe no modelo da Escola BÃƒÂ­blica Dominical.'
-                : 'RelatÃƒÂ³rio geral no modelo da Escola BÃƒÂ­blica Dominical.'}
+                ? 'Relatório da sua classe no modelo da Escola Bíblica Dominical.'
+                : 'Relatório geral no modelo da Escola Bíblica Dominical.'}
             </p>
           </div>
 
@@ -6225,17 +6247,17 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <div className="relatorios-dashboard no-print">
           <div className="relatorios-hero">
             <div>
-              <span className="selo-publico">RelatÃƒÂ³rios da EBD</span>
-              <h3>Resumo geral da Escola BÃƒÂ­blica Dominical</h3>
+              <span className="selo-publico">Relatórios da EBD</span>
+              <h3>Resumo geral da Escola Bíblica Dominical</h3>
               <p>
-                Acompanhe alunos, classes, frequÃƒÂªncia e presenÃƒÂ§a dos professores
-                com uma visualizaÃƒÂ§ÃƒÂ£o mais clara e moderna.
+                Acompanhe alunos, classes, frequência e presença dos professores
+                com uma visualização mais clara e moderna.
               </p>
             </div>
 
             <div className="relatorios-percentual">
               <strong>{calcularFrequenciaGeral()}%</strong>
-              <span>frequÃƒÂªncia geral</span>
+              <span>frequência geral</span>
             </div>
           </div>
 
@@ -6259,9 +6281,9 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </div>
 
             <div className="card card-relatorio-moderna destaque">
-              <span>FrequÃƒÂªncia</span>
+              <span>Frequência</span>
               <strong>{calcularFrequenciaGeral()}%</strong>
-              <p>mÃƒÂ©dia geral de presenÃƒÂ§a</p>
+              <p>média geral de presença</p>
             </div>
           </div>
 
@@ -6270,7 +6292,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <div className="cabecalho-relatorio-professores">
                 <div>
                   <span className="selo-publico">Professores</span>
-                  <h3>Resumo da ÃƒÂºltima chamada dos professores</h3>
+                  <h3>Resumo da última chamada dos professores</h3>
                   <p>Data da chamada: {formatarDataRelatorio(resumoProfessores.data)}</p>
                 </div>
 
@@ -6330,7 +6352,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               alt="Logo EBD Fiel"
               className="logo-relatorio"
             />
-            <h3>{configuracaoIgreja.nome_igreja || 'RelatÃƒÂ³rio do Domingo'}</h3>
+            <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
             {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
             {configuracaoIgreja.pastor_dirigente && (
               <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
@@ -6350,14 +6372,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <table className="tabela tabela-ebd">
               <thead>
                 <tr>
-                  <th>NÃ‚Âº</th>
+                  <th>Nº</th>
                   <th>Classes</th>
-                  <th>MatrÃƒÂ­cula</th>
-                  <th>AusÃƒÂªncia</th>
-                  <th>PresenÃƒÂ§a</th>
+                  <th>Matrícula</th>
+                  <th>Ausência</th>
+                  <th>Presença</th>
                   <th>Visitante</th>
                   <th>Total</th>
-                  <th>BÃƒÂ­blia</th>
+                  <th>Bíblia</th>
                   <th>Revista</th>
                   <th>Ofertas</th>
                   <th>%</th>
@@ -6402,18 +6424,18 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   <>
                     <tr className="linha-professores-titulo">
                       <td colSpan="11">
-                        CHAMADA DOS PROFESSORES Ã¢â‚¬Â¢ Total: {resumoProfessores.totalProfessores} Ã¢â‚¬Â¢
-                        Presentes: {resumoProfessores.presentes} Ã¢â‚¬Â¢ Faltaram:{' '}
-                        {resumoProfessores.faltaram} Ã¢â‚¬Â¢ Justificaram:{' '}
-                        {resumoProfessores.justificaram} Ã¢â‚¬Â¢ FrequÃƒÂªncia:{' '}
+                        CHAMADA DOS PROFESSORES • Total: {resumoProfessores.totalProfessores} •
+                        Presentes: {resumoProfessores.presentes} • Faltaram:{' '}
+                        {resumoProfessores.faltaram} • Justificaram:{' '}
+                        {resumoProfessores.justificaram} • Frequência:{' '}
                         {percentualProfessores}%
                       </td>
                     </tr>
 
                     <tr className="linha-professores-cabecalho">
-                      <td>NÃ‚Âº</td>
+                      <td>Nº</td>
                       <td>Professor</td>
-                      <td colSpan="3">Classe de referÃƒÂªncia</td>
+                      <td colSpan="3">Classe de referência</td>
                       <td colSpan="3">Status</td>
                       <td colSpan="3">Data</td>
                     </tr>
@@ -6435,7 +6457,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       ))
                     ) : (
                       <tr className="linha-professor-relatorio">
-                        <td colSpan="11">Nenhuma chamada de professor lanÃƒÂ§ada neste perÃƒÂ­odo.</td>
+                        <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
                       </tr>
                     )}
                   </>
@@ -6453,7 +6475,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>As configuraÃƒÂ§ÃƒÂµes da igreja sÃƒÂ£o gerenciadas pela secretaria.</p>
+          <p>As configurações da igreja são gerenciadas pela secretaria.</p>
         </section>
       )
     }
@@ -6462,8 +6484,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>ConfiguraÃƒÂ§ÃƒÂµes da Igreja</h2>
-            <p>Preencha os dados que aparecerÃƒÂ£o nos relatÃƒÂ³rios e PDFs.</p>
+            <h2>Configurações da Igreja</h2>
+            <p>Preencha os dados que aparecerão nos relatórios e PDFs.</p>
           </div>
         </div>
 
@@ -6477,19 +6499,19 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('nome_igreja', event.target.value)
                 }
-                placeholder="Ex: Assembleia de Deus MinistÃƒÂ©rio..."
+                placeholder="Ex: Assembleia de Deus Ministério..."
               />
             </label>
 
             <label>
-              CongregaÃƒÂ§ÃƒÂ£o / departamento
+              Congregação / departamento
               <input
                 type="text"
                 value={configuracaoIgreja.congregacao}
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('congregacao', event.target.value)
                 }
-                placeholder="Ex: Escola BÃƒÂ­blica Dominical"
+                placeholder="Ex: Escola Bíblica Dominical"
               />
             </label>
 
@@ -6504,7 +6526,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                     event.target.value
                   )
                 }
-                placeholder="Ex: Pr. JoÃƒÂ£o Silva"
+                placeholder="Ex: Pr. João Silva"
               />
             </label>
 
@@ -6533,7 +6555,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             </label>
 
             <label>
-              EndereÃƒÂ§o
+              Endereço
               <input
                 type="text"
                 value={configuracaoIgreja.endereco}
@@ -6564,7 +6586,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('cidade', event.target.value)
                 }
-                placeholder="Ex: SÃƒÂ£o Paulo"
+                placeholder="Ex: São Paulo"
               />
             </label>
 
@@ -6588,13 +6610,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
               type="submit"
               disabled={salvandoConfiguracaoIgreja}
             >
-              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configuraÃƒÂ§ÃƒÂµes'}
+              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configurações'}
             </button>
           </div>
         </form>
 
         <div className="resumo">
-          <h3>PrÃƒÂ©via do cabeÃƒÂ§alho</h3>
+          <h3>Prévia do cabeçalho</h3>
           <p>
             <strong>{buscarNomeIgrejaParaExibicao()}</strong>
           </p>
@@ -6649,7 +6671,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   <p>{feedback.mensagem}</p>
 
                   <small>
-                    {feedback.tipo} Ã¢â‚¬Â¢ {feedback.nome_usuario || feedback.email_usuario || 'UsuÃƒÂ¡rio'} Ã¢â‚¬Â¢{' '}
+                    {feedback.tipo} • {feedback.nome_usuario || feedback.email_usuario || 'Usuário'} •{' '}
                     {formatarDataHoraFeedback(feedback.created_at)}
                   </small>
                 </div>
@@ -6684,10 +6706,10 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <div className="admin-acessos-topo">
           <div>
             <span className="selo-admin">Igrejas e acessos</span>
-            <h3>Controle comercial de usuÃƒÂ¡rios</h3>
+            <h3>Controle comercial de usuários</h3>
             <p>
-              Vincule secretarias e professores ÃƒÂ s igrejas cadastradas. Para criar o login,
-              primeiro crie o usuÃƒÂ¡rio em Supabase Ã¢â€ â€™ Authentication Ã¢â€ â€™ Users e cole o User UID aqui.
+              Vincule secretarias e professores às igrejas cadastradas. Para criar o login,
+              primeiro crie o usuário em Supabase → Authentication → Users e cole o User UID aqui.
             </p>
           </div>
 
@@ -6719,7 +6741,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <div>
                 <h3>{acessoAdminEditandoUserId ? 'Editar acesso' : 'Novo acesso'}</h3>
                 <p>
-                  Este vÃƒÂ­nculo define qual igreja o usuÃƒÂ¡rio acessa e qual perfil ele terÃƒÂ¡ no sistema.
+                  Este vínculo define qual igreja o usuário acessa e qual perfil ele terá no sistema.
                 </p>
               </div>
             </div>
@@ -6800,7 +6822,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   onChange={(event) =>
                     setNovoAcessoAdmin({ ...novoAcessoAdmin, classeId: event.target.value })
                   }
-                  placeholder="Opcional, normalmente sÃƒÂ³ para professor"
+                  placeholder="Opcional, normalmente só para professor"
                 />
               </label>
 
@@ -6867,7 +6889,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
               <div className="acoes-acesso-admin">
                 <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
-                  Enviar recuperaÃƒÂ§ÃƒÂ£o
+                  Enviar recuperação
                 </button>
 
                 <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
@@ -6896,7 +6918,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>Esta ÃƒÂ¡rea ÃƒÂ© exclusiva para administradores do sistema.</p>
+          <p>Esta área é exclusiva para administradores do sistema.</p>
         </section>
       )
     }
@@ -6911,10 +6933,10 @@ Qualquer dificuldade, pode me chamar por aqui.`
       <section className="conteudo">
         <div className="topo-pagina topo-admin-sistema">
           <div>
-            <span className="selo-admin">AdministraÃƒÂ§ÃƒÂ£o do sistema</span>
-            <h2>AdministraÃƒÂ§ÃƒÂ£o comercial</h2>
+            <span className="selo-admin">Administração do sistema</span>
+            <h2>Administração comercial</h2>
             <p>
-              Gerencie igrejas, sedes, congregaÃƒÂ§ÃƒÂµes, acessos, status do piloto, recuperaÃƒÂ§ÃƒÂ£o de senha e feedbacks em um ÃƒÂºnico painel.
+              Gerencie igrejas, sedes, congregações, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
             </p>
           </div>
 
@@ -6935,7 +6957,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <div className="card card-admin">
             <span>Pendentes</span>
             <strong>{igrejasPendentes}</strong>
-            <p>aguardando aprovaÃƒÂ§ÃƒÂ£o</p>
+            <p>aguardando aprovação</p>
           </div>
 
           <div className="card card-admin">
@@ -6967,8 +6989,8 @@ Qualquer dificuldade, pode me chamar por aqui.`
               <div>
                 <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja do piloto'}</h3>
                 <p>
-                  Cadastre a igreja com endereÃƒÂ§o completo, tipo de igreja e vÃƒÂ­nculo com a sede.
-                  Depois crie o usuÃƒÂ¡rio em Supabase Ã¢â€ â€™ Authentication Ã¢â€ â€™ Users e vincule o acesso.
+                  Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
+                  Depois crie o usuário em Supabase → Authentication → Users e vincule o acesso.
                 </p>
               </div>
             </div>
@@ -6990,7 +7012,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                CongregaÃƒÂ§ÃƒÂ£o
+                Congregação
                 <input
                   type="text"
                   value={novaIgrejaAdmin.congregacao}
@@ -7015,7 +7037,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       pastor_dirigente: event.target.value,
                     })
                   }
-                  placeholder="Ex: Pr. JoÃƒÂ£o Silva"
+                  placeholder="Ex: Pr. João Silva"
                 />
               </label>
 
@@ -7082,7 +7104,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label className="campo-sede-filiada">
-                EndereÃƒÂ§o da igreja
+                Endereço da igreja
                 <input
                   type="text"
                   value={novaIgrejaAdmin.endereco}
@@ -7097,7 +7119,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                NÃƒÂºmero
+                Número
                 <input
                   type="text"
                   value={novaIgrejaAdmin.numero_endereco}
@@ -7153,7 +7175,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   }
                 >
                   <option value="sede">Sede</option>
-                  <option value="congregacao">CongregaÃƒÂ§ÃƒÂ£o</option>
+                  <option value="congregacao">Congregação</option>
                 </select>
               </label>
 
@@ -7175,7 +7197,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label className="campo-sede-filiada">
-                    EndereÃƒÂ§o da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={novaIgrejaAdmin.sede_filiada_endereco}
@@ -7190,7 +7212,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </label>
 
                   <label>
-                    NÃƒÂºmero da sede
+                    Número da sede
                     <input
                       type="text"
                       value={novaIgrejaAdmin.sede_filiada_numero}
@@ -7265,7 +7287,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                ResponsÃƒÂ¡vel
+                Responsável
                 <input
                   type="text"
                   value={novaIgrejaAdmin.responsavel_nome}
@@ -7275,12 +7297,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       responsavel_nome: event.target.value,
                     })
                   }
-                  placeholder="Nome da secretaria responsÃƒÂ¡vel"
+                  placeholder="Nome da secretaria responsável"
                 />
               </label>
 
               <label>
-                E-mail do responsÃƒÂ¡vel
+                E-mail do responsável
                 <input
                   type="email"
                   value={novaIgrejaAdmin.responsavel_email}
@@ -7294,7 +7316,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                WhatsApp do responsÃƒÂ¡vel
+                WhatsApp do responsável
                 <input
                   type="text"
                   value={novaIgrejaAdmin.responsavel_whatsapp}
@@ -7309,7 +7331,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                Limite de usuÃƒÂ¡rios
+                Limite de usuários
                 <input
                   type="number"
                   min="1"
@@ -7324,7 +7346,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label>
-                InÃƒÂ­cio do piloto
+                Início do piloto
                 <input
                   type="date"
                   value={novaIgrejaAdmin.data_inicio_piloto}
@@ -7352,7 +7374,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               </label>
 
               <label className="campo-observacoes-admin">
-                ObservaÃƒÂ§ÃƒÂµes do piloto
+                Observações do piloto
                 <input
                   type="text"
                   value={novaIgrejaAdmin.observacoes_piloto}
@@ -7369,7 +7391,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {igrejaAdminEditandoId ? 'Salvar alteraÃƒÂ§ÃƒÂµes' : 'Salvar igreja'}
+                {igrejaAdminEditandoId ? 'Salvar alterações' : 'Salvar igreja'}
               </button>
 
               <button
@@ -7390,7 +7412,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
               type="text"
               value={buscaIgrejaAdmin}
               onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
-              placeholder="Buscar por igreja, congregaÃƒÂ§ÃƒÂ£o, responsÃƒÂ¡vel ou e-mail"
+              placeholder="Buscar por igreja, congregação, responsável ou e-mail"
             />
           </label>
 
@@ -7410,18 +7432,18 @@ Qualquer dificuldade, pode me chamar por aqui.`
                   </span>
                   {igreja.status_piloto === 'pendente' && (
                     <span className="selo-aguardando-aprovacao">
-                      aguardando decisÃƒÂ£o
+                      aguardando decisão
                     </span>
                   )}
                 </div>
 
-                {igreja.congregacao && <p>CongregaÃƒÂ§ÃƒÂ£o: {igreja.congregacao}</p>}
+                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
                 {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
                 <div className="dados-igreja-admin">
                   <p>
                     Tipo:{' '}
                     <strong>
-                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'CongregaÃƒÂ§ÃƒÂ£o'}
+                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
                     </strong>
                   </p>
 
@@ -7434,11 +7456,11 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
                   {(igreja.endereco || igreja.bairro || igreja.cep) && (
                     <p>
-                      EndereÃƒÂ§o: {igreja.endereco}
-                      {igreja.numero_endereco ? `, nÃ‚Âº ${igreja.numero_endereco}` : ''}
+                      Endereço: {igreja.endereco}
+                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
                       {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
                       {igreja.bairro ? `, ${igreja.bairro}` : ''}
-                      {igreja.cep ? ` Ã¢â‚¬Â¢ CEP ${igreja.cep}` : ''}
+                      {igreja.cep ? ` • CEP ${igreja.cep}` : ''}
                     </p>
                   )}
 
@@ -7450,21 +7472,21 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
                   {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
                     <p>
-                      EndereÃƒÂ§o da sede: {igreja.sede_filiada_endereco}
-                      {igreja.sede_filiada_numero ? `, nÃ‚Âº ${igreja.sede_filiada_numero}` : ''}
+                      Endereço da sede: {igreja.sede_filiada_endereco}
+                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
                       {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
-                      {igreja.sede_filiada_cep ? ` Ã¢â‚¬Â¢ CEP ${igreja.sede_filiada_cep}` : ''}
+                      {igreja.sede_filiada_cep ? ` • CEP ${igreja.sede_filiada_cep}` : ''}
                     </p>
                   )}
                 </div>
 
-                {igreja.responsavel_nome && <p>ResponsÃƒÂ¡vel: {igreja.responsavel_nome}</p>}
+                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
                 <p>Acessos vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
-                    Piloto: {igreja.data_inicio_piloto || 'sem inÃƒÂ­cio'} atÃƒÂ©{' '}
+                    Piloto: {igreja.data_inicio_piloto || 'sem início'} até{' '}
                     {igreja.data_fim_piloto || 'sem fim'}
                   </p>
                 )}
@@ -7484,7 +7506,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
                       className="botao-nao-aprovar-igreja"
                       onClick={() => naoAprovarIgrejaPiloto(igreja)}
                     >
-                      NÃƒÂ£o aprovar
+                      Não aprovar
                     </button>
                   </div>
                 )}
@@ -7551,14 +7573,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
         numero: '01',
         titulo: 'Confira os dados da igreja',
         texto:
-          'Ao entrar no sistema, confira se o nome da igreja, congregaÃƒÂ§ÃƒÂ£o, dirigente, cidade e demais dados estÃƒÂ£o corretos.',
-        local: 'Painel ou ConfiguraÃƒÂ§ÃƒÂµes',
+          'Ao entrar no sistema, confira se o nome da igreja, congregação, dirigente, cidade e demais dados estão corretos.',
+        local: 'Painel ou Configurações',
       },
       {
         numero: '02',
         titulo: 'Cadastre as classes da EBD',
         texto:
-          'Crie as turmas da Escola BÃƒÂ­blica Dominical. Exemplo: CrianÃƒÂ§as, Adolescentes, Jovens, Adultos, Novos Convertidos.',
+          'Crie as turmas da Escola Bíblica Dominical. Exemplo: Crianças, Adolescentes, Jovens, Adultos, Novos Convertidos.',
         local: 'Menu Classes',
       },
       {
@@ -7572,21 +7594,21 @@ Qualquer dificuldade, pode me chamar por aqui.`
         numero: '04',
         titulo: 'Cadastre os professores',
         texto:
-          'Cadastre os professores da EBD e vincule cada professor ÃƒÂ  classe em que ele atua. Uma classe pode ter mais de um professor.',
+          'Cadastre os professores da EBD e vincule cada professor à classe em que ele atua. Uma classe pode ter mais de um professor.',
         local: 'Menu Professores ou Classes',
       },
       {
         numero: '05',
-        titulo: 'FaÃƒÂ§a a chamada dos alunos',
+        titulo: 'Faça a chamada dos alunos',
         texto:
-          'Na data da EBD, registre presenÃƒÂ§a, falta, visitantes, BÃƒÂ­blias, revistas, ofertas e demais informaÃƒÂ§ÃƒÂµes da chamada.',
+          'Na data da EBD, registre presença, falta, visitantes, Bíblias, revistas, ofertas e demais informações da chamada.',
         local: 'Menu Chamada',
       },
       {
         numero: '06',
-        titulo: 'FaÃƒÂ§a a chamada dos professores',
+        titulo: 'Faça a chamada dos professores',
         texto:
-          'Registre tambÃƒÂ©m a presenÃƒÂ§a dos professores em uma chamada separada, facilitando o acompanhamento da equipe docente.',
+          'Registre também a presença dos professores em uma chamada separada, facilitando o acompanhamento da equipe docente.',
         local: 'Menu Chamada',
       },
       {
@@ -7598,16 +7620,16 @@ Qualquer dificuldade, pode me chamar por aqui.`
       },
       {
         numero: '08',
-        titulo: 'Gere relatÃƒÂ³rios',
+        titulo: 'Gere relatórios',
         texto:
-          'Depois de registrar as chamadas, gere o relatÃƒÂ³rio em PDF com os dados da EBD, incluindo alunos e professores.',
-        local: 'Menu RelatÃƒÂ³rios',
+          'Depois de registrar as chamadas, gere o relatório em PDF com os dados da EBD, incluindo alunos e professores.',
+        local: 'Menu Relatórios',
       },
       {
         numero: '09',
         titulo: 'Envie feedback do piloto',
         texto:
-          'Durante o teste piloto, envie sugestÃƒÂµes, dÃƒÂºvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
+          'Durante o teste piloto, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
         local: 'Painel',
       },
     ]
@@ -7617,15 +7639,15 @@ Qualquer dificuldade, pode me chamar por aqui.`
         <div className="manual-hero">
           <div>
             <span className="selo-manual">Primeiros passos</span>
-            <h2>Manual do usuÃƒÂ¡rio EBD Fiel</h2>
+            <h2>Manual do usuário EBD Fiel</h2>
             <p>
-              Siga este roteiro para configurar sua igreja e comeÃƒÂ§ar a usar o sistema
-              na rotina da Escola BÃƒÂ­blica Dominical.
+              Siga este roteiro para configurar sua igreja e começar a usar o sistema
+              na rotina da Escola Bíblica Dominical.
             </p>
           </div>
 
           <button className="botao-principal" onClick={() => navegarParaPagina('classes')}>
-            ComeÃƒÂ§ar pelas classes
+            Começar pelas classes
           </button>
         </div>
 
@@ -7633,7 +7655,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           <strong>Ordem recomendada:</strong>
           <span>
             primeiro confira os dados da igreja, depois cadastre classes, alunos,
-            professores, faÃƒÂ§a a chamada e gere os relatÃƒÂ³rios.
+            professores, faça a chamada e gere os relatórios.
           </span>
         </div>
 
@@ -7656,7 +7678,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <h3>Dica para o teste piloto</h3>
             <p>
               Use o sistema em uma rotina real da EBD e envie feedback sempre que
-              encontrar algo confuso, difÃƒÂ­cil ou que possa melhorar.
+              encontrar algo confuso, difícil ou que possa melhorar.
             </p>
           </div>
 
@@ -7708,7 +7730,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
           </div>
           <div>
             <h1>EBD Fiel</h1>
-            <p>GestÃƒÂ£o da Escola BÃƒÂ­blica</p>
+            <p>Gestão da Escola Bíblica</p>
           </div>
         </div>
 
@@ -7747,12 +7769,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
             <div>
               <span>Modo suporte ativo</span>
               <strong>
-                VocÃƒÂª estÃƒÂ¡ visualizando a igreja{' '}
+                Você está visualizando a igreja{' '}
                 {igrejaSuporteAdmin?.nome_igreja ||
                   igrejaAtualPiloto?.nome_igreja ||
                   buscarNomeIgrejaParaExibicao()}
               </strong>
-              <p>VocÃƒÂª continua logado como administrador do sistema.</p>
+              <p>Você continua logado como administrador do sistema.</p>
             </div>
 
             <button className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
