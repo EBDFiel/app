@@ -1710,6 +1710,66 @@ Qualquer dificuldade, pode me chamar por aqui.`
     }
   }
 
+  function buscarIgrejaAdminPorId(igrejaId) {
+    return igrejasAdmin.find((item) => Number(item.id) === Number(igrejaId)) || null
+  }
+
+  function buscarContatoIgrejaAdmin(igrejaId) {
+    const igreja = buscarIgrejaAdminPorId(igrejaId)
+
+    if (!igreja) {
+      return {
+        responsavel: '',
+        email: '',
+        whatsapp: '',
+        telefone: '',
+      }
+    }
+
+    return {
+      responsavel: igreja.responsavel_nome || '',
+      email: igreja.responsavel_email || igreja.email || '',
+      whatsapp: igreja.responsavel_whatsapp || '',
+      telefone: igreja.telefone || '',
+    }
+  }
+
+  function copiarContatoAcessoAdmin(acesso) {
+    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+    const texto = [
+      `Nome: ${acesso.nome || contato.responsavel || 'NÃ£o informado'}`,
+      `E-mail de acesso: ${acesso.email || 'NÃ£o informado'}`,
+      `Igreja: ${buscarNomeIgrejaAdmin(acesso.igreja_id)}`,
+      `ResponsÃ¡vel: ${contato.responsavel || 'NÃ£o informado'}`,
+      `WhatsApp: ${contato.whatsapp || 'NÃ£o informado'}`,
+      `Telefone: ${contato.telefone || 'NÃ£o informado'}`,
+      `E-mail da igreja/responsÃ¡vel: ${contato.email || 'NÃ£o informado'}`,
+    ].join('\n')
+
+    navigator.clipboard
+      ?.writeText(texto)
+      .then(() => alert('Contato copiado.'))
+      .catch(() => window.prompt('Copie os dados abaixo:', texto))
+  }
+
+  function abrirWhatsAppAcessoAdmin(acesso) {
+    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+    const numero = limparNumeroWhatsApp(contato.whatsapp || contato.telefone)
+
+    if (!numero) {
+      alert('NÃ£o hÃ¡ WhatsApp/telefone cadastrado para este acesso.')
+      return
+    }
+
+    const numeroComPais = numero.startsWith('55') ? numero : `55${numero}`
+    const mensagem = encodeURIComponent(
+      `Paz do Senhor! Aqui Ã© o suporte do EBD Fiel. Estou entrando em contato sobre o acesso da igreja ${buscarNomeIgrejaAdmin(acesso.igreja_id)}.`
+    )
+
+    window.open(`https://wa.me/${numeroComPais}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
+  }
+
+
   function filtrarIgrejasAdmin() {
     const termo = buscaIgrejaAdmin.toLowerCase()
 
@@ -4521,7 +4581,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                 </div>
 
                 <div className="mockup-body">
-                  <div className="mockup-check">{'âœ“'}</div>
+                  <div className="mockup-check">{'\u2713'}</div>
                   <h3>{'Chamada digital'}</h3>
                   <p>{'Presen\u00e7a registrada em tempo real'}</p>
 
@@ -7205,7 +7265,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
               type="text"
               value={buscaAcessoAdmin}
               onChange={(event) => setBuscaAcessoAdmin(event.target.value)}
-              placeholder="Buscar por nome, e-mail, perfil ou igreja"
+              placeholder="Buscar por nome, e-mail, telefone, WhatsApp, perfil ou igreja"
             />
           </label>
 
@@ -7225,12 +7285,45 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
                 <p>{acesso.email}</p>
                 <p>Igreja: {buscarNomeIgrejaAdmin(acesso.igreja_id)}</p>
+
+                {(() => {
+                  const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+
+                  return (
+                    <div className="contato-acesso-admin">
+                      {contato.responsavel && (
+                        <p>ResponsÃ¡vel: {contato.responsavel}</p>
+                      )}
+
+                      {contato.whatsapp && (
+                        <p>WhatsApp: {contato.whatsapp}</p>
+                      )}
+
+                      {contato.telefone && contato.telefone !== contato.whatsapp && (
+                        <p>Telefone: {contato.telefone}</p>
+                      )}
+
+                      {contato.email && contato.email !== acesso.email && (
+                        <p>E-mail da igreja: {contato.email}</p>
+                      )}
+                    </div>
+                  )
+                })()}
+
                 <small>User UID: {acesso.user_id}</small>
               </div>
 
               <div className="acoes-acesso-admin">
                 <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
                   Enviar recuperaÃ§Ã£o
+                </button>
+
+                <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
+                  WhatsApp
+                </button>
+
+                <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
+                  Copiar contato
                 </button>
 
                 <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
