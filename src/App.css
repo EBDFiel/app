@@ -10872,3 +10872,35 @@ button.botao-principal {
   font-weight: 950;
   color: #10b981;
 }
+
+
+/* Cadastro: DDD separado e estado em lista suspensa */
+.campo-telefone-cadastro {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.campo-telefone-cadastro input {
+  width: 100%;
+}
+
+.formulario-cadastro-piloto select,
+.formulario select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .campo-telefone-cadastro {
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 10px;
+  }
+}
