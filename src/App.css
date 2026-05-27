@@ -10744,3 +10744,101 @@ button.botao-principal {
 .cabecalho-relatorio p {
   line-height: 1.35;
 }
+
+
+/* Respostas aos feedbacks do piloto */
+.feedback-admin-conteudo {
+  min-width: 0;
+}
+
+.acoes-feedback-admin {
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 170px;
+}
+
+.acoes-feedback-admin button {
+  width: 100%;
+}
+
+.feedback-responder-box {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.feedback-responder-box label {
+  display: grid;
+  gap: 8px;
+  color: #003B66;
+  font-weight: 900;
+}
+
+.feedback-responder-box textarea {
+  width: 100%;
+  min-height: 110px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 12px 14px;
+  resize: vertical;
+  font: inherit;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.feedback-responder-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.feedback-resposta-admin,
+.feedback-resposta-igreja {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #fffbe8;
+  border: 1px solid rgba(255, 210, 0, 0.35);
+}
+
+.feedback-resposta-admin strong,
+.feedback-resposta-igreja strong {
+  display: block;
+  color: #8a5b00;
+  margin-bottom: 4px;
+}
+
+.feedback-resposta-admin p,
+.feedback-resposta-igreja p {
+  margin: 4px 0;
+  color: #334155;
+}
+
+.feedback-com-resposta {
+  border-color: rgba(0, 140, 68, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(0, 140, 68, 0.10), transparent 34%),
+    #ffffff;
+}
+
+.feedback-aguardando-resposta {
+  display: inline-block;
+  margin-top: 8px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+@media (max-width: 800px) {
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-feedback-admin {
+    width: 100%;
+    min-width: 0;
+  }
+}
