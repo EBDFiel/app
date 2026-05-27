@@ -359,10 +359,13 @@ function App() {
   ]
 
 
+
   function corrigirTextoQuebrado(valor) {
     if (!valor || typeof valor !== 'string') {
       return valor
     }
+
+    let textoCorrigido = valor
 
     const correcoes = {
       'BÃƒÂ­blica': 'BÃ­blica',
@@ -414,6 +417,8 @@ function App() {
       'pÃƒÂºblico': 'pÃºblico',
       'LiberaÃƒÂ§ÃƒÂ£o': 'LiberaÃ§Ã£o',
       'liberaÃƒÂ§ÃƒÂ£o': 'liberaÃ§Ã£o',
+      'ResponsÃƒÂ¡vel': 'ResponsÃ¡vel',
+      'responsÃƒÂ¡vel': 'responsÃ¡vel',
       'ÃƒÂrea': 'Ãrea',
       'ÃƒÂ¡rea': 'Ã¡rea',
       'JÃƒÂ¡': 'JÃ¡',
@@ -422,6 +427,9 @@ function App() {
       'sÃƒÂ£o': 'sÃ£o',
       'NÃƒÂ£o': 'NÃ£o',
       'nÃƒÂ£o': 'nÃ£o',
+      'VocÃƒÂª': 'VocÃª',
+      'vocÃƒÂª': 'vocÃª',
+      'cÃƒÂ³digo': 'cÃ³digo',
       'ÃƒÂºnico': 'Ãºnico',
       'ÃƒÂ©': 'Ã©',
       'Ãƒ ': 'Ã ',
@@ -448,18 +456,42 @@ function App() {
       'Ã‚': '',
     }
 
-    return Object.entries(correcoes).reduce(
-      (texto, [errado, certo]) => texto.split(errado).join(certo),
-      valor
-    )
+    Object.entries(correcoes).forEach(([errado, certo]) => {
+      textoCorrigido = textoCorrigido.split(errado).join(certo)
+    })
+
+    function tentarDecodificarMojibake(texto) {
+      if (!/[ÃƒÃ‚Ã¢]/.test(texto)) {
+        return texto
+      }
+
+      try {
+        const decodificado = decodeURIComponent(escape(texto))
+        if (decodificado && decodificado !== texto && !/[ÃƒÃ‚Ã¢]/.test(decodificado)) {
+          return decodificado
+        }
+      } catch {
+        return texto
+      }
+
+      return texto
+    }
+
+    textoCorrigido = tentarDecodificarMojibake(textoCorrigido)
+    textoCorrigido = tentarDecodificarMojibake(textoCorrigido)
+
+    return textoCorrigido
   }
 
   function corrigirTextosDaTela() {
-    if (typeof document === 'undefined') {
+    if (typeof document === 'undefined' || !document.body) {
       return
     }
 
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+    const walker = document.createTreeWalker(
+      document.body,
+      window.NodeFilter ? window.NodeFilter.SHOW_TEXT : 4
+    )
 
     const nodes = []
     while (walker.nextNode()) {
@@ -476,9 +508,6 @@ function App() {
     document.querySelectorAll('input, textarea').forEach((campo) => {
       if (campo.placeholder) {
         campo.placeholder = corrigirTextoQuebrado(campo.placeholder)
-      }
-      if (campo.value && campo.getAttribute('data-corrigir-texto') === 'true') {
-        campo.value = corrigirTextoQuebrado(campo.value)
       }
     })
 
@@ -498,12 +527,14 @@ function App() {
   useEffect(() => {
     corrigirTextosDaTela()
 
-    if (typeof document === 'undefined') {
+    if (typeof document === 'undefined' || !document.body) {
       return undefined
     }
 
+    const intervalId = window.setInterval(corrigirTextosDaTela, 300)
+
     const observer = new MutationObserver(() => {
-      corrigirTextosDaTela()
+      window.requestAnimationFrame(corrigirTextosDaTela)
     })
 
     observer.observe(document.body, {
@@ -514,7 +545,10 @@ function App() {
       attributeFilter: ['placeholder', 'title', 'aria-label', 'alt'],
     })
 
-    return () => observer.disconnect()
+    return () => {
+      window.clearInterval(intervalId)
+      observer.disconnect()
+    }
   }, [paginaAtual, telaPublica, sessao, carregando, verificandoSessao, igrejasAdmin, acessosAdmin, classes, alunos, perfilUsuario])
 
 
