@@ -1,11819 +1,8587 @@
-* {
-  box-sizing: border-box;
-}
-
-:root {
-  color-scheme: light;
-  --cor-fundo: #f4f7fb;
-  --cor-fundo-secundario: #eef3fb;
-  --cor-superficie: #ffffff;
-  --cor-superficie-escura: #0f172a;
-  --cor-superficie-escura-2: #111c36;
-  --cor-primaria: #2563eb;
-  --cor-primaria-escura: #1d4ed8;
-  --cor-primaria-clara: #dbeafe;
-  --cor-sucesso: #16a34a;
-  --cor-sucesso-clara: #dcfce7;
-  --cor-borda: #dbe2ea;
-  --cor-borda-forte: #bfdbfe;
-  --cor-texto: #0f172a;
-  --cor-texto-suave: #475569;
-  --cor-texto-claro: #e2e8f0;
-  --cor-perigo: #dc2626;
-  --cor-perigo-clara: #fee2e2;
-  --sombra-padrao: 0 18px 40px rgba(15, 23, 42, 0.08);
-  --sombra-suave: 0 10px 24px rgba(15, 23, 42, 0.06);
-  --raio-grande: 24px;
-  --raio-medio: 18px;
-  --raio-pequeno: 12px;
-}
-
-html,
-body,
-#root {
-  min-height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
-  color: var(--cor-texto);
-}
-
-button,
-input,
-select {
-  font: inherit;
-}
-
-button:disabled {
-  opacity: 0.75;
-  cursor: not-allowed;
-}
-
-.app {
-  min-height: 100vh;
-  display: flex;
-  background: transparent;
-}
-
-.tela-login {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(320px, 1.2fr) minmax(320px, 460px);
-  background: linear-gradient(135deg, #f7faff 0%, #eef4ff 50%, #f8fbff 100%);
-}
-
-.tela-mensagem {
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 420px);
-}
-
-.painel-apresentacao {
-  padding: 56px;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.22), transparent 32%),
-    linear-gradient(135deg, #0f172a 0%, #172554 55%, #1d4ed8 100%);
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-.marca-login,
-.marca-sidebar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.marca-login h1,
-.marca-sidebar h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.marca-login p,
-.marca-sidebar p {
-  margin: 4px 0 0;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.logo-simbolo {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  background: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
-  overflow: hidden;
-}
-
-.logo-simbolo-sidebar {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: #ffffff;
-}
-
-.icone-logo {
-  width: 28px;
-  height: 28px;
-}
-
-.logo-imagem {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 14px;
-}
-
-.logo-relatorio {
-  width: 76px;
-  height: 76px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 8px;
-}
-
-
-.apresentacao-texto {
-  display: grid;
-  gap: 18px;
-  max-width: 640px;
-}
-
-.selo-apresentacao,
-.hero-tag {
-  display: inline-flex;
-  width: fit-content;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.selo-apresentacao {
-  background: rgba(255, 255, 255, 0.14);
-  color: #dbeafe;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-}
-
-.apresentacao-texto h2 {
-  margin: 0;
-  font-size: 44px;
-  line-height: 1.1;
-}
-
-.apresentacao-texto p {
-  margin: 0;
-  font-size: 18px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.beneficios-login {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.beneficio-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.11);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.icone-beneficio,
-.icone-status,
-.icone-svg,
-.icone-hero {
-  width: 22px;
-  height: 22px;
-}
-
-.cartao-login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 48px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.4);
-}
-
-.topo-cartao-login {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.topo-cartao-login h2,
-.cartao-mensagem h2 {
-  margin: 0 0 6px;
-  font-size: 30px;
-}
-
-.topo-cartao-login p,
-.cartao-mensagem p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  line-height: 1.6;
-}
-
-.topo-cartao-icone,
-.mensagem-status-icone {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
-}
-
-.mensagem-erro-icone {
-  background: #ffe4e6;
-  color: var(--cor-perigo);
-}
-
-.cartao-mensagem {
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.formulario {
-  margin-top: 24px;
-  background: #f8fbff;
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-medio);
-  padding: 24px;
-  display: grid;
-  gap: 16px;
-}
-
-.formulario-login {
-  margin-top: 0;
-  background: var(--cor-superficie);
-  box-shadow: var(--sombra-suave);
-}
-
-.formulario label,
-.filtros label {
-  display: grid;
-  gap: 8px;
-  font-weight: 700;
-  color: var(--cor-texto);
-}
-
-.formulario input,
-.formulario select,
-.filtros input,
-.filtros select {
-  width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #cfd8e3;
-  border-radius: 12px;
-  font-size: 15px;
-  background: #ffffff;
-  color: var(--cor-texto);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.formulario input:focus,
-.formulario select:focus,
-.filtros input:focus,
-.filtros select:focus {
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-}
-
-.botao-principal,
-.botao-secundario,
-.botao-editar,
-.botao-excluir,
-.botao-presenca,
-.botao-falta {
-  border-radius: 12px;
-  padding: 12px 18px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 700;
-  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease,
-    color 0.16s ease, box-shadow 0.16s ease;
-}
-
-.botao-principal:hover,
-.botao-secundario:hover,
-.botao-editar:hover,
-.botao-excluir:hover,
-.botao-presenca:hover,
-.botao-falta:hover {
-  transform: translateY(-1px);
-}
-
-.botao-principal {
-  margin-top: 20px;
-  border: none;
-  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-escura) 100%);
-  color: white;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
-}
-
-.botao-principal:hover {
-  background: linear-gradient(135deg, var(--cor-primaria-escura) 0%, #1e40af 100%);
-}
-
-.botao-largura-total {
-  width: 100%;
-}
-
-.botao-secundario {
-  margin-top: 20px;
-  border: 1px solid var(--cor-borda);
-  background: white;
-  color: var(--cor-texto);
-}
-
-.botao-secundario:hover {
-  background: #f8fafc;
-}
-
-.menu-lateral {
-  width: 280px;
-  background: linear-gradient(180deg, #081224 0%, #0f1b34 100%);
-  color: white;
-  padding: 28px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  border-right: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.menu-navegacao,
-.menu-lateral nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.menu-lateral button {
-  width: 100%;
-  border: none;
-  background: transparent;
-  color: #dbe4f2;
-  padding: 13px 14px;
-  text-align: left;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.menu-lateral button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
-
-.menu-lateral button.ativo {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(59, 130, 246, 0.95));
-  color: white;
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
-}
-
-.icone-menu {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.cartao-usuario-sidebar {
-  margin-top: auto;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: grid;
-  gap: 10px;
-}
-
-.titulo-usuario-sidebar {
-  margin: 0;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #93a4c2;
-}
-
-.cartao-usuario-sidebar strong {
-  color: white;
-  font-size: 14px;
-  word-break: break-word;
-}
-
-.botao-sair-sidebar {
-  margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.area-principal {
-  flex: 1;
-  padding: 28px;
-}
-
-.conteudo {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: var(--raio-grande);
-  padding: 28px;
-  box-shadow: var(--sombra-padrao);
-}
-
-.conteudo h2 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 30px;
-}
-
-.conteudo > p {
-  color: var(--cor-texto-suave);
-}
-
-.topo-pagina {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.topo-pagina > div > p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-}
-
-.topo-pagina .botao-principal,
-.topo-pagina .botao-secundario {
-  margin-top: 0;
-}
-
-.hero-painel {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 380px);
-  gap: 20px;
-  margin-bottom: 24px;
-}
-
-.hero-painel-conteudo,
-.hero-painel-destaque {
-  border-radius: 22px;
-  padding: 28px;
-}
-
-.hero-painel-conteudo {
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.24), transparent 30%),
-    linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
-  color: white;
-}
-
-.hero-painel-conteudo h2 {
-  color: white;
-  font-size: 34px;
-  margin: 14px 0 10px;
-}
-
-.hero-painel-conteudo p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.7;
-}
-
-.hero-tag {
-  background: rgba(255, 255, 255, 0.18);
-  color: #eff6ff;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-}
-
-.hero-acoes {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 24px;
-}
-
-.hero-acoes .botao-principal,
-.hero-acoes .botao-secundario {
-  margin-top: 0;
-}
-
-.hero-painel-destaque {
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
-  border: 1px solid #dbeafe;
-}
-
-.hero-painel-destaque h3 {
-  margin: 0 0 8px;
-  font-size: 20px;
-}
-
-.hero-painel-destaque p {
-  margin: 0 0 18px;
-  color: var(--cor-texto-suave);
-}
-
-.hero-painel-destaque ul {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 10px;
-  color: var(--cor-texto);
-  font-weight: 700;
-}
-
-.hero-icone-area {
-  width: 56px;
-  height: 56px;
-  display: grid;
-  place-items: center;
-  border-radius: 18px;
-  background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
-  margin-bottom: 16px;
-}
-
-.icone-hero {
-  width: 26px;
-  height: 26px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
-}
-
-.cards-estatisticas {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-}
-
-.card {
-  background: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
-  border-radius: 18px;
-  padding: 20px;
-  box-shadow: var(--sombra-suave);
-}
-
-.card h3 {
-  margin-top: 0;
-  margin-bottom: 6px;
-}
-
-.card p {
-  margin-bottom: 0;
-  color: var(--cor-texto-suave);
-}
-
-.card-estatistica {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.card-estatistica .card-icone {
-  width: 52px;
-  height: 52px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 16px;
-  background: #eef4ff;
-  color: var(--cor-primaria);
-}
-
-.card-estatistica .card-conteudo {
-  display: grid;
-  gap: 4px;
-}
-
-.card-titulo {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--cor-texto-suave);
-}
-
-.card-valor {
-  font-size: 28px;
-  line-height: 1;
-}
-
-.card.destaque,
-.card-estatistica.destaque {
-  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-  border-color: var(--cor-borda-forte);
-}
-
-.card-estatistica.destaque .card-icone {
-  background: rgba(37, 99, 235, 0.12);
-}
-
-.grade-resumos-comerciais {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.resumo {
-  margin-top: 28px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 18px;
-  padding: 22px;
-}
-
-.resumo h3 {
-  margin-top: 0;
-  margin-bottom: 8px;
-}
-
-.resumo p {
-  margin: 0;
-  color: var(--cor-texto);
-  line-height: 1.7;
-}
-
-.resumo-comercial {
-  margin-top: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  border-color: var(--cor-borda);
-}
-
-.resumo-alerta-claro {
-  background: linear-gradient(180deg, #f9fafb 0%, #eff6ff 100%);
-}
-
-.grade-campos {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.grade-campos-configuracoes {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.grupo-botoes {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.filtros {
-  margin-top: 24px;
-  background: #f8fbff;
-  border: 1px solid var(--cor-borda);
-  border-radius: 18px;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 16px;
-  align-items: end;
-}
-
-.filtros .botao-secundario {
-  margin-top: 0;
-}
-
-.contador-resultados {
-  margin-top: 18px;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-.lista {
-  margin-top: 24px;
-  display: grid;
-  gap: 14px;
-}
-
-.item-lista {
-  background: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
-  border-radius: 18px;
-  padding: 18px 20px;
-  box-shadow: var(--sombra-suave);
-}
-
-.item-lista h3 {
-  margin: 0 0 6px;
-}
-
-.item-lista p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-}
-
-.item-com-acoes,
-.item-chamada {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.acoes-item,
-.acoes-chamada {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.botao-editar {
-  border: 1px solid var(--cor-primaria);
-  background: white;
-  color: var(--cor-primaria);
-}
-
-.botao-editar:hover {
-  background: #eff6ff;
-}
-
-.botao-excluir {
-  border: 1px solid var(--cor-perigo);
-  background: white;
-  color: var(--cor-perigo);
-}
-
-.botao-excluir:hover {
-  background: var(--cor-perigo-clara);
-}
-
-.botao-presenca,
-.botao-falta {
-  border: 1px solid var(--cor-borda);
-  background: white;
-  color: var(--cor-texto);
-}
-
-.botao-presenca:hover {
-  background: #dcfce7;
-  border-color: #22c55e;
-}
-
-.botao-falta:hover {
-  background: #fee2e2;
-  border-color: #ef4444;
-}
-
-.ativo-presente {
-  background: #22c55e;
-  border-color: #22c55e;
-  color: white;
-}
-
-.ativo-falta {
-  background: #ef4444;
-  border-color: #ef4444;
-  color: white;
-}
-
-.resumo-chamada {
-  margin-top: 24px;
-  background: #ecfdf5;
-  border: 1px solid #bbf7d0;
-  border-radius: 18px;
-  padding: 18px 20px;
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.resumo-chamada p {
-  margin: 0;
-}
-
-.aviso {
-  margin-top: 24px;
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  color: #9a3412;
-  border-radius: 16px;
-  padding: 16px 18px;
-}
-
-.aviso p {
-  margin: 0;
-}
-
-.tabela-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.tabela {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.tabela th,
-.tabela td {
-  padding: 14px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.tabela th {
-  background: #f8fafc;
-  font-weight: 700;
-}
-
-.tabela tr:last-child td {
-  border-bottom: none;
-}
-
-.relatorio-folha {
-  margin-top: 28px;
-  background: white;
-  border: 1px solid #111827;
-  border-radius: 12px;
-  padding: 18px;
-}
-
-.cabecalho-relatorio {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.cabecalho-relatorio h3 {
-  margin: 0 0 6px;
-  text-transform: uppercase;
-}
-
-.cabecalho-relatorio p {
-  margin: 0;
-  color: #4b5563;
-}
-
-.tabela-ebd {
-  border: 1px solid #111827;
-  border-radius: 0;
-  font-size: 13px;
-}
-
-.tabela-ebd th,
-.tabela-ebd td {
-  border: 1px solid #111827;
-  padding: 8px;
-  text-align: center;
-}
-
-.tabela-ebd th {
-  background: #f3f4f6;
-  color: #111827;
-}
-
-.tabela-ebd td:nth-child(2),
-.tabela-ebd th:nth-child(2) {
-  text-align: left;
-  min-width: 160px;
-}
-
-.linha-total td {
-  font-weight: 700;
-  background: #f3f4f6;
-}
-
-.linha-domingo-anterior td {
-  font-weight: 700;
-  text-align: left;
-  background: #fafafa;
-}
-
-.no-print {
-  display: flex;
-}
-
-@media (max-width: 1180px) {
-  .hero-painel,
-  .cards-estatisticas,
-  .grade-resumos-comerciais,
-  .grade-campos-configuracoes {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-painel {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 1000px) {
-  .grade-campos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .tela-login {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 900px) {
-  .filtros,
-  .grade-campos-configuracoes,
-  .cards-estatisticas,
-  .grade-resumos-comerciais {
-    grid-template-columns: 1fr;
-  }
-
-  .filtros .botao-secundario {
-    width: 100%;
-  }
-
-  .painel-apresentacao,
-  .cartao-login {
-    padding: 32px 24px;
-  }
-
-  .apresentacao-texto h2 {
-    font-size: 34px;
-  }
-}
-
-@media (max-width: 800px) {
-  .app {
-    flex-direction: column;
-  }
-
-  .menu-lateral {
-    width: 100%;
-  }
-
-  .cards,
-  .beneficios-login {
-    grid-template-columns: 1fr;
-  }
-
-  .topo-pagina {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .item-com-acoes,
-  .item-chamada {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .acoes-item,
-  .acoes-chamada,
-  .hero-acoes {
-    flex-direction: column;
-  }
-
-  .botao-editar,
-  .botao-excluir,
-  .botao-presenca,
-  .botao-falta,
-  .hero-acoes .botao-principal,
-  .hero-acoes .botao-secundario {
-    width: 100%;
-  }
-
-  .grade-campos {
-    grid-template-columns: 1fr;
-  }
-
-  .resumo-chamada {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .area-principal {
-    padding: 18px;
-  }
-
-  .conteudo {
-    padding: 20px;
-  }
-}
-
-
-
-/* Logo oficial da marca na área pública */
-.marca-login .logo-simbolo,
-.marca-publica .logo-publica {
-  background: #ffffff;
-  overflow: hidden;
-}
-
-.marca-login .logo-imagem {
-  padding: 4px;
-  border-radius: 14px;
-}
-
-.marca-publica .logo-imagem {
-  padding: 4px;
-  border-radius: 14px;
-}
-
-@media (max-width: 720px) {
-  .marca-publica .logo-publica {
-    width: 54px;
-    height: 54px;
-  }
-}
-
-
-/* Ajustes premium da tela de login */
-.tela-login .painel-apresentacao {
-  background:
-    radial-gradient(circle at 18% 12%, rgba(96, 165, 250, 0.22), transparent 28%),
-    radial-gradient(circle at 86% 82%, rgba(37, 99, 235, 0.24), transparent 32%),
-    linear-gradient(145deg, #071225 0%, #10255c 54%, #1d4ed8 100%);
-}
-
-.tela-login .marca-login {
-  align-items: center;
-}
-
-.tela-login .marca-login .logo-simbolo {
-  width: 74px;
-  height: 74px;
-  border-radius: 20px;
-  padding: 6px;
-  background: #ffffff;
-  box-shadow: 0 18px 38px rgba(2, 6, 23, 0.22);
-}
-
-.tela-login .marca-login h1 {
-  color: #ffffff;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.tela-login .marca-login p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.tela-login .apresentacao-texto {
-  max-width: 680px;
-}
-
-.tela-login .apresentacao-texto h2 {
-  color: #ffffff;
-  font-size: clamp(38px, 5vw, 58px);
-  line-height: 1.02;
-  letter-spacing: -0.045em;
-  text-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
-}
-
-.tela-login .apresentacao-texto p {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 20px;
-  max-width: 620px;
-}
-
-.tela-login .selo-apresentacao {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.tela-login .beneficio-item {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.08);
-}
-
-.tela-login .beneficio-item .icone-beneficio {
-  color: #dbeafe;
-}
-
-.tela-login .cartao-login {
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
-    rgba(255, 255, 255, 0.96);
-}
-
-.tela-login .botao-voltar-publico {
-  margin-bottom: 28px;
-  padding: 0;
-  color: #2563eb;
-  font-size: 15px;
-  opacity: 0.9;
-}
-
-.tela-login .botao-voltar-publico:hover {
-  opacity: 1;
-  text-decoration: underline;
-}
-
-.tela-login .topo-cartao-login {
-  align-items: flex-start;
-}
-
-.tela-login .topo-cartao-login h2 {
-  color: #0f172a;
-  font-size: 34px;
-  letter-spacing: -0.03em;
-}
-
-.tela-login .topo-cartao-login p {
-  color: #475569;
-  font-size: 18px;
-}
-
-.tela-login .topo-cartao-icone {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
-}
-
-.tela-login .formulario-login {
-  padding: 28px;
-  border-radius: 24px;
-  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.1);
-}
-
-.tela-login .formulario input {
-  min-height: 56px;
-  font-weight: 700;
-}
-
-.tela-login .formulario input::placeholder {
-  color: #64748b;
-}
-
-.tela-login .botao-principal {
-  min-height: 56px;
-  border-radius: 14px;
-  font-weight: 800;
-}
-
-@media (max-width: 1000px) {
-  .tela-login .painel-apresentacao {
-    min-height: auto;
-  }
-
-  .tela-login .marca-login .logo-simbolo {
-    width: 66px;
-    height: 66px;
-  }
-}
-
-@media (max-width: 720px) {
-  .tela-login .marca-login {
-    align-items: flex-start;
-  }
-
-  .tela-login .marca-login h1 {
-    font-size: 26px;
-  }
-
-  .tela-login .marca-login p {
-    font-size: 15px;
-  }
-
-  .tela-login .apresentacao-texto h2 {
-    font-size: 34px;
-  }
-
-  .tela-login .apresentacao-texto p {
-    font-size: 17px;
-  }
-}
-
-/* Landing page pública */
-.pagina-publica {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 34%),
-    linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
-  color: var(--cor-texto);
-}
-
-.topo-publico {
-  width: min(1180px, calc(100% - 36px));
-  margin: 0 auto;
-  padding: 24px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-}
-
-.marca-publica {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.logo-publica {
-  width: 58px;
-  height: 58px;
-}
-
-.marca-publica strong {
-  display: block;
-  font-size: 22px;
-}
-
-.marca-publica span {
-  display: block;
-  margin-top: 3px;
-  color: var(--cor-texto-suave);
-  font-size: 14px;
-}
-
-.menu-publico {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.menu-publico a {
-  color: var(--cor-texto-suave);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.menu-publico a:hover {
-  color: var(--cor-primaria);
-}
-
-.menu-publico button {
-  border: none;
-  border-radius: 999px;
-  padding: 10px 18px;
-  background: var(--cor-primaria);
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.hero-publico {
-  width: min(1180px, calc(100% - 36px));
-  margin: 34px auto 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(330px, 0.9fr);
-  gap: 34px;
-  align-items: center;
-}
-
-.hero-publico-texto {
-  display: grid;
-  gap: 22px;
-}
-
-.selo-publico {
-  display: inline-flex;
-  width: fit-content;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #dbeafe;
-  color: #1d4ed8;
-  font-weight: 800;
-  font-size: 13px;
-}
-
-.hero-publico h1 {
-  margin: 0;
-  font-size: clamp(38px, 5vw, 64px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-.hero-publico p,
-.secao-beneficios-publica p,
-.cartao-plano-publico p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  line-height: 1.75;
-  font-size: 17px;
-}
-
-.acoes-publicas {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.acoes-publicas .botao-principal,
-.acoes-publicas .botao-secundario {
-  margin-top: 0;
-}
-
-.link-botao-publico {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.metricas-publicas {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  max-width: 540px;
-}
-
-.metricas-publicas div {
-  padding: 18px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.76);
-  border: 1px solid rgba(219, 226, 234, 0.9);
-  box-shadow: var(--sombra-suave);
-}
-
-.metricas-publicas strong {
-  display: block;
-  font-size: 22px;
-}
-
-.metricas-publicas span {
-  color: var(--cor-texto-suave);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.hero-publico-card {
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.22), transparent 36%),
-    linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
-  border-radius: 32px;
-  padding: 22px;
-  box-shadow: 0 28px 65px rgba(30, 64, 175, 0.24);
-}
-
-.mini-dashboard {
-  background: rgba(255, 255, 255, 0.94);
-  border-radius: 26px;
-  padding: 22px;
-  display: grid;
-  gap: 18px;
-}
-
-.mini-dashboard-topo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.mini-dashboard-topo span {
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.mini-dashboard-topo strong {
-  display: block;
-  margin-top: 3px;
-  font-size: 24px;
-}
-
-.mini-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.mini-grid div {
-  border: 1px solid var(--cor-borda);
-  border-radius: 18px;
-  padding: 16px;
-  display: grid;
-  gap: 6px;
-  color: var(--cor-primaria);
-}
-
-.mini-grid strong {
-  color: var(--cor-texto);
-}
-
-.mini-grid span {
-  color: var(--cor-texto-suave);
-  font-size: 13px;
-}
-
-.linha-progresso-publica {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  border-radius: 18px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  padding: 16px;
-}
-
-.linha-progresso-publica span {
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-.linha-progresso-publica strong {
-  color: var(--cor-primaria);
-  font-size: 24px;
-}
-
-.secao-publica {
-  width: min(1180px, calc(100% - 36px));
-  margin: 74px auto 0;
-}
-
-.cabecalho-secao-publica {
-  display: grid;
-  gap: 14px;
-  max-width: 760px;
-  margin-bottom: 24px;
-}
-
-.cabecalho-secao-publica h2,
-.secao-beneficios-publica h2,
-.cartao-plano-publico h2 {
-  margin: 0;
-  font-size: clamp(28px, 4vw, 42px);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
-}
-
-.grade-recursos-publicos {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.grade-recursos-publicos article {
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: var(--sombra-suave);
-}
-
-.icone-recurso-publico {
-  width: 34px;
-  height: 34px;
-  color: var(--cor-primaria);
-  margin-bottom: 12px;
-}
-
-.grade-recursos-publicos h3 {
-  margin: 0 0 8px;
-}
-
-.grade-recursos-publicos p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  line-height: 1.65;
-}
-
-.secao-beneficios-publica {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.8fr);
-  gap: 28px;
-  align-items: center;
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-  border-radius: 30px;
-  padding: 32px;
-  box-shadow: var(--sombra-padrao);
-}
-
-.lista-beneficios-publicos {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 12px;
-}
-
-.lista-beneficios-publicos li {
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #f8fbff;
-  border: 1px solid var(--cor-borda);
-  font-weight: 700;
-  color: var(--cor-texto);
-}
-
-.cartao-plano-publico {
-  margin-bottom: 68px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 30%),
-    linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  color: #ffffff;
-  border-radius: 32px;
-  padding: 36px;
-  display: grid;
-  gap: 18px;
-  box-shadow: 0 28px 65px rgba(15, 23, 42, 0.18);
-}
-
-.cartao-plano-publico h2,
-.cartao-plano-publico p {
-  color: #ffffff;
-}
-
-.botao-voltar-publico {
-  width: fit-content;
-  border: 0;
-  background: transparent;
-  color: var(--cor-primaria);
-  font-weight: 800;
-  cursor: pointer;
-  margin-bottom: 24px;
-}
-
-@media (max-width: 1000px) {
-  .hero-publico,
-  .secao-beneficios-publica {
-    grid-template-columns: 1fr;
-  }
-
-  .grade-recursos-publicos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 720px) {
-  .topo-publico {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .menu-publico {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .hero-publico {
-    margin-top: 16px;
-  }
-
-  .metricas-publicas,
-  .grade-recursos-publicos,
-  .mini-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .secao-publica {
-    margin-top: 46px;
-  }
-
-  .secao-beneficios-publica,
-  .cartao-plano-publico {
-    padding: 24px;
-  }
-}
-
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 10mm;
-  }
-
-  body {
-    background: white;
-  }
-
-  .menu-lateral,
-  .no-print,
-  .cards,
-  .resumo,
-  .aviso,
-  .topo-pagina,
-  .topo-pagina p,
-  .hero-painel,
-  .hero-acoes,
-  .grade-resumos-comerciais {
-    display: none !important;
-  }
-
-  .app {
-    display: block;
-    min-height: auto;
-  }
-
-  .area-principal {
-    padding: 0;
-  }
-
-  .conteudo {
-    box-shadow: none;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    background: white;
-  }
-
-  .relatorio-folha {
-    margin-top: 0;
-    border: none;
-    padding: 0;
-  }
-
-  .cabecalho-relatorio h3 {
-    font-size: 16px;
-  }
-
-  .cabecalho-relatorio p {
-    font-size: 12px;
-  }
-
-  .tabela-container {
-    overflow: visible;
-  }
-
-  .tabela-ebd {
-    width: 100%;
-    font-size: 11px;
-  }
-
-  .tabela-ebd th,
-  .tabela-ebd td {
-    padding: 5px;
-  }
-}
-
-
-
-
-
-
-
-.tipo-pessoa-destaque {
-  display: inline-flex;
-  width: fit-content;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #1d4ed8;
-  font-weight: 800;
-  font-size: 12px;
-}
-
-/* Chamada dos professores */
-.abas-chamada {
-  margin-top: 24px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.abas-chamada button {
-  border: 1px solid var(--cor-borda);
-  background: #ffffff;
-  color: var(--cor-texto);
-  border-radius: 999px;
-  padding: 12px 18px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.abas-chamada button.ativo {
-  background: var(--cor-primaria);
-  color: #ffffff;
-  border-color: var(--cor-primaria);
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.2);
-}
-
-.resumo-professores {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-}
-
-.acoes-chamada-professores {
-  justify-content: flex-end;
-}
-
-.botao-justificou {
-  border: 1px solid #f59e0b;
-  background: #ffffff;
-  color: #b45309;
-  border-radius: 12px;
-  padding: 12px 18px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.botao-justificou:hover {
-  background: #fffbeb;
-}
-
-.ativo-justificou {
-  background: #f59e0b;
-  border-color: #f59e0b;
-  color: #ffffff;
-}
-
-.formulario-observacao-professores {
-  margin-top: 18px;
-}
-
-@media (max-width: 800px) {
-  .abas-chamada,
-  .abas-chamada button,
-  .botao-justificou {
-    width: 100%;
-  }
-}
-
-/* Classes vinculadas ao professor */
-.campo-classes-professor {
-  display: grid;
-  gap: 8px;
-  font-weight: 700;
-  color: var(--cor-texto);
-}
-
-.lista-checkboxes-classes {
-  display: grid;
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid #cfd8e3;
-  border-radius: 12px;
-  background: #ffffff;
-}
-
-.checkbox-classe-professor {
-  display: flex !important;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 10px !important;
-  font-weight: 700;
-  color: var(--cor-texto-suave);
-}
-
-.checkbox-classe-professor input {
-  width: auto !important;
-  min-height: auto !important;
-}
-
-/* Cadastro de usuários */
-.aviso-usuarios {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
-}
-
-.aviso-usuarios strong {
-  color: #1e40af;
-}
-
-/* Aniversariantes da semana */
-.alerta-aniversariantes {
-  margin-top: 24px;
-  padding: 22px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-  border: 1px solid #bfdbfe;
-  box-shadow: var(--sombra-suave);
-}
-
-.topo-alerta-aniversariantes {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-
-.topo-alerta-aniversariantes h3 {
-  margin: 10px 0 0;
-  font-size: 22px;
-}
-
-.topo-alerta-aniversariantes > strong {
-  min-width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 16px;
-  background: var(--cor-primaria);
-  color: #ffffff;
-  font-size: 22px;
-}
-
-.lista-aniversariantes {
-  display: grid;
-  gap: 12px;
-}
-
-.item-aniversariante {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: center;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-}
-
-.item-aniversariante strong {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.item-aniversariante p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-.item-aniversariante span {
-  flex-shrink: 0;
-  color: var(--cor-primaria);
-  font-weight: 800;
-}
-
-.texto-sem-aniversariantes {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-@media (max-width: 720px) {
-  .topo-alerta-aniversariantes,
-  .item-aniversariante {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/* Perfis de usuário */
-.linha-tags-painel {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.hero-tag-clara {
-  background: rgba(255, 255, 255, 0.28);
-  color: #ffffff;
-}
-
-.selo-perfil-sidebar {
-  display: inline-flex;
-  width: fit-content;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.18);
-  color: #dbeafe;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.texto-ajuda-campo {
-  color: var(--cor-texto-suave);
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-select:disabled,
-input:disabled {
-  background: #eef2f7;
-  color: #64748b;
-  cursor: not-allowed;
-}
-
-
-/* Ajuste para estrutura multiusuário por igreja */
-.aviso-perfil {
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1e3a8a;
-  font-weight: 700;
-}
-
-
-/* Cadastro separado de alunos e professores */
-.menu-navegacao button span:last-child {
-  line-height: 1.2;
-}
-
-
-/* Professores puxados automaticamente nas classes */
-.aviso-classes-professores {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
-}
-
-.aviso-classes-professores strong {
-  color: #1d4ed8;
-}
-
-
-/* Professores também gerenciados pela tela de Classes */
-.formulario-professor-classe {
-  margin-bottom: 22px;
-  background: #ffffff;
-}
-
-.topo-formulario-inline h3 {
-  margin: 0 0 6px;
-  font-size: 22px;
-}
-
-.topo-formulario-inline p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.professores-na-classe {
-  margin-top: 14px;
-  display: grid;
-  gap: 8px;
-}
-
-.professor-classe-linha {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: #f8fbff;
-  border: 1px solid var(--cor-borda);
-}
-
-.professor-classe-linha span {
-  font-weight: 800;
-  color: var(--cor-texto);
-}
-
-.professor-classe-linha > div {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.botao-pequeno {
-  padding: 8px 12px;
-  font-size: 13px;
-}
-
-.botao-sem-margem {
-  margin-top: 0;
-}
-
-.texto-sem-professor {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-@media (max-width: 800px) {
-  .professor-classe-linha {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .professor-classe-linha > div,
-  .botao-sem-margem {
-    width: 100%;
-  }
-}
-
-
-/* Migração automática de professores das classes */
-.aviso-edicao-classe {
-  margin-top: 0;
-  background: #f8fbff;
-  border-color: #bfdbfe;
-  color: #1e3a8a;
-}
-
-.aviso-edicao-classe p {
-  margin: 0;
-}
-
-
-/* Relatórios modernos */
-.relatorios-dashboard {
-  margin-top: 24px;
-  display: grid;
-  gap: 22px;
-}
-
-.relatorios-hero {
-  display: flex;
-  justify-content: space-between;
-  gap: 22px;
-  align-items: center;
-  padding: 26px;
-  border-radius: 26px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 32%),
-    linear-gradient(135deg, #1d4ed8 0%, #172554 100%);
-  color: #ffffff;
-  box-shadow: 0 24px 50px rgba(37, 99, 235, 0.18);
-}
-
-.relatorios-hero .selo-publico {
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-}
-
-.relatorios-hero h3 {
-  margin: 12px 0 8px;
-  font-size: 30px;
-  line-height: 1.1;
-}
-
-.relatorios-hero p {
-  margin: 0;
-  max-width: 680px;
-  color: rgba(255, 255, 255, 0.86);
-  line-height: 1.6;
-}
-
-.relatorios-percentual {
-  min-width: 150px;
-  min-height: 150px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-}
-
-.relatorios-percentual strong {
-  display: block;
-  font-size: 42px;
-  line-height: 1;
-}
-
-.relatorios-percentual span {
-  display: block;
-  margin-top: 6px;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.86);
-}
-
-.cards-relatorios-modernas {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  margin-top: 0;
-}
-
-.card-relatorio-moderna {
-  display: grid;
-  gap: 6px;
-}
-
-.card-relatorio-moderna span {
-  color: var(--cor-texto-suave);
-  font-weight: 800;
-}
-
-.card-relatorio-moderna strong {
-  font-size: 36px;
-  line-height: 1;
-}
-
-.card-relatorio-moderna p {
-  margin: 0;
-}
-
-.relatorio-professores-moderno {
-  padding: 24px;
-  border-radius: 26px;
-  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-  border: 1px solid #bfdbfe;
-  box-shadow: var(--sombra-suave);
-}
-
-.cabecalho-relatorio-professores {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.cabecalho-relatorio-professores h3 {
-  margin: 10px 0 6px;
-  font-size: 26px;
-}
-
-.cabecalho-relatorio-professores p {
-  margin: 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-.circulo-presenca-professores {
-  width: 116px;
-  height: 116px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  border-radius: 50%;
-  background: var(--cor-primaria);
-  color: #ffffff;
-  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.22);
-}
-
-.circulo-presenca-professores strong {
-  font-size: 30px;
-  line-height: 1;
-}
-
-.circulo-presenca-professores span {
-  font-weight: 800;
-  font-size: 13px;
-}
-
-.grade-professores-resumo {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.grade-professores-resumo div {
-  padding: 18px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-}
-
-.grade-professores-resumo span {
-  display: block;
-  color: var(--cor-texto-suave);
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.grade-professores-resumo strong {
-  font-size: 32px;
-}
-
-.lista-professores-relatorio {
-  margin-top: 18px;
-  display: grid;
-  gap: 10px;
-}
-
-.linha-professor-relatorio {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: center;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-}
-
-.linha-professor-relatorio strong {
-  display: block;
-}
-
-.linha-professor-relatorio p {
-  margin: 3px 0 0;
-  color: var(--cor-texto-suave);
-  font-weight: 700;
-}
-
-.status-professor {
-  flex-shrink: 0;
-  padding: 7px 12px;
-  border-radius: 999px;
-  font-weight: 900;
-  font-size: 13px;
-}
-
-.status-presente {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-faltou {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.status-justificou {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.bloco-professores-pdf {
-  margin-top: 24px;
-}
-
-.bloco-professores-pdf h4 {
-  margin: 0 0 12px;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.tabela-professores-pdf,
-.tabela-professores-detalhe-pdf {
-  margin-top: 12px;
-}
-
-@media (max-width: 900px) {
-  .relatorios-hero,
-  .cabecalho-relatorio-professores,
-  .linha-professor-relatorio {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .relatorios-percentual,
-  .circulo-presenca-professores {
-    border-radius: 22px;
-    width: 100%;
-    min-height: auto;
-    height: auto;
-    padding: 22px;
-  }
-
-  .grade-professores-resumo {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 620px) {
-  .grade-professores-resumo {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Página pública premium */
-.pagina-publica {
-  background:
-    radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
-    radial-gradient(circle at 90% 16%, rgba(14, 165, 233, 0.16), transparent 28%),
-    linear-gradient(180deg, #f8fbff 0%, #eef5ff 48%, #f8fbff 100%);
-}
-
-.topo-publico {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  width: min(1180px, calc(100% - 36px));
-  margin-top: 14px;
-  padding: 14px 18px;
-  border: 1px solid rgba(219, 226, 234, 0.85);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
-}
-
-.hero-publico {
-  margin-top: 58px;
-  gap: 44px;
-}
-
-.hero-publico-texto {
-  gap: 24px;
-}
-
-.hero-publico h1 {
-  max-width: 760px;
-  font-size: clamp(42px, 5.7vw, 74px);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
-  color: #0f172a;
-}
-
-.hero-publico p {
-  max-width: 690px;
-  font-size: 19px;
-  color: #334155;
-}
-
-.selo-publico {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-.acoes-publicas .botao-principal {
-  padding: 15px 24px;
-  border-radius: 16px;
-  font-size: 16px;
-  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.22);
-}
-
-.acoes-publicas .botao-secundario {
-  padding: 14px 22px;
-  border-radius: 16px;
-  font-size: 16px;
-}
-
-.metricas-publicas div {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 40%),
-    rgba(255, 255, 255, 0.86);
-}
-
-.metricas-publicas strong {
-  font-size: 26px;
-  color: #1d4ed8;
-}
-
-.hero-publico-card {
-  position: relative;
-  padding: 1px;
-  background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.72)),
-    linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
-  box-shadow: 0 34px 80px rgba(37, 99, 235, 0.24);
-}
-
-.hero-publico-card::before {
-  content: "";
-  position: absolute;
-  inset: -26px;
-  z-index: -1;
-  border-radius: 42px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.18), transparent 68%);
-}
-
-.mini-dashboard {
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.mini-dashboard-topo strong {
-  font-size: 28px;
-  letter-spacing: -0.03em;
-}
-
-.mini-grid div {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.mini-grid div:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
-}
-
-.linha-progresso-publica {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-}
-
-.secao-impacto-publica {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(180px, 0.75fr));
-  gap: 18px;
-  align-items: stretch;
-}
-
-.impacto-card {
-  padding: 24px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(219, 226, 234, 0.95);
-  box-shadow: var(--sombra-suave);
-}
-
-.impacto-card-principal {
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 30%),
-    linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  color: #ffffff;
-}
-
-.impacto-card span {
-  display: inline-flex;
-  width: fit-content;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: #dbeafe;
-  color: #1d4ed8;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.impacto-card-principal span {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-}
-
-.impacto-card strong {
-  display: grid;
-  width: 46px;
-  height: 46px;
-  place-items: center;
-  border-radius: 16px;
-  background: #eff6ff;
-  color: #1d4ed8;
-  font-size: 18px;
-  margin-bottom: 18px;
-}
-
-.impacto-card h2,
-.impacto-card h3 {
-  margin: 14px 0 10px;
-  letter-spacing: -0.03em;
-}
-
-.impacto-card h2 {
-  font-size: clamp(28px, 3.7vw, 44px);
-  line-height: 1.08;
-}
-
-.impacto-card h3 {
-  font-size: 21px;
-}
-
-.impacto-card p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.7;
-}
-
-.impacto-card-principal p {
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 17px;
-}
-
-.grade-recursos-publicos article {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.grade-recursos-publicos article::after {
-  content: "";
-  position: absolute;
-  right: -26px;
-  top: -26px;
-  width: 82px;
-  height: 82px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.08);
-}
-
-.grade-recursos-publicos article:hover {
-  transform: translateY(-3px);
-  border-color: #bfdbfe;
-  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.1);
-}
-
-.secao-beneficios-publica {
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 34%),
-    rgba(255, 255, 255, 0.94);
-}
-
-.lista-beneficios-publicos li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.lista-beneficios-publicos li::before {
-  content: "✓";
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: #dcfce7;
-  color: #166534;
-  font-weight: 900;
-}
-
-.cartao-plano-publico {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.cartao-plano-publico::after {
-  content: "";
-  position: absolute;
-  right: -80px;
-  top: -80px;
-  width: 220px;
-  height: 220px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-@media (max-width: 1100px) {
-  .secao-impacto-publica {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .impacto-card-principal {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 720px) {
-  .topo-publico {
-    position: static;
-    margin-top: 0;
-    border-radius: 0 0 24px 24px;
-    width: 100%;
-  }
-
-  .hero-publico {
-    margin-top: 28px;
-  }
-
-  .secao-impacto-publica {
-    grid-template-columns: 1fr;
-  }
-
-  .impacto-card-principal {
-    grid-column: span 1;
-  }
-
-  .hero-publico h1 {
-    font-size: 38px;
-  }
-}
-
-
-/* Página principal ultra moderna e mais colorida */
-.pagina-publica {
-  position: relative;
-  overflow-x: hidden;
-  background:
-    radial-gradient(circle at 8% 7%, rgba(37, 99, 235, 0.20), transparent 28%),
-    radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.18), transparent 26%),
-    radial-gradient(circle at 15% 76%, rgba(34, 197, 94, 0.12), transparent 30%),
-    radial-gradient(circle at 84% 86%, rgba(249, 115, 22, 0.11), transparent 26%),
-    linear-gradient(180deg, #f8fbff 0%, #eef6ff 42%, #f8fbff 100%);
-}
-
-.pagina-publica::before,
-.pagina-publica::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  border-radius: 999px;
-  filter: blur(4px);
-  pointer-events: none;
-}
-
-.pagina-publica::before {
-  width: 360px;
-  height: 360px;
-  left: -160px;
-  top: 190px;
-  background: rgba(37, 99, 235, 0.10);
-}
-
-.pagina-publica::after {
-  width: 420px;
-  height: 420px;
-  right: -180px;
-  top: 520px;
-  background: rgba(14, 165, 233, 0.10);
-}
-
-.topo-publico,
-.hero-publico,
-.secao-publica {
-  position: relative;
-  z-index: 1;
-}
-
-.topo-publico {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.82));
-  border: 1px solid rgba(191, 219, 254, 0.9);
-}
-
-.menu-publico button,
-.acoes-publicas .botao-principal {
-  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
-  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
-}
-
-.hero-publico {
-  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
-}
-
-.hero-publico h1 {
-  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #0891b2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.selo-publico {
-  background: linear-gradient(135deg, #dbeafe 0%, #cffafe 100%);
-  color: #1d4ed8;
-  border: 1px solid rgba(37, 99, 235, 0.12);
-}
-
-.hero-publico-card {
-  transform: perspective(900px) rotateY(-3deg) rotateX(2deg);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hero-publico-card:hover {
-  transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-4px);
-  box-shadow: 0 42px 90px rgba(37, 99, 235, 0.28);
-}
-
-.mini-dashboard {
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
-    rgba(255, 255, 255, 0.96);
-}
-
-.mini-dashboard-topo strong {
-  background: linear-gradient(135deg, #0f172a, #2563eb);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.mini-grid div:nth-child(1) {
-  border-color: #bfdbfe;
-}
-
-.mini-grid div:nth-child(2) {
-  border-color: #bbf7d0;
-}
-
-.mini-grid div:nth-child(3) {
-  border-color: #fed7aa;
-}
-
-.mini-grid div:nth-child(4) {
-  border-color: #ddd6fe;
-}
-
-.metricas-publicas div:nth-child(1) {
-  border-color: #bfdbfe;
-}
-
-.metricas-publicas div:nth-child(2) {
-  border-color: #ddd6fe;
-}
-
-.metricas-publicas div:nth-child(3) {
-  border-color: #bbf7d0;
-}
-
-.secao-impacto-publica {
-  align-items: stretch;
-}
-
-.impacto-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.impacto-card::after {
-  content: "";
-  position: absolute;
-  right: -44px;
-  bottom: -44px;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.07);
-}
-
-.impacto-card:nth-child(3)::after {
-  background: rgba(34, 197, 94, 0.08);
-}
-
-.impacto-card:nth-child(4)::after {
-  background: rgba(249, 115, 22, 0.09);
-}
-
-.secao-experiencia-publica {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 24px;
-  align-items: center;
-  padding: 32px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.18), transparent 28%),
-    linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0e7490 100%);
-  color: #ffffff;
-  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.18);
-}
-
-.cabecalho-experiencia-publica .selo-publico {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.cabecalho-experiencia-publica h2 {
-  margin: 16px 0 12px;
-  font-size: clamp(30px, 4vw, 48px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-.cabecalho-experiencia-publica p {
-  margin: 0;
-  max-width: 560px;
-  color: rgba(255, 255, 255, 0.86);
-  line-height: 1.75;
-  font-size: 17px;
-}
-
-.grade-experiencia-publica {
-  display: grid;
-  gap: 16px;
-}
-
-.experiencia-card {
-  padding: 22px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(14px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.experiencia-card strong {
-  display: inline-grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  margin-bottom: 12px;
-}
-
-.experiencia-card h3 {
-  margin: 0 0 8px;
-  font-size: 22px;
-}
-
-.experiencia-card p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  line-height: 1.65;
-}
-
-.experiencia-azul {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.36), rgba(14, 165, 233, 0.20));
-}
-
-.experiencia-verde {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.28), rgba(20, 184, 166, 0.18));
-}
-
-.experiencia-laranja {
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.28), rgba(234, 179, 8, 0.16));
-}
-
-.grade-recursos-publicos article:nth-child(1) {
-  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-}
-
-.grade-recursos-publicos article:nth-child(2) {
-  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
-}
-
-.grade-recursos-publicos article:nth-child(3) {
-  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
-}
-
-.grade-recursos-publicos article:nth-child(4) {
-  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
-}
-
-.cartao-plano-publico {
-  background:
-    radial-gradient(circle at top right, rgba(14, 165, 233, 0.22), transparent 36%),
-    radial-gradient(circle at bottom left, rgba(37, 99, 235, 0.28), transparent 34%),
-    linear-gradient(135deg, #020617 0%, #172554 58%, #0e7490 100%);
-}
-
-.cartao-plano-publico .botao-principal {
-  background: linear-gradient(135deg, #2563eb, #06b6d4);
-}
-
-@media (max-width: 1000px) {
-  .hero-publico-card {
-    transform: none;
-  }
-
-  .secao-experiencia-publica {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Redesign estratégico inspirado em plataforma SaaS */
-:root {
-  --landing-primary: #0B3B5F;
-  --landing-primary-light: #2B5C8A;
-  --landing-accent: #E6B31E;
-  --landing-coral: #FF6B6B;
-  --landing-bg: #F9FAFB;
-  --landing-card-shadow: 0 24px 45px -18px rgba(11, 59, 95, 0.28);
-}
-
-.pagina-publica {
-  font-family: Inter, "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
-  background:
-    radial-gradient(circle at 8% 7%, rgba(230, 179, 30, 0.12), transparent 24%),
-    radial-gradient(circle at 90% 10%, rgba(95, 75, 139, 0.12), transparent 26%),
-    radial-gradient(circle at 18% 72%, rgba(11, 59, 95, 0.12), transparent 30%),
-    linear-gradient(180deg, #f9fafb 0%, #eef6fb 42%, #ffffff 100%);
-}
-
-.topo-publico {
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(11, 59, 95, 0.10);
-  box-shadow: 0 18px 42px rgba(11, 59, 95, 0.08);
-}
-
-.marca-publica strong {
-  color: var(--landing-primary);
-  letter-spacing: -0.03em;
-}
-
-.menu-publico a {
-  color: #334155;
-}
-
-.menu-publico a:hover {
-  color: var(--landing-primary);
-}
-
-.menu-publico button {
-  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  border-radius: 999px;
-  box-shadow: 0 12px 26px rgba(11, 59, 95, 0.22);
-}
-
-.hero-publico {
-  min-height: calc(100vh - 140px);
-  align-items: center;
-}
-
-.hero-publico h1 {
-  font-family: "Plus Jakarta Sans", Poppins, Inter, Arial, sans-serif;
-  font-size: clamp(44px, 6vw, 76px);
-  line-height: 0.98;
-  letter-spacing: -0.06em;
-  background: linear-gradient(135deg, #092f4b 0%, #0B3B5F 46%, #5F4B8B 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero-publico p {
-  font-size: 20px;
-  line-height: 1.75;
-  color: #334155;
-}
-
-.selo-publico {
-  background: linear-gradient(135deg, #fff7d6 0%, #e0f2fe 100%);
-  color: var(--landing-primary);
-  border: 1px solid rgba(230, 179, 30, 0.22);
-}
-
-.acoes-publicas .botao-principal,
-.cartao-plano-publico .botao-principal {
-  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  border-radius: 999px;
-  padding: 14px 30px;
-  box-shadow: 0 18px 35px -12px rgba(11, 59, 95, 0.55);
-}
-
-.acoes-publicas .botao-principal:hover,
-.cartao-plano-publico .botao-principal:hover,
-.menu-publico button:hover {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.acoes-publicas .botao-secundario {
-  border-radius: 999px;
-  border-color: rgba(11, 59, 95, 0.18);
-}
-
-.metricas-publicas div,
-.grade-recursos-publicos article,
-.impacto-card,
-.experiencia-card {
-  border-radius: 28px;
-  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-}
-
-.metricas-publicas div:hover,
-.grade-recursos-publicos article:hover,
-.impacto-card:hover,
-.experiencia-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--landing-card-shadow);
-}
-
-.hero-publico-card {
-  border-radius: 34px;
-  background:
-    linear-gradient(135deg, rgba(230, 179, 30, 0.85), rgba(255, 107, 107, 0.45)),
-    linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  box-shadow: 0 38px 90px rgba(11, 59, 95, 0.28);
-}
-
-.mini-dashboard {
-  border-radius: 32px;
-}
-
-.mini-grid div {
-  border-radius: 22px;
-}
-
-.linha-progresso-publica {
-  background: linear-gradient(135deg, #fff7d6, #dbeafe);
-  border-color: rgba(230, 179, 30, 0.32);
-}
-
-.secao-impacto-publica {
-  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(185px, 0.8fr));
-}
-
-.impacto-card-principal {
-  background:
-    radial-gradient(circle at top right, rgba(230, 179, 30, 0.22), transparent 34%),
-    linear-gradient(135deg, #082f49 0%, #0B3B5F 55%, #5F4B8B 100%);
-}
-
-.impacto-card strong {
-  background: linear-gradient(135deg, #fff7d6, #dbeafe);
-  color: var(--landing-primary);
-}
-
-.secao-publico-alvo {
-  padding: 34px;
-  border-radius: 34px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
-}
-
-.grade-publico-alvo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.grade-publico-alvo article {
-  padding: 24px;
-  border-radius: 26px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid var(--cor-borda);
-}
-
-.grade-publico-alvo strong {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--landing-primary);
-  font-size: 20px;
-}
-
-.grade-publico-alvo p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.secao-selos-publicos {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.secao-selos-publicos div {
-  padding: 22px;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: var(--sombra-suave);
-}
-
-.secao-selos-publicos span {
-  display: inline-flex;
-  margin-bottom: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #fff7d6;
-  color: #92400e;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.secao-selos-publicos strong {
-  display: block;
-  color: var(--landing-primary);
-  font-size: 18px;
-}
-
-.secao-experiencia-publica {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(230, 179, 30, 0.20), transparent 28%),
-    radial-gradient(circle at 88% 78%, rgba(255, 107, 107, 0.16), transparent 28%),
-    linear-gradient(135deg, #082f49 0%, #0B3B5F 50%, #5F4B8B 100%);
-}
-
-.experiencia-laranja {
-  background: linear-gradient(135deg, rgba(230, 179, 30, 0.28), rgba(255, 107, 107, 0.18));
-}
-
-.cartao-plano-publico {
-  background:
-    radial-gradient(circle at top right, rgba(230, 179, 30, 0.22), transparent 36%),
-    radial-gradient(circle at bottom left, rgba(255, 107, 107, 0.22), transparent 34%),
-    linear-gradient(135deg, #061826 0%, var(--landing-primary) 58%, #5F4B8B 100%);
-}
-
-.rodape-publico {
-  width: min(1180px, calc(100% - 36px));
-  margin: 0 auto 36px;
-  padding: 30px;
-  display: grid;
-  grid-template-columns: 1.5fr 0.7fr 0.9fr;
-  gap: 26px;
-  border-radius: 32px;
-  background: #ffffff;
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: 0 20px 45px rgba(11, 59, 95, 0.08);
-}
-
-.rodape-publico p {
-  margin: 14px 0 0;
-  color: #475569;
-  line-height: 1.7;
-}
-
-.rodape-publico h3 {
-  margin: 0 0 12px;
-  color: var(--landing-primary);
-}
-
-.rodape-publico a,
-.rodape-publico button {
-  display: block;
-  width: fit-content;
-  margin-top: 8px;
-  color: #334155;
-  text-decoration: none;
-  font-weight: 800;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-
-.rodape-publico a:hover,
-.rodape-publico button:hover {
-  color: var(--landing-primary);
-}
-
-.botao-whatsapp-flutuante {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 20;
-  padding: 14px 20px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 900;
-  box-shadow: 0 18px 36px rgba(11, 59, 95, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.botao-whatsapp-flutuante:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 24px 44px rgba(11, 59, 95, 0.34);
-}
-
-@media (max-width: 1000px) {
-  .secao-impacto-publica,
-  .grade-publico-alvo,
-  .secao-selos-publicos,
-  .rodape-publico {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .hero-publico {
-    min-height: auto;
-  }
-
-  .botao-whatsapp-flutuante {
-    left: 18px;
-    right: 18px;
-    text-align: center;
-  }
-}
-
-
-/* Ajustes finais da página pública: contraste, CTA, mockup e seções */
-.hero-publico-card {
-  transform: perspective(1000px) rotateY(-4deg) rotateX(2deg) scale(1.04);
-  box-shadow: 0 44px 100px rgba(11, 59, 95, 0.34);
-}
-
-.hero-publico-card::after {
-  content: "";
-  position: absolute;
-  inset: -18px;
-  z-index: -1;
-  border-radius: 42px;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(230, 179, 30, 0.22), transparent 30%),
-    radial-gradient(circle at 80% 80%, rgba(95, 75, 139, 0.18), transparent 34%);
-}
-
-.mini-dashboard {
-  transform: scale(1.02);
-}
-
-.acoes-publicas .botao-principal,
-.cartao-plano-publico .botao-principal {
-  background: linear-gradient(135deg, var(--landing-accent), #FF6B6B);
-  color: #111827;
-  font-weight: 900;
-  box-shadow: 0 18px 36px -10px rgba(230, 179, 30, 0.55);
-}
-
-.acoes-publicas .botao-principal:hover,
-.cartao-plano-publico .botao-principal:hover {
-  box-shadow: 0 24px 46px -14px rgba(255, 107, 107, 0.58);
-}
-
-.menu-publico button {
-  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  color: #ffffff;
-}
-
-.secao-experiencia-publica {
-  color: #ffffff;
-}
-
-.secao-experiencia-publica h2,
-.secao-experiencia-publica h3,
-.secao-experiencia-publica strong {
-  color: #ffffff;
-}
-
-.secao-experiencia-publica p {
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.cabecalho-experiencia-publica h2 {
-  color: #ffffff;
-  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-}
-
-.cabecalho-experiencia-publica p {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.experiencia-card h3,
-.experiencia-card strong {
-  color: #ffffff;
-}
-
-.secao-organiza-sistema {
-  padding: 34px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(230, 179, 30, 0.12), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
-}
-
-.grade-organiza-sistema {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
-}
-
-.grade-organiza-sistema article {
-  position: relative;
-  overflow: hidden;
-  padding: 24px;
-  border-radius: 26px;
-  background: #ffffff;
-  border: 1px solid var(--cor-borda);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.grade-organiza-sistema article:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--landing-card-shadow);
-}
-
-.grade-organiza-sistema article::after {
-  content: "";
-  position: absolute;
-  right: -38px;
-  bottom: -38px;
-  width: 110px;
-  height: 110px;
-  border-radius: 999px;
-  background: rgba(11, 59, 95, 0.06);
-}
-
-.grade-organiza-sistema article:nth-child(2)::after,
-.grade-organiza-sistema article:nth-child(6)::after {
-  background: rgba(34, 197, 94, 0.08);
-}
-
-.grade-organiza-sistema article:nth-child(3)::after,
-.grade-organiza-sistema article:nth-child(5)::after {
-  background: rgba(230, 179, 30, 0.10);
-}
-
-.grade-organiza-sistema span {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 15px;
-  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
-  color: #ffffff;
-  font-weight: 900;
-  margin-bottom: 14px;
-}
-
-.grade-organiza-sistema strong {
-  display: block;
-  font-size: 21px;
-  color: var(--landing-primary);
-  margin-bottom: 8px;
-}
-
-.grade-organiza-sistema p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.grade-publico-alvo article:nth-child(1) {
-  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-  border-color: #bfdbfe;
-}
-
-.grade-publico-alvo article:nth-child(2) {
-  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
-  border-color: #bbf7d0;
-}
-
-.grade-publico-alvo article:nth-child(3) {
-  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
-  border-color: #fed7aa;
-}
-
-.grade-publico-alvo article:nth-child(1)::before,
-.grade-publico-alvo article:nth-child(2)::before,
-.grade-publico-alvo article:nth-child(3)::before {
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
-  border-radius: 18px;
-  margin-bottom: 14px;
-  font-size: 24px;
-  font-weight: 900;
-}
-
-.grade-publico-alvo article:nth-child(1)::before {
-  content: "S";
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.grade-publico-alvo article:nth-child(2)::before {
-  content: "P";
-  background: #dcfce7;
-  color: #166534;
-}
-
-.grade-publico-alvo article:nth-child(3)::before {
-  content: "L";
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.cartao-plano-publico h2,
-.cartao-plano-publico p {
-  color: #ffffff;
-}
-
-.frase-confianca-cta {
-  margin: 18px 0 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-weight: 800;
-  letter-spacing: 0.01em;
-}
-
-.cartao-plano-publico .acoes-publicas {
-  margin-top: 22px;
-}
-
-@media (max-width: 1000px) {
-  .hero-publico-card {
-    transform: none;
-  }
-
-  .grade-organiza-sistema {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .grade-organiza-sistema {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Correção do bloco escuro: texto claro e melhor contraste */
-.impacto-card-principal h2,
-.impacto-card-principal h3,
-.impacto-card-principal strong {
-  color: #ffffff !important;
-}
-
-.impacto-card-principal p {
-  color: rgba(255, 255, 255, 0.88) !important;
-}
-
-.impacto-card-principal {
-  background:
-    radial-gradient(circle at 88% 12%, rgba(230, 179, 30, 0.28), transparent 28%),
-    radial-gradient(circle at 10% 92%, rgba(14, 165, 233, 0.24), transparent 32%),
-    linear-gradient(135deg, #06283f 0%, #0B3B5F 52%, #5F4B8B 100%) !important;
-}
-
-.impacto-card-principal span {
-  background: rgba(255, 255, 255, 0.16) !important;
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.20) !important;
-}
-
-.impacto-card-principal h2 {
-  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-}
-
-
-/* Repaginação moderna da área interna */
-.aplicacao,
-.app,
-.layout-app {
-  background:
-    radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.10), transparent 24%),
-    radial-gradient(circle at 86% 12%, rgba(14, 165, 233, 0.10), transparent 24%),
-    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
-}
-
-.menu-lateral,
-.sidebar {
-  background:
-    radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 30%),
-    linear-gradient(180deg, #07182f 0%, #0b1528 100%) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 16px 0 42px rgba(15, 23, 42, 0.12);
-}
-
-.menu-lateral .marca-app,
-.sidebar .marca-app,
-.logo-area {
-  padding: 18px 16px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.menu-lateral nav button,
-.menu-navegacao button,
-.sidebar nav button {
-  border-radius: 18px !important;
-  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-}
-
-.menu-lateral nav button:hover,
-.menu-navegacao button:hover,
-.sidebar nav button:hover {
-  transform: translateX(3px);
-  background: rgba(255, 255, 255, 0.10) !important;
-}
-
-.menu-lateral nav button.ativo,
-.menu-navegacao button.ativo,
-.sidebar nav button.ativo {
-  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
-  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.26);
-}
-
-.usuario-logado,
-.card-usuario,
-.bloco-usuario {
-  border-radius: 24px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-}
-
-.conteudo,
-.painel-conteudo,
-.area-conteudo,
-main.conteudo {
-  width: min(1180px, calc(100% - 34px));
-  margin-inline: auto;
-}
-
-.conteudo > h2,
-.topo-pagina h2 {
-  font-size: clamp(30px, 3vw, 42px);
-  letter-spacing: -0.045em;
-  color: #0f172a;
-}
-
-.topo-pagina {
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 24px;
-}
-
-.topo-pagina p {
-  color: #475569;
-  font-size: 17px;
-  line-height: 1.65;
-}
-
-.card,
-.resumo,
-.item-lista,
-.formulario,
-.filtros,
-.alerta-aniversariantes,
-.relatorio-professores-moderno,
-.secao-configuracoes,
-.aviso {
-  border-radius: 26px !important;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.045), transparent 34%),
-    #ffffff !important;
-  border: 1px solid rgba(203, 213, 225, 0.86) !important;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07) !important;
-}
-
-.item-lista {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-
-.item-lista:hover {
-  transform: translateY(-2px);
-  border-color: #bfdbfe !important;
-  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.10) !important;
-}
-
-.grade-resumos-comerciais,
-.cards,
-.cards-estatisticas,
-.grade-professores-resumo {
-  gap: 18px !important;
-}
-
-.resumo,
-.card {
-  position: relative;
-  overflow: hidden;
-}
-
-.resumo::after,
-.card::after {
-  content: "";
-  position: absolute;
-  right: -38px;
-  bottom: -38px;
-  width: 110px;
-  height: 110px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.055);
-}
-
-.resumo h3,
-.card h3 {
-  color: #0f172a;
-}
-
-.resumo p,
-.card p {
-  color: #475569;
-}
-
-.botao-principal,
-button.botao-principal {
-  border-radius: 16px !important;
-  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
-  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.24);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.botao-principal:hover,
-button.botao-principal:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 22px 40px rgba(37, 99, 235, 0.30);
-}
-
-.botao-secundario,
-.botao-editar,
-.botao-excluir,
-.botao-presenca,
-.botao-falta,
-.botao-justificou {
-  border-radius: 14px !important;
-}
-
-input,
-select,
-textarea {
-  border-radius: 14px !important;
-  border-color: #cbd5e1 !important;
-  background: #ffffff !important;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #2563eb !important;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-}
-
-.lista {
-  gap: 16px !important;
-}
-
-.item-com-acoes {
-  align-items: center;
-}
-
-.acoes-item,
-.acoes-chamada {
-  gap: 10px !important;
-}
-
-.abas-chamada {
-  padding: 8px;
-  border-radius: 999px;
-  background: #ffffff;
-  border: 1px solid #dbeafe;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-  width: fit-content;
-}
-
-.abas-chamada button {
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.abas-chamada button.ativo {
-  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
-}
-
-.relatorios-hero,
-.secao-experiencia-publica,
-.cartao-plano-publico {
-  border-radius: 34px !important;
-}
-
-.tabela,
-.tabela-ebd {
-  border-radius: 18px;
-  overflow: hidden;
-}
-
-@media (max-width: 900px) {
-  .conteudo,
-  .painel-conteudo,
-  .area-conteudo,
-  main.conteudo {
-    width: min(100% - 20px, 1180px);
-  }
-
-  .topo-pagina {
-    flex-direction: column;
-  }
-
-  .abas-chamada {
-    width: 100%;
-    border-radius: 22px;
-  }
-}
-
-
-/* Relatório responsivo e professores integrados */
-.area-relatorio,
-.relatorio,
-.relatorio-ebd,
-.cabecalho-relatorio,
-.tabela-container,
-.tabela-relatorio-wrapper {
-  max-width: 100%;
-}
-
-.relatorio,
-.relatorio-ebd {
-  overflow: visible !important;
-}
-
-.tabela-container,
-.tabela-relatorio-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 18px;
-}
-
-.tabela-ebd,
-.tabela {
-  width: 100%;
-  min-width: 760px;
-  border-collapse: collapse;
-}
-
-.relatorio-professores-integrado {
-  margin-top: 16px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #f8fbff;
-  border: 1px solid #dbeafe;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-.titulo-integrado-professores {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #dbeafe;
-}
-
-.titulo-integrado-professores strong {
-  color: #0f172a;
-  font-size: 16px;
-  text-transform: uppercase;
-}
-
-.titulo-integrado-professores span {
-  color: #334155;
-  font-weight: 800;
-  line-height: 1.5;
-}
-
-.professores-integrados-lista {
-  display: grid;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.professor-integrado-item {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-}
-
-.professor-integrado-item span {
-  color: #0f172a;
-  font-weight: 700;
-}
-
-.professor-integrado-item strong {
-  color: #1d4ed8;
-  font-weight: 900;
-}
-
-.bloco-professores-pdf {
-  display: none;
-}
-
-@media (max-width: 760px) {
-  .conteudo,
-  .area-conteudo,
-  .painel-conteudo,
-  main.conteudo {
-    width: min(100% - 16px, 1180px) !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .relatorio,
-  .relatorio-ebd,
-  .area-relatorio {
-    padding: 14px !important;
-    border-radius: 20px !important;
-    width: 100%;
-  }
-
-  .cabecalho-relatorio {
-    text-align: center;
-  }
-
-  .cabecalho-relatorio h2,
-  .cabecalho-relatorio h3 {
-    font-size: 18px !important;
-  }
-
-  .cabecalho-relatorio p {
-    font-size: 13px !important;
-    line-height: 1.5;
-  }
-
-  .tabela-ebd,
-  .tabela {
-    min-width: 720px;
-    font-size: 12px;
-  }
-
-  .relatorio-professores-integrado {
-    padding: 12px;
-  }
-
-  .professor-integrado-item {
-    grid-template-columns: 1fr;
-    gap: 4px;
-  }
-}
-
-@media print {
-  body {
-    background: #ffffff !important;
-  }
-
-  .no-print,
-  .menu-lateral,
-  .sidebar,
-  .topo-pagina,
-  .botao-whatsapp-flutuante {
-    display: none !important;
-  }
-
-  .conteudo,
-  .area-conteudo,
-  .painel-conteudo,
-  main.conteudo {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .relatorio,
-  .relatorio-ebd,
-  .area-relatorio {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 8mm !important;
-    margin: 0 !important;
-    border: 1px solid #0f172a !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    page-break-inside: avoid;
-  }
-
-  .tabela-container,
-  .tabela-relatorio-wrapper {
-    overflow: visible !important;
-  }
-
-  .tabela-ebd,
-  .tabela {
-    width: 100% !important;
-    min-width: 0 !important;
-    font-size: 9px !important;
-    table-layout: fixed;
-  }
-
-  .tabela-ebd th,
-  .tabela-ebd td,
-  .tabela th,
-  .tabela td {
-    padding: 5px 4px !important;
-    word-break: break-word;
-  }
-
-  .relatorio-professores-integrado {
-    margin-top: 10px !important;
-    padding: 8px !important;
-    border: 1px solid #0f172a !important;
-    background: #ffffff !important;
-    box-shadow: none !important;
-  }
-
-  .titulo-integrado-professores {
-    padding-bottom: 6px;
-  }
-
-  .titulo-integrado-professores strong,
-  .titulo-integrado-professores span {
-    font-size: 10px !important;
-  }
-
-  .professores-integrados-lista {
-    gap: 4px;
-  }
-
-  .professor-integrado-item {
-    grid-template-columns: 1.2fr 1fr auto;
-    padding: 4px 6px !important;
-    border-radius: 0;
-    background: #ffffff !important;
-    font-size: 9px !important;
-  }
-
-  @page {
-    size: A4 portrait;
-    margin: 8mm;
-  }
-}
-
-
-/* Relatório em formato vertical no celular */
-@media (max-width: 760px) {
-  .tabela-container,
-  .tabela-relatorio-wrapper {
-    overflow-x: visible !important;
-  }
-
-  .tabela-ebd,
-  .tabela {
-    min-width: 0 !important;
-  }
-
-  .tabela-ebd thead,
-  .tabela thead {
-    display: none;
-  }
-
-  .tabela-ebd,
-  .tabela-ebd tbody,
-  .tabela-ebd tr,
-  .tabela-ebd td,
-  .tabela,
-  .tabela tbody,
-  .tabela tr,
-  .tabela td {
-    display: block;
-    width: 100%;
-  }
-
-  .tabela-ebd tr,
-  .tabela tr {
-    margin-bottom: 14px;
-    padding: 14px;
-    border: 1px solid #dbeafe;
-    border-radius: 18px;
-    background: #ffffff;
-    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
-  }
-
-  .tabela-ebd tr:last-child,
-  .tabela tr:last-child {
-    margin-bottom: 0;
-  }
-
-  .tabela-ebd td,
-  .tabela td {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: center;
-    padding: 9px 0 !important;
-    border: none !important;
-    border-bottom: 1px solid #e2e8f0 !important;
-    text-align: right;
-    font-size: 14px;
-    word-break: normal;
-  }
-
-  .tabela-ebd td:last-child,
-  .tabela td:last-child {
-    border-bottom: none !important;
-  }
-
-  .tabela-ebd td::before,
-  .tabela td::before {
-    content: "";
-    flex-shrink: 0;
-    color: #475569;
-    font-weight: 900;
-    text-align: left;
-  }
-
-  .tabela-ebd td:nth-child(1)::before,
-  .tabela td:nth-child(1)::before {
-    content: "Classe";
-  }
-
-  .tabela-ebd td:nth-child(2)::before,
-  .tabela td:nth-child(2)::before {
-    content: "Matrícula";
-  }
-
-  .tabela-ebd td:nth-child(3)::before,
-  .tabela td:nth-child(3)::before {
-    content: "Ausência";
-  }
-
-  .tabela-ebd td:nth-child(4)::before,
-  .tabela td:nth-child(4)::before {
-    content: "Presença";
-  }
-
-  .tabela-ebd td:nth-child(5)::before,
-  .tabela td:nth-child(5)::before {
-    content: "Visitante";
-  }
-
-  .tabela-ebd td:nth-child(6)::before,
-  .tabela td:nth-child(6)::before {
-    content: "Total";
-  }
-
-  .tabela-ebd td:nth-child(7)::before,
-  .tabela td:nth-child(7)::before {
-    content: "Bíblia";
-  }
-
-  .tabela-ebd td:nth-child(8)::before,
-  .tabela td:nth-child(8)::before {
-    content: "Revista";
-  }
-
-  .tabela-ebd td:nth-child(9)::before,
-  .tabela td:nth-child(9)::before {
-    content: "Ofertas";
-  }
-
-  .tabela-ebd td:nth-child(10)::before,
-  .tabela td:nth-child(10)::before {
-    content: "%";
-  }
-
-  .tabela-ebd tr:last-child,
-  .tabela tr:last-child {
-    background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
-    border-color: #bfdbfe;
-  }
-
-  .tabela-ebd tr:last-child td:first-child,
-  .tabela tr:last-child td:first-child {
-    color: #1d4ed8;
-    font-weight: 900;
-  }
-}
-
-@media print {
-  .tabela-ebd,
-  .tabela,
-  .tabela-ebd thead,
-  .tabela thead,
-  .tabela-ebd tbody,
-  .tabela tbody,
-  .tabela-ebd tr,
-  .tabela tr,
-  .tabela-ebd td,
-  .tabela td {
-    display: revert !important;
-  }
-
-  .tabela-ebd td::before,
-  .tabela td::before {
-    content: none !important;
-  }
-}
-
-
-/* Navegação mobile: ao escolher uma opção, a página abre no topo */
-html {
-  scroll-behavior: smooth;
-}
-
-@media (max-width: 900px) {
-  .conteudo,
-  main.conteudo,
-  .area-conteudo,
-  .painel-conteudo {
-    scroll-margin-top: 12px;
-  }
-}
-
-
-/* Correção definitiva: menu mobile rola para a área principal */
-html {
-  scroll-behavior: smooth;
-}
-
-.area-principal {
-  scroll-margin-top: 8px;
-}
-
-@media (max-width: 900px) {
-  .area-principal {
-    scroll-margin-top: 8px;
-  }
-}
-
-
-/* Administração do sistema */
-.selo-admin {
-  display: inline-flex;
-  width: fit-content;
-  margin-bottom: 10px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #dbeafe, #cffafe);
-  color: #1d4ed8;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.topo-admin-sistema {
-  align-items: center;
-}
-
-.cards-admin-sistema {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  margin-bottom: 24px;
-}
-
-.card-admin {
-  display: grid;
-  gap: 6px;
-}
-
-.card-admin span {
-  color: var(--cor-texto-suave);
-  font-weight: 800;
-}
-
-.card-admin strong {
-  font-size: 34px;
-  color: #1d4ed8;
-}
-
-.formulario-admin-igreja {
-  margin-bottom: 24px;
-}
-
-.campo-observacoes-admin {
-  grid-column: span 2;
-}
-
-.filtros-admin {
-  margin-bottom: 22px;
-}
-
-.lista-admin-igrejas {
-  display: grid;
-  gap: 14px;
-}
-
-.igreja-admin-card {
-  align-items: center;
-}
-
-.linha-titulo-admin {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.linha-titulo-admin h3 {
-  margin: 0;
-}
-
-.status-piloto {
-  display: inline-flex;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.status-teste {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.status-ativa {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-pausada {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-cancelada {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-@media (max-width: 760px) {
-  .campo-observacoes-admin {
-    grid-column: span 1;
-  }
-
-  .igreja-admin-card {
-    align-items: flex-start;
-  }
-}
-
-
-/* Correção do logo no menu lateral */
-.marca-sidebar h1,
-.menu-lateral .marca-sidebar h1,
-.sidebar .marca-sidebar h1 {
-  color: #ffffff !important;
-}
-
-.marca-sidebar p,
-.menu-lateral .marca-sidebar p,
-.sidebar .marca-sidebar p {
-  color: rgba(255, 255, 255, 0.88) !important;
-}
-
-.marca-sidebar {
-  color: #ffffff;
-}
-
-/* Destacar melhor a Administração quando aparecer */
-.menu-navegacao button:last-child {
-  margin-top: 8px;
-}
-
-
-/* Tela cheia no PC: página pública e área logada */
-@media (min-width: 1024px) {
-  html,
-  body,
-  #root {
-    width: 100%;
-    min-width: 100%;
-    min-height: 100%;
-  }
-
-  body {
-    overflow-x: hidden;
-  }
-
-  .pagina-publica {
-    width: 100%;
-    max-width: none;
-  }
-
-  .topo-publico,
-  .hero-publico,
-  .secao-publica,
-  .rodape-publico {
-    width: min(100% - 72px, 1440px) !important;
-    max-width: 1440px !important;
-  }
-
-  .hero-publico {
-    min-height: calc(100vh - 110px);
-    padding-top: 42px;
-    padding-bottom: 42px;
-  }
-
-  .app {
-    width: 100%;
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
-    background:
-      radial-gradient(circle at 15% 8%, rgba(37, 99, 235, 0.08), transparent 28%),
-      linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
-  }
-
-  .menu-lateral {
-    width: 280px;
-    min-width: 280px;
-    min-height: 100vh;
-    position: sticky;
-    top: 0;
-    align-self: start;
-  }
-
-  .area-principal {
-    width: 100%;
-    min-width: 0;
-    padding: 28px 34px;
-  }
-
-  .conteudo,
-  main.conteudo,
-  .area-conteudo,
-  .painel-conteudo {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .conteudo > section,
-  .conteudo > div,
-  .topo-pagina,
-  .formulario,
-  .filtros,
-  .lista,
-  .cards,
-  .cards-estatisticas,
-  .relatorios-dashboard,
-  .relatorio,
-  .relatorio-ebd,
-  .area-relatorio {
-    max-width: none !important;
-  }
-
-  .cards,
-  .cards-estatisticas,
-  .cards-admin-sistema {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-
-  .lista {
-    width: 100%;
-  }
-
-  .item-lista {
-    width: 100%;
-  }
-
-  .relatorio,
-  .relatorio-ebd,
-  .area-relatorio {
-    width: 100% !important;
-  }
-}
-
-/* Em telas muito grandes, deixa a landing mais elegante sem ficar estreita */
-@media (min-width: 1500px) {
-  .topo-publico,
-  .hero-publico,
-  .secao-publica,
-  .rodape-publico {
-    width: min(100% - 96px, 1560px) !important;
-    max-width: 1560px !important;
-  }
-
-  .hero-publico h1 {
-    font-size: clamp(58px, 5vw, 86px);
-  }
-
-  .area-principal {
-    padding: 34px 42px;
-  }
-}
-
-/* No celular mantém layout em coluna, sem forçar largura de PC */
-@media (max-width: 1023px) {
-  .app {
-    display: block;
-    width: 100%;
-    min-height: 100vh;
-  }
-
-  .menu-lateral {
-    width: 100%;
-    min-width: 0;
-    position: relative;
-  }
-
-  .area-principal {
-    width: 100%;
-    padding: 18px 10px;
-  }
-}
-
-
-/* Correção da página inicial no celular */
-@media (max-width: 760px) {
-  .pagina-publica {
-    overflow-x: hidden;
-  }
-
-  .topo-publico {
-    width: calc(100% - 20px) !important;
-    margin: 8px auto 0 !important;
-    padding: 14px !important;
-    border-radius: 24px !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 14px !important;
-  }
-
-  .topo-publico .marca-publica {
-    display: grid !important;
-    grid-template-columns: auto 1fr !important;
-    align-items: center !important;
-    gap: 12px !important;
-  }
-
-  .topo-publico .marca-publica h1,
-  .topo-publico .marca-publica strong {
-    font-size: 24px !important;
-    line-height: 1.1 !important;
-    margin: 0 !important;
-    color: #0B3B5F !important;
-  }
-
-  .topo-publico .marca-publica p,
-  .topo-publico .marca-publica span {
-    font-size: 14px !important;
-    line-height: 1.35 !important;
-    margin: 4px 0 0 !important;
-  }
-
-  .topo-publico .logo-simbolo,
-  .topo-publico .logo-publica {
-    width: 64px !important;
-    height: 64px !important;
-    min-width: 64px !important;
-  }
-
-  .menu-publico {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
-    align-items: center !important;
-  }
-
-  .menu-publico a {
-    font-size: 13px !important;
-    text-align: center !important;
-    padding: 9px 4px !important;
-    border-radius: 999px !important;
-    background: #f8fafc !important;
-  }
-
-  .menu-publico button {
-    grid-column: 1 / -1 !important;
-    width: 100% !important;
-    min-height: 48px !important;
-    border-radius: 999px !important;
-    font-size: 18px !important;
-  }
-
-  .hero-publico {
-    width: calc(100% - 24px) !important;
-    margin: 26px auto 0 !important;
-    padding: 0 !important;
-    min-height: auto !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-    overflow: visible !important;
-  }
-
-  .hero-publico-texto {
-    width: 100% !important;
-    display: grid !important;
-    gap: 18px !important;
-    text-align: center !important;
-    justify-items: center !important;
-  }
-
-  .hero-publico .selo-publico {
-    max-width: 100% !important;
-    padding: 11px 16px !important;
-    font-size: 13px !important;
-    line-height: 1.45 !important;
-    text-align: center !important;
-    white-space: normal !important;
-  }
-
-  .hero-publico h1 {
-    width: 100% !important;
-    max-width: 100% !important;
-    font-size: clamp(38px, 13vw, 54px) !important;
-    line-height: 1.02 !important;
-    letter-spacing: -0.055em !important;
-    text-align: center !important;
-    margin: 0 !important;
-    word-break: normal !important;
-  }
-
-  .hero-publico p {
-    width: 100% !important;
-    max-width: 100% !important;
-    font-size: 16px !important;
-    line-height: 1.7 !important;
-    text-align: center !important;
-    margin: 0 !important;
-  }
-
-  .acoes-publicas {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  .acoes-publicas .botao-principal,
-  .acoes-publicas .botao-secundario {
-    width: 100% !important;
-    min-height: 52px !important;
-    justify-content: center !important;
-    text-align: center !important;
-    border-radius: 18px !important;
-  }
-
-  .metricas-publicas {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px !important;
-  }
-
-  .metricas-publicas div {
-    min-width: 0 !important;
-    padding: 14px 8px !important;
-  }
-
-  .metricas-publicas strong {
-    font-size: 20px !important;
-  }
-
-  .metricas-publicas span {
-    font-size: 11px !important;
-  }
-
-  .hero-publico-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-    transform: none !important;
-    padding: 0 !important;
-    border-radius: 28px !important;
-    box-shadow: 0 24px 54px rgba(11, 59, 95, 0.20) !important;
-  }
-
-  .hero-publico-card::before,
-  .hero-publico-card::after {
-    display: none !important;
-  }
-
-  .mini-dashboard {
-    width: 100% !important;
-    max-width: 100% !important;
-    transform: none !important;
-    padding: 22px !important;
-    border-radius: 28px !important;
-  }
-
-  .mini-dashboard-topo {
-    align-items: flex-start !important;
-  }
-
-  .mini-dashboard-topo strong {
-    font-size: 28px !important;
-  }
-
-  .mini-grid {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-
-  .mini-grid div {
-    min-height: auto !important;
-    padding: 22px 18px !important;
-  }
-
-  .linha-progresso-publica {
-    padding: 14px !important;
-  }
-
-  .botao-whatsapp-flutuante {
-    left: 14px !important;
-    right: 14px !important;
-    bottom: 12px !important;
-    width: auto !important;
-    text-align: center !important;
-    border-radius: 999px !important;
-    padding: 15px 18px !important;
-    font-size: 16px !important;
-  }
-
-  .secao-publica {
-    width: calc(100% - 24px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-
-
-/* Página pública inspirada no modelo Sistema EBD */
-.hero-modelo-sistema-ebd {
-  position: relative;
-  align-items: center;
-  gap: 54px;
-  padding-top: 68px;
-  padding-bottom: 72px;
-}
-
-.hero-modelo-sistema-ebd::before {
-  content: "";
-  position: absolute;
-  inset: -40px -30px auto auto;
-  width: 420px;
-  height: 420px;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(230, 179, 30, 0.18), transparent 64%);
-  pointer-events: none;
-}
-
-.logo-faixa-modelo {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: fit-content;
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(11, 59, 95, 0.10);
-  box-shadow: 0 18px 38px rgba(11, 59, 95, 0.08);
-}
-
-.logo-faixa-imagem {
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  border-radius: 18px;
-  background: #ffffff;
-}
-
-.logo-faixa-modelo strong,
-.logo-faixa-modelo span {
-  display: block;
-}
-
-.logo-faixa-modelo strong {
-  color: #0B3B5F;
-  font-size: 20px;
-  line-height: 1;
-}
-
-.logo-faixa-modelo span {
-  color: #475569;
-  font-weight: 800;
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.hero-modelo-texto h1 {
-  max-width: 720px;
-  font-size: clamp(48px, 6.4vw, 88px);
-  line-height: 0.96;
-  letter-spacing: -0.065em;
-}
-
-.hero-modelo-texto p {
-  max-width: 680px;
-}
-
-.selo-modelo {
-  margin-top: 4px;
-}
-
-.acoes-modelo {
-  margin-top: 8px;
-}
-
-.selos-download-modelo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  width: min(100%, 680px);
-  margin-top: 10px;
-}
-
-.selos-download-modelo div {
-  padding: 18px;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 1px solid rgba(11, 59, 95, 0.10);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
-  text-align: center;
-}
-
-.selos-download-modelo strong,
-.selos-download-modelo span {
-  display: block;
-}
-
-.selos-download-modelo strong {
-  color: #1d4ed8;
-  font-size: 21px;
-}
-
-.selos-download-modelo span {
-  color: #475569;
-  font-size: 12px;
-  font-weight: 800;
-  margin-top: 5px;
-}
-
-.hero-video-modelo {
-  display: grid;
-  gap: 18px;
-}
-
-.video-card-modelo {
-  position: relative;
-  overflow: hidden;
-  padding: 26px;
-  min-height: 260px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(230, 179, 30, 0.16), transparent 36%),
-    linear-gradient(135deg, #082f49 0%, #0B3B5F 62%, #5F4B8B 100%);
-  color: #ffffff;
-  box-shadow: 0 30px 70px rgba(11, 59, 95, 0.24);
-}
-
-.video-topo-modelo {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.82);
-  font-weight: 900;
-}
-
-.play-modelo {
-  display: grid;
-  place-items: center;
-  width: 82px;
-  height: 82px;
-  margin: 34px auto 24px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
-}
-
-.play-modelo span {
-  transform: translateX(3px);
-  font-size: 28px;
-}
-
-.video-card-modelo h3 {
-  margin: 0 0 8px;
-  font-size: 24px;
-  line-height: 1.2;
-  color: #ffffff;
-}
-
-.video-card-modelo p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  line-height: 1.6;
-}
-
-.mini-dashboard-modelo {
-  transform: none;
-}
-
-.secao-caracteristicas-modelo,
-.secao-faq-modelo {
-  padding: 34px;
-  border-radius: 34px;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
-}
-
-.grade-caracteristicas-modelo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 26px;
-}
-
-.grade-caracteristicas-modelo article {
-  padding: 28px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid #e2e8f0;
-  text-align: center;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
-
-.grade-caracteristicas-modelo article:hover,
-.mockup-lista-modelo div:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 24px 45px rgba(11, 59, 95, 0.12);
-}
-
-.icone-caracteristica-modelo {
-  display: grid;
-  place-items: center;
-  width: 66px;
-  height: 66px;
-  margin: 0 auto 18px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #dbeafe, #cffafe);
-  color: #1d4ed8;
-}
-
-.grade-caracteristicas-modelo h3 {
-  margin: 0 0 8px;
-  color: #0f172a;
-  font-size: 24px;
-}
-
-.grade-caracteristicas-modelo p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.6;
-}
-
-.secao-tempo-modelo {
-  display: grid;
-  grid-template-columns: 0.75fr 1.25fr;
-  gap: 34px;
-  align-items: center;
-  padding: 42px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at left, rgba(230, 179, 30, 0.16), transparent 34%),
-    linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-  border: 1px solid #dbeafe;
-}
-
-.tempo-ilustracao-modelo {
-  display: grid;
-  place-items: center;
-}
-
-.circulo-tempo-modelo {
-  display: grid;
-  place-items: center;
-  width: min(260px, 70vw);
-  height: min(260px, 70vw);
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 30% 25%, #ffffff, transparent 34%),
-    linear-gradient(135deg, #0B3B5F, #2B5C8A);
-  color: #ffffff;
-  box-shadow: 0 28px 60px rgba(11, 59, 95, 0.22);
-}
-
-.circulo-tempo-modelo .icone-svg {
-  width: 88px;
-  height: 88px;
-}
-
-.secao-tempo-modelo h2,
-.secao-funcoes-modelo h2 {
-  margin: 18px 0 14px;
-  color: #0B3B5F;
-  font-size: clamp(30px, 4vw, 52px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-.secao-tempo-modelo p {
-  color: #475569;
-  line-height: 1.8;
-  font-size: 17px;
-  margin-bottom: 22px;
-}
-
-.secao-funcoes-modelo {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  gap: 28px;
-  align-items: center;
-  padding: 42px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(34, 197, 94, 0.10), transparent 34%),
-    #ffffff;
-  border: 1px solid rgba(11, 59, 95, 0.08);
-  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
-}
-
-.lista-funcoes-modelo {
-  display: grid;
-  gap: 12px;
-  padding: 0;
-  margin: 22px 0;
-  list-style: none;
-}
-
-.lista-funcoes-modelo li {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  color: #334155;
-  font-weight: 800;
-  line-height: 1.55;
-}
-
-.lista-funcoes-modelo li::before {
-  content: "";
-  width: 9px;
-  height: 9px;
-  margin-top: 8px;
-  flex-shrink: 0;
-  border-radius: 999px;
-  background: #1d4ed8;
-  box-shadow: 0 0 0 5px #dbeafe;
-}
-
-.frase-muito-mais {
-  display: block;
-  color: #0B3B5F;
-  font-size: 30px;
-}
-
-.mockup-funcoes-modelo {
-  padding: 18px;
-  border-radius: 34px;
-  background: #0B3B5F;
-  box-shadow: 0 30px 70px rgba(11, 59, 95, 0.22);
-}
-
-.mockup-barra-modelo {
-  display: flex;
-  gap: 7px;
-  margin-bottom: 16px;
-}
-
-.mockup-barra-modelo span {
-  width: 11px;
-  height: 11px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.42);
-}
-
-.mockup-lista-modelo {
-  display: grid;
-  gap: 12px;
-}
-
-.mockup-lista-modelo div {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.10);
-  color: #ffffff;
-  font-weight: 900;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
-
-.faq-modelo-lista {
-  display: grid;
-  gap: 12px;
-  margin-top: 22px;
-}
-
-.faq-modelo-lista details {
-  padding: 18px 20px;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-}
-
-.faq-modelo-lista summary {
-  cursor: pointer;
-  color: #0B3B5F;
-  font-weight: 900;
-  font-size: 17px;
-}
-
-.faq-modelo-lista p {
-  margin: 12px 0 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.cartao-modelo-final {
-  text-align: center;
-}
-
-@media (max-width: 1000px) {
-  .hero-modelo-sistema-ebd,
-  .secao-tempo-modelo,
-  .secao-funcoes-modelo {
-    grid-template-columns: 1fr;
-  }
-
-  .grade-caracteristicas-modelo {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-video-modelo {
-    width: 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  .hero-modelo-sistema-ebd {
-    width: calc(100% - 24px) !important;
-    margin: 22px auto 0 !important;
-    padding: 0 0 34px !important;
-    gap: 22px !important;
-  }
-
-  .logo-faixa-modelo {
-    width: 100%;
-    border-radius: 24px;
-    justify-content: flex-start;
-  }
-
-  .hero-modelo-texto {
-    text-align: center !important;
-  }
-
-  .hero-modelo-texto h1 {
-    font-size: clamp(40px, 13vw, 58px) !important;
-  }
-
-  .selos-download-modelo {
-    grid-template-columns: 1fr;
-  }
-
-  .video-card-modelo {
-    min-height: auto;
-    text-align: center;
-  }
-
-  .video-topo-modelo {
-    justify-content: center;
-  }
-
-  .secao-caracteristicas-modelo,
-  .secao-tempo-modelo,
-  .secao-funcoes-modelo,
-  .secao-faq-modelo {
-    width: calc(100% - 24px) !important;
-    padding: 24px !important;
-  }
-
-  .mockup-funcoes-modelo {
-    padding: 14px;
-  }
-
-  .botao-whatsapp-flutuante {
-    display: none !important;
-  }
-}
-
-
-/* Ajuste com base nas cores da logo oficial: azul, amarelo, vermelho e verde */
-:root {
-  --logo-azul: #12A8E0;
-  --logo-amarelo: #FFCB05;
-  --logo-vermelho: #EF3E23;
-  --logo-verde: #009B4E;
-  --logo-azul-escuro: #073B63;
-}
-
-.pagina-publica {
-  background:
-    radial-gradient(circle at 8% 8%, rgba(255, 203, 5, 0.22), transparent 26%),
-    radial-gradient(circle at 92% 12%, rgba(18, 168, 224, 0.20), transparent 28%),
-    radial-gradient(circle at 12% 78%, rgba(0, 155, 78, 0.12), transparent 28%),
-    radial-gradient(circle at 88% 82%, rgba(239, 62, 35, 0.10), transparent 26%),
-    linear-gradient(180deg, #fffdf3 0%, #f0f9ff 44%, #ffffff 100%) !important;
-}
-
-.topo-publico {
-  border-color: rgba(18, 168, 224, 0.22) !important;
-  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.10) !important;
-}
-
-.menu-publico button,
-.botao-principal,
-.acoes-publicas .botao-principal,
-.cartao-plano-publico .botao-principal,
-.botao-manual-modelo {
-  background: linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
-  color: #ffffff !important;
-  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.26) !important;
-}
-
-.acoes-publicas .botao-secundario {
-  border-color: rgba(255, 203, 5, 0.65) !important;
-  background: #ffffff !important;
-}
-
-.selo-publico,
-.selo-modelo {
-  background: linear-gradient(135deg, rgba(255, 203, 5, 0.30), rgba(18, 168, 224, 0.16)) !important;
-  color: var(--logo-azul-escuro) !important;
-  border-color: rgba(18, 168, 224, 0.20) !important;
-}
-
-.hero-modelo-texto h1 {
-  background: linear-gradient(
-    135deg,
-    var(--logo-azul-escuro) 0%,
-    var(--logo-azul) 42%,
-    var(--logo-verde) 72%,
-    var(--logo-vermelho) 100%
-  ) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-}
-
-.logo-faixa-modelo {
-  border-color: rgba(255, 203, 5, 0.35) !important;
-  background:
-    radial-gradient(circle at top left, rgba(255, 203, 5, 0.14), transparent 38%),
-    #ffffff !important;
-}
-
-.logo-faixa-modelo strong {
-  color: var(--logo-azul-escuro) !important;
-}
-
-.selos-download-modelo div:nth-child(1) {
-  border-color: rgba(18, 168, 224, 0.32) !important;
-}
-
-.selos-download-modelo div:nth-child(2) {
-  border-color: rgba(255, 203, 5, 0.46) !important;
-}
-
-.selos-download-modelo div:nth-child(3) {
-  border-color: rgba(0, 155, 78, 0.32) !important;
-}
-
-.selos-download-modelo strong {
-  color: var(--logo-azul-escuro) !important;
-}
-
-/* Manual interativo no lugar do vídeo */
-.manual-card-modelo {
-  position: relative;
-  overflow: hidden;
-  padding: 26px;
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at 12% 12%, rgba(255, 203, 5, 0.30), transparent 30%),
-    radial-gradient(circle at 90% 18%, rgba(18, 168, 224, 0.26), transparent 32%),
-    radial-gradient(circle at 18% 92%, rgba(0, 155, 78, 0.16), transparent 30%),
-    linear-gradient(135deg, #073B63 0%, #0B4F7A 62%, #0f766e 100%);
-  color: #ffffff;
-  box-shadow: 0 30px 70px rgba(7, 59, 99, 0.24);
-}
-
-.manual-card-modelo::after {
-  content: "";
-  position: absolute;
-  right: -60px;
-  bottom: -60px;
-  width: 170px;
-  height: 170px;
-  border-radius: 999px;
-  background: rgba(239, 62, 35, 0.16);
-}
-
-.manual-topo-modelo {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.manual-topo-modelo span,
-.manual-topo-modelo strong {
-  display: block;
-}
-
-.manual-topo-modelo span {
-  width: fit-content;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(255, 203, 5, 0.20);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.manual-topo-modelo strong {
-  margin-top: 10px;
-  font-size: 25px;
-  line-height: 1.14;
-  color: #ffffff;
-}
-
-.manual-topo-modelo .icone-svg {
-  color: #FFCB05;
-  width: 34px;
-  height: 34px;
-}
-
-.manual-passos-modelo {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 10px;
-}
-
-.manual-passos-modelo details {
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  overflow: hidden;
-  backdrop-filter: blur(12px);
-}
-
-.manual-passos-modelo summary {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 16px;
-  cursor: pointer;
-  list-style: none;
-  color: #ffffff;
-  font-weight: 900;
-}
-
-.manual-passos-modelo summary::-webkit-details-marker {
-  display: none;
-}
-
-.manual-passos-modelo summary span {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  flex-shrink: 0;
-  border-radius: 13px;
-  background: linear-gradient(135deg, var(--logo-amarelo), #ffe680);
-  color: #073B63;
-  font-weight: 900;
-}
-
-.manual-passos-modelo p {
-  margin: 0;
-  padding: 0 16px 16px 62px;
-  color: rgba(255, 255, 255, 0.86);
-  line-height: 1.6;
-}
-
-.botao-manual-modelo {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  margin-top: 18px;
-  min-height: 52px;
-  border: none;
-  border-radius: 18px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.grade-caracteristicas-modelo article:nth-child(1) .icone-caracteristica-modelo {
-  background: rgba(18, 168, 224, 0.14) !important;
-  color: var(--logo-azul) !important;
-}
-
-.grade-caracteristicas-modelo article:nth-child(2) .icone-caracteristica-modelo {
-  background: rgba(0, 155, 78, 0.14) !important;
-  color: var(--logo-verde) !important;
-}
-
-.grade-caracteristicas-modelo article:nth-child(3) .icone-caracteristica-modelo {
-  background: rgba(255, 203, 5, 0.20) !important;
-  color: #b77900 !important;
-}
-
-.secao-tempo-modelo {
-  background:
-    radial-gradient(circle at left, rgba(255, 203, 5, 0.18), transparent 34%),
-    linear-gradient(135deg, #effaff 0%, #ffffff 100%) !important;
-  border-color: rgba(18, 168, 224, 0.20) !important;
-}
-
-.circulo-tempo-modelo {
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255, 203, 5, 0.42), transparent 35%),
-    linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
-}
-
-.lista-funcoes-modelo li::before {
-  background: var(--logo-verde) !important;
-  box-shadow: 0 0 0 5px rgba(0, 155, 78, 0.12) !important;
-}
-
-.mockup-funcoes-modelo {
-  background:
-    radial-gradient(circle at top right, rgba(255, 203, 5, 0.18), transparent 32%),
-    linear-gradient(135deg, var(--logo-azul-escuro), #0b4f7a) !important;
-}
-
-.mockup-barra-modelo span:nth-child(1) {
-  background: var(--logo-vermelho) !important;
-}
-
-.mockup-barra-modelo span:nth-child(2) {
-  background: var(--logo-amarelo) !important;
-}
-
-.mockup-barra-modelo span:nth-child(3) {
-  background: var(--logo-verde) !important;
-}
-
-.cartao-modelo-final {
-  background:
-    radial-gradient(circle at top right, rgba(255, 203, 5, 0.22), transparent 36%),
-    radial-gradient(circle at bottom left, rgba(0, 155, 78, 0.18), transparent 34%),
-    linear-gradient(135deg, #073B63 0%, #0B4F7A 58%, #0f766e 100%) !important;
-}
-
-@media (max-width: 760px) {
-  .manual-card-modelo {
-    padding: 22px;
-    border-radius: 28px;
-  }
-
-  .manual-topo-modelo {
-    align-items: center;
-  }
-
-  .manual-topo-modelo strong {
-    font-size: 22px;
-  }
-
-  .manual-passos-modelo p {
-    padding-left: 16px;
-  }
-}
-
-
-/* Área interna modernizada com cores da logo oficial */
-:root {
-  --logo-azul: #12A8E0;
-  --logo-amarelo: #FFCB05;
-  --logo-vermelho: #EF3E23;
-  --logo-verde: #009B4E;
-  --logo-azul-escuro: #073B63;
-  --logo-fundo: #F4FBFF;
-}
-
-.app {
-  background:
-    radial-gradient(circle at 16% 8%, rgba(18, 168, 224, 0.12), transparent 28%),
-    radial-gradient(circle at 88% 14%, rgba(255, 203, 5, 0.16), transparent 25%),
-    radial-gradient(circle at 82% 86%, rgba(0, 155, 78, 0.10), transparent 30%),
-    linear-gradient(180deg, #f7fcff 0%, #eef7ff 100%) !important;
-}
-
-.menu-lateral {
-  background:
-    radial-gradient(circle at 14% 8%, rgba(255, 203, 5, 0.12), transparent 28%),
-    radial-gradient(circle at 88% 30%, rgba(18, 168, 224, 0.18), transparent 32%),
-    linear-gradient(180deg, #05283F 0%, #061B2E 100%) !important;
-}
-
-.marca-sidebar h1,
-.marca-sidebar strong {
-  color: #ffffff !important;
-}
-
-.marca-sidebar p,
-.marca-sidebar span {
-  color: rgba(255, 255, 255, 0.88) !important;
-}
-
-.menu-navegacao button.ativo,
-.menu-lateral nav button.ativo,
-.sidebar nav button.ativo {
-  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde)) !important;
-  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.28) !important;
-}
-
-.menu-navegacao button:hover,
-.menu-lateral nav button:hover,
-.sidebar nav button:hover {
-  background: rgba(255, 255, 255, 0.11) !important;
-}
-
-.usuario-logado,
-.card-usuario,
-.bloco-usuario {
-  background:
-    radial-gradient(circle at top right, rgba(255, 203, 5, 0.08), transparent 28%),
-    rgba(255, 255, 255, 0.08) !important;
-}
-
-.area-principal {
-  background:
-    radial-gradient(circle at 92% 6%, rgba(255, 203, 5, 0.08), transparent 26%),
-    radial-gradient(circle at 8% 92%, rgba(18, 168, 224, 0.08), transparent 26%) !important;
-}
-
-.topo-pagina {
-  padding: 24px;
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 203, 5, 0.14), transparent 28%),
-    #ffffff;
-  border: 1px solid rgba(18, 168, 224, 0.18);
-  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.08);
-}
-
-.topo-pagina h2 {
-  color: var(--logo-azul-escuro) !important;
-  font-size: clamp(34px, 4vw, 52px) !important;
-  line-height: 1;
-}
-
-.topo-pagina p {
-  color: #475569 !important;
-}
-
-.card,
-.resumo,
-.item-lista,
-.formulario,
-.filtros,
-.aviso,
-.secao-configuracoes {
-  border-color: rgba(18, 168, 224, 0.16) !important;
-}
-
-.botao-principal,
-button.botao-principal {
-  background: linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
-  color: #ffffff !important;
-  border: none !important;
-}
-
-.botao-verde {
-  background: linear-gradient(135deg, var(--logo-verde), #16a34a) !important;
-  color: #ffffff !important;
-}
-
-.botao-editar {
-  border-color: var(--logo-azul) !important;
-  color: #075985 !important;
-  background: #ffffff !important;
-}
-
-.botao-excluir {
-  border-color: var(--logo-vermelho) !important;
-  color: #b91c1c !important;
-  background: #ffffff !important;
-}
-
-.resumo::after,
-.card::after {
-  background: rgba(255, 203, 5, 0.11) !important;
-}
-
-/* Classes em destaque */
-.aviso-classes-moderno {
-  background:
-    linear-gradient(135deg, rgba(18, 168, 224, 0.09), rgba(255, 203, 5, 0.13)),
-    #ffffff !important;
-  border-color: rgba(18, 168, 224, 0.20) !important;
-}
-
-.classe-card-moderno {
-  position: relative;
-  overflow: hidden;
-  align-items: stretch !important;
-  gap: 24px !important;
-  padding: 26px !important;
-  border-radius: 30px !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 203, 5, 0.16), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%) !important;
-  border: 1px solid rgba(18, 168, 224, 0.20) !important;
-  box-shadow: 0 20px 48px rgba(7, 59, 99, 0.09) !important;
-}
-
-.classe-card-moderno::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 22px;
-  bottom: 22px;
-  width: 7px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--logo-azul), var(--logo-verde), var(--logo-amarelo));
-}
-
-.classe-card-conteudo {
-  width: 100%;
-}
-
-.classe-card-cabecalho {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 18px;
-}
-
-.classe-card-selo {
-  display: inline-flex;
-  margin-bottom: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #e0f2fe;
-  color: #075985;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.classe-card-cabecalho h3 {
-  margin: 0 !important;
-  color: var(--logo-azul-escuro) !important;
-  font-size: clamp(30px, 4vw, 46px) !important;
-  line-height: 1.04 !important;
-  letter-spacing: -0.04em;
-}
-
-.classe-card-matricula {
-  display: grid;
-  place-items: center;
-  min-width: 96px;
-  min-height: 86px;
-  padding: 14px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde));
-  color: #ffffff;
-  font-size: 34px;
-  line-height: 1;
-  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.22);
-}
-
-.classe-card-matricula span {
-  margin-top: 4px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.classe-card-info {
-  display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.classe-card-info p {
-  margin: 0;
-  padding: 14px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid #dbeafe;
-}
-
-.classe-card-info strong,
-.classe-card-info span {
-  display: block;
-}
-
-.classe-card-info strong {
-  color: #64748b;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.classe-card-info span {
-  margin-top: 5px;
-  color: #0f172a;
-  font-weight: 900;
-}
-
-.professores-na-classe {
-  border-radius: 20px !important;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid #e2e8f0;
-  padding: 12px;
-}
-
-.professor-classe-linha {
-  border-radius: 16px !important;
-  background: #ffffff !important;
-}
-
-.acoes-classe-card {
-  min-width: 190px;
-  display: grid !important;
-  align-content: start;
-}
-
-.acoes-classe-card button {
-  width: 100%;
-}
-
-.formulario-pessoa-classe {
-  border-color: rgba(0, 155, 78, 0.22) !important;
-  background:
-    radial-gradient(circle at top right, rgba(0, 155, 78, 0.08), transparent 30%),
-    #ffffff !important;
-}
-
-.formulario-pessoa-classe h3 {
-  color: var(--logo-azul-escuro);
-}
-
-@media (max-width: 900px) {
-  .classe-card-cabecalho,
-  .classe-card-info {
-    grid-template-columns: 1fr;
-  }
-
-  .classe-card-cabecalho {
-    display: grid;
-  }
-
-  .classe-card-matricula {
-    width: 100%;
-    min-height: auto;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .acoes-classe-card {
-    width: 100%;
-  }
-}
-
-
-/* Cores mais fortes e destaque maior para nomes das classes */
-:root {
-  --logo-azul: #00AEEF;
-  --logo-azul-forte: #006BB6;
-  --logo-amarelo: #FFD200;
-  --logo-vermelho: #F0442E;
-  --logo-verde: #00A651;
-  --logo-verde-forte: #008C44;
-  --logo-azul-escuro: #003B66;
-}
-
-/* Página inicial com cores mais vivas */
-.pagina-publica {
-  background:
-    radial-gradient(circle at 6% 7%, rgba(255, 210, 0, 0.34), transparent 25%),
-    radial-gradient(circle at 92% 10%, rgba(0, 174, 239, 0.34), transparent 28%),
-    radial-gradient(circle at 12% 78%, rgba(0, 166, 81, 0.22), transparent 29%),
-    radial-gradient(circle at 86% 86%, rgba(240, 68, 46, 0.18), transparent 27%),
-    linear-gradient(180deg, #fff8d8 0%, #e8f8ff 42%, #ffffff 100%) !important;
-}
-
-.hero-modelo-texto h1 {
-  background: linear-gradient(
-    135deg,
-    #003B66 0%,
-    #006BB6 34%,
-    #00AEEF 58%,
-    #00A651 78%,
-    #F0442E 100%
-  ) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-}
-
-.selo-publico,
-.selo-modelo {
-  background: linear-gradient(135deg, rgba(255, 210, 0, 0.52), rgba(0, 174, 239, 0.22)) !important;
-  border-color: rgba(0, 174, 239, 0.36) !important;
-  color: #003B66 !important;
-  box-shadow: 0 12px 28px rgba(0, 107, 182, 0.10);
-}
-
-.manual-card-modelo,
-.video-card-modelo,
-.cartao-modelo-final {
-  background:
-    radial-gradient(circle at 12% 12%, rgba(255, 210, 0, 0.35), transparent 30%),
-    radial-gradient(circle at 90% 18%, rgba(0, 174, 239, 0.34), transparent 32%),
-    radial-gradient(circle at 18% 92%, rgba(0, 166, 81, 0.22), transparent 30%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 55%, #008C44 100%) !important;
-}
-
-.botao-principal,
-.acoes-publicas .botao-principal,
-.cartao-plano-publico .botao-principal,
-.botao-manual-modelo {
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%) !important;
-  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.36) !important;
-}
-
-.acoes-publicas .botao-secundario {
-  border: 2px solid var(--logo-amarelo) !important;
-  color: var(--logo-azul-escuro) !important;
-}
-
-/* Área interna com cores mais fortes */
-.app {
-  background:
-    radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
-    radial-gradient(circle at 92% 10%, rgba(255, 210, 0, 0.26), transparent 28%),
-    radial-gradient(circle at 84% 90%, rgba(0, 166, 81, 0.16), transparent 30%),
-    linear-gradient(180deg, #eefaff 0%, #f7fbff 52%, #ffffff 100%) !important;
-}
-
-.menu-lateral {
-  background:
-    radial-gradient(circle at 10% 8%, rgba(255, 210, 0, 0.20), transparent 28%),
-    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.30), transparent 32%),
-    radial-gradient(circle at 20% 86%, rgba(0, 166, 81, 0.20), transparent 32%),
-    linear-gradient(180deg, #002E50 0%, #031A2E 100%) !important;
-}
-
-.menu-navegacao button.ativo,
-.menu-lateral nav button.ativo,
-.sidebar nav button.ativo {
-  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
-  box-shadow: 0 22px 44px rgba(0, 174, 239, 0.38) !important;
-}
-
-.topo-pagina {
-  background:
-    radial-gradient(circle at 88% 12%, rgba(255, 210, 0, 0.25), transparent 30%),
-    radial-gradient(circle at 8% 92%, rgba(0, 174, 239, 0.16), transparent 30%),
-    #ffffff !important;
-  border: 1px solid rgba(0, 174, 239, 0.30) !important;
-}
-
-.topo-pagina h2 {
-  background: linear-gradient(135deg, #003B66, #006BB6, #00AEEF) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-}
-
-/* Novo destaque das classes */
-.classe-card-moderno {
-  padding: 0 !important;
-  border-radius: 34px !important;
-  overflow: hidden !important;
-  border: 2px solid rgba(0, 174, 239, 0.28) !important;
-  background: #ffffff !important;
-  box-shadow: 0 26px 60px rgba(0, 59, 102, 0.14) !important;
-}
-
-.classe-card-moderno::before {
-  display: none !important;
-}
-
-.classe-card-conteudo {
-  padding: 0 !important;
-}
-
-.classe-card-cabecalho {
-  position: relative;
-  margin: 0 !important;
-  padding: 30px 28px !important;
-  min-height: 190px;
-  display: grid !important;
-  grid-template-columns: 1fr auto;
-  align-items: center !important;
-  gap: 20px !important;
-  background:
-    radial-gradient(circle at 92% 18%, rgba(255, 210, 0, 0.38), transparent 34%),
-    radial-gradient(circle at 12% 88%, rgba(0, 166, 81, 0.22), transparent 32%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 52%, #00AEEF 100%) !important;
-  color: #ffffff;
-}
-
-.classe-card-cabecalho::after {
-  content: "";
-  position: absolute;
-  right: -42px;
-  bottom: -42px;
-  width: 150px;
-  height: 150px;
-  border-radius: 999px;
-  background: rgba(255, 210, 0, 0.20);
-}
-
-.classe-card-selo {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 14px !important;
-  padding: 8px 14px !important;
-  background: rgba(255, 255, 255, 0.18) !important;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: #ffffff !important;
-  font-size: 12px !important;
-  letter-spacing: 0.08em !important;
-}
-
-.classe-card-cabecalho h3 {
-  position: relative;
-  z-index: 1;
-  color: #ffffff !important;
-  font-size: clamp(48px, 10vw, 82px) !important;
-  line-height: 0.92 !important;
-  letter-spacing: -0.07em !important;
-  text-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
-}
-
-.classe-card-matricula {
-  position: relative;
-  z-index: 1;
-  min-width: 128px !important;
-  min-height: 118px !important;
-  border-radius: 30px !important;
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.38), transparent 32%),
-    linear-gradient(135deg, #FFD200 0%, #00A651 100%) !important;
-  color: #ffffff !important;
-  font-size: 46px !important;
-  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18) !important;
-  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-}
-
-.classe-card-matricula span {
-  color: #ffffff !important;
-  font-size: 12px !important;
-  font-weight: 900;
-}
-
-.classe-card-info {
-  padding: 22px 26px 0 !important;
-  margin-bottom: 16px !important;
-  grid-template-columns: 1fr 1fr !important;
-}
-
-.classe-card-info p {
-  border-radius: 22px !important;
-  border: 1px solid rgba(0, 174, 239, 0.22) !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 30%),
-    #ffffff !important;
-  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.06);
-}
-
-.classe-card-info strong {
-  color: #006BB6 !important;
-}
-
-.classe-card-info span {
-  color: #0f172a !important;
-  font-size: 20px;
-}
-
-.professores-na-classe {
-  margin: 0 26px 22px !important;
-  border-radius: 24px !important;
-  background:
-    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 30%),
-    #f8fcff !important;
-  border: 1px solid rgba(0, 174, 239, 0.18) !important;
-}
-
-.professor-classe-linha {
-  border: 1px solid rgba(0, 174, 239, 0.15) !important;
-  box-shadow: 0 12px 24px rgba(0, 59, 102, 0.05);
-}
-
-.acoes-classe-card {
-  padding: 0 26px 26px !important;
-  min-width: 220px !important;
-}
-
-.acoes-classe-card button {
-  min-height: 54px;
-  border-radius: 18px !important;
-  font-size: 16px;
-  font-weight: 900;
-}
-
-.acoes-classe-card .botao-principal {
-  background: linear-gradient(135deg, #003B66, #00AEEF) !important;
-}
-
-.acoes-classe-card .botao-verde {
-  background: linear-gradient(135deg, #008C44, #00A651) !important;
-}
-
-.item-lista:hover.classe-card-moderno {
-  transform: translateY(-4px);
-  box-shadow: 0 34px 72px rgba(0, 59, 102, 0.18) !important;
-}
-
-/* Cards e formulários mais vivos */
-.card,
-.resumo,
-.formulario,
-.filtros,
-.aviso,
-.item-lista:not(.classe-card-moderno) {
-  border-color: rgba(0, 174, 239, 0.24) !important;
-  box-shadow: 0 20px 45px rgba(0, 59, 102, 0.08) !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #00AEEF !important;
-  box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.14) !important;
-}
-
-@media (max-width: 900px) {
-  .classe-card-cabecalho {
-    grid-template-columns: 1fr !important;
-    min-height: auto;
-    padding: 30px 24px !important;
-  }
-
-  .classe-card-cabecalho h3 {
-    font-size: clamp(52px, 15vw, 76px) !important;
-  }
-
-  .classe-card-matricula {
-    width: 100% !important;
-    min-width: 0 !important;
-    min-height: 86px !important;
-    display: flex !important;
-    gap: 10px !important;
-  }
-
-  .classe-card-info {
-    grid-template-columns: 1fr !important;
-    padding: 20px 20px 0 !important;
-  }
-
-  .professores-na-classe {
-    margin: 0 20px 20px !important;
-  }
-
-  .acoes-classe-card {
-    padding: 0 20px 24px !important;
-  }
-}
-
-
-/* Landing oficial EBD Fiel: paleta da logo e layout profissional */
-:root {
-  --color-primary: #00AEEF;
-  --color-primary-dark: #006BB6;
-  --color-primary-deep: #003B66;
-  --color-yellow: #FFD200;
-  --color-yellow-soft: #FFF3B8;
-  --color-green: #00A651;
-  --color-green-dark: #008C44;
-  --color-green-soft: #E7F8EF;
-  --color-red: #F0442E;
-  --color-red-soft: #FFE8E2;
-  --color-text: #071827;
-  --color-muted: #5E6B78;
-  --color-border: #DDE7EF;
-  --color-bg: #F7FBFD;
-  --color-white: #FFFFFF;
-}
-
-.pagina-publica {
-  background:
-    radial-gradient(circle at 8% 8%, rgba(255, 210, 0, 0.30), transparent 26%),
-    radial-gradient(circle at 92% 10%, rgba(0, 174, 239, 0.26), transparent 28%),
-    radial-gradient(circle at 16% 82%, rgba(0, 166, 81, 0.14), transparent 30%),
-    linear-gradient(180deg, #fffdf0 0%, #eefaff 44%, #ffffff 100%) !important;
-}
-
-.hero-ebd-oficial {
-  width: min(100% - 64px, 1440px) !important;
-  min-height: calc(100vh - 120px);
-  align-items: center;
-  gap: 54px;
-  padding: 58px 0 72px !important;
-}
-
-.hero-ebd-texto h1 {
-  max-width: 780px;
-  margin: 0;
-  font-size: clamp(52px, 6.4vw, 88px);
-  line-height: 0.96;
-  letter-spacing: -0.07em;
-  background: linear-gradient(135deg, #003B66 0%, #006BB6 42%, #00AEEF 66%, #00A651 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero-ebd-texto p {
-  max-width: 680px;
-  color: #334155;
-  font-size: 19px;
-  line-height: 1.75;
-}
-
-.selo-ebd-oficial,
-.selo-publico {
-  background: linear-gradient(135deg, rgba(255, 210, 0, 0.48), rgba(0, 174, 239, 0.16)) !important;
-  color: #003B66 !important;
-  border: 1px solid rgba(0, 174, 239, 0.24) !important;
-}
-
-.acoes-hero-oficial {
-  margin-top: 8px;
-}
-
-.selos-confianca-hero {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.selos-confianca-hero span {
-  padding: 10px 13px;
-  border-radius: 999px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  color: #003B66;
-  font-weight: 900;
-  box-shadow: 0 12px 26px rgba(0, 59, 102, 0.06);
-}
-
-.mockup-sistema-oficial {
-  position: relative;
-  overflow: hidden;
-  padding: 30px;
-  border-radius: 38px;
-  background:
-    radial-gradient(circle at 12% 12%, rgba(255, 210, 0, 0.22), transparent 28%),
-    radial-gradient(circle at 90% 18%, rgba(0, 174, 239, 0.24), transparent 32%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 56%, #008C44 100%);
-  box-shadow: 0 36px 80px rgba(0, 59, 102, 0.24);
-  color: #ffffff;
-}
-
-.mockup-sistema-topo,
-.mockup-chamada-oficial {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.mockup-sistema-topo span,
-.mockup-sistema-topo strong {
-  display: block;
-}
-
-.mockup-sistema-topo span {
-  color: rgba(255, 255, 255, 0.75);
-  font-weight: 900;
-}
-
-.mockup-sistema-topo strong {
-  margin-top: 4px;
-  font-size: 30px;
-  color: #ffffff;
-}
-
-.mockup-presenca {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  margin: 22px 0;
-  padding: 18px;
-  border-radius: 22px;
-  background: rgba(255, 210, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.mockup-presenca strong {
-  font-size: 34px;
-  color: #FFD200;
-}
-
-.mockup-grid-oficial {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.mockup-grid-oficial article {
-  padding: 20px;
-  border-radius: 24px;
-  background: #ffffff;
-  color: #071827;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-}
-
-.mockup-grid-oficial article .icone-svg {
-  color: #006BB6;
-}
-
-.mockup-grid-oficial article span,
-.mockup-grid-oficial article strong {
-  display: block;
-}
-
-.mockup-grid-oficial article span {
-  margin-top: 12px;
-  color: #64748b;
-  font-weight: 900;
-}
-
-.mockup-grid-oficial article strong {
-  margin-top: 4px;
-  font-size: 28px;
-  color: #003B66;
-}
-
-.mockup-chamada-oficial {
-  margin-top: 14px;
-  padding: 18px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.mockup-chamada-oficial strong,
-.mockup-chamada-oficial span {
-  display: block;
-}
-
-.mockup-chamada-oficial span {
-  color: rgba(255, 255, 255, 0.78);
-  font-weight: 800;
-}
-
-.status-online-oficial {
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: #E7F8EF;
-  color: #008C44 !important;
-}
-
-.barra-confianca-oficial {
-  width: min(100% - 64px, 1440px);
-  margin: 0 auto 32px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.barra-confianca-oficial span {
-  padding: 18px;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  text-align: center;
-  font-weight: 900;
-  color: #003B66;
-  box-shadow: 0 16px 34px rgba(0, 59, 102, 0.06);
-}
-
-.secao-manual-oficial,
-.problema-solucao-oficial,
-.recursos-oficiais,
-.publico-oficial,
-.teste-piloto-oficial,
-.faq-oficial {
-  padding: 38px !important;
-  border-radius: 36px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  border: 1px solid rgba(0, 174, 239, 0.16) !important;
-  box-shadow: 0 24px 60px rgba(0, 59, 102, 0.08) !important;
-}
-
-.manual-interativo-oficial {
-  display: grid;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.manual-interativo-oficial details {
-  border-radius: 24px;
-  overflow: hidden;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-}
-
-.manual-interativo-oficial summary {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
-  cursor: pointer;
-  list-style: none;
-  color: #003B66;
-  font-weight: 900;
-  font-size: 18px;
-}
-
-.manual-interativo-oficial summary::-webkit-details-marker {
-  display: none;
-}
-
-.manual-interativo-oficial summary span {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #FFD200, #FFF3B8);
-  color: #003B66;
-}
-
-.manual-interativo-oficial p {
-  margin: 0;
-  padding: 0 20px 20px 72px;
-  color: #475569;
-  line-height: 1.7;
-}
-
-.botao-manual-oficial {
-  margin-top: 22px;
-}
-
-.comparativo-oficial {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 26px;
-}
-
-.comparativo-oficial article {
-  padding: 28px;
-  border-radius: 28px;
-  border: 1px solid #DDE7EF;
-}
-
-.antes-oficial {
-  background: #ffffff;
-}
-
-.depois-oficial {
-  background:
-    radial-gradient(circle at top right, rgba(0, 166, 81, 0.14), transparent 34%),
-    linear-gradient(135deg, #effaff, #ffffff);
-  border-color: rgba(0, 166, 81, 0.20) !important;
-}
-
-.comparativo-oficial h3 {
-  margin: 0 0 14px;
-  color: #003B66;
-  font-size: 26px;
-}
-
-.comparativo-oficial ul,
-.lista-seguranca-oficial {
-  display: grid;
-  gap: 12px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.comparativo-oficial li {
-  color: #334155;
-  font-weight: 800;
-}
-
-.grade-recursos-oficiais,
-.grade-publico-oficial,
-.cards-planos-oficiais {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 26px;
-}
-
-.grade-recursos-oficiais article,
-.grade-publico-oficial article,
-.cards-planos-oficiais article {
-  padding: 26px;
-  border-radius: 28px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.16);
-  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
-}
-
-.grade-recursos-oficiais article .icone-svg {
-  color: #006BB6;
-}
-
-.grade-recursos-oficiais h3,
-.grade-publico-oficial strong,
-.cards-planos-oficiais h3 {
-  display: block;
-  margin: 14px 0 8px;
-  color: #003B66;
-  font-size: 22px;
-}
-
-.grade-recursos-oficiais p,
-.grade-publico-oficial p,
-.cards-planos-oficiais p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.seguranca-oficial {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  align-items: center;
-  padding: 42px !important;
-  border-radius: 36px !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
-  color: #ffffff;
-}
-
-.seguranca-oficial h2 {
-  margin: 16px 0 12px;
-  color: #ffffff;
-  font-size: clamp(32px, 4vw, 54px);
-  line-height: 1.05;
-}
-
-.seguranca-oficial p {
-  color: rgba(255, 255, 255, 0.84);
-  line-height: 1.75;
-}
-
-.lista-seguranca-oficial span {
-  padding: 16px 18px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  font-weight: 900;
-}
-
-.acoes-teste-oficial {
-  justify-content: center;
-  margin-top: 24px;
-}
-
-.cta-final-oficial {
-  text-align: center;
-  padding: 52px !important;
-  border-radius: 38px !important;
-  color: #ffffff;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.24), transparent 34%),
-    radial-gradient(circle at bottom left, rgba(0, 166, 81, 0.20), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
-}
-
-.cta-final-oficial h2 {
-  margin: 16px auto 12px;
-  max-width: 780px;
-  color: #ffffff;
-  font-size: clamp(34px, 5vw, 64px);
-  line-height: 1;
-}
-
-.cta-final-oficial p {
-  max-width: 740px;
-  margin: 0 auto 24px;
-  color: rgba(255, 255, 255, 0.84);
-  line-height: 1.75;
-}
-
-/* Área interna refinada */
-.app {
-  background:
-    radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
-    radial-gradient(circle at 92% 10%, rgba(255, 210, 0, 0.24), transparent 28%),
-    linear-gradient(180deg, #eefaff 0%, #ffffff 100%) !important;
-}
-
-.menu-lateral {
-  background:
-    radial-gradient(circle at 10% 8%, rgba(255, 210, 0, 0.20), transparent 28%),
-    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.30), transparent 32%),
-    linear-gradient(180deg, #002E50 0%, #031A2E 100%) !important;
-}
-
-.menu-navegacao button.ativo,
-.menu-lateral nav button.ativo,
-.sidebar nav button.ativo {
-  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
-}
-
-.botao-principal,
-button.botao-principal {
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 56%, #00A651 100%) !important;
-  color: #ffffff !important;
-}
-
-.botao-verde {
-  background: linear-gradient(135deg, #008C44, #00A651) !important;
-  color: #ffffff !important;
-}
-
-.classe-card-cabecalho h3 {
-  color: #ffffff !important;
-  font-size: clamp(48px, 10vw, 82px) !important;
-  line-height: 0.92 !important;
-}
-
-@media (max-width: 1000px) {
-  .hero-ebd-oficial,
-  .seguranca-oficial,
-  .comparativo-oficial {
-    grid-template-columns: 1fr !important;
-  }
-
-  .grade-recursos-oficiais,
-  .grade-publico-oficial,
-  .cards-planos-oficiais,
-  .barra-confianca-oficial {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .hero-ebd-oficial {
-    width: calc(100% - 24px) !important;
-    min-height: auto;
-    padding: 24px 0 36px !important;
-    grid-template-columns: 1fr !important;
-  }
-
-  .hero-ebd-texto {
-    text-align: center;
-    justify-items: center;
-  }
-
-  .hero-ebd-texto h1 {
-    font-size: clamp(38px, 12vw, 56px) !important;
-  }
-
-  .hero-ebd-texto p {
-    font-size: 16px;
-  }
-
-  .selos-confianca-hero,
-  .acoes-hero-oficial {
-    width: 100%;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-  }
-
-  .mockup-grid-oficial,
-  .grade-recursos-oficiais,
-  .grade-publico-oficial,
-  .cards-planos-oficiais,
-  .barra-confianca-oficial {
-    grid-template-columns: 1fr;
-  }
-
-  .mockup-sistema-oficial,
-  .secao-manual-oficial,
-  .problema-solucao-oficial,
-  .recursos-oficiais,
-  .publico-oficial,
-  .teste-piloto-oficial,
-  .faq-oficial,
-  .seguranca-oficial,
-  .cta-final-oficial {
-    width: calc(100% - 24px) !important;
-    padding: 24px !important;
-  }
-
-  .manual-interativo-oficial p {
-    padding-left: 20px;
-  }
-
-  .comparativo-oficial {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-
-/* Feedback do teste piloto */
-.feedback-piloto-card,
-.admin-feedback-alertas {
-  margin-top: 24px;
-  padding: 26px;
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
-  border: 1px solid rgba(0, 174, 239, 0.22);
-  box-shadow: 0 22px 52px rgba(0, 59, 102, 0.10);
-}
-
-.feedback-piloto-topo,
-.admin-feedback-topo {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 18px;
-}
-
-.feedback-piloto-topo h3,
-.admin-feedback-topo h3 {
-  margin: 10px 0 6px;
-  color: #003B66;
-  font-size: clamp(24px, 3vw, 36px);
-  line-height: 1.05;
-}
-
-.feedback-piloto-topo p,
-.admin-feedback-topo p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.admin-feedback-topo > strong {
-  display: grid;
-  place-items: center;
-  min-width: 74px;
-  min-height: 74px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #F0442E, #FFD200);
-  color: #ffffff;
-  font-size: 34px;
-  box-shadow: 0 18px 36px rgba(240, 68, 46, 0.20);
-}
-
-.feedback-piloto-form {
-  display: grid;
-  gap: 14px;
-}
-
-.feedback-piloto-form textarea {
-  resize: vertical;
-  min-height: 110px;
-}
-
-.feedbacks-recentes-igreja {
-  margin-top: 22px;
-  display: grid;
-  gap: 10px;
-}
-
-.feedbacks-recentes-igreja h4 {
-  margin: 0;
-  color: #003B66;
-}
-
-.feedback-recente-item,
-.feedback-admin-item {
-  padding: 16px;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid #DDE7EF;
-}
-
-.feedback-recente-item strong {
-  color: #006BB6;
-  text-transform: capitalize;
-}
-
-.feedback-recente-item p,
-.feedback-admin-item p {
-  margin: 6px 0;
-  color: #334155;
-  line-height: 1.6;
-}
-
-.feedback-recente-item span,
-.feedback-admin-item small {
-  color: #64748b;
-  font-weight: 800;
-}
-
-.lista-feedbacks-admin {
-  display: grid;
-  gap: 12px;
-}
-
-.feedback-admin-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 14px;
-  align-items: center;
-}
-
-.feedback-novo {
-  border-color: rgba(240, 68, 46, 0.30);
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.16), transparent 34%),
-    #ffffff;
-}
-
-.feedback-lido {
-  opacity: 0.78;
-}
-
-.linha-feedback-admin {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.linha-feedback-admin strong {
-  color: #003B66;
-  font-size: 18px;
-}
-
-.linha-feedback-admin span {
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: #E7F8EF;
-  color: #008C44;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.feedback-novo .linha-feedback-admin span {
-  background: #FFE8E2;
-  color: #b91c1c;
-}
-
-.texto-sem-feedback {
-  margin: 0;
-  color: #64748b;
-  font-weight: 800;
-}
-
-/* Professores dentro da mesma tabela do relatório */
-.linha-professores-titulo td {
-  background:
-    linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
-  color: #ffffff !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-  letter-spacing: 0.02em;
-}
-
-.linha-professores-cabecalho td {
-  background: #FFF3B8 !important;
-  color: #003B66 !important;
-  font-weight: 900 !important;
-  text-align: center !important;
-}
-
-.linha-professor-relatorio td {
-  background: #ffffff !important;
-  color: #071827 !important;
-  font-weight: 700;
-}
-
-@media (max-width: 760px) {
-  .feedback-piloto-card,
-  .admin-feedback-alertas {
-    padding: 20px;
-  }
-
-  .feedback-piloto-topo,
-  .admin-feedback-topo,
-  .feedback-admin-item {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
-  .admin-feedback-topo > strong {
-    width: 100%;
-  }
-
-  .linha-professores-titulo td,
-  .linha-professores-cabecalho td,
-  .linha-professor-relatorio td {
-    display: block !important;
-    width: 100% !important;
-  }
-
-  .linha-professores-cabecalho {
-    display: none !important;
-  }
-
-  .linha-professor-relatorio td::before {
-    content: none !important;
-  }
-}
-
-@media print {
-  .feedback-piloto-card,
-  .admin-feedback-alertas {
-    display: none !important;
-  }
-
-  .linha-professores-titulo td {
-    background: #e5e7eb !important;
-    color: #000000 !important;
-  }
-
-  .linha-professores-cabecalho td {
-    background: #f3f4f6 !important;
-    color: #000000 !important;
-  }
-}
-
-
-/* Feedback piloto - formulário largo, moderno e profissional */
-.feedback-piloto-card {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(22px, 3vw, 34px) !important;
-  border-radius: 34px !important;
-  background:
-    radial-gradient(circle at 95% 0%, rgba(255, 210, 0, 0.30), transparent 34%),
-    radial-gradient(circle at 0% 100%, rgba(0, 174, 239, 0.18), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%) !important;
-  border: 1px solid rgba(0, 174, 239, 0.24) !important;
-  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.12) !important;
-}
-
-.feedback-piloto-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 7px;
-  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
-}
-
-.feedback-piloto-topo {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 24px !important;
-}
-
-.feedback-piloto-topo h3 {
-  max-width: 980px;
-  margin-top: 12px !important;
-  color: #003B66 !important;
-  font-size: clamp(28px, 3.4vw, 44px) !important;
-  line-height: 1.02 !important;
-  letter-spacing: -0.045em;
-}
-
-.feedback-piloto-topo p {
-  max-width: 980px;
-  color: #334155 !important;
-  font-size: 16px;
-}
-
-.feedback-piloto-form-moderno {
-  position: relative;
-  z-index: 1;
-  display: grid !important;
-  gap: 18px !important;
-  width: 100% !important;
-  margin-top: 0 !important;
-}
-
-.feedback-form-grid {
-  display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  gap: 16px;
-  align-items: stretch;
-  width: 100%;
-}
-
-.feedback-campo {
-  display: grid !important;
-  gap: 9px !important;
-  width: 100% !important;
-  color: #003B66 !important;
-  font-weight: 900 !important;
-}
-
-.feedback-campo > span,
-.feedback-label-linha span {
-  color: #003B66;
-  font-size: 14px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.045em;
-}
-
-.feedback-campo select,
-.feedback-campo textarea {
-  width: 100% !important;
-  display: block !important;
-  border: 1px solid rgba(0, 174, 239, 0.28) !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  color: #071827 !important;
-  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.05);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
-}
-
-.feedback-campo select {
-  min-height: 54px;
-  padding: 0 16px !important;
-  border-radius: 18px !important;
-  font-weight: 800;
-}
-
-.feedback-campo textarea {
-  min-height: 220px !important;
-  padding: 18px 20px !important;
-  border-radius: 24px !important;
-  resize: vertical;
-  line-height: 1.65;
-  font-size: 16px;
-}
-
-.feedback-campo textarea::placeholder {
-  color: #64748b;
-}
-
-.feedback-campo select:focus,
-.feedback-campo textarea:focus {
-  outline: none !important;
-  border-color: #00AEEF !important;
-  box-shadow:
-    0 0 0 5px rgba(0, 174, 239, 0.14),
-    0 18px 36px rgba(0, 59, 102, 0.10) !important;
-}
-
-.feedback-dica {
-  display: grid;
-  align-content: center;
-  gap: 6px;
-  min-height: 76px;
-  padding: 16px 18px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 36%),
-    linear-gradient(135deg, rgba(0, 174, 239, 0.10), rgba(0, 166, 81, 0.08));
-  border: 1px solid rgba(0, 174, 239, 0.18);
-}
-
-.feedback-dica strong {
-  color: #003B66;
-  font-size: 16px;
-}
-
-.feedback-dica span {
-  color: #475569;
-  line-height: 1.45;
-  font-weight: 700;
-}
-
-.feedback-label-linha {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.feedback-label-linha small {
-  color: #64748b;
-  font-weight: 900;
-  font-size: 12px;
-}
-
-.feedback-acoes {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.botao-feedback-enviar {
-  min-height: 58px;
-  padding: 0 24px;
-  border: none;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  cursor: pointer;
-  color: #ffffff;
-  font-weight: 900;
-  font-size: 16px;
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
-  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.30);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-}
-
-.botao-feedback-enviar strong {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.botao-feedback-enviar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 24px 52px rgba(0, 174, 239, 0.38);
-  filter: saturate(1.08);
-}
-
-.botao-feedback-enviar:disabled {
-  cursor: not-allowed;
-  opacity: 0.75;
-  transform: none;
-}
-
-.feedback-acoes p {
-  max-width: 520px;
-  margin: 0;
-  color: #64748b;
-  line-height: 1.55;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.feedbacks-recentes-igreja {
-  margin-top: 26px !important;
-  padding-top: 22px;
-  border-top: 1px solid rgba(0, 174, 239, 0.16);
-}
-
-.feedbacks-recentes-igreja h4 {
-  color: #003B66 !important;
-  font-size: 18px;
-}
-
-.feedback-recente-item {
-  border-radius: 20px !important;
-  border-color: rgba(0, 174, 239, 0.18) !important;
-  box-shadow: 0 12px 26px rgba(0, 59, 102, 0.05);
-}
-
-@media (max-width: 760px) {
-  .feedback-form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .feedback-campo textarea {
-    min-height: 240px !important;
-  }
-
-  .feedback-acoes,
-  .botao-feedback-enviar {
-    width: 100%;
-  }
-
-  .feedback-acoes {
-    display: grid;
-  }
-}
-
-
-/* Administração comercial definitiva */
-.admin-acessos-bloco {
-  margin: 24px 0;
-  padding: clamp(22px, 3vw, 32px);
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
-    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.14), transparent 36%),
-    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%);
-  border: 1px solid rgba(0, 174, 239, 0.24);
-  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
-}
-
-.admin-acessos-topo {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.admin-acessos-topo h3 {
-  margin: 10px 0 6px;
-  color: #003B66;
-  font-size: clamp(28px, 3.4vw, 44px);
-  line-height: 1.02;
-  letter-spacing: -0.045em;
-}
-
-.admin-acessos-topo p {
-  max-width: 900px;
-  margin: 0;
-  color: #475569;
-  line-height: 1.65;
-}
-
-.admin-acessos-resumo {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
-.admin-acessos-resumo div {
-  padding: 18px;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
-}
-
-.admin-acessos-resumo strong,
-.admin-acessos-resumo span {
-  display: block;
-}
-
-.admin-acessos-resumo strong {
-  color: #003B66;
-  font-size: 34px;
-  line-height: 1;
-}
-
-.admin-acessos-resumo span {
-  margin-top: 6px;
-  color: #64748b;
-  font-weight: 900;
-}
-
-.formulario-admin-acesso {
-  background:
-    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 34%),
-    #ffffff !important;
-  border-color: rgba(0, 166, 81, 0.22) !important;
-}
-
-.filtros-admin-acessos {
-  margin: 18px 0;
-  align-items: end;
-}
-
-.lista-acessos-admin {
-  display: grid;
-  gap: 12px;
-}
-
-.acesso-admin-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: center;
-  padding: 18px;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
-}
-
-.linha-acesso-admin {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.linha-acesso-admin h4 {
-  margin: 0;
-  color: #003B66;
-  font-size: 20px;
-}
-
-.linha-acesso-admin span {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #E7F8EF;
-  color: #008C44;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.acesso-admin-card p {
-  margin: 6px 0 0;
-  color: #334155;
-  font-weight: 700;
-}
-
-.acesso-admin-card small {
-  display: block;
-  margin-top: 8px;
-  color: #64748b;
-  word-break: break-all;
-}
-
-.acoes-acesso-admin {
-  display: grid;
-  gap: 8px;
-  min-width: 180px;
-}
-
-.acoes-acesso-admin button {
-  width: 100%;
-}
-
-@media (max-width: 900px) {
-  .admin-acessos-topo,
-  .acesso-admin-card {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
-  .admin-acessos-resumo {
-    grid-template-columns: 1fr;
-  }
-
-  .acoes-acesso-admin {
-    width: 100%;
-  }
-}
-
-
-/* Teste fechado - sem solicitação pública de acesso */
-.aviso-teste-fechado {
-  display: inline-flex;
-  align-items: center;
-  min-height: 54px;
-  padding: 12px 18px;
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
-    rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 174, 239, 0.22);
-  color: #003B66;
-  font-weight: 900;
-  line-height: 1.45;
-  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.06);
-}
-
-.aviso-teste-fechado-centro {
-  justify-content: center;
-  text-align: center;
-}
-
-.acoes-hero-oficial .botao-principal,
-.acoes-teste-oficial .botao-principal,
-.cta-final-oficial .botao-principal {
-  min-height: 56px;
-  border-radius: 18px;
-}
-
-@media (max-width: 760px) {
-  .aviso-teste-fechado {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
-
-/* Cadastro de igrejas AD: sede, congregação e endereço completo */
-.campo-sede-filiada {
-  grid-column: span 2;
-}
-
-.dados-igreja-admin {
-  display: grid;
-  gap: 6px;
-  margin: 12px 0;
-  padding: 14px;
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 34%),
-    #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.16);
-}
-
-.dados-igreja-admin p {
-  margin: 0 !important;
-  color: #334155;
-  line-height: 1.5;
-}
-
-.dados-igreja-admin strong {
-  color: #003B66;
-}
-
-.formulario-admin-igreja select,
-.formulario-admin-igreja input {
-  min-height: 48px;
-}
-
-@media (max-width: 760px) {
-  .campo-sede-filiada {
-    grid-column: span 1;
-  }
-
-  .dados-igreja-admin {
-    padding: 12px;
-  }
-}
-
-
-/* Cadastro do piloto fechado */
-.tela-cadastro-piloto {
-  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.35fr);
-}
-
-.painel-cadastro-piloto {
-  background:
-    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
-    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
-}
-
-.cartao-cadastro-piloto {
-  justify-content: flex-start;
-  overflow-y: auto;
-}
-
-.formulario-cadastro-piloto {
-  gap: 20px;
-}
-
-.grupo-cadastro-piloto {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 18px;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 34%),
-    #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.05);
-}
-
-.grupo-cadastro-piloto h3 {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: #003B66;
-  font-size: 22px;
-}
-
-.campo-cadastro-piloto-largo {
-  grid-column: 1 / -1;
-}
-
-.bloco-criar-piloto {
-  margin-top: 18px;
-  padding: 18px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
-    linear-gradient(135deg, rgba(0, 174, 239, 0.08), rgba(0, 166, 81, 0.07));
-  border: 1px solid rgba(0, 174, 239, 0.18);
-}
-
-.bloco-criar-piloto p {
-  margin: 0 0 12px;
-  color: #003B66;
-  font-weight: 800;
-  line-height: 1.5;
-}
-
-.aviso-cadastro-piloto {
-  border-color: rgba(240, 68, 46, 0.28) !important;
-  background: #FFE8E2 !important;
-  color: #991b1b !important;
-}
-
-.aviso-sucesso-cadastro {
-  border-color: rgba(0, 166, 81, 0.28) !important;
-  background: #E7F8EF !important;
-  color: #166534 !important;
-}
-
-.status-pendente {
-  background: #fff3b8;
-  color: #92400e;
-}
-
-.contato-fechado-publico {
-  display: inline-flex;
-  color: #475569;
-  font-weight: 800;
-  line-height: 1.5;
-}
-
-@media (max-width: 900px) {
-  .tela-cadastro-piloto {
-    grid-template-columns: 1fr;
-  }
-
-  .grupo-cadastro-piloto {
-    grid-template-columns: 1fr;
-  }
-
-  .campo-cadastro-piloto-largo {
-    grid-column: span 1;
-  }
-}
-
-
-/* Recuperação de senha */
-.tela-recuperacao-senha {
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
-}
-
-.painel-recuperacao-senha {
-  background:
-    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
-    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
-}
-
-.cartao-recuperacao-senha {
-  justify-content: center;
-}
-
-.botao-link-login {
-  width: 100%;
-  border: none;
-  background: transparent;
-  color: #003B66;
-  font-weight: 900;
-  margin-top: 4px;
-  padding: 12px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.botao-link-login:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 900px) {
-  .tela-recuperacao-senha {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Aprovação rápida de igrejas no painel administrativo */
-.acoes-aprovacao-igreja {
-  gap: 10px !important;
-}
-
-.grupo-aprovacao-rapida {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 36%),
-    #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.20);
-}
-
-.botao-aprovar-igreja,
-.botao-nao-aprovar-igreja {
-  min-height: 48px;
-  border-radius: 16px;
-  padding: 0 16px;
-  border: none;
-  cursor: pointer;
-  font-weight: 900;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-}
-
-.botao-aprovar-igreja {
-  background: linear-gradient(135deg, #008C44, #00A651);
-  color: #ffffff;
-  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.22);
-}
-
-.botao-nao-aprovar-igreja {
-  background: #ffffff;
-  color: #b91c1c;
-  border: 1px solid rgba(240, 68, 46, 0.42);
-}
-
-.botao-aprovar-igreja:hover,
-.botao-nao-aprovar-igreja:hover {
-  transform: translateY(-2px);
-  filter: saturate(1.08);
-}
-
-.selo-aguardando-aprovacao {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: #fff3b8;
-  color: #92400e;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-@media (max-width: 760px) {
-  .grupo-aprovacao-rapida {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Mensagem pós-cadastro e aviso de aprovação */
-.tela-cadastro-enviado {
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
-}
-
-.painel-cadastro-enviado {
-  background:
-    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
-    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
-}
-
-.cartao-cadastro-enviado {
-  justify-content: center;
-}
-
-.mensagem-status-sucesso {
-  background: linear-gradient(135deg, #008C44, #00A651);
-  color: #ffffff;
-  box-shadow: 0 18px 40px rgba(0, 166, 81, 0.22);
-}
-
-.resumo-cadastro-enviado {
-  display: grid;
-  gap: 8px;
-  width: 100%;
-  margin: 18px 0;
-  padding: 18px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
-    #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-}
-
-.resumo-cadastro-enviado span {
-  color: #003B66;
-  font-weight: 900;
-}
-
-.aviso-aprovacao-cadastro {
-  width: 100%;
-  margin-bottom: 20px;
-  padding: 18px;
-  border-radius: 22px;
-  background: #E7F8EF;
-  border: 1px solid rgba(0, 166, 81, 0.22);
-}
-
-.aviso-aprovacao-cadastro strong {
-  display: block;
-  margin-bottom: 6px;
-  color: #008C44;
-}
-
-.aviso-aprovacao-cadastro p {
-  margin: 0;
-  color: #334155;
-  line-height: 1.6;
-}
-
-.grupo-aviso-aprovacao {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at top right, rgba(37, 211, 102, 0.16), transparent 36%),
-    #ffffff;
-  border: 1px solid rgba(0, 166, 81, 0.18);
-}
-
-.botao-whatsapp-admin,
-.botao-copiar-admin {
-  min-height: 46px;
-  border-radius: 16px;
-  padding: 0 14px;
-  cursor: pointer;
-  font-weight: 900;
-}
-
-.botao-whatsapp-admin {
-  border: none;
-  background: linear-gradient(135deg, #008C44, #00A651);
-  color: #ffffff;
-  box-shadow: 0 14px 30px rgba(0, 166, 81, 0.20);
-}
-
-.botao-copiar-admin {
-  background: #ffffff;
-  color: #003B66;
-  border: 1px solid rgba(0, 174, 239, 0.26);
-}
-
-@media (max-width: 900px) {
-  .tela-cadastro-enviado {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Destaque para cadastro do piloto na tela de login */
-.aviso-login-aprovado {
-  width: 100%;
-  margin-bottom: 14px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.18);
-  color: #475569;
-  font-weight: 800;
-  line-height: 1.45;
-}
-
-.bloco-cadastro-destaque {
-  position: relative;
-  margin-top: 22px !important;
-  padding: 24px !important;
-  border-radius: 30px !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.34), transparent 34%),
-    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.22), transparent 36%),
-    linear-gradient(135deg, #ffffff 0%, #ecfff6 100%) !important;
-  border: 1px solid rgba(0, 166, 81, 0.26) !important;
-  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.14);
-  overflow: hidden;
-}
-
-.bloco-cadastro-destaque::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 7px;
-  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
-}
-
-.selo-primeiro-acesso {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(0, 174, 239, 0.12);
-  color: #003B66;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.bloco-cadastro-destaque h3 {
-  margin: 12px 0 8px;
-  color: #003B66;
-  font-size: clamp(24px, 3vw, 34px);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-}
-
-.bloco-cadastro-destaque p {
-  margin: 0 0 18px !important;
-  color: #334155 !important;
-  font-weight: 800 !important;
-  line-height: 1.55 !important;
-}
-
-.botao-cadastrar-igreja {
-  min-height: 60px;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  color: #ffffff;
-  font-weight: 950;
-  font-size: 16px;
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
-  box-shadow: 0 22px 46px rgba(0, 174, 239, 0.32);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-}
-
-.botao-cadastrar-igreja:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 28px 60px rgba(0, 174, 239, 0.42);
-  filter: saturate(1.08);
-}
-
-@media (max-width: 760px) {
-  .bloco-cadastro-destaque {
-    padding: 22px !important;
-  }
-
-  .botao-cadastrar-igreja {
-    min-height: 58px;
-  }
-}
-
-
-/* Manual do usuário */
-.botao-manual-painel {
-  border-color: rgba(255, 255, 255, 0.50) !important;
-}
-
-.manual-usuario-pagina {
-  display: grid;
-  gap: 22px;
-}
-
-.manual-hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 22px;
-  padding: clamp(24px, 4vw, 42px);
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.28), transparent 34%),
-    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.18), transparent 36%),
-    linear-gradient(135deg, #ffffff 0%, #f7fcff 100%);
-  border: 1px solid rgba(0, 174, 239, 0.22);
-  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
-}
-
-.selo-manual {
-  display: inline-flex;
-  min-height: 30px;
-  align-items: center;
-  padding: 5px 12px;
-  border-radius: 999px;
-  color: #003B66;
-  background: rgba(0, 174, 239, 0.12);
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.manual-hero h2 {
-  margin: 12px 0 10px;
-  color: #003B66;
-  font-size: clamp(34px, 4vw, 58px);
-  line-height: 1.02;
-  letter-spacing: -0.05em;
-}
-
-.manual-hero p {
-  max-width: 820px;
-  margin: 0;
-  color: #475569;
-  font-size: 18px;
-  line-height: 1.65;
-  font-weight: 700;
-}
-
-.manual-alerta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 18px 20px;
-  border-radius: 24px;
-  background: #E7F8EF;
-  border: 1px solid rgba(0, 166, 81, 0.22);
-  color: #334155;
-  line-height: 1.5;
-}
-
-.manual-alerta strong {
-  color: #008C44;
-}
-
-.manual-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.manual-card {
-  position: relative;
-  display: grid;
-  gap: 16px;
-  min-height: 250px;
-  padding: 22px;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 36%),
-    #ffffff;
-  border: 1px solid rgba(0, 174, 239, 0.16);
-  box-shadow: 0 18px 44px rgba(0, 59, 102, 0.07);
-  overflow: hidden;
-}
-
-.manual-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 6px;
-  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
-}
-
-.manual-numero {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  color: #ffffff;
-  background: linear-gradient(135deg, #003B66, #00AEEF);
-  font-weight: 950;
-  font-size: 18px;
-  box-shadow: 0 14px 28px rgba(0, 174, 239, 0.22);
-}
-
-.manual-local {
-  display: inline-flex;
-  margin-bottom: 8px;
-  color: #008C44;
-  font-size: 12px;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: 0.045em;
-}
-
-.manual-card h3 {
-  margin: 0 0 8px;
-  color: #003B66;
-  font-size: 22px;
-  line-height: 1.15;
-}
-
-.manual-card p {
-  margin: 0;
-  color: #475569;
-  line-height: 1.6;
-  font-weight: 700;
-}
-
-.manual-final {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  padding: 24px;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(0, 174, 239, 0.15), transparent 34%),
-    linear-gradient(135deg, #003B66, #006BB6);
-  color: #ffffff;
-  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.18);
-}
-
-.manual-final h3 {
-  margin: 0 0 8px;
-  font-size: 28px;
-}
-
-.manual-final p {
-  max-width: 760px;
-  margin: 0;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.88);
-  font-weight: 700;
-}
-
-.manual-final .botao-secundario {
-  background: #ffffff;
-  color: #003B66;
-  border-color: rgba(255, 255, 255, 0.9);
-}
-
-@media (max-width: 1100px) {
-  .manual-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .manual-hero,
-  .manual-final {
-    display: grid;
-  }
-}
-
-@media (max-width: 720px) {
-  .manual-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .manual-alerta {
-    display: grid;
-  }
-
-  .manual-card {
-    min-height: auto;
-  }
-}
-
-
-/* Endereço com número separado */
-.formulario-cadastro-piloto .campo-cadastro-piloto-largo,
-.formulario-admin-igreja .campo-sede-filiada {
-  min-width: 0;
-}
-
-@media (min-width: 1100px) {
-  .formulario-cadastro-piloto .campo-cadastro-piloto-largo {
-    grid-column: span 2 !important;
-  }
-
-  .formulario-admin-igreja .campo-sede-filiada {
-    grid-column: span 2 !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .formulario-cadastro-piloto .campo-cadastro-piloto-largo,
-  .formulario-admin-igreja .campo-sede-filiada {
-    grid-column: span 1 !important;
-  }
-}
-
-
-/* Cards de classes em modo compacto */
-@media (min-width: 761px) {
-  .classe-card,
-  .card-classe,
-  .item-classe,
-  .classe-card-moderna,
-  .classe-destaque-card {
-    min-height: auto !important;
-  }
-
-  .classe-card .classe-header,
-  .classe-card-moderna .classe-header,
-  .classe-destaque-card .classe-header,
-  .classe-topo,
-  .classe-hero,
-  .classe-card-cabecalho {
-    min-height: 132px !important;
-    padding: 24px 28px !important;
-    border-radius: 28px 28px 0 0 !important;
-  }
-
-  .classe-card h3,
-  .card-classe h3,
-  .item-classe h3,
-  .classe-card-moderna h3,
-  .classe-destaque-card h3 {
-    font-size: clamp(34px, 3.6vw, 58px) !important;
-    line-height: 0.98 !important;
-    margin: 0 !important;
-  }
-
-  .classe-card .badge,
-  .classe-card-moderna .badge,
-  .classe-destaque-card .badge,
-  .classe-selo,
-  .selo-classe {
-    transform: scale(0.92);
-    transform-origin: left center;
-    margin-bottom: 10px !important;
-  }
-
-  .classe-card .contador-alunos,
-  .classe-card-moderna .contador-alunos,
-  .classe-destaque-card .contador-alunos,
-  .classe-total-alunos,
-  .classe-bolha-alunos {
-    width: 104px !important;
-    height: 88px !important;
-    min-width: 104px !important;
-    min-height: 88px !important;
-    border-radius: 22px !important;
-    right: 24px !important;
-    top: 28px !important;
-  }
-
-  .classe-card .contador-alunos strong,
-  .classe-card-moderna .contador-alunos strong,
-  .classe-destaque-card .contador-alunos strong,
-  .classe-total-alunos strong,
-  .classe-bolha-alunos strong {
-    font-size: 36px !important;
-    line-height: 1 !important;
-  }
-
-  .classe-card .contador-alunos span,
-  .classe-card-moderna .contador-alunos span,
-  .classe-destaque-card .contador-alunos span,
-  .classe-total-alunos span,
-  .classe-bolha-alunos span {
-    font-size: 11px !important;
-  }
-
-  .classe-card .classe-corpo,
-  .classe-card-moderna .classe-corpo,
-  .classe-destaque-card .classe-corpo,
-  .classe-conteudo,
-  .classe-card-body {
-    padding: 18px 24px !important;
-    gap: 14px !important;
-  }
-
-  .classe-card .classe-info-grid,
-  .classe-card-moderna .classe-info-grid,
-  .classe-destaque-card .classe-info-grid,
-  .classe-resumo-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
-    gap: 12px !important;
-  }
-
-  .classe-card .classe-info,
-  .classe-card-moderna .classe-info,
-  .classe-destaque-card .classe-info,
-  .classe-info-box,
-  .classe-resumo-item {
-    min-height: 72px !important;
-    padding: 14px 18px !important;
-    border-radius: 20px !important;
-  }
-
-  .classe-card .professores-lista,
-  .classe-card-moderna .professores-lista,
-  .classe-destaque-card .professores-lista,
-  .professor-classe-lista,
-  .professores-classe-lista {
-    padding: 12px !important;
-    border-radius: 20px !important;
-    gap: 8px !important;
-  }
-
-  .classe-card .professor-classe-linha,
-  .classe-card-moderna .professor-classe-linha,
-  .classe-destaque-card .professor-classe-linha,
-  .professor-classe-linha {
-    min-height: 50px !important;
-    padding: 10px 14px !important;
-    border-radius: 16px !important;
-  }
-
-  .classe-card .acoes-item,
-  .classe-card-moderna .acoes-item,
-  .classe-destaque-card .acoes-item,
-  .acoes-classe-card {
-    align-self: stretch !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    gap: 10px !important;
-    min-width: 170px !important;
-    padding: 0 !important;
-  }
-
-  .classe-card .acoes-item button,
-  .classe-card-moderna .acoes-item button,
-  .classe-destaque-card .acoes-item button,
-  .acoes-classe-card button {
-    min-height: 48px !important;
-    padding: 0 16px !important;
-    border-radius: 16px !important;
-    font-size: 15px !important;
-  }
-
-  .item-lista.item-com-acoes.classe-card,
-  .item-lista.item-com-acoes.classe-card-moderna,
-  .item-lista.item-com-acoes.classe-destaque-card {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 180px !important;
-    gap: 18px !important;
-    align-items: stretch !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-}
-
-/* Compactação extra para qualquer card de classe com o visual atual */
-@media (min-width: 761px) {
-  .lista-classes .item-lista,
-  .classes-lista .item-lista {
-    margin-bottom: 18px !important;
-  }
-
-  .lista-classes .item-lista > div:first-child,
-  .classes-lista .item-lista > div:first-child {
-    min-width: 0;
-  }
-
-  .lista-classes .item-lista h3,
-  .classes-lista .item-lista h3 {
-    font-size: clamp(32px, 3.4vw, 56px) !important;
-  }
-
-  .lista-classes .item-lista .acoes-item,
-  .classes-lista .item-lista .acoes-item {
-    gap: 10px !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .classe-card .classe-header,
-  .classe-card-moderna .classe-header,
-  .classe-destaque-card .classe-header,
-  .classe-topo,
-  .classe-hero,
-  .classe-card-cabecalho {
-    min-height: 116px !important;
-    padding: 22px !important;
-  }
-
-  .classe-card h3,
-  .card-classe h3,
-  .item-classe h3,
-  .classe-card-moderna h3,
-  .classe-destaque-card h3 {
-    font-size: clamp(38px, 12vw, 56px) !important;
-    line-height: 1 !important;
-  }
-
-  .classe-card .contador-alunos,
-  .classe-card-moderna .contador-alunos,
-  .classe-destaque-card .contador-alunos,
-  .classe-total-alunos,
-  .classe-bolha-alunos {
-    width: 96px !important;
-    height: 80px !important;
-    min-height: 80px !important;
-    border-radius: 22px !important;
-  }
-
-  .classe-card .classe-corpo,
-  .classe-card-moderna .classe-corpo,
-  .classe-destaque-card .classe-corpo,
-  .classe-conteudo,
-  .classe-card-body {
-    padding: 16px !important;
-  }
-
-  .classe-card .acoes-item button,
-  .classe-card-moderna .acoes-item button,
-  .classe-destaque-card .acoes-item button,
-  .acoes-classe-card button {
-    min-height: 50px !important;
-    border-radius: 16px !important;
-  }
-}
-
-
-/* Visual moderno e mais atraente para cards de classes */
-:root {
-  --classe-azul-profundo: #062b49;
-  --classe-azul-vivo: #0476d9;
-  --classe-ciano: #00b7e8;
-  --classe-verde: #00a651;
-  --classe-amarelo: #ffd43b;
-  --classe-laranja: #ff7a18;
-  --classe-vermelho: #ef4444;
-  --classe-roxo: #6d5dfc;
-  --classe-fundo-suave: #f3fbff;
-}
-
-/* Deixa a área de classes mais limpa */
-.conteudo:has(.lista-classes),
-.conteudo:has(.classes-lista) {
-  background:
-    radial-gradient(circle at 8% 4%, rgba(0, 183, 232, 0.14), transparent 28%),
-    radial-gradient(circle at 90% 12%, rgba(255, 212, 59, 0.16), transparent 30%),
-    linear-gradient(180deg, #f8fdff 0%, #eefaff 100%);
-}
-
-/* Cards principais */
-.lista-classes .item-lista,
-.classes-lista .item-lista,
-.item-lista.item-com-acoes.classe-card,
-.item-lista.item-com-acoes.classe-card-moderna,
-.item-lista.item-com-acoes.classe-destaque-card {
-  position: relative !important;
-  border: 1px solid rgba(0, 183, 232, 0.26) !important;
-  border-radius: 30px !important;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(246, 252, 255, 0.96)) !important;
-  box-shadow:
-    0 22px 55px rgba(6, 43, 73, 0.10),
-    0 0 0 1px rgba(255, 255, 255, 0.80) inset !important;
-  overflow: hidden !important;
-}
-
-/* Faixa lateral colorida */
-.lista-classes .item-lista::before,
-.classes-lista .item-lista::before,
-.item-lista.item-com-acoes.classe-card::before,
-.item-lista.item-com-acoes.classe-card-moderna::before,
-.item-lista.item-com-acoes.classe-destaque-card::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 auto 0 0 !important;
-  width: 9px !important;
-  background: linear-gradient(180deg, var(--classe-ciano), var(--classe-verde), var(--classe-amarelo)) !important;
-  z-index: 4 !important;
-}
-
-/* Cabeçalho dos cards */
-.classe-card .classe-header,
-.classe-card-moderna .classe-header,
-.classe-destaque-card .classe-header,
-.classe-topo,
-.classe-hero,
-.classe-card-cabecalho {
-  position: relative !important;
-  overflow: hidden !important;
-  background:
-    radial-gradient(circle at 86% 20%, rgba(255, 212, 59, 0.35), transparent 24%),
-    radial-gradient(circle at 20% 0%, rgba(0, 183, 232, 0.30), transparent 28%),
-    linear-gradient(135deg, #062b49 0%, #0567b1 42%, #00a651 100%) !important;
-  box-shadow: 0 18px 42px rgba(4, 118, 217, 0.18) !important;
-}
-
-.classe-card .classe-header::after,
-.classe-card-moderna .classe-header::after,
-.classe-destaque-card .classe-header::after,
-.classe-topo::after,
-.classe-hero::after,
-.classe-card-cabecalho::after {
-  content: "" !important;
-  position: absolute !important;
-  right: -46px !important;
-  top: 34px !important;
-  width: 154px !important;
-  height: 154px !important;
-  border-radius: 999px !important;
-  background: rgba(255, 212, 59, 0.30) !important;
-  filter: blur(0.2px) !important;
-}
-
-/* Título da classe */
-.classe-card h3,
-.card-classe h3,
-.item-classe h3,
-.classe-card-moderna h3,
-.classe-destaque-card h3,
-.lista-classes .item-lista h3,
-.classes-lista .item-lista h3 {
-  color: #ffffff !important;
-  text-shadow: 0 12px 34px rgba(0, 0, 0, 0.24) !important;
-  letter-spacing: -0.055em !important;
-}
-
-/* Selo CLASSE */
-.classe-card .badge,
-.classe-card-moderna .badge,
-.classe-destaque-card .badge,
-.classe-selo,
-.selo-classe {
-  background: rgba(255, 255, 255, 0.18) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14) !important;
-  backdrop-filter: blur(12px) !important;
-}
-
-/* Contador de alunos */
-.classe-card .contador-alunos,
-.classe-card-moderna .contador-alunos,
-.classe-destaque-card .contador-alunos,
-.classe-total-alunos,
-.classe-bolha-alunos {
-  background: linear-gradient(135deg, #ffd43b 0%, #7ed321 52%, #00a651 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  box-shadow:
-    0 18px 38px rgba(0, 166, 81, 0.26),
-    0 0 0 8px rgba(255, 212, 59, 0.14) !important;
-}
-
-/* Caixas internas */
-.classe-card .classe-info,
-.classe-card-moderna .classe-info,
-.classe-destaque-card .classe-info,
-.classe-info-box,
-.classe-resumo-item,
-.dados-classe-card > div,
-.lista-classes .item-lista p,
-.classes-lista .item-lista p {
-  border-color: rgba(0, 183, 232, 0.20) !important;
-}
-
-.classe-card .classe-info,
-.classe-card-moderna .classe-info,
-.classe-destaque-card .classe-info,
-.classe-info-box,
-.classe-resumo-item {
-  background:
-    radial-gradient(circle at top right, rgba(255, 212, 59, 0.18), transparent 36%),
-    linear-gradient(135deg, #ffffff, #f4fbff) !important;
-  box-shadow: 0 14px 28px rgba(6, 43, 73, 0.06) !important;
-}
-
-/* Títulos internos */
-.classe-card strong,
-.classe-card-moderna strong,
-.classe-destaque-card strong,
-.classe-info-box strong,
-.classe-resumo-item strong {
-  color: var(--classe-azul-profundo) !important;
-}
-
-.classe-card span,
-.classe-card-moderna span,
-.classe-destaque-card span,
-.classe-info-box span,
-.classe-resumo-item span {
-  color: #0476d9;
-}
-
-/* Lista de professores */
-.classe-card .professores-lista,
-.classe-card-moderna .professores-lista,
-.classe-destaque-card .professores-lista,
-.professor-classe-lista,
-.professores-classe-lista {
-  background:
-    linear-gradient(135deg, rgba(0, 183, 232, 0.09), rgba(0, 166, 81, 0.06)) !important;
-  border: 1px solid rgba(0, 183, 232, 0.20) !important;
-}
-
-.classe-card .professor-classe-linha,
-.classe-card-moderna .professor-classe-linha,
-.classe-destaque-card .professor-classe-linha,
-.professor-classe-linha {
-  background: #ffffff !important;
-  border: 1px solid rgba(0, 183, 232, 0.16) !important;
-  box-shadow: 0 10px 24px rgba(6, 43, 73, 0.06) !important;
-}
-
-/* Botões dos cards */
-.acoes-classe-card .botao-principal,
-.classe-card .acoes-item .botao-principal,
-.classe-card-moderna .acoes-item .botao-principal,
-.classe-destaque-card .acoes-item .botao-principal {
-  background: linear-gradient(135deg, #062b49 0%, #00b7e8 58%, #00a651 100%) !important;
-  color: #ffffff !important;
-  border: none !important;
-  box-shadow: 0 16px 34px rgba(0, 183, 232, 0.25) !important;
-}
-
-.acoes-classe-card .botao-verde,
-.classe-card .acoes-item .botao-verde,
-.classe-card-moderna .acoes-item .botao-verde,
-.classe-destaque-card .acoes-item .botao-verde {
-  background: linear-gradient(135deg, #007a3d, #00a651) !important;
-  color: #ffffff !important;
-  border: none !important;
-  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.23) !important;
-}
-
-.acoes-classe-card .botao-editar,
-.classe-card .acoes-item .botao-editar,
-.classe-card-moderna .acoes-item .botao-editar,
-.classe-destaque-card .acoes-item .botao-editar {
-  background: #ffffff !important;
-  color: #062b49 !important;
-  border: 1px solid rgba(0, 183, 232, 0.42) !important;
-  box-shadow: 0 12px 26px rgba(6, 43, 73, 0.06) !important;
-}
-
-.acoes-classe-card .botao-excluir,
-.classe-card .acoes-item .botao-excluir,
-.classe-card-moderna .acoes-item .botao-excluir,
-.classe-destaque-card .acoes-item .botao-excluir {
-  background: #ffffff !important;
-  color: #d92d20 !important;
-  border: 1px solid rgba(239, 68, 68, 0.40) !important;
-  box-shadow: 0 12px 26px rgba(239, 68, 68, 0.05) !important;
-}
-
-.acoes-classe-card button:hover,
-.classe-card .acoes-item button:hover,
-.classe-card-moderna .acoes-item button:hover,
-.classe-destaque-card .acoes-item button:hover {
-  transform: translateY(-2px) !important;
-  filter: saturate(1.08) !important;
-}
-
-/* Alterna cores dos cards para ficar mais vivo */
-.lista-classes .item-lista:nth-child(2n) .classe-header,
-.classes-lista .item-lista:nth-child(2n) .classe-header,
-.lista-classes .item-lista:nth-child(2n) .classe-topo,
-.classes-lista .item-lista:nth-child(2n) .classe-topo,
-.lista-classes .item-lista:nth-child(2n) .classe-hero,
-.classes-lista .item-lista:nth-child(2n) .classe-hero {
-  background:
-    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
-    radial-gradient(circle at 18% 4%, rgba(109, 93, 252, 0.26), transparent 28%),
-    linear-gradient(135deg, #062b49 0%, #6d5dfc 48%, #00b7e8 100%) !important;
-}
-
-.lista-classes .item-lista:nth-child(3n) .classe-header,
-.classes-lista .item-lista:nth-child(3n) .classe-header,
-.lista-classes .item-lista:nth-child(3n) .classe-topo,
-.classes-lista .item-lista:nth-child(3n) .classe-topo,
-.lista-classes .item-lista:nth-child(3n) .classe-hero,
-.classes-lista .item-lista:nth-child(3n) .classe-hero {
-  background:
-    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
-    radial-gradient(circle at 18% 4%, rgba(255, 122, 24, 0.24), transparent 28%),
-    linear-gradient(135deg, #062b49 0%, #0476d9 48%, #ff7a18 100%) !important;
-}
-
-/* Responsivo */
-@media (max-width: 760px) {
-  .lista-classes .item-lista,
-  .classes-lista .item-lista,
-  .item-lista.item-com-acoes.classe-card,
-  .item-lista.item-com-acoes.classe-card-moderna,
-  .item-lista.item-com-acoes.classe-destaque-card {
-    border-radius: 26px !important;
-  }
-
-  .classe-card .classe-header,
-  .classe-card-moderna .classe-header,
-  .classe-destaque-card .classe-header,
-  .classe-topo,
-  .classe-hero,
-  .classe-card-cabecalho {
-    border-radius: 26px 26px 0 0 !important;
-  }
-
-  .classe-card .contador-alunos,
-  .classe-card-moderna .contador-alunos,
-  .classe-destaque-card .contador-alunos,
-  .classe-total-alunos,
-  .classe-bolha-alunos {
-    box-shadow:
-      0 12px 28px rgba(0, 166, 81, 0.22),
-      0 0 0 6px rgba(255, 212, 59, 0.13) !important;
-  }
-}
-
-
-/* REFORCO FINAL - cards de classes realmente diferentes, menores e coloridos */
-.lista-classes-modernas {
-  display: grid !important;
-  gap: 18px !important;
-}
-
-.lista-classes-modernas .classe-card-moderno {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 164px !important;
-  gap: 14px !important;
-  align-items: stretch !important;
-  padding: 0 !important;
-  border-radius: 26px !important;
-  border: 1px solid rgba(0, 174, 239, 0.24) !important;
-  background: #ffffff !important;
-  box-shadow: 0 18px 42px rgba(0, 59, 102, 0.10) !important;
-  overflow: hidden !important;
-}
-
-.lista-classes-modernas .classe-card-moderno::before {
-  display: none !important;
-}
-
-.lista-classes-modernas .classe-card-conteudo {
-  min-width: 0 !important;
-  padding: 0 !important;
-}
-
-.lista-classes-modernas .classe-card-cabecalho {
-  position: relative !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 86px !important;
-  align-items: center !important;
-  min-height: 118px !important;
-  margin: 0 !important;
-  padding: 20px 24px !important;
-  border-radius: 26px 0 0 0 !important;
-  overflow: hidden !important;
-  background:
-    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
-    linear-gradient(135deg, #003B66 0%, #0078d7 52%, #00A651 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
-    linear-gradient(135deg, #3b0764 0%, #2563eb 52%, #00AEEF 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
-    linear-gradient(135deg, #003B66 0%, #00AEEF 52%, #F0442E 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
-    linear-gradient(135deg, #064e3b 0%, #008C44 48%, #006BB6 100%) !important;
-}
-
-.lista-classes-modernas .classe-card-cabecalho::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 auto 0 0 !important;
-  width: 8px !important;
-  background: linear-gradient(180deg, #FFD200, #00AEEF, #00A651) !important;
-}
-
-.lista-classes-modernas .classe-card-cabecalho::after {
-  content: "" !important;
-  position: absolute !important;
-  right: -34px !important;
-  bottom: -48px !important;
-  width: 150px !important;
-  height: 150px !important;
-  border-radius: 999px !important;
-  background: rgba(255, 210, 0, 0.24) !important;
-}
-
-.lista-classes-modernas .classe-card-selo {
-  position: relative !important;
-  z-index: 2 !important;
-  width: fit-content !important;
-  margin: 0 0 8px 0 !important;
-  padding: 5px 11px !important;
-  border-radius: 999px !important;
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.20) !important;
-  border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  font-size: 11px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0.06em !important;
-}
-
-.lista-classes-modernas .classe-card-cabecalho h3 {
-  position: relative !important;
-  z-index: 2 !important;
-  margin: 0 !important;
-  color: #ffffff !important;
-  font-size: clamp(36px, 3.7vw, 56px) !important;
-  line-height: 0.95 !important;
-  letter-spacing: -0.06em !important;
-  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.22) !important;
-}
-
-.lista-classes-modernas .classe-card-matricula {
-  position: relative !important;
-  z-index: 2 !important;
-  display: grid !important;
-  place-items: center !important;
-  min-width: 78px !important;
-  min-height: 74px !important;
-  width: 78px !important;
-  height: 74px !important;
-  padding: 8px !important;
-  border-radius: 20px !important;
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #FFD200 0%, #85D91E 45%, #00A651 100%) !important;
-  box-shadow: 0 12px 26px rgba(0, 166, 81, 0.26) !important;
-  font-size: 30px !important;
-  line-height: 1 !important;
-}
-
-.lista-classes-modernas .classe-card-matricula span {
-  display: block !important;
-  margin: 2px 0 0 !important;
-  color: #ffffff !important;
-  font-size: 9px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-}
-
-.lista-classes-modernas .classe-card-info {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 190px !important;
-  gap: 10px !important;
-  margin: 0 !important;
-  padding: 14px 18px 10px 18px !important;
-}
-
-.lista-classes-modernas .classe-card-info p {
-  min-height: 58px !important;
-  margin: 0 !important;
-  padding: 10px 13px !important;
-  border-radius: 16px !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
-    #f9fdff !important;
-  border: 1px solid rgba(0, 174, 239, 0.18) !important;
-  box-shadow: none !important;
-}
-
-.lista-classes-modernas .classe-card-info strong {
-  color: #0078d7 !important;
-  font-size: 10px !important;
-  font-weight: 950 !important;
-  letter-spacing: 0.08em !important;
-}
-
-.lista-classes-modernas .classe-card-info span {
-  margin-top: 4px !important;
-  color: #101828 !important;
-  font-size: 16px !important;
-  font-weight: 950 !important;
-}
-
-.lista-classes-modernas .professores-na-classe {
-  margin: 0 18px 14px 18px !important;
-  padding: 9px !important;
-  border-radius: 16px !important;
-  background: rgba(0, 174, 239, 0.08) !important;
-  border: 1px solid rgba(0, 174, 239, 0.16) !important;
-}
-
-.lista-classes-modernas .professor-classe-linha {
-  min-height: 42px !important;
-  padding: 7px 10px !important;
-  border-radius: 13px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(0, 174, 239, 0.15) !important;
-  box-shadow: none !important;
-}
-
-.lista-classes-modernas .professor-classe-linha span {
-  color: #101828 !important;
-  font-weight: 950 !important;
-}
-
-.lista-classes-modernas .professor-classe-linha .botao-pequeno {
-  min-height: 30px !important;
-  padding: 5px 10px !important;
-  border-radius: 10px !important;
-  font-size: 12px !important;
-}
-
-.lista-classes-modernas .acoes-classe-card {
-  width: auto !important;
-  min-width: 0 !important;
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  align-content: center !important;
-  gap: 8px !important;
-  padding: 14px 14px 14px 0 !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 251, 255, 0.96)) !important;
-}
-
-.lista-classes-modernas .acoes-classe-card button {
-  min-height: 42px !important;
-  width: 100% !important;
-  padding: 0 12px !important;
-  border-radius: 14px !important;
-  font-size: 14px !important;
-  font-weight: 950 !important;
-  box-shadow: none !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-principal {
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 100%) !important;
-  color: #ffffff !important;
-  border: 0 !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-verde {
-  background: linear-gradient(135deg, #008C44 0%, #00A651 100%) !important;
-  color: #ffffff !important;
-  border: 0 !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-editar {
-  background: #ffffff !important;
-  color: #003B66 !important;
-  border: 1px solid rgba(0, 174, 239, 0.42) !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-excluir {
-  background: #fffafa !important;
-  color: #d92d20 !important;
-  border: 1px solid rgba(240, 68, 46, 0.42) !important;
-}
-
-/* celular */
-@media (max-width: 760px) {
-  .lista-classes-modernas .classe-card-moderno {
-    grid-template-columns: 1fr !important;
-    gap: 0 !important;
-  }
-
-  .lista-classes-modernas .classe-card-cabecalho {
-    grid-template-columns: minmax(0, 1fr) 76px !important;
-    min-height: 112px !important;
-    border-radius: 24px 24px 0 0 !important;
-    padding: 18px 18px !important;
-  }
-
-  .lista-classes-modernas .classe-card-cabecalho h3 {
-    font-size: clamp(34px, 12vw, 52px) !important;
-  }
-
-  .lista-classes-modernas .classe-card-matricula {
-    width: 72px !important;
-    height: 68px !important;
-    min-width: 72px !important;
-    min-height: 68px !important;
-    font-size: 27px !important;
-  }
-
-  .lista-classes-modernas .classe-card-info {
-    grid-template-columns: 1fr !important;
-    padding: 12px !important;
-  }
-
-  .lista-classes-modernas .professores-na-classe {
-    margin: 0 12px 12px !important;
-  }
-
-  .lista-classes-modernas .acoes-classe-card {
-    padding: 0 12px 12px !important;
-  }
-}
-
-
-/* Formulário claro para editar o nome da classe */
-.formulario-editar-classe {
-  position: relative;
-  overflow: hidden;
-  border-radius: 30px !important;
-  border: 1px solid rgba(0, 174, 239, 0.26) !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 30%),
-    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.12), transparent 34%),
-    #ffffff !important;
-  box-shadow: 0 22px 54px rgba(0, 59, 102, 0.10) !important;
-}
-
-.formulario-editar-classe::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 8px;
-  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
-}
-
-.cabecalho-formulario-editar-classe {
-  display: grid;
-  gap: 8px;
-  margin-bottom: 18px;
-  padding: 20px;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.20), transparent 34%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 58%, #00A651 100%);
-  color: #ffffff;
-}
-
-.cabecalho-formulario-editar-classe span {
-  width: fit-content;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  font-size: 12px;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.cabecalho-formulario-editar-classe h3 {
-  margin: 0;
-  font-size: clamp(26px, 3vw, 38px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-.cabecalho-formulario-editar-classe p {
-  max-width: 760px;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.55;
-  font-weight: 700;
-}
-
-.formulario-editar-classe label input {
-  min-height: 58px;
-  font-size: 17px;
-  font-weight: 850;
-}
-
-
-/* Modo suporte do administrador */
-.botao-acessar-igreja {
-  min-height: 48px;
-  border: none;
-  border-radius: 16px;
-  padding: 0 16px;
-  cursor: pointer;
-  color: #ffffff;
-  font-weight: 950;
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
-  box-shadow: 0 16px 34px rgba(0, 174, 239, 0.25);
-}
-
-.botao-acessar-igreja:hover {
-  transform: translateY(-2px);
-  filter: saturate(1.08);
-}
-
-.banner-modo-suporte {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 22px;
-  padding: 18px 20px;
-  border-radius: 28px;
-  color: #ffffff;
-  background:
-    radial-gradient(circle at 92% 20%, rgba(255, 210, 0, 0.36), transparent 26%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 48%, #00A651 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 22px 52px rgba(0, 59, 102, 0.20);
-}
-
-.banner-modo-suporte span {
-  display: inline-flex;
-  width: fit-content;
-  margin-bottom: 6px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-
-.banner-modo-suporte strong {
-  display: block;
-  font-size: clamp(20px, 2.4vw, 30px);
-  line-height: 1.1;
-}
-
-.banner-modo-suporte p {
-  margin: 6px 0 0;
-  color: rgba(255, 255, 255, 0.86);
-  font-weight: 750;
-}
-
-.botao-sair-suporte {
-  min-height: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 16px;
-  padding: 0 18px;
-  cursor: pointer;
-  color: #003B66;
-  background: #ffffff;
-  font-weight: 950;
-  white-space: nowrap;
-}
-
-/* Visual comercial impactante - página principal */
-.pagina-publica {
-  background:
-    radial-gradient(circle at 7% 7%, rgba(255, 210, 0, 0.44), transparent 24%),
-    radial-gradient(circle at 92% 8%, rgba(0, 174, 239, 0.38), transparent 28%),
-    radial-gradient(circle at 16% 78%, rgba(0, 166, 81, 0.26), transparent 26%),
-    radial-gradient(circle at 88% 82%, rgba(240, 68, 46, 0.20), transparent 24%),
-    linear-gradient(180deg, #fff8d8 0%, #e8f8ff 34%, #ffffff 100%) !important;
-}
-
-.topo-publico {
-  max-width: min(1240px, calc(100% - 32px)) !important;
-  top: 14px !important;
-  border-radius: 28px !important;
-  border: 1px solid rgba(0, 174, 239, 0.22) !important;
-  background: rgba(255, 255, 255, 0.82) !important;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 18px 50px rgba(0, 59, 102, 0.13) !important;
-}
-
-.hero-publico,
-.hero-ebd-oficial {
-  max-width: min(1240px, calc(100% - 32px)) !important;
-  min-height: 720px;
-  margin: 26px auto 30px !important;
-  border-radius: 42px !important;
-  padding: clamp(38px, 6vw, 78px) !important;
-  background:
-    radial-gradient(circle at 9% 10%, rgba(255, 210, 0, 0.42), transparent 24%),
-    radial-gradient(circle at 88% 18%, rgba(0, 174, 239, 0.42), transparent 28%),
-    radial-gradient(circle at 70% 88%, rgba(0, 166, 81, 0.25), transparent 26%),
-    linear-gradient(135deg, #ffffff 0%, #effaff 55%, #fff7d8 100%) !important;
-  border: 1px solid rgba(0, 174, 239, 0.22) !important;
-  box-shadow: 0 34px 90px rgba(0, 59, 102, 0.16) !important;
-  overflow: hidden;
-}
-
-.hero-publico h1,
-.hero-ebd-texto h1 {
-  max-width: 820px !important;
-  background: linear-gradient(135deg, #003B66 0%, #006BB6 34%, #00AEEF 52%, #00A651 76%, #F0442E 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-  font-size: clamp(48px, 7vw, 96px) !important;
-  line-height: 0.94 !important;
-  letter-spacing: -0.075em !important;
-}
-
-.hero-publico p,
-.hero-ebd-texto p {
-  max-width: 720px !important;
-  color: #334155 !important;
-  font-size: clamp(18px, 2vw, 24px) !important;
-  line-height: 1.55 !important;
-  font-weight: 750 !important;
-}
-
-.selo-publico,
-.selo-ebd-oficial {
-  border: 1px solid rgba(0, 174, 239, 0.28) !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 210, 0, 0.32), transparent 38%),
-    rgba(255, 255, 255, 0.82) !important;
-  color: #003B66 !important;
-  box-shadow: 0 12px 26px rgba(0, 174, 239, 0.10) !important;
-}
-
-.acoes-publicas .botao-principal,
-.acoes-hero-oficial .botao-principal {
-  min-height: 58px !important;
-  border-radius: 19px !important;
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%) !important;
-  box-shadow: 0 22px 52px rgba(0, 174, 239, 0.32) !important;
-}
-
-.mockup-sistema-oficial {
-  border-radius: 34px !important;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(255, 210, 0, 0.25), transparent 32%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(235, 249, 255, 0.92)) !important;
-  border: 1px solid rgba(0, 174, 239, 0.25) !important;
-  box-shadow: 0 32px 86px rgba(0, 59, 102, 0.18) !important;
-}
-
-.mockup-grid-oficial article {
-  border-radius: 22px !important;
-  border: 1px solid rgba(0, 174, 239, 0.18) !important;
-  background: #ffffff !important;
-  box-shadow: 0 14px 32px rgba(0, 59, 102, 0.08) !important;
-}
-
-.mockup-grid-oficial article:nth-child(1) {
-  background: linear-gradient(135deg, #ffffff, #e8f8ff) !important;
-}
-
-.mockup-grid-oficial article:nth-child(2) {
-  background: linear-gradient(135deg, #ffffff, #e9fff4) !important;
-}
-
-.mockup-grid-oficial article:nth-child(3) {
-  background: linear-gradient(135deg, #ffffff, #fff8d8) !important;
-}
-
-.mockup-grid-oficial article:nth-child(4) {
-  background: linear-gradient(135deg, #ffffff, #fff0ec) !important;
-}
-
-.secao-publica {
-  max-width: min(1240px, calc(100% - 32px)) !important;
-  border-radius: 38px !important;
-  border: 1px solid rgba(0, 174, 239, 0.16) !important;
-  box-shadow: 0 24px 70px rgba(0, 59, 102, 0.08) !important;
-}
-
-.cta-final-oficial {
-  background:
-    radial-gradient(circle at 88% 18%, rgba(255, 210, 0, 0.30), transparent 25%),
-    linear-gradient(135deg, #003B66 0%, #006BB6 48%, #00A651 100%) !important;
-  color: #ffffff !important;
-}
-
-/* Visual interno mais vivo e profissional */
-.app {
-  background:
-    radial-gradient(circle at 18% 6%, rgba(0, 174, 239, 0.16), transparent 25%),
-    radial-gradient(circle at 86% 10%, rgba(255, 210, 0, 0.18), transparent 24%),
-    linear-gradient(135deg, #eefaff 0%, #ffffff 44%, #fffbe8 100%) !important;
-}
-
-.menu-lateral {
-  background:
-    radial-gradient(circle at 0% 0%, rgba(255, 210, 0, 0.18), transparent 28%),
-    radial-gradient(circle at 100% 16%, rgba(0, 174, 239, 0.24), transparent 34%),
-    linear-gradient(180deg, #00243d 0%, #003B66 46%, #001827 100%) !important;
-  box-shadow: 18px 0 60px rgba(0, 59, 102, 0.22) !important;
-}
-
-.menu-navegacao button {
-  border-radius: 18px !important;
-  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-}
-
-.menu-navegacao button:hover {
-  transform: translateX(4px);
-  background: rgba(255, 255, 255, 0.10) !important;
-}
-
-.menu-navegacao button.ativo {
-  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
-  box-shadow: 0 18px 38px rgba(0, 174, 239, 0.28) !important;
-}
-
-.area-principal {
-  background:
-    radial-gradient(circle at 92% 8%, rgba(255, 210, 0, 0.14), transparent 24%),
-    radial-gradient(circle at 10% 18%, rgba(0, 174, 239, 0.10), transparent 24%) !important;
-}
-
-.topo-pagina {
-  border-radius: 34px !important;
-  padding: clamp(24px, 4vw, 42px) !important;
-  background:
-    radial-gradient(circle at 88% 12%, rgba(255, 210, 0, 0.22), transparent 30%),
-    linear-gradient(135deg, #ffffff 0%, #f5fcff 100%) !important;
-  border: 1px solid rgba(0, 174, 239, 0.18) !important;
-  box-shadow: 0 22px 58px rgba(0, 59, 102, 0.09) !important;
-}
-
-.topo-pagina h2 {
-  color: #003B66 !important;
-  font-size: clamp(38px, 5vw, 72px) !important;
-  line-height: 0.98 !important;
-  letter-spacing: -0.065em !important;
-}
-
-.card,
-.item-lista,
-.formulario {
-  border-color: rgba(0, 174, 239, 0.18) !important;
-  box-shadow: 0 18px 48px rgba(0, 59, 102, 0.08) !important;
-}
-
-.botao-principal {
-  background: linear-gradient(135deg, #003B66 0%, #00AEEF 52%, #00A651 100%) !important;
-  box-shadow: 0 18px 42px rgba(0, 174, 239, 0.24) !important;
-}
-
-.botao-secundario {
-  border-color: rgba(0, 174, 239, 0.30) !important;
-  color: #003B66 !important;
-}
-
-@media (max-width: 900px) {
-  .banner-modo-suporte {
-    display: grid;
-  }
-
-  .botao-sair-suporte {
-    width: 100%;
-  }
-
-  .hero-publico,
-  .hero-ebd-oficial {
-    min-height: auto;
-  }
-}
-
-
-/* Botão Alterar nome da classe */
-.lista-classes-modernas .acoes-classe-card .botao-editar,
-.acoes-classe-card .botao-editar {
-  white-space: normal !important;
-  line-height: 1.15 !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-}
-
-
-/* =========================================================
-   MODELO COMERCIAL DOURADO - Inspirado no modelo enviado
-   Página inicial + parte interna
-   ========================================================= */
-
-:root {
-  --ebd-gold: #D4AF37;
-  --ebd-gold-light: #F5A623;
-  --ebd-gold-dark: #B8860B;
-  --ebd-cyan: #00BCD4;
-  --ebd-cyan-dark: #0097A7;
-  --ebd-red: #FF5722;
-  --ebd-red-dark: #E64A19;
-  --ebd-green: #4CAF50;
-  --ebd-green-dark: #2E7D32;
-  --ebd-dark: #1A1A1A;
-  --ebd-dark-2: #2D2D2D;
-  --ebd-gray: #4A4A4A;
-  --ebd-light: #F8F9FA;
-  --ebd-white: #FFFFFF;
-  --ebd-gradient-gold: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
-  --ebd-gradient-cyan: linear-gradient(135deg, #00BCD4, #0097A7);
-  --ebd-gradient-red: linear-gradient(135deg, #FF5722, #E64A19);
-  --ebd-gradient-green: linear-gradient(135deg, #4CAF50, #2E7D32);
-  --ebd-shadow-gold: 0 18px 42px rgba(212, 175, 55, 0.28);
-  --ebd-shadow-dark: 0 24px 70px rgba(26, 26, 26, 0.18);
-}
-
-/* PÁGINA PRINCIPAL */
-.pagina-publica {
-  background:
-    radial-gradient(circle at 8% 6%, rgba(212, 175, 55, 0.30), transparent 24%),
-    radial-gradient(circle at 92% 10%, rgba(0, 188, 212, 0.26), transparent 26%),
-    radial-gradient(circle at 14% 82%, rgba(76, 175, 80, 0.18), transparent 24%),
-    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.topo-publico {
-  position: sticky !important;
-  top: 12px !important;
-  z-index: 50 !important;
-  max-width: min(1280px, calc(100% - 28px)) !important;
-  margin: 12px auto 0 !important;
-  padding: 12px 18px !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border: 1px solid rgba(212, 175, 55, 0.22) !important;
-  box-shadow: 0 8px 28px rgba(26, 26, 26, 0.08) !important;
-  backdrop-filter: blur(16px) !important;
-}
-
-.marca-publica strong,
-.marca-login h1,
-.marca-sidebar h1 {
-  font-family: Georgia, "Times New Roman", serif !important;
-  letter-spacing: 0.02em !important;
-  background: var(--ebd-gradient-gold) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-}
-
-.logo-simbolo,
-.logo-publica,
-.logo-simbolo-sidebar {
-  background: var(--ebd-gradient-gold) !important;
-  border: 2px solid rgba(0, 188, 212, 0.35) !important;
-  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.32) !important;
-}
-
-.menu-publico a {
-  color: var(--ebd-gray) !important;
-  font-weight: 700 !important;
-}
-
-.menu-publico a:hover {
-  color: var(--ebd-gold-dark) !important;
-}
-
-.menu-publico button,
-.acoes-publicas .botao-principal,
-.acoes-hero-oficial .botao-principal,
-.botao-manual-oficial {
-  color: var(--ebd-dark) !important;
-  background: var(--ebd-gradient-gold) !important;
-  border: none !important;
-  box-shadow: var(--ebd-shadow-gold) !important;
-}
-
-.hero-publico,
-.hero-ebd-oficial {
-  position: relative !important;
-  max-width: min(1280px, calc(100% - 28px)) !important;
-  min-height: 720px !important;
-  margin: 18px auto 34px !important;
-  padding: clamp(40px, 6vw, 84px) !important;
-  border-radius: 42px !important;
-  overflow: hidden !important;
-  background:
-    radial-gradient(circle at 16% 42%, rgba(212, 175, 55, 0.14), transparent 36%),
-    radial-gradient(circle at 92% 18%, rgba(0, 188, 212, 0.13), transparent 26%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 52%, #1A1A1A 100%) !important;
-  border: 1px solid rgba(212, 175, 55, 0.24) !important;
-  box-shadow: var(--ebd-shadow-dark) !important;
-}
-
-.hero-publico::after,
-.hero-ebd-oficial::after {
-  content: "✝" !important;
-  position: absolute !important;
-  right: 28px !important;
-  bottom: 12px !important;
-  color: var(--ebd-gold) !important;
-  opacity: 0.06 !important;
-  font-size: clamp(90px, 13vw, 190px) !important;
-  font-family: Georgia, "Times New Roman", serif !important;
-  line-height: 1 !important;
-}
-
-.hero-publico-texto,
-.hero-ebd-texto,
-.mockup-sistema-oficial {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-.selo-publico,
-.selo-ebd-oficial,
-.selo-apresentacao {
-  color: var(--ebd-gold-light) !important;
-  background: rgba(212, 175, 55, 0.14) !important;
-  border: 1px solid rgba(212, 175, 55, 0.30) !important;
-  box-shadow: none !important;
-}
-
-.hero-publico h1,
-.hero-ebd-texto h1 {
-  color: #ffffff !important;
-  background: none !important;
-  -webkit-background-clip: initial !important;
-  background-clip: initial !important;
-  max-width: 850px !important;
-  font-size: clamp(40px, 6.2vw, 82px) !important;
-  line-height: 1.06 !important;
-  letter-spacing: -0.065em !important;
-}
-
-.hero-publico p,
-.hero-ebd-texto p {
-  max-width: 720px !important;
-  color: rgba(255, 255, 255, 0.78) !important;
-  font-size: clamp(17px, 1.6vw, 21px) !important;
-  line-height: 1.7 !important;
-}
-
-.aviso-teste-fechado,
-.selos-confianca-hero span,
-.barra-confianca-oficial span {
-  color: rgba(255, 255, 255, 0.78) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(212, 175, 55, 0.26) !important;
-}
-
-.mockup-sistema-oficial {
-  background: #ffffff !important;
-  border: 1px solid rgba(212, 175, 55, 0.28) !important;
-  border-radius: 28px !important;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.34) !important;
-  overflow: hidden !important;
-}
-
-.mockup-sistema-topo {
-  background: var(--ebd-dark) !important;
-  color: #ffffff !important;
-  border-radius: 0 !important;
-}
-
-.mockup-grid-oficial article:nth-child(1) {
-  background: linear-gradient(135deg, #FFFFFF, #FFF8E1) !important;
-  border-bottom: 3px solid var(--ebd-gold) !important;
-}
-.mockup-grid-oficial article:nth-child(2) {
-  background: linear-gradient(135deg, #FFFFFF, #E0F7FA) !important;
-  border-bottom: 3px solid var(--ebd-cyan) !important;
-}
-.mockup-grid-oficial article:nth-child(3) {
-  background: linear-gradient(135deg, #FFFFFF, #FBE9E7) !important;
-  border-bottom: 3px solid var(--ebd-red) !important;
-}
-.mockup-grid-oficial article:nth-child(4) {
-  background: linear-gradient(135deg, #FFFFFF, #E8F5E9) !important;
-  border-bottom: 3px solid var(--ebd-green) !important;
-}
-
-.secao-publica {
-  max-width: min(1280px, calc(100% - 28px)) !important;
-  border-radius: 34px !important;
-  border: 1px solid rgba(212, 175, 55, 0.16) !important;
-  background: rgba(255, 255, 255, 0.94) !important;
-  box-shadow: 0 18px 54px rgba(26, 26, 26, 0.08) !important;
-}
-
-.cabecalho-secao-publica h2 {
-  background: var(--ebd-gradient-gold) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-  font-size: clamp(34px, 4.5vw, 62px) !important;
-  letter-spacing: -0.055em !important;
-}
-
-.grade-recursos-oficiais article,
-.grade-publico-oficial article,
-.cards-planos-oficiais article,
-.manual-interativo-oficial details,
-.faq-modelo-lista details {
-  background: #ffffff !important;
-  border-radius: 26px !important;
-  border: 1px solid rgba(212, 175, 55, 0.14) !important;
-  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.055) !important;
-  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-}
-
-.grade-recursos-oficiais article:hover,
-.grade-publico-oficial article:hover,
-.cards-planos-oficiais article:hover,
-.manual-interativo-oficial details:hover,
-.faq-modelo-lista details:hover {
-  transform: translateY(-7px) !important;
-  box-shadow: 0 22px 44px rgba(26, 26, 26, 0.10) !important;
-}
-
-.grade-recursos-oficiais article:nth-child(1),
-.grade-recursos-oficiais article:nth-child(5) { border-bottom: 4px solid var(--ebd-gold) !important; }
-.grade-recursos-oficiais article:nth-child(2),
-.grade-recursos-oficiais article:nth-child(6) { border-bottom: 4px solid var(--ebd-cyan) !important; }
-.grade-recursos-oficiais article:nth-child(3) { border-bottom: 4px solid var(--ebd-red) !important; }
-.grade-recursos-oficiais article:nth-child(4) { border-bottom: 4px solid var(--ebd-green) !important; }
-
-.antes-oficial {
-  background: linear-gradient(135deg, #FFF5F5, #FFE0E0) !important;
-  border-left: 5px solid var(--ebd-red) !important;
-}
-.depois-oficial {
-  background: linear-gradient(135deg, #F0FFF4, #E0FFE8) !important;
-  border-left: 5px solid var(--ebd-green) !important;
-}
-
-.cta-final-oficial,
-.rodape-publico {
-  background:
-    radial-gradient(circle at 12% 10%, rgba(212, 175, 55, 0.12), transparent 28%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 54%, #1A1A1A 100%) !important;
-  color: #ffffff !important;
-}
-
-.cta-final-oficial h2 {
-  color: var(--ebd-gold) !important;
-}
-
-/* LOGIN / CADASTRO */
-.tela-login {
-  background:
-    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.26), transparent 28%),
-    radial-gradient(circle at 88% 12%, rgba(0, 188, 212, 0.18), transparent 30%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 48%, #F8F9FA 48%, #E8ECF1 100%) !important;
-}
-
-.painel-apresentacao {
-  background:
-    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.12), transparent 44%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(212, 175, 55, 0.22) !important;
-}
-
-.painel-apresentacao h2,
-.apresentacao-texto h2 { color: #ffffff !important; }
-
-.painel-apresentacao p,
-.apresentacao-texto p { color: rgba(255, 255, 255, 0.76) !important; }
-
-.cartao-login {
-  border-radius: 34px !important;
-  border: 1px solid rgba(212, 175, 55, 0.18) !important;
-  box-shadow: 0 28px 70px rgba(26, 26, 26, 0.16) !important;
-}
-
-.topo-cartao-icone {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.botao-cadastrar-igreja,
-.botao-principal,
-.cartao-login .botao-principal {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-  box-shadow: var(--ebd-shadow-gold) !important;
-  border: none !important;
-}
-
-/* PARTE INTERNA */
-.app {
-  background:
-    radial-gradient(circle at 14% 8%, rgba(212, 175, 55, 0.22), transparent 24%),
-    radial-gradient(circle at 92% 12%, rgba(0, 188, 212, 0.18), transparent 28%),
-    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
-}
-
-.menu-lateral {
-  background:
-    radial-gradient(circle at 20% 8%, rgba(212, 175, 55, 0.16), transparent 28%),
-    linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 55%, #111111 100%) !important;
-  border-right: 1px solid rgba(212, 175, 55, 0.18) !important;
-  box-shadow: 18px 0 55px rgba(26, 26, 26, 0.18) !important;
-}
-
-.menu-navegacao button {
-  color: rgba(255, 255, 255, 0.78) !important;
-  border-radius: 18px !important;
-}
-
-.menu-navegacao button:hover {
-  color: #ffffff !important;
-  background: rgba(212, 175, 55, 0.12) !important;
-  transform: translateX(5px) !important;
-}
-
-.menu-navegacao button.ativo {
-  color: var(--ebd-dark) !important;
-  background: var(--ebd-gradient-gold) !important;
-  box-shadow: 0 14px 34px rgba(212, 175, 55, 0.30) !important;
-}
-
-.icone-menu {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: var(--ebd-gold) !important;
-}
-
-.menu-navegacao button.ativo .icone-menu {
-  background: rgba(26, 26, 26, 0.10) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.cartao-usuario-sidebar {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(212, 175, 55, 0.16) !important;
-}
-
-.cartao-usuario-sidebar strong { color: #ffffff !important; }
-
-.selo-perfil-sidebar {
-  background: rgba(212, 175, 55, 0.14) !important;
-  color: var(--ebd-gold-light) !important;
-}
-
-.area-principal {
-  background:
-    radial-gradient(circle at 88% 8%, rgba(212, 175, 55, 0.12), transparent 24%),
-    radial-gradient(circle at 6% 18%, rgba(0, 188, 212, 0.10), transparent 25%) !important;
-}
-
-.topo-pagina {
-  border-radius: 30px !important;
-  background:
-    radial-gradient(circle at 92% 18%, rgba(212, 175, 55, 0.18), transparent 28%),
-    #ffffff !important;
-  border: 1px solid rgba(212, 175, 55, 0.16) !important;
-  box-shadow: 0 16px 46px rgba(26, 26, 26, 0.08) !important;
-}
-
-.topo-pagina h2 {
-  color: var(--ebd-dark) !important;
-  font-size: clamp(34px, 4.5vw, 64px) !important;
-  letter-spacing: -0.055em !important;
-}
-
-.card,
-.item-lista,
-.formulario,
-.manual-card,
-.card-admin {
-  border-color: rgba(212, 175, 55, 0.16) !important;
-  background: #ffffff !important;
-  box-shadow: 0 12px 34px rgba(26, 26, 26, 0.07) !important;
-}
-
-.card-estatistica .card-icone,
-.card-icone {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.cards .card:nth-child(4n + 1),
-.cards-admin-sistema .card:nth-child(4n + 1) { border-bottom: 4px solid var(--ebd-gold) !important; }
-.cards .card:nth-child(4n + 2),
-.cards-admin-sistema .card:nth-child(4n + 2) { border-bottom: 4px solid var(--ebd-cyan) !important; }
-.cards .card:nth-child(4n + 3),
-.cards-admin-sistema .card:nth-child(4n + 3) { border-bottom: 4px solid var(--ebd-red) !important; }
-.cards .card:nth-child(4n + 4),
-.cards-admin-sistema .card:nth-child(4n + 4) { border-bottom: 4px solid var(--ebd-green) !important; }
-
-.lista-classes-modernas .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.34), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 56%, #B8860B 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #0097A7 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #FF5722 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #2E7D32 100%) !important;
-}
-
-.lista-classes-modernas .classe-card-matricula {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-principal,
-.lista-classes-modernas .acoes-classe-card .botao-verde,
-.botao-acessar-igreja,
-.botao-aprovar-igreja {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-  border: none !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-editar,
-.botao-editar {
-  background: #ffffff !important;
-  color: var(--ebd-gold-dark) !important;
-  border: 1px solid rgba(212, 175, 55, 0.38) !important;
-}
-
-.lista-classes-modernas .acoes-classe-card .botao-excluir,
-.botao-excluir {
-  background: #fff7f4 !important;
-  color: var(--ebd-red-dark) !important;
-  border: 1px solid rgba(255, 87, 34, 0.30) !important;
-}
-
-.banner-modo-suporte {
-  background:
-    radial-gradient(circle at 92% 20%, rgba(212, 175, 55, 0.24), transparent 28%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 58%, #B8860B 100%) !important;
-  border: 1px solid rgba(212, 175, 55, 0.24) !important;
-}
-
-.botao-sair-suporte {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-  border: none !important;
-}
-
-.manual-hero,
-.manual-final {
-  background:
-    radial-gradient(circle at 88% 14%, rgba(212, 175, 55, 0.22), transparent 28%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(212, 175, 55, 0.20) !important;
-}
-
-.manual-hero h2,
-.manual-final h3 { color: var(--ebd-gold) !important; }
-
-.manual-hero p,
-.manual-final p { color: rgba(255, 255, 255, 0.78) !important; }
-
-.manual-numero {
-  background: var(--ebd-gradient-gold) !important;
-  color: var(--ebd-dark) !important;
-}
-
-.manual-card::before {
-  background: linear-gradient(180deg, var(--ebd-gold), var(--ebd-cyan), var(--ebd-green)) !important;
-}
-
-@media (max-width: 900px) {
-  .topo-publico { border-radius: 24px !important; }
-  .hero-publico,
-  .hero-ebd-oficial {
-    min-height: auto !important;
-    border-radius: 30px !important;
-  }
-  .tela-login {
-    background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 45%, #F8F9FA 45%, #E8ECF1 100%) !important;
-  }
-}
-
-
-/* =========================================================
-   LANDING EXATAMENTE NO MODELO ENVIADO + INTERNO NO MESMO PADRAO
-   ========================================================= */
-
-.modelo-exato-ebd,
-.modelo-exato-ebd * {
-  box-sizing: border-box;
-}
-
-.modelo-exato-ebd {
-  --gold: #D4AF37;
-  --gold-light: #F5A623;
-  --gold-dark: #B8860B;
-  --cyan: #00BCD4;
-  --red: #FF5722;
-  --green: #4CAF50;
-  --dark: #1A1A1A;
-  --gray: #4A4A4A;
-  --light: #F8F9FA;
-  --white: #FFFFFF;
-  --gradient-gold: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
-  --gradient-cyan: linear-gradient(135deg, #00BCD4, #0097A7);
-  --gradient-red: linear-gradient(135deg, #FF5722, #E64A19);
-  --gradient-green: linear-gradient(135deg, #4CAF50, #2E7D32);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%);
-  color: #1A1A1A;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-.modelo-exato-ebd button {
-  font: inherit;
-}
-
-.modelo-exato-ebd .navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  z-index: 1000;
-  padding: 0.8rem 0;
-}
-
-.modelo-exato-ebd .nav-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modelo-exato-ebd .logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  z-index: 1001;
-}
-
-.modelo-exato-ebd .logo-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--gradient-gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
-}
-
-.modelo-exato-ebd .logo-icon::before {
-  content: "✝";
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.modelo-exato-ebd .logo-icon::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  border-radius: 50%;
-  border: 2px solid var(--cyan);
-  opacity: 0.5;
-}
-
-.modelo-exato-ebd .logo-text {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.modelo-exato-ebd .logo-text span {
-  color: var(--gold);
-  background: none;
-}
-
-.modelo-exato-ebd .logo-sub {
-  font-size: 0.7rem;
-  color: var(--gray);
-  letter-spacing: 1px;
-}
-
-.modelo-exato-ebd .nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.modelo-exato-ebd .nav-links a {
-  text-decoration: none;
-  color: var(--gray);
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.modelo-exato-ebd .nav-links a:hover {
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .btn-nav {
-  background: var(--gradient-gold);
-  color: var(--dark) !important;
-  padding: 0.6rem 1.2rem;
-  border-radius: 2rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.modelo-exato-ebd .btn-nav:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-}
-
-.modelo-exato-ebd .menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
-  z-index: 1001;
-}
-
-.modelo-exato-ebd .hamburger {
-  width: 24px;
-  height: 20px;
-  position: relative;
-  display: inline-block;
-}
-
-.modelo-exato-ebd .hamburger span {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  left: 0;
-  background: var(--dark);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-.modelo-exato-ebd .hamburger span:nth-child(1) { top: 0; }
-.modelo-exato-ebd .hamburger span:nth-child(2) { top: 9px; }
-.modelo-exato-ebd .hamburger span:nth-child(3) { top: 18px; }
-
-.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(1) {
-  transform: rotate(45deg);
-  top: 9px;
-  background: var(--gold);
-}
-
-.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(2) {
-  opacity: 0;
-}
-
-.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(3) {
-  transform: rotate(-45deg);
-  top: 9px;
-  background: var(--gold);
-}
-
-.modelo-exato-ebd .mobile-menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 80%;
-  max-width: 320px;
-  height: 100vh;
-  background: var(--white);
-  box-shadow: -5px 0 30px rgba(0,0,0,0.1);
-  z-index: 1000;
-  transition: right 0.3s ease;
-  padding: 5rem 2rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.modelo-exato-ebd .mobile-menu.active {
-  right: 0;
-}
-
-.modelo-exato-ebd .mobile-menu a,
-.modelo-exato-ebd .btn-nav-mobile {
-  text-decoration: none;
-  color: var(--dark);
-  font-size: 1.2rem;
-  font-weight: 500;
-  padding: 0.75rem 0;
-  border: 0;
-  border-bottom: 1px solid #eee;
-  background: transparent;
-  text-align: left;
-}
-
-.modelo-exato-ebd .btn-nav-mobile {
-  background: var(--gradient-gold);
-  color: var(--dark);
-  text-align: center;
-  border-radius: 2rem;
-  margin-top: 1rem;
-  border-bottom: none;
-  padding: 0.75rem;
-  font-weight: 600;
-}
-
-.modelo-exato-ebd .menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 999;
-  border: 0;
-}
-
-.modelo-exato-ebd .btn-primary {
-  background: var(--gradient-gold);
-  color: var(--dark);
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 3rem;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
-}
-
-.modelo-exato-ebd .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
-}
-
-.modelo-exato-ebd .btn-outline {
-  background: transparent;
-  border: 2px solid var(--gold);
-  color: var(--gold-dark);
-  padding: 0.8rem 1.8rem;
-  border-radius: 3rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.modelo-exato-ebd .btn-outline:hover {
-  background: var(--gold);
-  color: var(--dark);
-  transform: translateY(-2px);
-}
-
-.modelo-exato-ebd .hero {
-  padding: 7rem 1.5rem 4rem;
-  background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #1A1A1A 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.modelo-exato-ebd .hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(212,175,55,0.1) 0%, transparent 50%);
-}
-
-.modelo-exato-ebd .hero::after {
-  content: "✝";
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 8rem;
-  opacity: 0.03;
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .hero-content {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-}
-
-.modelo-exato-ebd .hero-badge {
-  display: inline-block;
-  background: rgba(212, 175, 55, 0.15);
-  color: var(--gold-light);
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-size: 0.875rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.modelo-exato-ebd .hero h1 {
-  font-size: clamp(2rem, 4.8vw, 3rem);
-  font-weight: 800;
-  color: white;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
-}
-
-.modelo-exato-ebd .hero h1 span {
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .hero p {
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.8);
-  line-height: 1.6;
-  margin-bottom: 2rem;
-}
-
-.modelo-exato-ebd .hero-stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.modelo-exato-ebd .stat-number {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .stat-label {
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.6);
-}
-
-.modelo-exato-ebd .hero-mockup {
-  background: var(--white);
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
-  border: 1px solid rgba(212,175,55,0.2);
-}
-
-.modelo-exato-ebd .mockup-header {
-  background: var(--dark);
-  padding: 1rem;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.modelo-exato-ebd .mockup-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.modelo-exato-ebd .mockup-red { background: var(--red); }
-.modelo-exato-ebd .mockup-gold { background: var(--gold); }
-.modelo-exato-ebd .mockup-green { background: var(--green); }
-
-.modelo-exato-ebd .mockup-body {
-  padding: 1.5rem;
-}
-
-.modelo-exato-ebd .mockup-check {
-  color: var(--green);
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
-}
-
-.modelo-exato-ebd .mockup-body h3 {
-  color: var(--dark);
-  margin: 0 0 0.35rem;
-}
-
-.modelo-exato-ebd .mockup-body p {
-  color: var(--gray);
-  margin: 0;
-}
-
-.modelo-exato-ebd .mockup-body hr {
-  margin: 1rem 0;
-  border: 0;
-  border-top: 1px solid #eee;
-}
-
-.modelo-exato-ebd .mockup-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.modelo-exato-ebd .section {
-  padding: 5rem 1.5rem;
-}
-
-.modelo-exato-ebd .section-soft,
-.modelo-exato-ebd .section-plans {
-  background: #F0F2F5;
-}
-
-.modelo-exato-ebd .container {
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.modelo-exato-ebd .section-title {
-  text-align: center;
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.modelo-exato-ebd .section-subtitle {
-  text-align: center;
-  color: var(--gray);
-  max-width: 600px;
-  margin: 0 auto 3rem;
-}
-
-.modelo-exato-ebd .features-grid,
-.modelo-exato-ebd .personas-grid,
-.modelo-exato-ebd .plans-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.modelo-exato-ebd .feature-card {
-  background: var(--white);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.3s;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-  border-bottom: 3px solid transparent;
-}
-
-.modelo-exato-ebd .feature-card:nth-child(1) { border-bottom-color: var(--gold); }
-.modelo-exato-ebd .feature-card:nth-child(2) { border-bottom-color: var(--cyan); }
-.modelo-exato-ebd .feature-card:nth-child(3) { border-bottom-color: var(--red); }
-.modelo-exato-ebd .feature-card:nth-child(4) { border-bottom-color: var(--green); }
-.modelo-exato-ebd .feature-card:nth-child(5) { border-bottom-color: var(--gold); }
-.modelo-exato-ebd .feature-card:nth-child(6) { border-bottom-color: var(--cyan); }
-
-.modelo-exato-ebd .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-.modelo-exato-ebd .feature-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: white;
-  font-size: 2rem;
-}
-
-.modelo-exato-ebd .feature-card:nth-child(1) .feature-icon { background: var(--gradient-gold); }
-.modelo-exato-ebd .feature-card:nth-child(2) .feature-icon { background: var(--gradient-cyan); }
-.modelo-exato-ebd .feature-card:nth-child(3) .feature-icon { background: var(--gradient-red); }
-.modelo-exato-ebd .feature-card:nth-child(4) .feature-icon { background: var(--gradient-green); }
-.modelo-exato-ebd .feature-card:nth-child(5) .feature-icon { background: var(--gradient-gold); }
-.modelo-exato-ebd .feature-card:nth-child(6) .feature-icon { background: var(--gradient-cyan); }
-
-.modelo-exato-ebd .feature-card h3 {
-  margin-bottom: 0.75rem;
-  color: var(--dark);
-}
-
-.modelo-exato-ebd .feature-card p,
-.modelo-exato-ebd .persona-card p,
-.modelo-exato-ebd .plan-card p {
-  color: var(--gray);
-  line-height: 1.55;
-}
-
-.modelo-exato-ebd .comparison {
-  background: var(--white);
-  border-radius: 2rem;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-.modelo-exato-ebd .comparison-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.modelo-exato-ebd .comparison-card {
-  padding: 2rem;
-  border-radius: 1.5rem;
-}
-
-.modelo-exato-ebd .comparison-card.before {
-  background: linear-gradient(135deg, #FFF5F5, #FFE0E0);
-  border-left: 4px solid var(--red);
-}
-
-.modelo-exato-ebd .comparison-card.after {
-  background: linear-gradient(135deg, #F0FFF4, #E0FFE8);
-  border-left: 4px solid var(--green);
-}
-
-.modelo-exato-ebd .comparison-icon {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.modelo-exato-ebd .comparison-card ul {
-  margin-top: 1rem;
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.modelo-exato-ebd .persona-card,
-.modelo-exato-ebd .plan-card {
-  background: var(--white);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.3s;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-}
-
-.modelo-exato-ebd .persona-card:hover,
-.modelo-exato-ebd .plan-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(212, 175, 55, 0.15);
-}
-
-.modelo-exato-ebd .persona-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: white;
-  font-size: 3rem;
-}
-
-.modelo-exato-ebd .persona-card:nth-child(1) .persona-avatar { background: var(--gradient-gold); }
-.modelo-exato-ebd .persona-card:nth-child(2) .persona-avatar { background: var(--gradient-cyan); }
-.modelo-exato-ebd .persona-card:nth-child(3) .persona-avatar { background: var(--gradient-red); }
-
-.modelo-exato-ebd .plan-card {
-  position: relative;
-}
-
-.modelo-exato-ebd .plan-card.featured {
-  transform: scale(1.02);
-  border: 2px solid var(--gold);
-  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
-}
-
-.modelo-exato-ebd .plan-badge {
-  position: absolute;
-  top: -12px;
-  right: 20px;
-  background: var(--gradient-gold);
-  color: var(--dark);
-  padding: 0.3rem 1rem;
-  border-radius: 2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.modelo-exato-ebd .plan-price {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--gold-dark);
-  margin: 1rem 0;
-}
-
-.modelo-exato-ebd .plan-card button {
-  width: 100%;
-  margin-top: 1.5rem;
-}
-
-.modelo-exato-ebd .plans-note {
-  text-align: center;
-  margin-top: 2rem;
-  color: var(--gray);
-}
-
-.modelo-exato-ebd .faq-list {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.modelo-exato-ebd .faq-item {
-  background: var(--white);
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-}
-
-.modelo-exato-ebd .faq-item summary {
-  padding: 1.2rem;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--dark);
-  list-style: none;
-}
-
-.modelo-exato-ebd .faq-item summary::-webkit-details-marker {
-  display: none;
-}
-
-.modelo-exato-ebd .faq-item summary::after {
-  content: "⌄";
-  float: right;
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .faq-item[open] summary::after {
-  content: "⌃";
-}
-
-.modelo-exato-ebd .faq-item p {
-  padding: 0 1.2rem 1.2rem;
-  color: var(--gray);
-}
-
-.modelo-exato-ebd .footer {
-  background: var(--dark);
-  color: white;
-  padding: 4rem 1.5rem 2rem;
-  margin-top: 3rem;
-}
-
-.modelo-exato-ebd .footer-grid {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 3rem;
-}
-
-.modelo-exato-ebd .footer-logo {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.8rem;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
-  font-weight: 800;
-}
-
-.modelo-exato-ebd .footer p,
-.modelo-exato-ebd .footer span {
-  color: rgba(255,255,255,0.6);
-}
-
-.modelo-exato-ebd .footer-gold {
-  color: var(--gold) !important;
-  margin-top: 1rem;
-}
-
-.modelo-exato-ebd .footer-col h4 {
-  color: var(--gold);
-  margin-bottom: 1rem;
-}
-
-.modelo-exato-ebd .footer-col a,
-.modelo-exato-ebd .footer-col span {
-  display: block;
-  color: rgba(255,255,255,0.7);
-  text-decoration: none;
-  margin: 0.5rem 0;
-}
-
-.modelo-exato-ebd .footer-col a:hover {
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .footer-button {
-  margin-top: 1rem;
-  background: rgba(255,255,255,0.05);
-  border-color: var(--gold);
-  color: var(--gold);
-}
-
-.modelo-exato-ebd .footer-bottom {
-  text-align: center;
-  padding-top: 3rem;
-  margin-top: 3rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.5);
-}
-
-/* INTERNO ADAPTADO AO MESMO MODELO */
-.app {
-  background: linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
-}
-
-.menu-lateral {
-  background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 55%, #111111 100%) !important;
-  border-right: 1px solid rgba(212, 175, 55, 0.22) !important;
-  box-shadow: 18px 0 50px rgba(26,26,26,0.18) !important;
-}
-
-.menu-navegacao button {
-  color: rgba(255,255,255,0.76) !important;
-  border-radius: 18px !important;
-}
-
-.menu-navegacao button:hover {
-  color: #fff !important;
-  background: rgba(212, 175, 55, 0.12) !important;
-}
-
-.menu-navegacao button.ativo {
-  color: #1A1A1A !important;
-  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
-  box-shadow: 0 14px 34px rgba(212, 175, 55, 0.30) !important;
-}
-
-.icone-menu {
-  color: #D4AF37 !important;
-  background: rgba(255,255,255,0.08) !important;
-}
-
-.menu-navegacao button.ativo .icone-menu {
-  color: #1A1A1A !important;
-  background: rgba(26,26,26,0.10) !important;
-}
-
-.cartao-usuario-sidebar {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(212, 175, 55, 0.18) !important;
-}
-
-.cartao-usuario-sidebar strong {
-  color: #fff !important;
-}
-
-.selo-perfil-sidebar {
-  color: #F5A623 !important;
-  background: rgba(212, 175, 55, 0.14) !important;
-}
-
-.area-principal {
-  background:
-    radial-gradient(circle at 88% 8%, rgba(212,175,55,0.12), transparent 24%),
-    radial-gradient(circle at 6% 18%, rgba(0,188,212,0.10), transparent 25%) !important;
-}
-
-.topo-pagina,
-.card,
-.item-lista,
-.formulario,
-.manual-card,
-.card-admin {
-  background: #fff !important;
-  border-color: rgba(212, 175, 55, 0.18) !important;
-  box-shadow: 0 12px 34px rgba(26,26,26,0.07) !important;
-}
-
-.topo-pagina h2,
-.card h3,
-.item-lista h3 {
-  color: #1A1A1A !important;
-}
-
-.botao-principal,
-.botao-cadastrar-igreja,
-.botao-acessar-igreja,
-.botao-aprovar-igreja,
-.botao-sair-suporte {
-  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
-  color: #1A1A1A !important;
-  border: none !important;
-  box-shadow: 0 12px 28px rgba(212,175,55,0.25) !important;
-}
-
-.botao-editar {
-  background: #fff !important;
-  color: #B8860B !important;
-  border: 1px solid rgba(212,175,55,0.38) !important;
-}
-
-.botao-excluir {
-  background: #fff7f4 !important;
-  color: #E64A19 !important;
-  border: 1px solid rgba(255,87,34,0.30) !important;
-}
-
-.card-estatistica .card-icone,
-.card-icone {
-  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
-  color: #1A1A1A !important;
-}
-
-.cards .card:nth-child(4n + 1),
-.cards-admin-sistema .card:nth-child(4n + 1) { border-bottom: 4px solid #D4AF37 !important; }
-.cards .card:nth-child(4n + 2),
-.cards-admin-sistema .card:nth-child(4n + 2) { border-bottom: 4px solid #00BCD4 !important; }
-.cards .card:nth-child(4n + 3),
-.cards-admin-sistema .card:nth-child(4n + 3) { border-bottom: 4px solid #FF5722 !important; }
-.cards .card:nth-child(4n + 4),
-.cards-admin-sistema .card:nth-child(4n + 4) { border-bottom: 4px solid #4CAF50 !important; }
-
-.lista-classes-modernas .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.34), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 56%, #B8860B 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #0097A7 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #FF5722 100%) !important;
-}
-
-.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
-  background:
-    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
-    linear-gradient(135deg, #1A1A1A 0%, #2E7D32 100%) !important;
-}
-
-.lista-classes-modernas .classe-card-matricula {
-  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
-  color: #1A1A1A !important;
-}
-
-.manual-hero,
-.manual-final,
-.banner-modo-suporte {
-  background:
-    radial-gradient(circle at 88% 14%, rgba(212,175,55,0.22), transparent 28%),
-    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
-  color: #fff !important;
-  border: 1px solid rgba(212,175,55,0.20) !important;
-}
-
-.manual-hero h2,
-.manual-final h3 {
-  color: #D4AF37 !important;
-}
-
-@media (max-width: 768px) {
-  .modelo-exato-ebd .menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modelo-exato-ebd .nav-links {
-    display: none;
-  }
-
-  .modelo-exato-ebd .hero-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .modelo-exato-ebd .hero h1 {
-    font-size: 1.8rem;
-  }
-
-  .modelo-exato-ebd .section-title {
-    font-size: 1.6rem;
-  }
-
-  .modelo-exato-ebd .comparison-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .modelo-exato-ebd .hero-stats {
-    justify-content: center;
-  }
-
-  .modelo-exato-ebd .btn-primary,
-  .modelo-exato-ebd .btn-outline {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .modelo-exato-ebd .plan-card.featured {
-    transform: scale(1);
-  }
-}
-
-
-/* Logo oficial no layout do modelo */
-.modelo-exato-ebd .logo-icon-oficial {
-  background: transparent !important;
-  border-radius: 50% !important;
-  overflow: visible !important;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.22) !important;
-}
-
-.modelo-exato-ebd .logo-icon-oficial::before,
-.modelo-exato-ebd .logo-icon-oficial::after {
-  display: none !important;
-  content: none !important;
-}
-
-.modelo-exato-ebd .logo-oficial-navbar {
-  width: 52px;
-  height: 52px;
-  display: block;
-  object-fit: contain;
-  border-radius: 50%;
-  background: #ffffff;
-  padding: 3px;
-  border: 2px solid rgba(212, 175, 55, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
-}
-
-.modelo-exato-ebd .logo-com-imagem-oficial {
-  gap: 0.85rem;
-}
-
-/* Garante a logo oficial também nas telas internas e de login */
-.logo-simbolo img.logo-imagem,
-.logo-publica img.logo-imagem,
-.logo-simbolo-sidebar img.logo-imagem {
-  object-fit: contain !important;
-}
-
-
-/* Ajuste solicitado: fundo principal azul e textos claros em fundos escuros */
-:root {
-  --fundo-principal-ebd: #103058;
-  --fundo-principal-ebd-escuro: #173f66;
-  --texto-claro-ebd: #ffffff;
-  --texto-claro-suave-ebd: rgba(255, 255, 255, 0.86);
-}
-
-/* Hero/página principal com a cor do modelo enviado */
-.modelo-exato-ebd .hero {
-  background: var(--fundo-principal-ebd) !important;
-}
-
-.modelo-exato-ebd .hero::before {
-  background:
-    radial-gradient(circle at 18% 34%, rgba(255, 255, 255, 0.06) 0%, transparent 42%),
-    radial-gradient(circle at 86% 22%, rgba(255, 255, 255, 0.04) 0%, transparent 34%) !important;
-}
-
-.modelo-exato-ebd .hero h1,
-.modelo-exato-ebd .hero h1 span,
-.modelo-exato-ebd .hero p,
-.modelo-exato-ebd .hero .stat-number,
-.modelo-exato-ebd .hero .stat-label {
-  color: var(--texto-claro-ebd) !important;
-}
-
-.modelo-exato-ebd .hero p,
-.modelo-exato-ebd .hero .stat-label {
-  color: var(--texto-claro-suave-ebd) !important;
-}
-
-/* Sempre que houver fundo escuro, texto claro */
-.modelo-exato-ebd .mockup-header,
-.modelo-exato-ebd .footer,
-.menu-lateral,
-.banner-modo-suporte,
-.manual-hero,
-.manual-final,
-.painel-apresentacao {
-  color: var(--texto-claro-ebd) !important;
-}
-
-.modelo-exato-ebd .mockup-header *,
-.modelo-exato-ebd .footer *,
-.menu-lateral *,
-.banner-modo-suporte *,
-.manual-hero *,
-.manual-final *,
-.painel-apresentacao * {
-  color: inherit;
-}
-
-.modelo-exato-ebd .footer a,
-.modelo-exato-ebd .footer-col a,
-.modelo-exato-ebd .footer-col span,
-.modelo-exato-ebd .footer p,
-.menu-lateral p,
-.menu-lateral span,
-.banner-modo-suporte p,
-.manual-hero p,
-.manual-final p,
-.painel-apresentacao p {
-  color: var(--texto-claro-suave-ebd) !important;
-}
-
-.modelo-exato-ebd .footer-logo,
-.modelo-exato-ebd .footer-col h4,
-.modelo-exato-ebd .footer-gold,
-.manual-hero h2,
-.manual-final h3 {
-  color: #D4AF37 !important;
-}
-
-/* Botões em áreas escuras com contraste */
-.modelo-exato-ebd .hero .btn-primary {
-  background: #14395e !important;
-  color: #ffffff !important;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14) !important;
-}
-
-.modelo-exato-ebd .hero .btn-primary:hover {
-  background: #0f3152 !important;
-}
-
-/* Parte interna: menu escuro sempre com textos claros */
-.menu-lateral .marca-sidebar h1,
-.menu-lateral .marca-sidebar p,
-.menu-lateral .menu-navegacao button,
-.menu-lateral .cartao-usuario-sidebar strong,
-.menu-lateral .titulo-usuario-sidebar,
-.menu-lateral .botao-sair-sidebar span {
-  color: #ffffff !important;
-}
-
-.menu-lateral .menu-navegacao button:not(.ativo) span {
-  color: rgba(255, 255, 255, 0.88) !important;
-}
-
-.menu-lateral .menu-navegacao button.ativo,
-.menu-lateral .menu-navegacao button.ativo span {
-  color: #ffffff !important;
-  background: var(--fundo-principal-ebd) !important;
-}
-
-.menu-lateral .menu-navegacao button.ativo .icone-menu {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.14) !important;
-}
-
-/* Cards de classe com fundos escuros/azuis e letras claras */
-.lista-classes-modernas .classe-card-cabecalho {
-  background: var(--fundo-principal-ebd) !important;
-}
-
-.lista-classes-modernas .classe-card-cabecalho *,
-.lista-classes-modernas .classe-card-selo,
-.lista-classes-modernas .classe-card-cabecalho h3 {
-  color: #ffffff !important;
-}
-
-.lista-classes-modernas .classe-card-selo {
-  background: rgba(255, 255, 255, 0.14) !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-}
-
-/* Login/apresentação com fundo escuro e letras claras */
-.painel-apresentacao h1,
-.painel-apresentacao h2,
-.painel-apresentacao h3,
-.painel-apresentacao strong,
-.painel-apresentacao span {
-  color: #ffffff !important;
-}
-
-.painel-apresentacao .selo-apresentacao {
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.24) !important;
-}
-
-
-/* Correção definitiva: textos da página principal renderizados por Unicode escape */
-.modelo-exato-ebd .feature-icon,
-.modelo-exato-ebd .persona-avatar,
-.modelo-exato-ebd .comparison-icon {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-weight: 950 !important;
-  color: #ffffff !important;
-  text-transform: uppercase !important;
-}
-
-.modelo-exato-ebd .comparison-card li::before {
-  content: "" !important;
-}
-
-.modelo-exato-ebd .comparison-card li {
-  color: #1A1A1A !important;
-}
-
-.modelo-exato-ebd .plans-note {
-  font-weight: 700 !important;
-}
-
-
-/* Revisão visual segura dos símbolos */
-.modelo-exato-ebd .feature-icon,
-.modelo-exato-ebd .persona-avatar,
-.modelo-exato-ebd .comparison-icon {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-size: 1.45rem !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-  color: #ffffff !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-transform: none !important;
-}
-
-.modelo-exato-ebd .persona-avatar {
-  font-size: 1.65rem !important;
-}
-
-.modelo-exato-ebd .comparison-card li::before {
-  content: "" !important;
-}
-
-.modelo-exato-ebd .comparison-card li {
-  color: #1A1A1A !important;
-}
-
-
-/* Remover selo de teste piloto da página inicial */
-.modelo-exato-ebd .hero-badge {
-  display: none !important;
-}
-
-
-/* Correcao emergencial de acentuacao e simbolos */
-.modelo-exato-ebd .feature-icon,
-.modelo-exato-ebd .persona-avatar,
-.modelo-exato-ebd .comparison-icon {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  font-size: 1.45rem !important;
-  font-weight: 950 !important;
-  line-height: 1 !important;
-  color: #ffffff !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-transform: none !important;
-}
-
-.modelo-exato-ebd .persona-avatar {
-  font-size: 1.65rem !important;
-}
-
-.modelo-exato-ebd .comparison-card li::before {
-  content: "" !important;
-}
-
-
-/* Ações rápidas da chamada dos alunos */
-.acoes-chamada-rapida {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 16px 0;
-}
-
-.botao-marcar-todos {
-  min-height: 48px;
-  border-radius: 16px;
-  border: 1px solid transparent;
-  padding: 0 14px;
-  cursor: pointer;
-  font-weight: 900;
-}
-
-.botao-marcar-todos.presente {
-  background: #eafaf0;
-  color: #087b39;
-  border-color: rgba(8, 123, 57, 0.22);
-}
-
-.botao-marcar-todos.faltou {
-  background: #fff1f0;
-  color: #b42318;
-  border-color: rgba(180, 35, 24, 0.22);
-}
-
-@media (max-width: 700px) {
-  .acoes-chamada-rapida {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Campo de data da aula/chamada */
-.formulario-data-chamada {
-  margin-bottom: 18px;
-}
-
-.texto-ajuda-campo {
-  display: block;
-  margin-top: 6px;
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.cabecalho-relatorio p {
-  line-height: 1.35;
-}
-
-
-/* Respostas aos feedbacks do piloto */
-.feedback-admin-conteudo {
-  min-width: 0;
-}
-
-.acoes-feedback-admin {
-  display: grid;
-  gap: 8px;
-  align-self: start;
-  min-width: 170px;
-}
-
-.acoes-feedback-admin button {
-  width: 100%;
-}
-
-.feedback-responder-box {
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 18px;
-  background: #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.22);
-}
-
-.feedback-responder-box label {
-  display: grid;
-  gap: 8px;
-  color: #003B66;
-  font-weight: 900;
-}
-
-.feedback-responder-box textarea {
-  width: 100%;
-  min-height: 110px;
-  border: 1px solid #cfe3f2;
-  border-radius: 16px;
-  padding: 12px 14px;
-  resize: vertical;
-  font: inherit;
-  color: #0f172a;
-  background: #ffffff;
-}
-
-.feedback-responder-acoes {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.feedback-resposta-admin,
-.feedback-resposta-igreja {
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 18px;
-  background: #fffbe8;
-  border: 1px solid rgba(255, 210, 0, 0.35);
-}
-
-.feedback-resposta-admin strong,
-.feedback-resposta-igreja strong {
-  display: block;
-  color: #8a5b00;
-  margin-bottom: 4px;
-}
-
-.feedback-resposta-admin p,
-.feedback-resposta-igreja p {
-  margin: 4px 0;
-  color: #334155;
-}
-
-.feedback-com-resposta {
-  border-color: rgba(0, 140, 68, 0.28);
-  background:
-    radial-gradient(circle at top right, rgba(0, 140, 68, 0.10), transparent 34%),
-    #ffffff;
-}
-
-.feedback-aguardando-resposta {
-  display: inline-block;
-  margin-top: 8px;
-  color: #64748b;
-  font-weight: 800;
-}
-
-@media (max-width: 800px) {
-  .feedback-admin-item {
-    grid-template-columns: 1fr;
-  }
-
-  .acoes-feedback-admin {
-    width: 100%;
-    min-width: 0;
-  }
-}
-
-
-/* Contato/WhatsApp na administração */
-.contato-acesso-admin {
-  margin: 8px 0;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.16);
-}
-
-.contato-acesso-admin p {
-  margin: 3px 0;
-  color: #334155;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.lista-acessos-admin .acoes-acesso-admin {
-  align-self: stretch;
-}
-
-.lista-acessos-admin .acoes-acesso-admin button {
-  min-width: 150px;
-}
-
-.mockup-check {
-  font-weight: 950;
-  color: #10b981;
-}
-
-
-/* Cadastro: DDD separado e estado em lista suspensa */
-.campo-telefone-cadastro {
-  display: grid;
-  grid-template-columns: 110px minmax(0, 1fr);
-  gap: 12px;
-}
-
-.campo-telefone-cadastro input {
-  width: 100%;
-}
-
-.formulario-cadastro-piloto select,
-.formulario select {
-  width: 100%;
-  min-height: 48px;
-  border: 1px solid #cfe3f2;
-  border-radius: 16px;
-  padding: 0 14px;
-  background: #ffffff;
-  color: #0f172a;
-  font: inherit;
-  font-weight: 800;
-}
-
-@media (max-width: 640px) {
-  .campo-telefone-cadastro {
-    grid-template-columns: 86px minmax(0, 1fr);
-    gap: 10px;
-  }
-}
-
-
-/* Usuários vinculados dentro do card da igreja */
-.botao-usuarios-vinculados {
-  border-color: rgba(0, 174, 239, 0.35) !important;
-  color: #005f8c !important;
-  background: #f0fbff !important;
-}
-
-.usuarios-vinculados-igreja {
-  grid-column: 1 / -1;
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at top right, rgba(0, 174, 239, 0.10), transparent 38%),
-    #f8fcff;
-  border: 1px solid rgba(0, 174, 239, 0.22);
-}
-
-.usuarios-vinculados-topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.usuarios-vinculados-topo strong {
-  display: block;
-  color: #003B66;
-  font-size: 16px;
-}
-
-.usuarios-vinculados-topo span {
-  color: #64748b;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.usuario-vinculado-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  padding: 14px;
-  margin-top: 10px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(207, 227, 242, 0.9);
-}
-
-.acoes-usuario-vinculado {
-  display: grid;
-  gap: 8px;
-  min-width: 170px;
-}
-
-.acoes-usuario-vinculado button {
-  width: 100%;
-}
-
-.usuarios-vinculados-vazio {
-  margin: 0;
-}
-
-@media (max-width: 850px) {
-  .usuarios-vinculados-topo,
-  .usuario-vinculado-card {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
-  .acoes-usuario-vinculado {
-    min-width: 0;
-  }
-}
-
-
-/* Botão WhatsApp mais discreto na Administração */
-.acoes-aprovacao-igreja .botao-whatsapp-admin,
-.igreja-admin-card .botao-whatsapp-admin {
-  background: #f0fdf4 !important;
-  color: #166534 !important;
-  border: 1px solid rgba(22, 101, 52, 0.22) !important;
-  box-shadow: none !important;
-  min-height: 38px !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-}
-
-.acoes-aprovacao-igreja .botao-whatsapp-admin:hover,
-.igreja-admin-card .botao-whatsapp-admin:hover {
-  background: #dcfce7 !important;
-  transform: none !important;
-}
-
-/* =========================================================
-   Administracao - melhoria visual segura v1
-   Apenas CSS. Nao altera regras de negocio nem funcoes JS.
-   ========================================================= */
-
-/* Container geral da Administracao */
-.conteudo:has(.topo-admin-sistema),
-.conteudo:has(.admin-acessos-bloco),
-.conteudo:has(.lista-admin-igrejas) {
-  background:
-    radial-gradient(circle at 6% 0%, rgba(212, 175, 55, 0.12), transparent 28%),
-    radial-gradient(circle at 96% 10%, rgba(0, 188, 212, 0.10), transparent 28%),
-    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
-}
-
-/* Topo da tela de Administracao */
-.topo-admin-sistema {
-  position: relative;
-  overflow: hidden;
-  border-radius: 30px !important;
-  padding: clamp(22px, 3vw, 36px) !important;
-  background:
-    radial-gradient(circle at 92% 18%, rgba(212, 175, 55, 0.24), transparent 28%),
-    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
-  border: 1px solid rgba(212, 175, 55, 0.24) !important;
-  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08) !important;
-}
-
-.topo-admin-sistema::after {
-  content: "";
-  position: absolute;
-  right: -42px;
-  bottom: -42px;
-  width: 150px;
-  height: 150px;
-  border-radius: 999px;
-  background: rgba(212, 175, 55, 0.13);
-  pointer-events: none;
-}
-
-.topo-admin-sistema > div,
-.topo-admin-sistema > button {
-  position: relative;
-  z-index: 1;
-}
-
-.selo-admin {
-  margin-bottom: 12px !important;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(0, 188, 212, 0.10)) !important;
-  color: #103058 !important;
-  border: 1px solid rgba(212, 175, 55, 0.22);
-}
-
-.topo-admin-sistema h2 {
-  max-width: 980px;
-  color: #103058 !important;
-  font-size: clamp(34px, 4.4vw, 58px) !important;
-  line-height: 0.98 !important;
-  letter-spacing: -0.055em !important;
-}
-
-.topo-admin-sistema p {
-  max-width: 920px;
-  color: #475569 !important;
-  font-weight: 700;
-}
-
-/* Cards de resumo da Administracao */
-.cards-admin-sistema {
-  gap: 16px !important;
-  margin: 22px 0 26px !important;
-}
-
-.cards-admin-sistema .card,
-.cards-admin-sistema .card-admin {
-  min-height: 130px;
-  display: grid;
-  align-content: space-between;
-  border-radius: 24px !important;
-  border: 1px solid rgba(212, 175, 55, 0.18) !important;
-  background:
-    radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.15), transparent 35%),
-    #ffffff !important;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07) !important;
-}
-
-.cards-admin-sistema .card:nth-child(1) { border-bottom: 4px solid #d4af37 !important; }
-.cards-admin-sistema .card:nth-child(2) { border-bottom: 4px solid #00bcd4 !important; }
-.cards-admin-sistema .card:nth-child(3) { border-bottom: 4px solid #ff5722 !important; }
-.cards-admin-sistema .card:nth-child(4) { border-bottom: 4px solid #4caf50 !important; }
-.cards-admin-sistema .card:nth-child(5) { border-bottom: 4px solid #b8860b !important; }
-
-.cards-admin-sistema .card strong,
-.cards-admin-sistema .card-admin strong {
-  color: #103058 !important;
-  font-size: 36px !important;
-  line-height: 1;
-}
-
-.cards-admin-sistema .card span,
-.cards-admin-sistema .card-admin span,
-.cards-admin-sistema .card p,
-.cards-admin-sistema .card-admin p {
-  color: #64748b !important;
-  font-weight: 800;
-}
-
-/* Blocos principais: feedbacks, auditoria e acessos */
-.admin-feedback-alertas,
-.admin-acessos-bloco,
-.feedback-piloto-card {
-  border-radius: 30px !important;
-  border: 1px solid rgba(0, 188, 212, 0.18) !important;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.18), transparent 32%),
-    radial-gradient(circle at 0% 100%, rgba(0, 188, 212, 0.10), transparent 34%),
-    #ffffff !important;
-  box-shadow: 0 24px 58px rgba(15, 23, 42, 0.08) !important;
-}
-
-.admin-feedback-topo h3,
-.admin-acessos-topo h3,
-.feedback-piloto-topo h3 {
-  color: #103058 !important;
-  letter-spacing: -0.04em;
-}
-
-.admin-feedback-topo p,
-.admin-acessos-topo p,
-.feedback-piloto-topo p {
-  color: #475569 !important;
-  font-weight: 700;
-}
-
-.admin-feedback-topo > strong {
-  background: linear-gradient(135deg, #d4af37, #f5a623) !important;
-  color: #1a1a1a !important;
-  box-shadow: 0 18px 38px rgba(212, 175, 55, 0.22) !important;
-}
-
-/* Itens de feedback */
-.feedback-admin-item,
-.feedback-recente-item,
-.feedback-resposta-admin,
-.feedback-resposta-igreja {
-  border-radius: 20px !important;
-  border: 1px solid rgba(203, 213, 225, 0.85) !important;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05) !important;
-}
-
-.feedback-novo {
-  border-color: rgba(255, 87, 34, 0.30) !important;
-  background:
-    radial-gradient(circle at top right, rgba(255, 87, 34, 0.07), transparent 35%),
-    #ffffff !important;
-}
-
-.feedback-com-resposta,
-.feedback-lido {
-  border-color: rgba(76, 175, 80, 0.25) !important;
-}
-
-/* Auditoria de cadastros incompletos */
-.admin-acessos-bloco .acesso-admin-card,
-.lista-acessos-admin .acesso-admin-card {
-  border-radius: 22px !important;
-  border: 1px solid rgba(0, 188, 212, 0.18) !important;
-  background: #ffffff !important;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06) !important;
-}
-
-.admin-acessos-bloco .linha-acesso-admin h4,
-.lista-acessos-admin .linha-acesso-admin h4 {
-  color: #103058 !important;
-}
-
-.admin-acessos-bloco .linha-acesso-admin span,
-.lista-acessos-admin .linha-acesso-admin span,
-.status-teste,
-.status-pendente,
-.status-ativa,
-.status-pausada,
-.status-cancelada,
-.status-piloto {
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  font-weight: 950 !important;
-}
-
-/* Busca da Administracao */
-.filtros-admin,
-.filtros-admin-acessos {
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 280px) !important;
-  border-radius: 22px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(0, 188, 212, 0.16) !important;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05) !important;
-}
-
-.filtros-admin input,
-.filtros-admin-acessos input,
-.filtros-admin select,
-.filtros-admin-acessos select {
-  min-height: 48px;
-}
-
-/* Cards de igrejas */
-.lista-admin-igrejas {
-  gap: 18px !important;
-}
-
-.igreja-admin-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 26px !important;
-  padding: 20px !important;
-  border: 1px solid rgba(0, 188, 212, 0.18) !important;
-  background:
-    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07) !important;
-}
-
-.igreja-admin-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 18px;
-  bottom: 18px;
-  width: 6px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #d4af37, #00bcd4, #4caf50);
-}
-
-.igreja-admin-card > div,
-.igreja-admin-card > section {
-  position: relative;
-  z-index: 1;
-}
-
-.linha-titulo-admin h3 {
-  color: #103058 !important;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-}
-
-.dados-igreja-admin {
-  border-radius: 18px !important;
-  border: 1px solid rgba(212, 175, 55, 0.16) !important;
-  background:
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 36%),
-    #f8fafc !important;
-}
-
-.dados-igreja-admin strong {
-  color: #103058 !important;
-}
-
-/* Usuarios vinculados */
-.usuarios-vinculados-igreja {
-  border-radius: 22px !important;
-  border: 1px solid rgba(0, 188, 212, 0.20) !important;
-  background:
-    radial-gradient(circle at top right, rgba(0, 188, 212, 0.08), transparent 34%),
-    #f8fbff !important;
-}
-
-.usuario-vinculado-card {
-  border-radius: 18px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(203, 213, 225, 0.9) !important;
-}
-
-/* Botoes da Administracao */
-.igreja-admin-card .botao-principal,
-.admin-acessos-bloco .botao-principal,
-.admin-feedback-alertas .botao-principal,
-.botao-acessar-igreja,
-.botao-aprovar-igreja {
-  background: linear-gradient(135deg, #103058, #173f66) !important;
-  color: #ffffff !important;
-  border: none !important;
-  box-shadow: 0 14px 30px rgba(16, 48, 88, 0.20) !important;
-}
-
-.igreja-admin-card .botao-secundario,
-.admin-acessos-bloco .botao-secundario,
-.admin-feedback-alertas .botao-secundario,
-.botao-usuarios-vinculados,
-.botao-copiar-admin {
-  background: #ffffff !important;
-  color: #103058 !important;
-  border: 1px solid rgba(0, 188, 212, 0.24) !important;
-  box-shadow: none !important;
-}
-
-.igreja-admin-card .botao-editar,
-.admin-acessos-bloco .botao-editar {
-  color: #8a5b00 !important;
-  border-color: rgba(212, 175, 55, 0.42) !important;
-}
-
-.igreja-admin-card .botao-excluir,
-.admin-acessos-bloco .botao-excluir {
-  color: #b42318 !important;
-  border-color: rgba(255, 87, 34, 0.32) !important;
-}
-
-/* Deixa a coluna de acoes mais organizada */
-.acoes-aprovacao-igreja,
-.acoes-acesso-admin,
-.acoes-feedback-admin,
-.acoes-usuario-vinculado {
-  gap: 10px !important;
-}
-
-.acoes-aprovacao-igreja button,
-.acoes-acesso-admin button,
-.acoes-feedback-admin button,
-.acoes-usuario-vinculado button {
-  min-height: 42px;
-  border-radius: 14px !important;
-  font-weight: 900 !important;
-}
-
-/* Responsivo da Administracao */
-@media (max-width: 900px) {
-  .topo-admin-sistema {
-    display: grid !important;
-    gap: 16px;
-  }
-
-  .topo-admin-sistema .botao-principal,
-  .topo-admin-sistema .botao-secundario {
-    width: 100%;
-  }
-
-  .filtros-admin,
-  .filtros-admin-acessos {
-    grid-template-columns: 1fr !important;
-  }
-
-  .igreja-admin-card {
-    padding: 18px !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .topo-admin-sistema h2 {
-    font-size: 34px !important;
-  }
-
-  .cards-admin-sistema .card,
-  .cards-admin-sistema .card-admin {
-    min-height: auto;
-  }
-
-  .admin-feedback-alertas,
-  .admin-acessos-bloco,
-  .feedback-piloto-card {
-    padding: 18px !important;
-  }
-}
-
-/* =========================================================
-   Ajuste final da marca no menu lateral
-   Remove brilho/sombra laranja da logo para um visual mais limpo
-   ========================================================= */
-.logo-simbolo-sidebar,
-.logo-simbolo-sidebar img,
-.marca-sidebar .logo-simbolo,
-.marca-sidebar .logo-simbolo img,
-.marca-sidebar .logo-imagem,
-.menu-lateral .logo-simbolo-sidebar,
-.menu-lateral .logo-simbolo-sidebar img,
-.menu-lateral .marca-sidebar .logo-imagem {
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-.logo-simbolo-sidebar,
-.menu-lateral .logo-simbolo-sidebar,
-.marca-sidebar .logo-simbolo {
-  background: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-}
-
-.marca-sidebar,
-.menu-lateral .marca-sidebar {
-  box-shadow: none !important;
-}
-
-.marca-sidebar::before,
-.marca-sidebar::after,
-.menu-lateral .marca-sidebar::before,
-.menu-lateral .marca-sidebar::after,
-.logo-simbolo-sidebar::before,
-.logo-simbolo-sidebar::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* =========================================================
-   Marca do menu lateral - logo limpa sem fundo dourado
-   ========================================================= */
-.menu-lateral .marca-sidebar,
-.marca-sidebar {
-  box-shadow: none !important;
-}
-
-.menu-lateral .marca-sidebar .logo-simbolo,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
-.marca-sidebar .logo-simbolo,
-.marca-sidebar .logo-simbolo-sidebar {
-  width: 54px !important;
-  height: 54px !important;
-  min-width: 54px !important;
-  border-radius: 16px !important;
-  background: #ffffff !important;
-  background-image: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  box-shadow: none !important;
-  filter: none !important;
-  padding: 3px !important;
-  overflow: hidden !important;
-}
-
-.menu-lateral .marca-sidebar .logo-imagem,
-.menu-lateral .marca-sidebar img,
-.marca-sidebar .logo-imagem,
-.marca-sidebar img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  border-radius: 12px !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-.menu-lateral .marca-sidebar .logo-simbolo::before,
-.menu-lateral .marca-sidebar .logo-simbolo::after,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar::before,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar::after,
-.marca-sidebar .logo-simbolo::before,
-.marca-sidebar .logo-simbolo::after,
-.marca-sidebar .logo-simbolo-sidebar::before,
-.marca-sidebar .logo-simbolo-sidebar::after {
-  display: none !important;
-  content: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-/* =========================================================
-   Logo limpa em todas as telas: menu lateral, login e pagina publica
-   Remove fundo dourado/laranja, brilho e sombra da marca
-   ========================================================= */
-.logo-simbolo,
-.logo-simbolo-sidebar,
-.logo-publica,
-.tela-login .marca-login .logo-simbolo,
-.marca-login .logo-simbolo,
-.marca-publica .logo-publica,
-.topo-publico .logo-simbolo,
-.topo-publico .logo-publica,
-.menu-lateral .marca-sidebar .logo-simbolo,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
-.marca-sidebar .logo-simbolo,
-.marca-sidebar .logo-simbolo-sidebar {
-  background: #ffffff !important;
-  background-image: none !important;
-  border: 1px solid rgba(226, 232, 240, 0.95) !important;
-  box-shadow: none !important;
-  filter: none !important;
-  overflow: hidden !important;
-}
-
-.logo-simbolo img,
-.logo-simbolo-sidebar img,
-.logo-publica img,
-.logo-imagem,
-.tela-login .marca-login .logo-imagem,
-.marca-login .logo-imagem,
-.marca-publica .logo-imagem,
-.menu-lateral .marca-sidebar .logo-imagem,
-.menu-lateral .marca-sidebar img,
-.marca-sidebar .logo-imagem,
-.marca-sidebar img {
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-  object-fit: contain !important;
-}
-
-.logo-simbolo::before,
-.logo-simbolo::after,
-.logo-simbolo-sidebar::before,
-.logo-simbolo-sidebar::after,
-.logo-publica::before,
-.logo-publica::after,
-.tela-login .marca-login .logo-simbolo::before,
-.tela-login .marca-login .logo-simbolo::after,
-.marca-login .logo-simbolo::before,
-.marca-login .logo-simbolo::after,
-.marca-publica .logo-publica::before,
-.marca-publica .logo-publica::after,
-.menu-lateral .marca-sidebar .logo-simbolo::before,
-.menu-lateral .marca-sidebar .logo-simbolo::after,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar::before,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar::after {
-  display: none !important;
-  content: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-.tela-login .marca-login .logo-simbolo {
-  width: 68px !important;
-  height: 68px !important;
-  border-radius: 18px !important;
-  padding: 5px !important;
-}
-
-.menu-lateral .marca-sidebar .logo-simbolo,
-.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
-.marca-sidebar .logo-simbolo,
-.marca-sidebar .logo-simbolo-sidebar {
-  width: 54px !important;
-  height: 54px !important;
-  min-width: 54px !important;
-  border-radius: 16px !important;
-  padding: 3px !important;
-}
-
-/* =========================================================
-   Painel EBD Fiel - ajustes de produto e conversao
-   ========================================================= */
-.modelo-exato-ebd .logo-text {
-  letter-spacing: -0.02em;
-}
-
-.modelo-exato-ebd .logo-sub {
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.modelo-exato-ebd .hero-ctas-publicas {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.modelo-exato-ebd .hero-ctas-publicas .btn-primary,
-.modelo-exato-ebd .hero-ctas-publicas .btn-outline {
-  min-height: 52px;
-}
-
-.modelo-exato-ebd .btn-outline-claro {
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.34) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-}
-
-.modelo-exato-ebd .btn-outline-claro:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
-  color: #ffffff !important;
-}
-
-.modelo-exato-ebd .secao-como-funciona {
-  background:
-    radial-gradient(circle at 8% 12%, rgba(212, 175, 55, 0.10), transparent 28%),
-    radial-gradient(circle at 92% 82%, rgba(0, 188, 212, 0.10), transparent 28%),
-    #ffffff;
-}
-
-.modelo-exato-ebd .como-funciona-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.4rem;
-  margin-top: 2rem;
-}
-
-.modelo-exato-ebd .como-funciona-grid article {
-  position: relative;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  background: #ffffff;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.06);
-  overflow: hidden;
-}
-
-.modelo-exato-ebd .como-funciona-grid article::after {
-  content: "";
-  position: absolute;
-  right: -34px;
-  bottom: -34px;
-  width: 110px;
-  height: 110px;
-  border-radius: 999px;
-  background: rgba(212, 175, 55, 0.10);
-}
-
-.modelo-exato-ebd .como-funciona-grid span {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
-  color: #1A1A1A;
-  font-weight: 950;
-  margin-bottom: 1rem;
-}
-
-.modelo-exato-ebd .como-funciona-grid h3 {
-  margin: 0 0 0.6rem;
-  color: #1A1A1A;
-  font-size: 1.25rem;
-}
-
-.modelo-exato-ebd .como-funciona-grid p {
-  margin: 0;
-  color: #4A4A4A;
-  line-height: 1.6;
-}
-
-.modelo-exato-ebd .section-plans {
-  position: relative;
-  z-index: 2;
-  padding-bottom: 5rem !important;
-}
-
-.modelo-exato-ebd .faq-list {
-  position: relative;
-  z-index: 1;
-}
-
-.modelo-exato-ebd .plan-card .btn-primary,
-.modelo-exato-ebd .plan-card .btn-outline,
-.modelo-exato-ebd .footer-button {
-  min-height: 48px;
-  justify-content: center;
-}
-
-.bloco-cadastro-destaque {
-  background:
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
-  border-color: rgba(212, 175, 55, 0.24) !important;
-}
-
-.selo-primeiro-acesso {
-  background: rgba(212, 175, 55, 0.16) !important;
-  color: #5f4306 !important;
-}
-
-@media (max-width: 768px) {
-  .modelo-exato-ebd .hero-ctas-publicas,
-  .modelo-exato-ebd .hero-ctas-publicas .btn-primary,
-  .modelo-exato-ebd .hero-ctas-publicas .btn-outline {
-    width: 100%;
-  }
-
-  .modelo-exato-ebd .como-funciona-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================================================
-   Solicitação de acesso - formulário amplo no desktop
-   ========================================================= */
-@media (min-width: 1100px) {
-  .tela-cadastro-piloto {
-    grid-template-columns: minmax(420px, 0.85fr) minmax(720px, 1.15fr) !important;
-    min-height: 100vh !important;
-    background:
-      radial-gradient(circle at 14% 55%, rgba(212, 175, 55, 0.14), transparent 30%),
-      linear-gradient(90deg, #1A1A1A 0%, #242424 52%, #f8fafc 52%, #eef6fb 100%) !important;
-  }
-
-  .tela-cadastro-piloto .painel-cadastro-piloto {
-    padding: clamp(34px, 4vw, 58px) !important;
-  }
-
-  .tela-cadastro-piloto .apresentacao-texto {
-    max-width: 720px !important;
-  }
-
-  .tela-cadastro-piloto .apresentacao-texto h2 {
-    font-size: clamp(44px, 4.8vw, 72px) !important;
-    line-height: 0.98 !important;
-    letter-spacing: -0.065em !important;
-  }
-
-  .tela-cadastro-piloto .apresentacao-texto p {
-    max-width: 660px !important;
-    font-size: 19px !important;
-    line-height: 1.75 !important;
-  }
-
-  .tela-cadastro-piloto .beneficios-login {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    max-width: 760px !important;
-  }
-
-  .cartao-cadastro-piloto {
-    width: 100% !important;
-    max-width: none !important;
-    padding: clamp(28px, 3vw, 46px) !important;
-    border-radius: 34px 0 0 34px !important;
-    background:
-      radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 30%),
-      #ffffff !important;
-  }
-
-  .cartao-cadastro-piloto .topo-cartao-login {
-    margin-bottom: 22px !important;
-    padding: 22px 24px !important;
-    border-radius: 28px !important;
-    background:
-      radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 36%),
-      linear-gradient(135deg, #ffffff 0%, #f8fcff 100%) !important;
-    border: 1px solid rgba(212, 175, 55, 0.18) !important;
-  }
-
-  .cartao-cadastro-piloto .topo-cartao-login h2 {
-    font-size: clamp(30px, 3vw, 44px) !important;
-    line-height: 1.04 !important;
-    letter-spacing: -0.045em !important;
-  }
-
-  .formulario-cadastro-piloto {
-    width: 100% !important;
-    max-width: none !important;
-    display: grid !important;
-    gap: 22px !important;
-    padding: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-
-  .grupo-cadastro-piloto {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    padding: 24px !important;
-    border-radius: 28px !important;
-    background:
-      radial-gradient(circle at top right, rgba(212, 175, 55, 0.11), transparent 34%),
-      #ffffff !important;
-    border: 1px solid rgba(0, 188, 212, 0.16) !important;
-    box-shadow: 0 18px 46px rgba(26, 26, 26, 0.07) !important;
-  }
-
-  .grupo-cadastro-piloto h3 {
-    grid-column: 1 / -1 !important;
-    font-size: 24px !important;
-    padding-bottom: 10px !important;
-    border-bottom: 1px solid rgba(0, 188, 212, 0.14) !important;
-  }
-
-  .campo-cadastro-piloto-largo {
-    grid-column: 1 / -1 !important;
-  }
-
-  .campo-telefone-cadastro {
-    grid-column: span 2 !important;
-    grid-template-columns: 110px minmax(0, 1fr) !important;
-  }
-
-  .formulario-cadastro-piloto input,
-  .formulario-cadastro-piloto select {
-    min-height: 54px !important;
-    border-radius: 16px !important;
-  }
-
-  .formulario-cadastro-piloto label {
-    min-width: 0 !important;
-  }
-
-  .cartao-cadastro-piloto .botao-principal {
-    min-height: 60px !important;
-    border-radius: 18px !important;
-    font-size: 16px !important;
-  }
-}
-
-@media (min-width: 1100px) and (max-width: 1320px) {
-  .tela-cadastro-piloto {
-    grid-template-columns: minmax(360px, 0.75fr) minmax(650px, 1.25fr) !important;
-  }
-
-  .grupo-cadastro-piloto {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  .campo-telefone-cadastro {
-    grid-column: 1 / -1 !important;
-  }
-}
-
-@media (max-width: 1099px) {
-  .tela-cadastro-piloto {
-    grid-template-columns: 1fr !important;
-  }
-
-  .cartao-cadastro-piloto {
-    width: min(100% - 24px, 860px) !important;
-    margin: 0 auto 24px !important;
-    border-radius: 30px !important;
-  }
-}
+import { useEffect, useState } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
+import './App.css'
+import { supabase } from './lib/supabase'
+
+const classesIniciais = [
+  { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
+  { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
+  { id: 3, nome: 'Crianças', professor: 'Irmã Ana' },
+]
+
+const ESTADOS_BRASIL = [
+  { sigla: 'AC', nome: 'Acre' },
+  { sigla: 'AL', nome: 'Alagoas' },
+  { sigla: 'AP', nome: 'Amapá' },
+  { sigla: 'AM', nome: 'Amazonas' },
+  { sigla: 'BA', nome: 'Bahia' },
+  { sigla: 'CE', nome: 'Ceará' },
+  { sigla: 'DF', nome: 'Distrito Federal' },
+  { sigla: 'ES', nome: 'Espírito Santo' },
+  { sigla: 'GO', nome: 'Goiás' },
+  { sigla: 'MA', nome: 'Maranhão' },
+  { sigla: 'MT', nome: 'Mato Grosso' },
+  { sigla: 'MS', nome: 'Mato Grosso do Sul' },
+  { sigla: 'MG', nome: 'Minas Gerais' },
+  { sigla: 'PA', nome: 'Pará' },
+  { sigla: 'PB', nome: 'Paraíba' },
+  { sigla: 'PR', nome: 'Paraná' },
+  { sigla: 'PE', nome: 'Pernambuco' },
+  { sigla: 'PI', nome: 'Piauí' },
+  { sigla: 'RJ', nome: 'Rio de Janeiro' },
+  { sigla: 'RN', nome: 'Rio Grande do Norte' },
+  { sigla: 'RS', nome: 'Rio Grande do Sul' },
+  { sigla: 'RO', nome: 'Rondônia' },
+  { sigla: 'RR', nome: 'Roraima' },
+  { sigla: 'SC', nome: 'Santa Catarina' },
+  { sigla: 'SP', nome: 'São Paulo' },
+  { sigla: 'SE', nome: 'Sergipe' },
+  { sigla: 'TO', nome: 'Tocantins' },
+]
+
+
+const alunosIniciais = [
+  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
+]
+
+
+function Icone({ nome, className = '' }) {
+  const comum = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: '1.8',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': 'true',
+    className,
+  }
+
+  switch (nome) {
+    case 'igreja':
+      return (
+        <svg {...comum}>
+          <path d="M12 3l2.2 3.2L18 8v11H6V8l3.8-1.8L12 3Z" />
+          <path d="M12 7v12" />
+          <path d="M9.5 10.5h5" />
+          <path d="M10 19v-3a2 2 0 0 1 4 0v3" />
+        </svg>
+      )
+    case 'painel':
+      return (
+        <svg {...comum}>
+          <rect x="3" y="3" width="8" height="8" rx="2" />
+          <rect x="13" y="3" width="8" height="5" rx="2" />
+          <rect x="13" y="10" width="8" height="11" rx="2" />
+          <rect x="3" y="13" width="8" height="8" rx="2" />
+        </svg>
+      )
+    case 'classes':
+      return (
+        <svg {...comum}>
+          <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H6.5A2.5 2.5 0 0 0 4 20.5v-14Z" />
+          <path d="M6.5 4A2.5 2.5 0 0 0 4 6.5V20" />
+          <path d="M8 8h8" />
+          <path d="M8 12h8" />
+        </svg>
+      )
+    case 'alunos':
+      return (
+        <svg {...comum}>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+          <circle cx="9.5" cy="7" r="3.5" />
+          <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M14.5 3.2a3.5 3.5 0 0 1 0 6.6" />
+        </svg>
+      )
+    case 'chamada':
+      return (
+        <svg {...comum}>
+          <rect x="4" y="3" width="16" height="18" rx="2" />
+          <path d="M8 7h8" />
+          <path d="M8 11h8" />
+          <path d="M8 15h3" />
+          <path d="m14 15 1.5 1.5L18 13" />
+        </svg>
+      )
+    case 'relatorios':
+      return (
+        <svg {...comum}>
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
+          <path d="M14 3v5h5" />
+          <path d="M9 13h6" />
+          <path d="M9 17h6" />
+        </svg>
+      )
+    case 'configuracoes':
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a2 2 0 1 1-4 0v-.2a1 1 0 0 0-.7-1 1 1 0 0 0-1 .2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a2 2 0 1 1 0-4h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1 1 0 0 0 1.1.2H9a1 1 0 0 0 .6-.9V4a2 2 0 1 1 4 0v.2a1 1 0 0 0 .7 1 1 1 0 0 0 1-.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1 1 0 0 0-.2 1.1V9c0 .4.2.8.6.9h.2a2 2 0 1 1 0 4h-.2a1 1 0 0 0-.9.7Z" />
+        </svg>
+      )
+    case 'sair':
+      return (
+        <svg {...comum}>
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5" />
+          <path d="M21 12H9" />
+        </svg>
+      )
+    case 'usuarios':
+      return (
+        <svg {...comum}>
+          <circle cx="9" cy="8" r="3" />
+          <path d="M3 19a6 6 0 0 1 12 0" />
+          <path d="M16 8h5" />
+          <path d="M18.5 5.5v5" />
+        </svg>
+      )
+    case 'biblia':
+      return (
+        <svg {...comum}>
+          <path d="M6 4.5A2.5 2.5 0 0 1 8.5 2H20v17H8.5A2.5 2.5 0 0 0 6 21.5v-17Z" />
+          <path d="M8.5 2A2.5 2.5 0 0 0 6 4.5V22" />
+          <path d="M13 6v6" />
+          <path d="M10 9h6" />
+        </svg>
+      )
+    case 'check':
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="m8.5 12.5 2.5 2.5 4.5-5" />
+        </svg>
+      )
+    default:
+      return (
+        <svg {...comum}>
+          <circle cx="12" cy="12" r="9" />
+        </svg>
+      )
+  }
+}
+
+function CardResumo({ icone, titulo, valor, descricao, destaque = false }) {
+  return (
+    <div className={`card card-estatistica${destaque ? ' destaque' : ''}`}>
+      <div className="card-icone">
+        <Icone nome={icone} className="icone-svg" />
+      </div>
+      <div className="card-conteudo">
+        <span className="card-titulo">{titulo}</span>
+        <strong className="card-valor">{valor}</strong>
+        <p>{descricao}</p>
+      </div>
+    </div>
+  )
+}
+
+
+function iniciarCorrecaoGlobalDeAcentos() {
+  if (typeof window === 'undefined' || window.__ebdFielCorretorAcentosAtivo) {
+    return
+  }
+
+  window.__ebdFielCorretorAcentosAtivo = true
+
+  const c = (...codigos) => String.fromCharCode(...codigos)
+
+  const pares = [
+    [c(0x00C3, 0x0081), c(0x00C1)],
+    [c(0x00C3, 0x0080), c(0x00C0)],
+    [c(0x00C3, 0x0082), c(0x00C2)],
+    [c(0x00C3, 0x0083), c(0x00C3)],
+    [c(0x00C3, 0x0089), c(0x00C9)],
+    [c(0x00C3, 0x008A), c(0x00CA)],
+    [c(0x00C3, 0x008D), c(0x00CD)],
+    [c(0x00C3, 0x0093), c(0x00D3)],
+    [c(0x00C3, 0x0094), c(0x00D4)],
+    [c(0x00C3, 0x0095), c(0x00D5)],
+    [c(0x00C3, 0x009A), c(0x00DA)],
+    [c(0x00C3, 0x0087), c(0x00C7)],
+    [c(0x00C3, 0x00A1), c(0x00E1)],
+    [c(0x00C3, 0x00A0), c(0x00E0)],
+    [c(0x00C3, 0x00A2), c(0x00E2)],
+    [c(0x00C3, 0x00A3), c(0x00E3)],
+    [c(0x00C3, 0x00A9), c(0x00E9)],
+    [c(0x00C3, 0x00AA), c(0x00EA)],
+    [c(0x00C3, 0x00AD), c(0x00ED)],
+    [c(0x00C3, 0x00B3), c(0x00F3)],
+    [c(0x00C3, 0x00B4), c(0x00F4)],
+    [c(0x00C3, 0x00B5), c(0x00F5)],
+    [c(0x00C3, 0x00BA), c(0x00FA)],
+    [c(0x00C3, 0x00A7), c(0x00E7)],
+    [c(0x00C2, 0x00BA), c(0x00BA)],
+    [c(0x00C2, 0x00AA), c(0x00AA)],
+    [c(0x00C2, 0x00B7), c(0x00B7)],
+    [c(0x00C2), ''],
+    [c(0x00E2, 0x0086, 0x0092), c(0x2192)],
+    [c(0x00E2, 0x009C, 0x0093), c(0x2713)],
+    [c(0x00E2, 0x0080, 0x00A2), c(0x2022)],
+  ]
+
+  const palavras = [
+    ['B' + c(0x00C3, 0x00AD) + 'blica', 'B' + c(0x00ED) + 'blica'],
+    ['Gest' + c(0x00C3, 0x00A3) + 'o', 'Gest' + c(0x00E3) + 'o'],
+    ['Administra' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'Administra' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['Configura' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'Configura' + c(0x00E7) + c(0x00F5) + 'es'],
+    ['Relat' + c(0x00C3, 0x00B3) + 'rios', 'Relat' + c(0x00F3) + 'rios'],
+    ['usu' + c(0x00C3, 0x00A1) + 'rios', 'usu' + c(0x00E1) + 'rios'],
+    ['usu' + c(0x00C3, 0x00A1) + 'rio', 'usu' + c(0x00E1) + 'rio'],
+    ['aprova' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'aprova' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['recupera' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'recupera' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'congrega' + c(0x00E7) + c(0x00F5) + 'es'],
+    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'congrega' + c(0x00E7) + c(0x00E3) + 'o'],
+    ['respons' + c(0x00C3, 0x00A1) + 'vel', 'respons' + c(0x00E1) + 'vel'],
+    ['Voc' + c(0x00C3, 0x00AA), 'Voc' + c(0x00EA)],
+    ['voc' + c(0x00C3, 0x00AA), 'voc' + c(0x00EA)],
+    ['c' + c(0x00C3, 0x00B3) + 'digo', 'c' + c(0x00F3) + 'digo'],
+    ['j' + c(0x00C3, 0x00A1), 'j' + c(0x00E1)],
+    ['J' + c(0x00C3, 0x00A1), 'J' + c(0x00E1)],
+  ]
+
+  function corrigir(texto) {
+    if (!texto || typeof texto !== 'string') {
+      return texto
+    }
+
+    let novo = texto
+
+    pares.forEach(([errado, certo]) => {
+      novo = novo.split(errado).join(certo)
+    })
+
+    palavras.forEach(([errado, certo]) => {
+      novo = novo.split(errado).join(certo)
+    })
+
+    return novo
+  }
+
+  function varrer() {
+    if (!document.body) {
+      return
+    }
+
+    const walker = document.createTreeWalker(document.body, 4)
+    const nodes = []
+
+    while (walker.nextNode()) {
+      nodes.push(walker.currentNode)
+    }
+
+    nodes.forEach((node) => {
+      const novo = corrigir(node.nodeValue)
+      if (novo !== node.nodeValue) {
+        node.nodeValue = novo
+      }
+    })
+
+    document.querySelectorAll('input, textarea').forEach((campo) => {
+      if (campo.placeholder) {
+        campo.placeholder = corrigir(campo.placeholder)
+      }
+    })
+
+    document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
+      ;['title', 'aria-label', 'alt'].forEach((atributo) => {
+        const valor = elemento.getAttribute(atributo)
+        if (valor) {
+          const novo = corrigir(valor)
+          if (novo !== valor) {
+            elemento.setAttribute(atributo, novo)
+          }
+        }
+      })
+    })
+  }
+
+  window.setInterval(varrer, 250)
+  window.addEventListener('load', varrer)
+  window.requestAnimationFrame(varrer)
+}
+
+iniciarCorrecaoGlobalDeAcentos()
+
+function App() {
+  const [paginaAtual, setPaginaAtual] = useState('painel')
+  const [carregando, setCarregando] = useState(true)
+  const [erroSistema, setErroSistema] = useState('')
+
+  const [sessao, setSessao] = useState(null)
+  const [verificandoSessao, setVerificandoSessao] = useState(true)
+  const [emailLogin, setEmailLogin] = useState('')
+  const [senhaLogin, setSenhaLogin] = useState('')
+  const [emailRecuperacao, setEmailRecuperacao] = useState('')
+  const [carregandoRecuperacao, setCarregandoRecuperacao] = useState(false)
+  const [mensagemRecuperacao, setMensagemRecuperacao] = useState('')
+  const [erroRecuperacao, setErroRecuperacao] = useState('')
+  const [novaSenhaRecuperacao, setNovaSenhaRecuperacao] = useState('')
+  const [confirmarNovaSenhaRecuperacao, setConfirmarNovaSenhaRecuperacao] = useState('')
+  const [carregandoNovaSenha, setCarregandoNovaSenha] = useState(false)
+  const [erroNovaSenha, setErroNovaSenha] = useState('')
+  const codigoPilotoOficial = 'EBDFIEL2026'
+  const [carregandoCadastroPiloto, setCarregandoCadastroPiloto] = useState(false)
+  const [erroCadastroPiloto, setErroCadastroPiloto] = useState('')
+  const [sucessoCadastroPiloto, setSucessoCadastroPiloto] = useState('')
+  const [ultimoCadastroPilotoEnviado, setUltimoCadastroPilotoEnviado] = useState({
+    nomeIgreja: '',
+    responsavel: '',
+    email: '',
+  })
+  const [cadastroPiloto, setCadastroPiloto] = useState({
+    nomeResponsavel: '',
+    cargoResponsavel: 'secretario',
+    email: '',
+    senha: '',
+    confirmarSenha: '',
+    codigoPiloto: '',
+    nomeIgreja: '',
+    tipoIgreja: 'congregacao',
+    congregacao: '',
+    sedeFiliadaNome: '',
+    sedeFiliadaEndereco: '',
+    sedeFiliadaNumero: '',
+    sedeFiliadaComplemento: '',
+    sedeFiliadaCep: '',
+    pastorDirigente: '',
+    telefoneDdd: '',
+    telefoneNumero: '',
+    telefone: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    numeroEndereco: '',
+    complementoEndereco: '',
+    cep: '',
+  })
+  const [carregandoLogin, setCarregandoLogin] = useState(false)
+  const [erroLogin, setErroLogin] = useState('')
+  const [telaPublica, setTelaPublica] = useState('landing')
+  const [menuPublicoAberto, setMenuPublicoAberto] = useState(false)
+
+  const [classes, setClasses] = useState([])
+  const [alunos, setAlunos] = useState([])
+  const [chamadasSalvas, setChamadasSalvas] = useState([])
+  const [chamadasProfessores, setChamadasProfessores] = useState([])
+  const [igrejaAtualPiloto, setIgrejaAtualPiloto] = useState(null)
+  const [feedbackPiloto, setFeedbackPiloto] = useState({
+    tipo: 'sugestao',
+    mensagem: '',
+  })
+  const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
+  const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
+  const [feedbackRespondendoId, setFeedbackRespondendoId] = useState(null)
+  const [respostaFeedbackAdmin, setRespostaFeedbackAdmin] = useState('')
+  const [enviandoRespostaFeedback, setEnviandoRespostaFeedback] = useState(false)
+  const [carregandoFeedback, setCarregandoFeedback] = useState(false)
+  const [perfilUsuario, setPerfilUsuario] = useState(null)
+  const [perfisIgreja, setPerfisIgreja] = useState([])
+  const [vinculosProfessores, setVinculosProfessores] = useState([])
+  const [igrejaId, setIgrejaId] = useState(null)
+  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(() => {
+    if (typeof window === 'undefined') {
+      return null
+    }
+
+    try {
+      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
+    } catch {
+      return null
+    }
+  })
+  const [igrejasAdmin, setIgrejasAdmin] = useState([])
+  const [acessosAdmin, setAcessosAdmin] = useState([])
+  const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
+  const [carregandoCadastrosIncompletosAdmin, setCarregandoCadastrosIncompletosAdmin] = useState(false)
+  const [erroCadastrosIncompletosAdmin, setErroCadastrosIncompletosAdmin] = useState('')
+  const [buscaAcessoAdmin, setBuscaAcessoAdmin] = useState('')
+  const [mostrarFormularioAcessoAdmin, setMostrarFormularioAcessoAdmin] = useState(false)
+  const [acessoAdminEditandoUserId, setAcessoAdminEditandoUserId] = useState(null)
+  const [novoAcessoAdmin, setNovoAcessoAdmin] = useState({
+    userId: '',
+    nome: '',
+    email: '',
+    perfil: 'secretaria',
+    igrejaId: '',
+    classeId: '',
+    dataNascimento: '',
+  })
+  const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
+  const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
+  const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
+  const [igrejaUsuariosAbertaId, setIgrejaUsuariosAbertaId] = useState(null)
+  const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
+    nome_igreja: '',
+    congregacao: '',
+    pastor_dirigente: '',
+    superintendente_ebd: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    numero_endereco: '',
+    complemento_endereco: '',
+    cep: '',
+    tipo_igreja: 'congregacao',
+    sede_filiada_nome: '',
+    sede_filiada_endereco: '',
+    sede_filiada_numero: '',
+    sede_filiada_complemento: '',
+    sede_filiada_cep: '',
+    telefone: '',
+    email: '',
+    status_piloto: 'teste',
+    responsavel_nome: '',
+    responsavel_email: '',
+    responsavel_whatsapp: '',
+    observacoes_piloto: '',
+    data_inicio_piloto: '',
+    data_fim_piloto: '',
+    limite_usuarios: 10,
+  })
+  const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
+    id: null,
+    nome_igreja: '',
+    congregacao: '',
+    pastor_dirigente: '',
+    cidade: '',
+    estado: '',
+    bairro: '',
+    endereco: '',
+    telefone: '',
+    email: '',
+  })
+  const [salvandoConfiguracaoIgreja, setSalvandoConfiguracaoIgreja] = useState(false)
+  const [mostrarFormularioPerfil, setMostrarFormularioPerfil] = useState(false)
+  const [perfilEditandoId, setPerfilEditandoId] = useState(null)
+  const [novoPerfil, setNovoPerfil] = useState({
+    userId: '',
+    nome: '',
+    email: '',
+    perfil: 'professor',
+    classeIds: [],
+    dataNascimento: '',
+  })
+
+
+
+  const [mostrarFormularioClasse, setMostrarFormularioClasse] = useState(false)
+  const [classeEditandoId, setClasseEditandoId] = useState(null)
+  const [novaClasse, setNovaClasse] = useState({
+    nome: '',
+    professor: '',
+  })
+
+  const [mostrarFormularioAluno, setMostrarFormularioAluno] = useState(false)
+  const [alunoEditandoId, setAlunoEditandoId] = useState(null)
+  const [novoAluno, setNovoAluno] = useState({
+    nome: '',
+    classeId: '',
+    telefone: '',
+    dataNascimento: '',
+    tipoPessoa: 'aluno',
+  })
+
+  const [buscaAluno, setBuscaAluno] = useState('')
+  const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
+
+  const [tipoChamada, setTipoChamada] = useState('alunos')
+  const [classeChamadaId, setClasseChamadaId] = useState('')
+  const [dataAulaChamada, setDataAulaChamada] = useState(() => new Date().toISOString().slice(0, 10))
+  const [presencas, setPresencas] = useState({})
+  const [presencasProfessores, setPresencasProfessores] = useState({})
+  const [observacoesChamadaProfessores, setObservacoesChamadaProfessores] = useState('')
+  const [dadosExtrasChamada, setDadosExtrasChamada] = useState({
+    visitantes: '',
+    biblias: '',
+    revistas: '',
+    ofertas: '',
+  })
+
+  const menu = [
+    { id: 'painel', nome: 'Painel', icone: 'painel' },
+    { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
+    { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
+    { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
+    { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
+    { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
+    { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
+    {
+      id: 'configuracoes',
+      nome: 'Configurações',
+      icone: 'configuracoes',
+      apenasSecretaria: true,
+    },
+    {
+      id: 'administracao',
+      nome: 'Administração',
+      icone: 'configuracoes',
+      apenasAdminSistema: true,
+    },
+  ]
+
+  useEffect(() => {
+    iniciarCorrecaoGlobalDeAcentos()
+
+    iniciarAutenticacao()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSessao(session)
+
+      if (event === 'PASSWORD_RECOVERY') {
+        setTelaPublica('novaSenha')
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
+
+      if (!session) {
+        limparDadosDoSistema()
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  async function iniciarAutenticacao() {
+    setVerificandoSessao(true)
+    setCarregando(true)
+
+    try {
+      const { data, error } = await supabase.auth.getSession()
+
+      if (error) {
+        throw error
+      }
+
+      setSessao(data.session)
+
+      if (data.session) {
+        await carregarDadosOnline(data.session)
+      } else {
+        limparDadosDoSistema()
+      }
+    } catch (error) {
+      console.error('Erro ao verificar sessão:', error)
+      setErroSistema('Erro ao verificar login.')
+    } finally {
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }
+  }
+
+  function limparDadosDoSistema() {
+    setClasses([])
+    setAlunos([])
+    setChamadasSalvas([])
+    setChamadasProfessores([])
+    setPerfilUsuario(null)
+    setPerfisIgreja([])
+    setVinculosProfessores([])
+    setIgrejaId(null)
+    setIgrejaSuporteAdmin(null)
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    }
+
+    setConfiguracaoIgreja({
+      id: null,
+      nome_igreja: '',
+      congregacao: '',
+      pastor_dirigente: '',
+      superintendente_ebd: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      telefone: '',
+      email: '',
+    })
+    navegarParaPagina('painel')
+    setTelaPublica('landing')
+    setErroCadastroPiloto('')
+    setSucessoCadastroPiloto('')
+    setUltimoCadastroPilotoEnviado({
+      nomeIgreja: '',
+      responsavel: '',
+      email: '',
+    })
+    setCadastroPiloto({
+      nomeResponsavel: '',
+      cargoResponsavel: 'secretario',
+      email: '',
+      senha: '',
+      confirmarSenha: '',
+      codigoPiloto: '',
+      nomeIgreja: '',
+      tipoIgreja: 'congregacao',
+      congregacao: '',
+      sedeFiliadaNome: '',
+      sedeFiliadaEndereco: '',
+      sedeFiliadaCep: '',
+      pastorDirigente: '',
+      telefone: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      cep: '',
+    })
+    setMostrarFormularioClasse(false)
+    setMostrarFormularioAluno(false)
+    setClasseEditandoId(null)
+    setAlunoEditandoId(null)
+    setNovaClasse({ nome: '', professor: '' })
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
+    setMostrarFormularioPerfil(false)
+    setPerfilEditandoId(null)
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
+    setBuscaAluno('')
+    setFiltroClasseAluno('')
+    setTipoChamada('alunos')
+    setClasseChamadaId('')
+    setPresencas({})
+    setPresencasProfessores({})
+    setObservacoesChamadaProfessores('')
+    setDataAulaChamada(new Date().toISOString().slice(0, 10))
+    setDadosExtrasChamada({
+      visitantes: '',
+      biblias: '',
+      revistas: '',
+      ofertas: '',
+    })
+  }
+
+  function criarSlugPiloto(texto) {
+    return String(texto || 'igreja')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .slice(0, 60)
+  }
+
+  async function cadastrarAcessoPiloto(event) {
+    event.preventDefault()
+
+    setErroCadastroPiloto('')
+    setSucessoCadastroPiloto('')
+
+    const codigoInformado = cadastroPiloto.codigoPiloto.trim().toUpperCase()
+    const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
+
+    if (codigoInformado !== codigoPilotoOficial) {
+      setErroCadastroPiloto('Código de autorização inválido. Confira o código informado no grupo.')
+      return
+    }
+
+    if (!cadastroPiloto.nomeResponsavel.trim()) {
+      setErroCadastroPiloto('Informe seu nome.')
+      return
+    }
+
+    const telefoneDdd = limparNumeroWhatsApp(cadastroPiloto.telefoneDdd).slice(0, 2)
+    const telefoneNumero = limparNumeroWhatsApp(cadastroPiloto.telefoneNumero)
+    const telefoneCompleto = `${telefoneDdd}${telefoneNumero}`
+
+    if (telefoneDdd.length !== 2) {
+      setErroCadastroPiloto('Informe o DDD com 2 números.')
+      return
+    }
+
+    if (telefoneNumero.length < 8) {
+      setErroCadastroPiloto('Informe o número de telefone/WhatsApp.')
+      return
+    }
+
+    if (!emailCadastro) {
+      setErroCadastroPiloto('Informe seu e-mail.')
+      return
+    }
+
+    if (cadastroPiloto.senha.length < 6) {
+      setErroCadastroPiloto('A senha precisa ter pelo menos 6 caracteres.')
+      return
+    }
+
+    if (cadastroPiloto.senha !== cadastroPiloto.confirmarSenha) {
+      setErroCadastroPiloto('A confirmação de senha não confere.')
+      return
+    }
+
+    if (!cadastroPiloto.nomeIgreja.trim()) {
+      setErroCadastroPiloto('Informe o nome da igreja.')
+      return
+    }
+
+    if (!cadastroPiloto.cidade.trim() || !cadastroPiloto.estado.trim()) {
+      setErroCadastroPiloto('Informe cidade e estado.')
+      return
+    }
+
+    if (cadastroPiloto.tipoIgreja === 'congregacao' && !cadastroPiloto.sedeFiliadaNome.trim()) {
+      setErroCadastroPiloto('Informe a sede à qual a congregação é filiada.')
+      return
+    }
+
+    setCarregandoCadastroPiloto(true)
+
+    try {
+      const { data: vagasDisponiveis, error: erroVagasDisponiveis } = await supabase.rpc(
+        'vagas_piloto_disponiveis'
+      )
+
+      if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
+        setErroCadastroPiloto(
+          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
+        )
+        setCarregandoCadastroPiloto(false)
+        return
+      }
+
+      const { data: cadastroAuth, error: erroCadastroAuth } = await supabase.auth.signUp({
+        email: emailCadastro,
+        password: cadastroPiloto.senha,
+      })
+
+      if (erroCadastroAuth) {
+        throw erroCadastroAuth
+      }
+
+      let sessaoCadastro = cadastroAuth.session
+      let usuarioCadastro = cadastroAuth.user
+
+      if (!sessaoCadastro) {
+        const { data: loginCadastro, error: erroLoginCadastro } =
+          await supabase.auth.signInWithPassword({
+            email: emailCadastro,
+            password: cadastroPiloto.senha,
+          })
+
+        if (!erroLoginCadastro) {
+          sessaoCadastro = loginCadastro.session
+          usuarioCadastro = loginCadastro.user || usuarioCadastro
+        }
+      }
+
+      if (!usuarioCadastro?.id) {
+        throw new Error(
+          'usuario_auth_sem_id: não foi possível identificar o usuário criado. Tente novamente ou fale com o administrador.'
+        )
+      }
+
+      const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
+
+      const { data: igrejaCriadaId, error: erroCadastroPilotoRpc } = await supabase.rpc(
+        'criar_solicitacao_acesso_publica',
+        {
+          p_user_id: usuarioCadastro.id,
+          p_email: emailCadastro,
+          p_nome: cadastroPiloto.nomeIgreja.trim(),
+          p_slug: `${slugBase}-${Date.now()}`,
+          p_nome_igreja: cadastroPiloto.nomeIgreja.trim(),
+          p_congregacao: cadastroPiloto.congregacao.trim(),
+          p_pastor_dirigente: cadastroPiloto.pastorDirigente.trim(),
+          p_cidade: cadastroPiloto.cidade.trim(),
+          p_estado: cadastroPiloto.estado.trim().toUpperCase(),
+          p_bairro: cadastroPiloto.bairro.trim(),
+          p_endereco: cadastroPiloto.endereco.trim(),
+          p_numero_endereco: cadastroPiloto.numeroEndereco.trim(),
+          p_complemento_endereco: cadastroPiloto.complementoEndereco.trim(),
+          p_cep: cadastroPiloto.cep.trim(),
+          p_telefone: telefoneCompleto,
+          p_tipo_igreja: cadastroPiloto.tipoIgreja,
+          p_sede_filiada_nome:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaNome.trim()
+              : '',
+          p_sede_filiada_endereco:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaEndereco.trim()
+              : '',
+          p_sede_filiada_numero:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaNumero.trim()
+              : '',
+          p_sede_filiada_complemento:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaComplemento.trim()
+              : '',
+          p_sede_filiada_cep:
+            cadastroPiloto.tipoIgreja === 'congregacao'
+              ? cadastroPiloto.sedeFiliadaCep.trim()
+              : '',
+          p_responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
+          p_responsavel_whatsapp: telefoneCompleto,
+          p_cargo_responsavel: cadastroPiloto.cargoResponsavel,
+        }
+      )
+
+      if (erroCadastroPilotoRpc) {
+        throw erroCadastroPilotoRpc
+      }
+
+      setSucessoCadastroPiloto(
+        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
+      )
+      setUltimoCadastroPilotoEnviado({
+        nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
+        responsavel: cadastroPiloto.nomeResponsavel.trim(),
+        email: emailCadastro,
+      })
+      setEmailLogin(emailCadastro)
+      setSenhaLogin('')
+      setTelaPublica('cadastroEnviado')
+      await supabase.auth.signOut()
+    } catch (error) {
+      console.error(error)
+
+      if (
+        String(error?.message || '').includes('limite_piloto_atingido') ||
+        String(error?.details || '').includes('limite_piloto_atingido')
+      ) {
+        setErroCadastroPiloto(
+          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
+        )
+      } else if (
+        String(error?.message || '').includes('usuario_ja_possui_perfil') ||
+        String(error?.details || '').includes('usuario_ja_possui_perfil')
+      ) {
+        setErroCadastroPiloto(
+          'Este e-mail já iniciou um cadastro anteriormente. Use “Esqueci minha senha” para recuperar o acesso ou fale com o administrador para concluir o vínculo.'
+        )
+      } else {
+        setErroCadastroPiloto(
+          traduzirErroSistema(error, 'Não foi possível criar a solicitação de acesso.')
+        )
+      }
+    } finally {
+      setCarregandoCadastroPiloto(false)
+    }
+  }
+
+  async function enviarLinkRecuperacaoSenha(event) {
+    event.preventDefault()
+
+    const email = emailRecuperacao.trim().toLowerCase()
+
+    setErroRecuperacao('')
+    setMensagemRecuperacao('')
+
+    if (!email) {
+      setErroRecuperacao('Informe seu e-mail para receber o link de recuperação.')
+      return
+    }
+
+    setCarregandoRecuperacao(true)
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setMensagemRecuperacao(
+        'Link de recuperação enviado. Confira sua caixa de entrada e também a pasta de spam.'
+      )
+    } catch (error) {
+      console.error(error)
+      setErroRecuperacao(
+        traduzirErroSistema(error, 'Não foi possível enviar o link de recuperação.')
+      )
+    } finally {
+      setCarregandoRecuperacao(false)
+    }
+  }
+
+  async function salvarNovaSenhaRecuperacao(event) {
+    event.preventDefault()
+
+    setErroNovaSenha('')
+
+    if (novaSenhaRecuperacao.length < 6) {
+      setErroNovaSenha('A nova senha precisa ter pelo menos 6 caracteres.')
+      return
+    }
+
+    if (novaSenhaRecuperacao !== confirmarNovaSenhaRecuperacao) {
+      setErroNovaSenha('A confirmação da nova senha não confere.')
+      return
+    }
+
+    setCarregandoNovaSenha(true)
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: novaSenhaRecuperacao,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setNovaSenhaRecuperacao('')
+      setConfirmarNovaSenhaRecuperacao('')
+      alert('Senha atualizada com sucesso. Entre novamente com sua nova senha.')
+      await supabase.auth.signOut()
+      setSessao(null)
+      setTelaPublica('login')
+    } catch (error) {
+      console.error(error)
+      setErroNovaSenha(
+        traduzirErroSistema(error, 'Não foi possível atualizar a senha.')
+      )
+    } finally {
+      setCarregandoNovaSenha(false)
+    }
+  }
+
+  async function entrarComEmailSenha(event) {
+    event.preventDefault()
+
+    if (!emailLogin.trim() || !senhaLogin.trim()) {
+      setErroLogin('Informe o e-mail e a senha.')
+      return
+    }
+
+    setCarregandoLogin(true)
+    setErroLogin('')
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailLogin.trim(),
+        password: senhaLogin,
+      })
+
+      if (error) {
+        throw error
+      }
+
+      setSessao(data.session)
+      setEmailLogin('')
+      setSenhaLogin('')
+
+      await carregarDadosOnline(data.session)
+    } catch (error) {
+      console.error('Erro ao entrar:', error)
+      setErroLogin('E-mail ou senha inválidos.')
+    } finally {
+      setCarregandoLogin(false)
+    }
+  }
+
+  async function sairDoSistema() {
+    const confirmar = window.confirm('Deseja sair do sistema?')
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      console.error('Erro ao sair:', error)
+      alert('Erro ao sair do sistema.')
+      return
+    }
+
+    setSessao(null)
+    limparDadosDoSistema()
+  }
+
+  async function carregarDadosOnline(sessaoAtual = sessao) {
+    setCarregando(true)
+    setErroSistema('')
+
+    try {
+      let sessaoParaUsar = sessaoAtual
+
+      if (!sessaoParaUsar?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoParaUsar = data?.session || null
+
+        if (sessaoParaUsar) {
+          setSessao(sessaoParaUsar)
+        }
+      }
+
+      await buscarTodosOsDados(sessaoParaUsar)
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error)
+      setErroSistema(
+        error?.message ||
+          'Não foi possível carregar os dados do Supabase.'
+      )
+    } finally {
+      setCarregando(false)
+    }
+  }
+
+  async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
+    if (!igrejaAtualId) {
+      throw new Error('Igreja não identificada para criar os dados iniciais.')
+    }
+
+    const classesParaSalvar = classesIniciais.map((classe) => ({
+      id: classe.id,
+      igreja_id: igrejaAtualId,
+      user_id: sessaoAtual?.user?.id,
+      nome: classe.nome,
+      professor: classe.professor,
+    }))
+
+    const alunosParaSalvar = alunosIniciais.map((aluno) => ({
+      id: aluno.id,
+      igreja_id: igrejaAtualId,
+      user_id: sessaoAtual?.user?.id,
+      nome: aluno.nome,
+      classe_id: aluno.classeId,
+      telefone: aluno.telefone,
+      data_nascimento: aluno.dataNascimento || null,
+      tipo_pessoa: aluno.tipoPessoa || 'aluno',
+    }))
+
+    const { error: erroClasses } = await supabase
+      .from('classes')
+      .upsert(classesParaSalvar)
+
+    if (erroClasses) {
+      throw erroClasses
+    }
+
+    const { error: erroAlunos } = await supabase
+      .from('alunos')
+      .upsert(alunosParaSalvar)
+
+    if (erroAlunos) {
+      throw erroAlunos
+    }
+  }
+
+
+  async function migrarProfessoresDasClasses(
+    igrejaAtualId,
+    classesBanco,
+    alunosBanco,
+    sessaoAtual = sessao
+  ) {
+    const professoresExistentes = (alunosBanco || [])
+      .filter((pessoa) => pessoa.tipo_pessoa === 'professor')
+      .map(
+        (pessoa) =>
+          `${String(pessoa.nome || '').trim().toLowerCase()}-${Number(
+            pessoa.classe_id || 0
+          )}`
+      )
+
+    const professoresParaCriar = []
+
+    ;(classesBanco || []).forEach((classe) => {
+      const textoProfessores = String(classe.professor || '').trim()
+
+      if (!textoProfessores) {
+        return
+      }
+
+      const nomes = textoProfessores
+        .split(/,|;|\/| e /i)
+        .map((nome) => nome.trim())
+        .filter(Boolean)
+
+      nomes.forEach((nome) => {
+        const chave = `${nome.toLowerCase()}-${Number(classe.id)}`
+
+        if (!professoresExistentes.includes(chave)) {
+          professoresExistentes.push(chave)
+
+          professoresParaCriar.push({
+            id: Date.now() + professoresParaCriar.length,
+            igreja_id: igrejaAtualId,
+            user_id: sessaoAtual?.user?.id,
+            nome,
+            classe_id: Number(classe.id),
+            telefone: '',
+            data_nascimento: null,
+            tipo_pessoa: 'professor',
+          })
+        }
+      })
+    })
+
+    if (professoresParaCriar.length === 0) {
+      return false
+    }
+
+    const { error } = await supabase.from('alunos').insert(professoresParaCriar)
+
+    if (error) {
+      throw error
+    }
+
+    return true
+  }
+
+  function usuarioEhProfessor() {
+    return perfilUsuario?.perfil === 'professor'
+  }
+
+  function buscarIgrejaIdAtual() {
+    return perfilUsuario?.igreja_id || igrejaId || null
+  }
+
+  function navegarParaPagina(paginaId) {
+    setPaginaAtual(paginaId)
+
+    if (paginaId === 'administracao') {
+      carregarIgrejasAdmin()
+    }
+
+    window.setTimeout(() => {
+      const areaPrincipal =
+        document.querySelector('.area-principal') ||
+        document.querySelector('main')
+
+      if (!areaPrincipal) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        return
+      }
+
+      const distanciaDoTopo =
+        areaPrincipal.getBoundingClientRect().top + window.pageYOffset - 8
+
+      window.scrollTo({
+        top: Math.max(distanciaDoTopo, 0),
+        behavior: 'smooth',
+      })
+    }, 180)
+  }
+
+  const emailsAdminSistema = [
+    'gallianoalves@gmail.com',
+    'galliano.alves@gmail.com',
+    'ebdbetel7@gmail.com',
+    'ebdfiel7@gmail.com',
+  ]
+
+  function usuarioEhAdminSistema() {
+    return emailsAdminSistema.includes(String(sessao?.user?.email || '').toLowerCase())
+  }
+
+  function buscarIgrejaSuporteAdminSalva() {
+    if (igrejaSuporteAdmin?.id) {
+      return igrejaSuporteAdmin
+    }
+
+    if (typeof window === 'undefined') {
+      return null
+    }
+
+    try {
+      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
+    } catch {
+      return null
+    }
+  }
+
+  async function acessarIgrejaComoSuporte(igreja) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
+      return
+    }
+
+    const igrejaSelecionada = {
+      id: Number(igreja.id),
+      nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
+      congregacao: igreja.congregacao || '',
+      status_piloto: igreja.status_piloto || '',
+    }
+
+    setIgrejaSuporteAdmin(igrejaSelecionada)
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(
+        'ebdfiel_igreja_suporte_admin',
+        JSON.stringify(igrejaSelecionada)
+      )
+    }
+
+    setPaginaAtual('painel')
+    await buscarTodosOsDados(sessao, igrejaSelecionada)
+  }
+
+  async function sairDoModoSuporteAdmin() {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    }
+
+    setIgrejaSuporteAdmin(null)
+    setClasses([])
+    setAlunos([])
+    setChamadasSalvas([])
+    setChamadasProfessores([])
+    setVinculosProfessores([])
+    setIgrejaId(null)
+    setIgrejaAtualPiloto(null)
+
+    const emailSessaoAtual = String(sessao?.user?.email || '').toLowerCase()
+
+    setPerfilUsuario({
+      id: null,
+      user_id: sessao?.user?.id,
+      nome: 'Administrador do sistema',
+      email: emailSessaoAtual,
+      perfil: 'admin',
+      igreja_id: null,
+      classe_id: null,
+    })
+
+    setPaginaAtual('administracao')
+    await carregarIgrejasAdmin()
+  }
+
+  function modoSuporteAdminAtivo() {
+    return usuarioEhAdminSistema() && Boolean(perfilUsuario?.modo_suporte_admin || igrejaSuporteAdmin?.id)
+  }
+
+  function limparFormularioIgrejaAdmin() {
+    setNovaIgrejaAdmin({
+      nome_igreja: '',
+      congregacao: '',
+      pastor_dirigente: '',
+      cidade: '',
+      estado: '',
+      bairro: '',
+      endereco: '',
+      telefone: '',
+      email: '',
+      status_piloto: 'teste',
+      responsavel_nome: '',
+      responsavel_email: '',
+      responsavel_whatsapp: '',
+      observacoes_piloto: '',
+      data_inicio_piloto: '',
+      data_fim_piloto: '',
+      limite_usuarios: 10,
+    })
+    setIgrejaAdminEditandoId(null)
+    setMostrarFormularioIgrejaAdmin(false)
+  }
+
+  function abrirNovaIgrejaAdmin() {
+    limparFormularioIgrejaAdmin()
+    setMostrarFormularioIgrejaAdmin(true)
+  }
+
+  function editarIgrejaAdmin(igreja) {
+    setNovaIgrejaAdmin({
+      nome_igreja: igreja.nome_igreja || '',
+      congregacao: igreja.congregacao || '',
+      pastor_dirigente: igreja.pastor_dirigente || '',
+      cidade: igreja.cidade || '',
+      estado: igreja.estado || '',
+      bairro: igreja.bairro || '',
+      endereco: igreja.endereco || '',
+      numero_endereco: igreja.numero_endereco || '',
+      complemento_endereco: igreja.complemento_endereco || '',
+      cep: igreja.cep || '',
+      tipo_igreja: igreja.tipo_igreja || 'congregacao',
+      sede_filiada_nome: igreja.sede_filiada_nome || '',
+      sede_filiada_endereco: igreja.sede_filiada_endereco || '',
+      sede_filiada_numero: igreja.sede_filiada_numero || '',
+      sede_filiada_complemento: igreja.sede_filiada_complemento || '',
+      sede_filiada_cep: igreja.sede_filiada_cep || '',
+      telefone: igreja.telefone || '',
+      email: igreja.email || '',
+      status_piloto: igreja.status_piloto || 'teste',
+      responsavel_nome: igreja.responsavel_nome || '',
+      responsavel_email: igreja.responsavel_email || '',
+      responsavel_whatsapp: igreja.responsavel_whatsapp || '',
+      observacoes_piloto: igreja.observacoes_piloto || '',
+      data_inicio_piloto: igreja.data_inicio_piloto || '',
+      data_fim_piloto: igreja.data_fim_piloto || '',
+      limite_usuarios: igreja.limite_usuarios || 10,
+    })
+    setIgrejaAdminEditandoId(igreja.id)
+    setMostrarFormularioIgrejaAdmin(true)
+  }
+
+  function limparFormularioAcessoAdmin() {
+    setNovoAcessoAdmin({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'secretaria',
+      igrejaId: '',
+      classeId: '',
+      dataNascimento: '',
+    })
+    setAcessoAdminEditandoUserId(null)
+    setMostrarFormularioAcessoAdmin(false)
+  }
+
+  function abrirNovoAcessoAdmin(igreja = null) {
+    setNovoAcessoAdmin({
+      userId: '',
+      nome: igreja?.responsavel_nome || '',
+      email: igreja?.responsavel_email || '',
+      perfil: 'secretaria',
+      igrejaId: igreja?.id ? String(igreja.id) : '',
+      classeId: '',
+      dataNascimento: '',
+    })
+    setAcessoAdminEditandoUserId(null)
+    setMostrarFormularioAcessoAdmin(true)
+  }
+
+  function editarAcessoAdmin(acesso) {
+    setNovoAcessoAdmin({
+      userId: acesso.user_id || '',
+      nome: acesso.nome || '',
+      email: acesso.email || '',
+      perfil: acesso.perfil || 'secretaria',
+      igrejaId: acesso.igreja_id ? String(acesso.igreja_id) : '',
+      classeId: acesso.classe_id ? String(acesso.classe_id) : '',
+      dataNascimento: acesso.data_nascimento || '',
+    })
+    setAcessoAdminEditandoUserId(acesso.user_id)
+    setMostrarFormularioAcessoAdmin(true)
+  }
+
+  function buscarNomeIgrejaAdmin(igrejaBuscaId) {
+    const igreja = igrejasAdmin.find((item) => Number(item.id) === Number(igrejaBuscaId))
+
+    return igreja?.nome_igreja || igreja?.nome || `Igreja ID ${igrejaBuscaId || '-'}`
+  }
+
+  function contarAcessosDaIgreja(igrejaBuscaId) {
+    return acessosAdmin.filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId)).length
+  }
+
+  function buscarAcessosDaIgrejaAdmin(igrejaBuscaId) {
+    return acessosAdmin
+      .filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId))
+      .sort((a, b) => String(a.nome || a.email || '').localeCompare(String(b.nome || b.email || '')))
+  }
+
+  function alternarUsuariosDaIgreja(igrejaBuscaId) {
+    setIgrejaUsuariosAbertaId((idAtual) =>
+      Number(idAtual) === Number(igrejaBuscaId) ? null : igrejaBuscaId
+    )
+  }
+
+  function filtrarAcessosAdmin() {
+    const termo = buscaAcessoAdmin.toLowerCase()
+
+    return acessosAdmin.filter((acesso) => {
+      const igrejaNome = buscarNomeIgrejaAdmin(acesso.igreja_id).toLowerCase()
+
+      return (
+        String(acesso.nome || '').toLowerCase().includes(termo) ||
+        String(acesso.email || '').toLowerCase().includes(termo) ||
+        String(acesso.perfil || '').toLowerCase().includes(termo) ||
+        igrejaNome.includes(termo)
+      )
+    })
+  }
+
+  async function carregarAcessosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('perfis_usuarios')
+      .select('*')
+      .order('nome', { ascending: true })
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setAcessosAdmin(data || [])
+  }
+
+  async function carregarCadastrosIncompletosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    setCarregandoCadastrosIncompletosAdmin(true)
+    setErroCadastrosIncompletosAdmin('')
+
+    const { data, error } = await supabase.rpc('listar_cadastros_incompletos_admin')
+
+    setCarregandoCadastrosIncompletosAdmin(false)
+
+    if (error) {
+      console.error(error)
+      setErroCadastrosIncompletosAdmin(
+        traduzirErroSistema(error, 'Não foi possível carregar os cadastros incompletos.')
+      )
+      setCadastrosIncompletosAdmin([])
+      return
+    }
+
+    setCadastrosIncompletosAdmin(data || [])
+  }
+
+  async function salvarAcessoAdmin(event) {
+    event.preventDefault()
+
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem gerenciar acessos.')
+      return
+    }
+
+    if (!novoAcessoAdmin.userId.trim()) {
+      alert('Informe o User UID do Supabase Authentication.')
+      return
+    }
+
+    if (!novoAcessoAdmin.nome.trim()) {
+      alert('Informe o nome do usuário.')
+      return
+    }
+
+    if (!novoAcessoAdmin.email.trim()) {
+      alert('Informe o e-mail do usuário.')
+      return
+    }
+
+    if (!novoAcessoAdmin.igrejaId) {
+      alert('Selecione a igreja vinculada.')
+      return
+    }
+
+    const dadosAcesso = {
+      user_id: novoAcessoAdmin.userId.trim(),
+      nome: novoAcessoAdmin.nome.trim(),
+      email: novoAcessoAdmin.email.trim().toLowerCase(),
+      perfil: novoAcessoAdmin.perfil,
+      igreja_id: Number(novoAcessoAdmin.igrejaId),
+      classe_id: novoAcessoAdmin.classeId ? Number(novoAcessoAdmin.classeId) : null,
+      data_nascimento: novoAcessoAdmin.dataNascimento || null,
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .upsert(dadosAcesso, { onConflict: 'user_id' })
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível salvar o acesso.')
+      return
+    }
+
+    await carregarAcessosAdmin()
+    limparFormularioAcessoAdmin()
+    alert('Acesso salvo com sucesso!')
+  }
+
+  async function removerAcessoAdmin(acesso) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem remover acessos.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuário continuará existindo no Authentication, mas ficará sem vínculo no sistema.`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .delete()
+      .eq('user_id', acesso.user_id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível remover o acesso.')
+      return
+    }
+
+    await carregarAcessosAdmin()
+  }
+
+  async function enviarRecuperacaoSenhaAdmin(email) {
+    if (!email) {
+      alert('Este usuário não possui e-mail cadastrado.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Enviar link de recuperação de senha para ${email}?`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin,
+    })
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível enviar o link de recuperação de senha.')
+      return
+    }
+
+    alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
+  }
+
+  async function carregarIgrejasAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('igrejas')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
+      return
+    }
+
+    setIgrejasAdmin(data || [])
+    await carregarAcessosAdmin()
+    await carregarFeedbacksAdmin()
+    await carregarCadastrosIncompletosAdmin()
+  }
+
+  async function salvarIgrejaAdmin(event) {
+    event.preventDefault()
+
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem cadastrar igrejas.')
+      return
+    }
+
+    if (!novaIgrejaAdmin.nome_igreja.trim()) {
+      alert('Informe o nome da igreja.')
+      return
+    }
+
+    const dadosIgreja = {
+      nome_igreja: novaIgrejaAdmin.nome_igreja.trim(),
+      congregacao: novaIgrejaAdmin.congregacao.trim(),
+      pastor_dirigente: novaIgrejaAdmin.pastor_dirigente.trim(),
+      cidade: novaIgrejaAdmin.cidade.trim(),
+      estado: novaIgrejaAdmin.estado.trim(),
+      bairro: novaIgrejaAdmin.bairro.trim(),
+      endereco: novaIgrejaAdmin.endereco.trim(),
+      numero_endereco: novaIgrejaAdmin.numero_endereco.trim(),
+      complemento_endereco: novaIgrejaAdmin.complemento_endereco.trim(),
+      cep: novaIgrejaAdmin.cep.trim(),
+      tipo_igreja: novaIgrejaAdmin.tipo_igreja,
+      sede_filiada_nome:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_nome.trim()
+          : '',
+      sede_filiada_endereco:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_endereco.trim()
+          : '',
+      sede_filiada_numero:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_numero.trim()
+          : '',
+      sede_filiada_complemento:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_complemento.trim()
+          : '',
+      sede_filiada_cep:
+        novaIgrejaAdmin.tipo_igreja === 'congregacao'
+          ? novaIgrejaAdmin.sede_filiada_cep.trim()
+          : '',
+      telefone: novaIgrejaAdmin.telefone.trim(),
+      email: novaIgrejaAdmin.email.trim(),
+      status_piloto: novaIgrejaAdmin.status_piloto,
+      responsavel_nome: novaIgrejaAdmin.responsavel_nome.trim(),
+      responsavel_email: novaIgrejaAdmin.responsavel_email.trim(),
+      responsavel_whatsapp: novaIgrejaAdmin.responsavel_whatsapp.trim(),
+      observacoes_piloto: novaIgrejaAdmin.observacoes_piloto.trim(),
+      data_inicio_piloto: novaIgrejaAdmin.data_inicio_piloto || null,
+      data_fim_piloto: novaIgrejaAdmin.data_fim_piloto || null,
+      limite_usuarios: Number(novaIgrejaAdmin.limite_usuarios || 10),
+    }
+
+    let resposta
+
+    if (igrejaAdminEditandoId) {
+      resposta = await supabase
+        .from('igrejas')
+        .update(dadosIgreja)
+        .eq('id', igrejaAdminEditandoId)
+    } else {
+      resposta = await supabase.from('igrejas').insert(dadosIgreja)
+    }
+
+    if (resposta.error) {
+      mostrarErroSistema(resposta.error, 'Erro ao salvar igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+    limparFormularioIgrejaAdmin()
+    alert('Igreja salva com sucesso!')
+  }
+
+  async function excluirIgrejaAdmin(igreja) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem excluir igrejas.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta ação pode apagar os dados vinculados.`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.from('igrejas').delete().eq('id', igreja.id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Erro ao excluir igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+  }
+
+  async function alterarStatusIgrejaAdmin(igreja, novoStatus) {
+    if (!usuarioEhAdminSistema()) {
+      alert('Apenas administradores do sistema podem alterar o status da igreja.')
+      return
+    }
+
+    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
+    const textoAcao =
+      novoStatus === 'teste'
+        ? 'aprovar esta igreja para o sistema'
+        : novoStatus === 'cancelada'
+          ? 'não aprovar esta igreja'
+          : `alterar o status para ${novoStatus}`
+
+    const confirmar = window.confirm(`Deseja ${textoAcao}: ${nomeIgreja}?`)
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('igrejas')
+      .update({ status_piloto: novoStatus })
+      .eq('id', igreja.id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível alterar o status da igreja.')
+      return
+    }
+
+    await carregarIgrejasAdmin()
+
+    if (novoStatus === 'teste') {
+      const avisarAgora = window.confirm(
+        'Igreja aprovada para o sistema. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
+      )
+
+      if (avisarAgora) {
+        abrirWhatsAppAprovacao({ ...igreja, status_piloto: 'teste' })
+      }
+    }
+
+    if (novoStatus === 'cancelada') {
+      alert('Igreja marcada como não aprovada.')
+    }
+  }
+
+  async function aprovarIgrejaPiloto(igreja) {
+    await alterarStatusIgrejaAdmin(igreja, 'teste')
+  }
+
+  async function naoAprovarIgrejaPiloto(igreja) {
+    await alterarStatusIgrejaAdmin(igreja, 'cancelada')
+  }
+
+  function gerarMensagemAprovacaoIgreja(igreja) {
+    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'sua igreja'
+
+    return `Paz do Senhor!
+
+O cadastro da ${nomeIgreja} no sistema do EBD Fiel foi aprovado.
+
+Acesse o sistema pelo link:
+
+https://app.ebdfiel.com.br
+
+Entre com o e-mail e a senha cadastrados no momento da inscrição.
+
+Manual rápido para começar:
+
+1. Confira os dados da igreja no painel.
+2. Vá em Classes e cadastre as turmas da EBD.
+3. Vá em Alunos ou entre em uma classe para cadastrar os alunos.
+4. Vá em Professores para cadastrar os professores da EBD.
+5. Vincule os professores às classes correspondentes.
+6. Vá em Chamada para registrar a presença dos alunos.
+7. Use Chamada dos professores para registrar a presença dos professores.
+8. Em Relatórios, gere o relatório da EBD em PDF.
+9. Durante o sistema, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
+
+Qualquer dificuldade, pode me chamar por aqui.`
+  }
+
+  function limparNumeroWhatsApp(numero) {
+    return String(numero || '').replace(/\D/g, '')
+  }
+
+  function abrirWhatsAppAprovacao(igreja) {
+    const numeroLimpo = limparNumeroWhatsApp(igreja.responsavel_whatsapp)
+    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
+    const texto = encodeURIComponent(mensagem)
+
+    if (!numeroLimpo) {
+      alert('Esta igreja não possui WhatsApp cadastrado. Use o botão “Copiar mensagem”.')
+      return
+    }
+
+    const numeroComPais = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`
+    window.open(`https://wa.me/${numeroComPais}?text=${texto}`, '_blank', 'noopener,noreferrer')
+  }
+
+  async function copiarMensagemAprovacao(igreja) {
+    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
+
+    try {
+      await navigator.clipboard.writeText(mensagem)
+      alert('Mensagem de aprovação copiada.')
+    } catch {
+      window.prompt('Copie a mensagem abaixo:', mensagem)
+    }
+  }
+
+  function buscarIgrejaAdminPorId(igrejaId) {
+    return igrejasAdmin.find((item) => Number(item.id) === Number(igrejaId)) || null
+  }
+
+  function buscarContatoIgrejaAdmin(igrejaId) {
+    const igreja = buscarIgrejaAdminPorId(igrejaId)
+
+    if (!igreja) {
+      return {
+        responsavel: '',
+        email: '',
+        whatsapp: '',
+        telefone: '',
+      }
+    }
+
+    return {
+      responsavel: igreja.responsavel_nome || '',
+      email: igreja.responsavel_email || igreja.email || '',
+      whatsapp: igreja.responsavel_whatsapp || '',
+      telefone: igreja.telefone || '',
+    }
+  }
+
+  function copiarContatoAcessoAdmin(acesso) {
+    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+    const texto = [
+      `Nome: ${acesso.nome || contato.responsavel || 'Não informado'}`,
+      `E-mail de acesso: ${acesso.email || 'Não informado'}`,
+      `Igreja: ${buscarNomeIgrejaAdmin(acesso.igreja_id)}`,
+      `Responsável: ${contato.responsavel || 'Não informado'}`,
+      `WhatsApp: ${contato.whatsapp || 'Não informado'}`,
+      `Telefone: ${contato.telefone || 'Não informado'}`,
+      `E-mail da igreja/responsável: ${contato.email || 'Não informado'}`,
+    ].join('\n')
+
+    navigator.clipboard
+      ?.writeText(texto)
+      .then(() => alert('Contato copiado.'))
+      .catch(() => window.prompt('Copie os dados abaixo:', texto))
+  }
+
+  function abrirWhatsAppAcessoAdmin(acesso) {
+    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+    const numero = limparNumeroWhatsApp(contato.whatsapp || contato.telefone)
+
+    if (!numero) {
+      alert('Não há WhatsApp/telefone cadastrado para este acesso.')
+      return
+    }
+
+    const numeroComPais = numero.startsWith('55') ? numero : `55${numero}`
+    const mensagem = encodeURIComponent(
+      `Paz do Senhor! Aqui é o suporte do EBD Fiel. Estou entrando em contato sobre o acesso da igreja ${buscarNomeIgrejaAdmin(acesso.igreja_id)}.`
+    )
+
+    window.open(`https://wa.me/${numeroComPais}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
+  }
+
+
+  function filtrarIgrejasAdmin() {
+    const termo = buscaIgrejaAdmin.toLowerCase()
+
+    return igrejasAdmin.filter((igreja) => {
+      return (
+        String(igreja.nome_igreja || '').toLowerCase().includes(termo) ||
+        String(igreja.congregacao || '').toLowerCase().includes(termo) ||
+        String(igreja.responsavel_nome || '').toLowerCase().includes(termo) ||
+        String(igreja.responsavel_email || '').toLowerCase().includes(termo)
+      )
+    })
+  }
+
+  function traduzirErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
+    const mensagemOriginal =
+      typeof erro === 'string'
+        ? erro
+        : erro?.message || erro?.error_description || mensagemPadrao
+
+    const mensagem = String(mensagemOriginal || '').toLowerCase()
+
+    if (mensagem.includes('could not find') && mensagem.includes('column')) {
+      const colunaEncontrada = String(mensagemOriginal).match(/'([^']+)' column/)
+      const tabelaEncontrada = String(mensagemOriginal).match(/of '([^']+)'/)
+
+      const coluna = colunaEncontrada?.[1] || 'necessária'
+      const tabela = tabelaEncontrada?.[1] || 'do banco de dados'
+
+      return `O campo "${coluna}" ainda não existe na tabela "${tabela}" do Supabase. Rode o SQL de atualização do banco, aguarde alguns segundos e tente novamente.`
+    }
+
+    if (mensagem.includes('schema cache')) {
+      return 'O Supabase ainda está atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
+    }
+
+    if (mensagem.includes('duplicate key') || mensagem.includes('already exists')) {
+      return 'Esse cadastro já existe. Verifique os dados informados e tente novamente.'
+    }
+
+    if (mensagem.includes('violates foreign key constraint')) {
+      return 'Não foi possível salvar porque há uma ligação obrigatória faltando no banco de dados. Verifique se a igreja, classe ou usuário vinculado existe.'
+    }
+
+    if (mensagem.includes('violates row-level security') || mensagem.includes('row-level security')) {
+      return 'Você não tem permissão para realizar esta ação. Verifique se está logado com o perfil correto.'
+    }
+
+    if (mensagem.includes('invalid input syntax')) {
+      return 'Algum campo foi preenchido com um formato inválido. Confira números, datas e campos obrigatórios.'
+    }
+
+    if (mensagem.includes('failed to fetch') || mensagem.includes('networkerror')) {
+      return 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
+    }
+
+    if (mensagem.includes('jwt') || mensagem.includes('token')) {
+      return 'Sua sessão expirou. Saia do sistema e entre novamente.'
+    }
+
+    if (mensagem.includes('auth')) {
+      return 'Não foi possível confirmar seu login. Saia do sistema e entre novamente.'
+    }
+
+    return mensagemPadrao
+  }
+
+  function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
+    console.error(erro)
+    alert(traduzirErroSistema(erro, mensagemPadrao))
+  }
+
+  function igrejaEstaEmTestePiloto() {
+    return igrejaAtualPiloto?.status_piloto === 'teste'
+  }
+
+  function formatarDataHoraFeedback(valor) {
+    if (!valor) {
+      return ''
+    }
+
+    try {
+      return new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(valor))
+    } catch {
+      return valor
+    }
+  }
+
+  async function carregarFeedbacksDaIgreja(igrejaAtualId = buscarIgrejaIdAtual()) {
+    if (!igrejaAtualId) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('feedbacks_piloto')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setFeedbacksIgreja(data || [])
+  }
+
+  async function carregarFeedbacksAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('feedbacks_piloto')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(80)
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    setFeedbacksAdmin(data || [])
+  }
+
+  async function enviarFeedbackPiloto(event) {
+    event.preventDefault()
+
+    if (!igrejaEstaEmTestePiloto()) {
+      alert('A área de feedback está disponível para igrejas em sistema.')
+      return
+    }
+
+    if (!feedbackPiloto.mensagem.trim()) {
+      alert('Escreva seu feedback antes de enviar.')
+      return
+    }
+
+    setCarregandoFeedback(true)
+
+    const { error } = await supabase.from('feedbacks_piloto').insert({
+      igreja_id: buscarIgrejaIdAtual(),
+      user_id: sessao?.user?.id || null,
+      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'Usuário',
+      email_usuario: perfilUsuario?.email || sessao?.user?.email || '',
+      perfil_usuario: perfilUsuario?.perfil || '',
+      tipo: feedbackPiloto.tipo,
+      mensagem: feedbackPiloto.mensagem.trim(),
+      lido: false,
+    })
+
+    setCarregandoFeedback(false)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível enviar o feedback.')
+      return
+    }
+
+    setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
+    await carregarFeedbacksDaIgreja()
+    alert('Feedback enviado com sucesso. Obrigado por ajudar no sistema!')
+  }
+
+  async function marcarFeedbackComoLido(feedbackId) {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('feedbacks_piloto')
+      .update({ lido: true, lido_em: new Date().toISOString() })
+      .eq('id', feedbackId)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível marcar o feedback como lido.')
+      return
+    }
+
+    await carregarFeedbacksAdmin()
+  }
+
+  function abrirRespostaFeedback(feedback) {
+    setFeedbackRespondendoId(feedback.id)
+    setRespostaFeedbackAdmin(feedback.resposta_admin || '')
+  }
+
+  function cancelarRespostaFeedback() {
+    setFeedbackRespondendoId(null)
+    setRespostaFeedbackAdmin('')
+  }
+
+  function buscarIgrejaDoFeedback(feedback) {
+    return igrejasAdmin.find(
+      (item) => Number(item.id) === Number(feedback.igreja_id)
+    )
+  }
+
+  function buscarWhatsAppFeedback(feedback) {
+    const igreja = buscarIgrejaDoFeedback(feedback)
+
+    return (
+      igreja?.responsavel_whatsapp ||
+      igreja?.telefone ||
+      feedback.whatsapp_usuario ||
+      ''
+    )
+  }
+
+  function montarMensagemRespostaFeedback(feedback) {
+    const nome = feedback.nome_usuario || 'irmão(ã)'
+    const resposta = feedback.resposta_admin || respostaFeedbackAdmin
+
+    return `Paz do Senhor, ${nome}!
+
+Obrigado pelo feedback enviado sobre o EBD Fiel.
+
+Resposta da equipe:
+${resposta}
+
+Seguimos à disposição para ajudar no sistema.
+
+EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
+  }
+
+  async function salvarRespostaFeedback(feedback) {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    if (!respostaFeedbackAdmin.trim()) {
+      alert('Escreva a resposta antes de salvar.')
+      return
+    }
+
+    setEnviandoRespostaFeedback(true)
+
+    const { error } = await supabase
+      .from('feedbacks_piloto')
+      .update({
+        resposta_admin: respostaFeedbackAdmin.trim(),
+        respondido_em: new Date().toISOString(),
+        respondido_por: sessao?.user?.email || 'Administrador',
+        lido: true,
+        lido_em: feedback.lido_em || new Date().toISOString(),
+      })
+      .eq('id', feedback.id)
+
+    setEnviandoRespostaFeedback(false)
+
+    if (error) {
+      mostrarErroSistema(error, 'Não foi possível salvar a resposta do feedback.')
+      return
+    }
+
+    setFeedbackRespondendoId(null)
+    setRespostaFeedbackAdmin('')
+    await carregarFeedbacksAdmin()
+    alert('Resposta salva. A igreja verá a resposta na área de feedback.')
+  }
+
+  async function registrarNotificacaoFeedback(feedbackId) {
+    await supabase
+      .from('feedbacks_piloto')
+      .update({ notificado_em: new Date().toISOString() })
+      .eq('id', feedbackId)
+  }
+
+  async function copiarRespostaFeedback(feedback) {
+    const mensagem = montarMensagemRespostaFeedback(feedback)
+
+    try {
+      await navigator.clipboard.writeText(mensagem)
+      await registrarNotificacaoFeedback(feedback.id)
+      await carregarFeedbacksAdmin()
+      alert('Mensagem copiada. Agora cole no WhatsApp ou e-mail da pessoa.')
+    } catch {
+      alert(mensagem)
+    }
+  }
+
+  async function enviarRespostaEmailFeedback(feedback) {
+    const emailDestino = feedback.email_usuario
+
+    if (!emailDestino) {
+      alert('Este feedback não possui e-mail vinculado.')
+      return
+    }
+
+    const assunto = encodeURIComponent('Resposta ao seu feedback no EBD Fiel')
+    const corpo = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
+
+    await registrarNotificacaoFeedback(feedback.id)
+    await carregarFeedbacksAdmin()
+
+    window.location.href = `mailto:${emailDestino}?subject=${assunto}&body=${corpo}`
+  }
+
+  async function enviarRespostaWhatsAppFeedback(feedback) {
+    const telefone = buscarWhatsAppFeedback(feedback)
+    const apenasNumeros = String(telefone || '').replace(/\D/g, '')
+
+    if (!apenasNumeros) {
+      alert('Não encontrei WhatsApp/telefone vinculado a este feedback. Use o botão copiar mensagem ou enviar e-mail.')
+      return
+    }
+
+    const telefoneComPais = apenasNumeros.length <= 11 ? `55${apenasNumeros}` : apenasNumeros
+    const mensagem = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
+
+    await registrarNotificacaoFeedback(feedback.id)
+    await carregarFeedbacksAdmin()
+
+    window.open(`https://wa.me/${telefoneComPais}?text=${mensagem}`, '_blank')
+  }
+
+  function buscarNomeIgrejaFeedback(feedback) {
+    const igreja = igrejasAdmin.find(
+      (item) => Number(item.id) === Number(feedback.igreja_id)
+    )
+
+    return (
+      igreja?.nome_igreja ||
+      igreja?.nome ||
+      feedback.nome_igreja ||
+      `Igreja ID ${feedback.igreja_id}`
+    )
+  }
+
+  function contarFeedbacksNaoLidos() {
+    return feedbacksAdmin.filter((feedback) => !feedback.lido).length
+  }
+
+  function usuarioEhSecretaria() {
+    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id) {
+      return false
+    }
+
+    return perfilUsuario?.perfil !== 'professor'
+  }
+
+  function buscarClassesVinculadasAoProfessor(perfilId = perfilUsuario?.id) {
+    const ids = vinculosProfessores
+      .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilId) && vinculo.ativo !== false)
+      .map((vinculo) => Number(vinculo.classe_id))
+      .filter(Boolean)
+
+    if (ids.length === 0 && perfilUsuario?.classe_id && Number(perfilId) === Number(perfilUsuario?.id)) {
+      return [Number(perfilUsuario.classe_id)]
+    }
+
+    return [...new Set(ids)]
+  }
+
+  function buscarNomesClassesDoProfessor(perfilId, classeIdFallback = null) {
+    let ids = buscarClassesVinculadasAoProfessor(perfilId)
+
+    if (ids.length === 0 && classeIdFallback) {
+      ids = [Number(classeIdFallback)]
+    }
+
+    return ids
+      .map((classeId) => buscarNomeClasse(classeId))
+      .filter(Boolean)
+      .join(', ')
+  }
+
+  function professorPodeAcessarClasse(classeId) {
+    if (!usuarioEhProfessor()) {
+      return true
+    }
+
+    return buscarClassesVinculadasAoProfessor().includes(Number(classeId))
+  }
+
+  function buscarClasseDoProfessorId() {
+    return buscarClassesVinculadasAoProfessor()[0] || Number(perfilUsuario?.classe_id || 0)
+  }
+
+  function podeGerenciarCadastros() {
+    return usuarioEhSecretaria()
+  }
+
+  function menuPermitidoParaUsuario(item) {
+    if (item.apenasAdminSistema && !usuarioEhAdminSistema()) {
+      return false
+    }
+
+    if (item.apenasSecretaria && !usuarioEhSecretaria()) {
+      return false
+    }
+
+    return true
+  }
+
+  async function buscarTodosOsDados(sessaoAtual = sessao, igrejaSuporteForcada = null) {
+    if (!sessaoAtual?.user?.id) {
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+    }
+
+    const { data: perfilBanco, error: erroPerfil } = await supabase
+      .from('perfis_usuarios')
+      .select('*')
+      .eq('user_id', sessaoAtual.user.id)
+      .maybeSingle()
+
+    if (erroPerfil) {
+      throw erroPerfil
+    }
+
+    let perfilAtual = perfilBanco
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+    const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
+    const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
+
+    if (!perfilBanco?.igreja_id) {
+      if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+        perfilAtual = {
+          id: null,
+          user_id: sessaoAtual.user.id,
+          nome: 'Administrador do sistema',
+          email: emailSessaoAtual,
+          perfil: 'secretaria',
+          igreja_id: Number(igrejaSuporteSelecionada.id),
+          classe_id: null,
+          modo_suporte_admin: true,
+        }
+
+        setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+      } else if (ehAdminSessaoAtual) {
+        const perfilAdminSistema = {
+          id: null,
+          user_id: sessaoAtual.user.id,
+          nome: 'Administrador do sistema',
+          email: emailSessaoAtual,
+          perfil: 'admin',
+          igreja_id: null,
+          classe_id: null,
+        }
+
+        setPerfilUsuario(perfilAdminSistema)
+        setIgrejaId(null)
+        setClasses([])
+        setAlunos([])
+        setChamadasSalvas([])
+        setChamadasProfessores([])
+        setVinculosProfessores([])
+        setPaginaAtual('administracao')
+
+        const { data: igrejasAdminBanco, error: erroIgrejasAdmin } = await supabase
+          .from('igrejas')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (erroIgrejasAdmin) {
+          throw erroIgrejasAdmin
+        }
+
+        setIgrejasAdmin(igrejasAdminBanco || [])
+
+        const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .order('nome', { ascending: true })
+
+        if (erroAcessosAdmin) {
+          console.error(erroAcessosAdmin)
+        } else {
+          setAcessosAdmin(acessosAdminBanco || [])
+        }
+
+        const { data: feedbacksAdminBanco, error: erroFeedbacksAdmin } = await supabase
+          .from('feedbacks_piloto')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(80)
+
+        if (erroFeedbacksAdmin) {
+          console.error(erroFeedbacksAdmin)
+        } else {
+          setFeedbacksAdmin(feedbacksAdminBanco || [])
+        }
+
+        await carregarCadastrosIncompletosAdmin()
+
+        setCarregando(false)
+        return
+      } else {
+        throw new Error(
+          'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
+        )
+      }
+    }
+
+    const igrejaAtualId = Number(perfilAtual.igreja_id)
+
+    setPerfilUsuario(perfilAtual)
+    setIgrejaId(igrejaAtualId)
+
+    const { data: vinculosBanco, error: erroVinculos } = await supabase
+      .from('classes_professores')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .eq('ativo', true)
+
+    if (erroVinculos) {
+      throw erroVinculos
+    }
+
+    const idsClassesPermitidas =
+      perfilAtual?.perfil === 'professor'
+        ? [
+            ...new Set(
+              (vinculosBanco || [])
+                .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilAtual.id))
+                .map((vinculo) => Number(vinculo.classe_id))
+                .filter(Boolean)
+            ),
+          ]
+        : []
+
+    if (
+      perfilAtual?.perfil === 'professor' &&
+      idsClassesPermitidas.length === 0 &&
+      perfilAtual?.classe_id
+    ) {
+      idsClassesPermitidas.push(Number(perfilAtual.classe_id))
+    }
+
+    const classePermitidaId =
+      perfilAtual?.perfil === 'professor'
+        ? idsClassesPermitidas[0] || null
+        : null
+
+    let consultaClasses = supabase
+      .from('classes')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('id', { ascending: true })
+
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaClasses = consultaClasses.in('id', idsClassesPermitidas)
+      } else {
+        consultaClasses = consultaClasses.eq('id', -1)
+      }
+    }
+
+    let { data: classesBanco, error: erroClasses } = await consultaClasses
+
+    if (erroClasses) {
+      throw erroClasses
+    }
+
+    if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
+      await inserirDadosIniciais(igrejaAtualId, sessaoAtual)
+
+      let novaConsultaClasses = supabase
+        .from('classes')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
+        } else {
+          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
+        }
+      }
+
+      const resultadoClasses = await novaConsultaClasses
+      classesBanco = resultadoClasses.data
+      erroClasses = resultadoClasses.error
+
+      if (erroClasses) {
+        throw erroClasses
+      }
+    }
+
+    let consultaAlunos = supabase
+      .from('alunos')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('id', { ascending: true })
+
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaAlunos = consultaAlunos.in('classe_id', idsClassesPermitidas)
+      } else {
+        consultaAlunos = consultaAlunos.eq('classe_id', -1)
+      }
+    }
+
+    let { data: alunosBanco, error: erroAlunos } = await consultaAlunos
+
+    if (erroAlunos) {
+      throw erroAlunos
+    }
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const criouProfessoresDasClasses = await migrarProfessoresDasClasses(
+        igrejaAtualId,
+        classesBanco || [],
+        alunosBanco || [],
+        sessaoAtual
+      )
+
+      if (criouProfessoresDasClasses) {
+        const { data: alunosAtualizados, error: erroAlunosAtualizados } =
+          await consultaAlunos
+
+        if (erroAlunosAtualizados) {
+          throw erroAlunosAtualizados
+        }
+
+        alunosBanco = alunosAtualizados || []
+      }
+    }
+
+    let consultaChamadas = supabase
+      .from('chamadas')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('id', { ascending: true })
+
+    if (perfilAtual.perfil === 'professor') {
+      if (idsClassesPermitidas.length > 0) {
+        consultaChamadas = consultaChamadas.in('classe_id', idsClassesPermitidas)
+      } else {
+        consultaChamadas = consultaChamadas.eq('classe_id', -1)
+      }
+    }
+
+    const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
+
+    if (erroChamadas) {
+      throw erroChamadas
+    }
+
+    let chamadasProfessoresBanco = []
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const { data: chamadasProfessoresEncontradas, error: erroChamadasProfessores } =
+        await supabase
+          .from('chamadas_professores')
+          .select('*')
+          .eq('igreja_id', igrejaAtualId)
+          .order('id', { ascending: true })
+
+      if (erroChamadasProfessores) {
+        throw erroChamadasProfessores
+      }
+
+      chamadasProfessoresBanco = chamadasProfessoresEncontradas || []
+    }
+
+    let perfisBanco = []
+
+    if (perfilAtual.perfil === 'secretaria') {
+      const { data: perfisEncontrados, error: erroPerfis } = await supabase
+        .from('perfis_usuarios')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('nome', { ascending: true })
+
+      if (erroPerfis) {
+        throw erroPerfis
+      }
+
+      perfisBanco = perfisEncontrados || []
+    } else {
+      perfisBanco = [perfilAtual]
+    }
+
+    const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
+      .from('configuracoes_igreja')
+      .select('*')
+      .eq('igreja_id', igrejaAtualId)
+      .order('created_at', { ascending: true })
+
+    if (erroConfiguracoes) {
+      throw erroConfiguracoes
+    }
+
+    const { data: igrejaPilotoBanco, error: erroIgrejaPiloto } = await supabase
+      .from('igrejas')
+      .select('*')
+      .eq('id', igrejaAtualId)
+      .maybeSingle()
+
+    if (erroIgrejaPiloto) {
+      console.error(erroIgrejaPiloto)
+    }
+
+    setIgrejaAtualPiloto(igrejaPilotoBanco || null)
+
+    if (igrejaPilotoBanco?.status_piloto === 'teste') {
+      await carregarFeedbacksDaIgreja(igrejaAtualId)
+    } else {
+      setFeedbacksIgreja([])
+    }
+
+    setClasses(
+      (classesBanco || []).map((classe) => ({
+        id: Number(classe.id),
+        nome: classe.nome,
+        professor: classe.professor,
+      }))
+    )
+
+    setAlunos(
+      (alunosBanco || []).map((aluno) => ({
+        id: Number(aluno.id),
+        nome: aluno.nome,
+        classeId: Number(aluno.classe_id),
+        telefone: aluno.telefone || '',
+        dataNascimento: aluno.data_nascimento || '',
+        tipoPessoa: aluno.tipo_pessoa || 'aluno',
+      }))
+    )
+
+    setPerfisIgreja(perfisBanco)
+    setVinculosProfessores(vinculosBanco || [])
+
+    setChamadasProfessores(
+      (chamadasProfessoresBanco || []).map((chamada) => ({
+        id: Number(chamada.id),
+        data: chamada.data,
+        totalProfessores: Number(chamada.total_professores || 0),
+        totalPresentes: Number(chamada.total_presentes || 0),
+        totalFaltas: Number(chamada.total_faltas || 0),
+        totalJustificadas: Number(chamada.total_justificadas || 0),
+        observacoes: chamada.observacoes || '',
+        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+      }))
+    )
+
+    setChamadasSalvas(
+      (chamadasBanco || []).map((chamada) => ({
+        id: Number(chamada.id),
+        data: chamada.data,
+        classeId: Number(chamada.classe_id),
+        matricula: Number(chamada.matricula || 0),
+        totalPresentes: Number(chamada.total_presentes || 0),
+        totalFaltas: Number(chamada.total_faltas || 0),
+        visitantes: Number(chamada.visitantes || 0),
+        biblias: Number(chamada.biblias || 0),
+        revistas: Number(chamada.revistas || 0),
+        ofertas: Number(chamada.ofertas || 0),
+        totalGeralClasse: Number(chamada.total_geral_classe || 0),
+        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+      }))
+    )
+
+    if (classePermitidaId) {
+      setClasseChamadaId(String(classePermitidaId))
+    }
+
+    const configuracaoAtual = configuracoesBanco?.[0]
+
+    setConfiguracaoIgreja({
+      id: configuracaoAtual?.id || null,
+      nome_igreja:
+        configuracaoAtual?.nome_igreja ||
+        igrejaPilotoBanco?.nome_igreja ||
+        igrejaPilotoBanco?.nome ||
+        '',
+      congregacao: configuracaoAtual?.congregacao || igrejaPilotoBanco?.congregacao || '',
+      pastor_dirigente:
+        configuracaoAtual?.pastor_dirigente || igrejaPilotoBanco?.pastor_dirigente || '',
+      superintendente_ebd:
+        configuracaoAtual?.superintendente_ebd || igrejaPilotoBanco?.superintendente_ebd || '',
+      cidade: configuracaoAtual?.cidade || igrejaPilotoBanco?.cidade || '',
+      estado: configuracaoAtual?.estado || igrejaPilotoBanco?.estado || '',
+      bairro: configuracaoAtual?.bairro || igrejaPilotoBanco?.bairro || '',
+      endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
+      telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
+      email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
+    })
+  }
+
+  function converterNumero(valor) {
+    const numero = Number(valor)
+    return Number.isNaN(numero) ? 0 : numero
+  }
+
+  function buscarNomeClasse(classeId) {
+    const classeEncontrada = classes.find(
+      (classe) => classe.id === Number(classeId)
+    )
+
+    return classeEncontrada ? classeEncontrada.nome : 'Sem classe'
+  }
+
+  function buscarProfessoresDaClasse(classeId) {
+    return professoresSomente()
+      .filter((professor) => professor.classeId === Number(classeId))
+      .sort((a, b) => a.nome.localeCompare(b.nome))
+  }
+
+  function buscarTextoProfessoresDaClasse(classeId) {
+    const professoresDaClasse = buscarProfessoresDaClasse(classeId)
+
+    if (professoresDaClasse.length === 0) {
+      return 'Nenhum professor vinculado'
+    }
+
+    return professoresDaClasse.map((professor) => professor.nome).join(', ')
+  }
+
+  function buscarDataAtual() {
+    return new Date().toLocaleDateString('pt-BR')
+  }
+
+  function buscarDataUltimaChamada() {
+    if (chamadasSalvas.length === 0) {
+      return buscarDataAtual()
+    }
+
+    const ultimaChamada = chamadasSalvas[chamadasSalvas.length - 1]
+    return ultimaChamada.data || buscarDataAtual()
+  }
+
+  function formatarDataRelatorio(dataTexto) {
+    if (!dataTexto) {
+      return buscarDataAtual()
+    }
+
+    const partes = dataTexto.split('/')
+
+    if (partes.length !== 3) {
+      return dataTexto
+    }
+
+    const dia = Number(partes[0])
+    const mes = Number(partes[1]) - 1
+    const ano = Number(partes[2])
+
+    const data = new Date(ano, mes, dia)
+
+    if (Number.isNaN(data.getTime())) {
+      return dataTexto
+    }
+
+    const dataFormatada = data.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    })
+
+    return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1)
+  }
+
+  function buscarNomeIgrejaParaExibicao() {
+    return configuracaoIgreja.nome_igreja.trim() || 'EBD Fiel'
+  }
+
+  function montarEnderecoIgreja() {
+    return [
+      configuracaoIgreja.endereco,
+      configuracaoIgreja.bairro,
+      configuracaoIgreja.cidade,
+      configuracaoIgreja.estado,
+    ]
+      .filter((valor) => valor && valor.trim())
+      .join(' - ')
+  }
+
+  function alunosSomente() {
+    return alunos.filter((aluno) => (aluno.tipoPessoa || 'aluno') === 'aluno')
+  }
+
+  function professoresSomente() {
+    return alunos.filter((aluno) => aluno.tipoPessoa === 'professor')
+  }
+
+  function calcularMatriculaDaClasse(classeId) {
+    return alunos.filter(
+      (aluno) =>
+        aluno.classeId === Number(classeId) &&
+        (aluno.tipoPessoa || 'aluno') === 'aluno'
+    ).length
+  }
+
+  function formatarMoeda(valor) {
+    return converterNumero(valor).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+  }
+
+  function calcularTotalPresentes() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalPresentes),
+      0
+    )
+  }
+
+  function calcularTotalFaltas() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalFaltas),
+      0
+    )
+  }
+
+  function calcularTotalVisitantes() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.visitantes),
+      0
+    )
+  }
+
+  function calcularTotalBiblias() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.biblias),
+      0
+    )
+  }
+
+  function calcularTotalRevistas() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.revistas),
+      0
+    )
+  }
+
+  function calcularTotalOfertas() {
+    return chamadasSalvas.reduce(
+      (total, chamada) => total + converterNumero(chamada.ofertas),
+      0
+    )
+  }
+
+  function calcularFrequenciaGeral() {
+    const presentes = calcularTotalPresentes()
+    const faltas = calcularTotalFaltas()
+    const total = presentes + faltas
+
+    if (total === 0) {
+      return 0
+    }
+
+    return Math.round((presentes / total) * 100)
+  }
+
+  function abrirRelatorioParaImpressao() {
+    const relatorio = document.querySelector('.relatorio-folha')
+
+    if (!relatorio) {
+      alert('Relatório não encontrado para impressão.')
+      return
+    }
+
+    const janela = window.open('', '_blank')
+
+    if (!janela) {
+      alert(
+        'O navegador bloqueou a abertura da impressão. No celular, use o botão Baixar PDF.'
+      )
+      return
+    }
+
+    janela.document.open()
+    janela.document.write(`
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Relatório EBD Fiel</title>
+
+          <style>
+            * {
+              box-sizing: border-box;
+            }
+
+            body {
+              margin: 0;
+              padding: 24px;
+              font-family: Arial, sans-serif;
+              color: #000;
+              background: #fff;
+            }
+
+            .area-acoes {
+              display: flex;
+              gap: 12px;
+              justify-content: center;
+              margin-bottom: 20px;
+            }
+
+            .area-acoes button {
+              border: 0;
+              border-radius: 8px;
+              padding: 12px 18px;
+              font-size: 15px;
+              font-weight: 700;
+              cursor: pointer;
+              background: #2563eb;
+              color: #fff;
+            }
+
+            .area-acoes .secundario {
+              background: #e5e7eb;
+              color: #111827;
+            }
+
+            .relatorio-folha {
+              width: Online;
+              max-width: 980px;
+              margin: 0 auto;
+              background: #fff;
+            }
+
+            .cabecalho-relatorio {
+              text-align: center;
+              margin-bottom: 16px;
+              padding-bottom: 8px;
+              border-bottom: 2px dotted #000;
+            }
+
+            .logo-relatorio {
+              width: 76px;
+              height: 76px;
+              object-fit: contain;
+              display: block;
+              margin: 0 auto 8px;
+            }
+
+            .cabecalho-relatorio h3 {
+              margin: 0 0 6px 0;
+              font-size: 20px;
+              font-weight: 700;
+            }
+
+            .cabecalho-relatorio p {
+              margin: 0;
+              font-size: 14px;
+              font-weight: 600;
+            }
+
+            .tabela-container {
+              width: Online;
+              overflow-x: visible;
+            }
+
+            table {
+              width: Online;
+              border-collapse: collapse;
+              table-layout: fixed;
+              font-size: 11px;
+            }
+
+            th,
+            td {
+              border: 1px solid #000;
+              padding: 5px 4px;
+              text-align: center;
+              vertical-align: middle;
+              word-break: break-word;
+            }
+
+            th {
+              font-weight: 700;
+              background: #f3f4f6;
+            }
+
+            td:nth-child(2),
+            th:nth-child(2) {
+              text-align: left;
+              width: 22%;
+            }
+
+            .linha-total td {
+              font-weight: 700;
+              background: #f3f4f6;
+            }
+
+            .linha-domingo-anterior td {
+              font-weight: 700;
+            }
+
+            @media print {
+              body {
+                padding: 0;
+              }
+
+              .area-acoes {
+                display: none;
+              }
+
+              .relatorio-folha {
+                max-width: none;
+              }
+
+              @page {
+                size: A4 landscape;
+                margin: 10mm;
+              }
+            }
+          </style>
+        </head>
+
+        <body>
+          <div class="area-acoes">
+            <button onclick="window.print()">Imprimir / Salvar PDF</button>
+            <button class="secundario" onclick="window.close()">Fechar</button>
+          </div>
+
+          ${relatorio.outerHTML}
+
+          <script>
+            setTimeout(function () {
+              try {
+                window.print()
+              } catch (error) {
+                console.log(error)
+              }
+            }, 800)
+          </script>
+        </body>
+      </html>
+    `)
+    janela.document.close()
+  }
+
+  async function baixarRelatorioPDF() {
+    const relatorioOriginal = document.querySelector('.relatorio-folha')
+
+    if (!relatorioOriginal) {
+      alert('Relatório não encontrado para gerar PDF.')
+      return
+    }
+
+    try {
+      const areaTemporaria = document.createElement('div')
+
+      areaTemporaria.style.position = 'fixed'
+      areaTemporaria.style.left = '-9999px'
+      areaTemporaria.style.top = '0'
+      areaTemporaria.style.width = '1200px'
+      areaTemporaria.style.background = '#ffffff'
+      areaTemporaria.style.padding = '24px'
+      areaTemporaria.style.zIndex = '-1'
+
+      const relatorioClone = relatorioOriginal.cloneNode(true)
+
+      relatorioClone.style.width = '1150px'
+      relatorioClone.style.maxWidth = '1150px'
+      relatorioClone.style.background = '#ffffff'
+
+      const tabelaContainer = relatorioClone.querySelector('.tabela-container')
+      if (tabelaContainer) {
+        tabelaContainer.style.overflow = 'visible'
+        tabelaContainer.style.width = 'Online'
+      }
+
+      const tabela = relatorioClone.querySelector('table')
+      if (tabela) {
+        tabela.style.width = 'Online'
+        tabela.style.tableLayout = 'fixed'
+        tabela.style.borderCollapse = 'collapse'
+      }
+
+      areaTemporaria.appendChild(relatorioClone)
+      document.body.appendChild(areaTemporaria)
+
+      const canvas = await html2canvas(relatorioClone, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        windowWidth: 1200,
+      })
+
+      document.body.removeChild(areaTemporaria)
+
+      const imagem = canvas.toDataURL('image/png')
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      const larguraPagina = pdf.internal.pageSize.getWidth()
+      const alturaPagina = pdf.internal.pageSize.getHeight()
+
+      const margem = 8
+      const larguraUtil = larguraPagina - margem * 2
+      const alturaImagem = (canvas.height * larguraUtil) / canvas.width
+
+      if (alturaImagem <= alturaPagina - margem * 2) {
+        pdf.addImage(imagem, 'PNG', margem, margem, larguraUtil, alturaImagem)
+      } else {
+        let alturaRestante = alturaImagem
+        let deslocamento = 0
+
+        while (alturaRestante > 0) {
+          pdf.addImage(
+            imagem,
+            'PNG',
+            margem,
+            margem - deslocamento,
+            larguraUtil,
+            alturaImagem
+          )
+
+          alturaRestante -= alturaPagina - margem * 2
+          deslocamento += alturaPagina - margem * 2
+
+          if (alturaRestante > 0) {
+            pdf.addPage()
+          }
+        }
+      }
+
+      pdf.save('relatorio-ebd-fiel.pdf')
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error)
+      alert('Não foi possível gerar o PDF. Tente novamente.')
+    }
+  }
+
+  function abrirNovaClasse() {
+    setNovaClasse({ nome: '', professor: '' })
+    setClasseEditandoId(null)
+    setMostrarFormularioClasse(true)
+  }
+
+  function editarClasse(classe) {
+    setNovaClasse({
+      nome: classe.nome,
+      professor: classe.professor,
+    })
+    setClasseEditandoId(classe.id)
+    setMostrarFormularioClasse(true)
+  }
+
+  function cancelarFormularioClasse() {
+    setNovaClasse({ nome: '', professor: '' })
+    setClasseEditandoId(null)
+    setMostrarFormularioClasse(false)
+  }
+
+  async function salvarClasse(event) {
+    event.preventDefault()
+
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode cadastrar ou editar classes.')
+      return
+    }
+
+    if (!novaClasse.nome.trim()) {
+      alert('Preencha o nome da classe.')
+      return
+    }
+
+    if (classeEditandoId) {
+      const { error } = await supabase
+        .from('classes')
+        .update({
+          nome: novaClasse.nome,
+          professor: novaClasse.professor || '',
+        })
+        .eq('id', classeEditandoId)
+
+      if (error) {
+        console.error(error)
+        alert('Erro ao salvar alterações da classe.')
+        return
+      }
+    } else {
+      const { error } = await supabase.from('classes').insert({
+        id: Date.now(),
+        nome: novaClasse.nome,
+        professor: novaClasse.professor,
+        igreja_id: buscarIgrejaIdAtual(),
+      })
+
+      if (error) {
+        console.error(error)
+        alert('Erro ao salvar classe.')
+        return
+      }
+    }
+
+    await buscarTodosOsDados()
+    cancelarFormularioClasse()
+  }
+
+  async function excluirClasse(classeId) {
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode excluir classes.')
+      return
+    }
+
+    const existemAlunos = alunos.some(
+      (aluno) => aluno.classeId === Number(classeId)
+    )
+
+    if (existemAlunos) {
+      alert('Não é possível excluir essa classe porque existem alunos nela.')
+      return
+    }
+
+    const confirmar = window.confirm('Tem certeza que deseja excluir esta classe?')
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.from('classes').delete().eq('id', classeId)
+
+    if (error) {
+      console.error(error)
+      alert('Erro ao excluir classe.')
+      return
+    }
+
+    await buscarTodosOsDados()
+  }
+
+  function abrirNovoAluno(tipoPessoa = 'aluno') {
+    setNovoAluno({
+      nome: '',
+      classeId: '',
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa,
+    })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(true)
+  }
+
+  function abrirNovoAlunoDaClasse(classeId) {
+    setNovoAluno({
+      nome: '',
+      classeId: String(classeId),
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa: 'aluno',
+    })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(true)
+  }
+
+  function abrirNovoProfessorDaClasse(classeId) {
+    setNovoAluno({
+      nome: '',
+      classeId: String(classeId),
+      telefone: '',
+      dataNascimento: '',
+      tipoPessoa: 'professor',
+    })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(true)
+  }
+
+  function editarProfessorDaClasse(professor) {
+    editarAluno(professor)
+    setNovoAluno({
+      nome: professor.nome,
+      classeId: String(professor.classeId),
+      telefone: professor.telefone,
+      dataNascimento: professor.dataNascimento || '',
+      tipoPessoa: 'professor',
+    })
+  }
+
+  function editarAluno(aluno) {
+    setNovoAluno({
+      nome: aluno.nome,
+      classeId: String(aluno.classeId),
+      telefone: aluno.telefone,
+      dataNascimento: aluno.dataNascimento || '',
+      tipoPessoa: aluno.tipoPessoa || 'aluno',
+    })
+    setAlunoEditandoId(aluno.id)
+    setMostrarFormularioAluno(true)
+  }
+
+  function cancelarFormularioAluno() {
+    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
+    setAlunoEditandoId(null)
+    setMostrarFormularioAluno(false)
+  }
+
+  async function salvarAluno(event) {
+    event.preventDefault()
+
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode cadastrar ou editar alunos.')
+      return
+    }
+
+    if (!novoAluno.nome.trim() || !novoAluno.classeId) {
+      alert('Preencha o nome do aluno e selecione uma classe.')
+      return
+    }
+
+    const alunoBanco = {
+      nome: novoAluno.nome,
+      classe_id: Number(novoAluno.classeId),
+      telefone: novoAluno.telefone,
+      data_nascimento: novoAluno.dataNascimento || null,
+      tipo_pessoa: novoAluno.tipoPessoa || 'aluno',
+    }
+
+    if (alunoEditandoId) {
+      const { error } = await supabase
+        .from('alunos')
+        .update(alunoBanco)
+        .eq('id', alunoEditandoId)
+
+      if (error) {
+        console.error(error)
+        alert('Erro ao salvar alterações do aluno.')
+        return
+      }
+    } else {
+      const { error } = await supabase.from('alunos').insert({
+        id: Date.now(),
+        ...alunoBanco,
+        igreja_id: buscarIgrejaIdAtual(),
+      })
+
+      if (error) {
+        console.error(error)
+        alert('Erro ao salvar aluno.')
+        return
+      }
+    }
+
+    await buscarTodosOsDados()
+    cancelarFormularioAluno()
+  }
+
+  async function excluirAluno(alunoId) {
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode excluir alunos.')
+      return
+    }
+
+    const confirmar = window.confirm('Tem certeza que deseja excluir este aluno?')
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase.from('alunos').delete().eq('id', alunoId)
+
+    if (error) {
+      console.error(error)
+      alert('Erro ao excluir aluno.')
+      return
+    }
+
+    await buscarTodosOsDados()
+  }
+
+  function filtrarCadastrosPorTipo(tipoPessoa) {
+    return alunos.filter((aluno) => {
+      const nomeCombina = aluno.nome
+        .toLowerCase()
+        .includes(buscaAluno.toLowerCase())
+
+      const classeCombina =
+        !filtroClasseAluno || aluno.classeId === Number(filtroClasseAluno)
+
+      const tipoCombina = (aluno.tipoPessoa || 'aluno') === tipoPessoa
+
+      return nomeCombina && classeCombina && tipoCombina
+    })
+  }
+
+  function filtrarAlunos() {
+    return filtrarCadastrosPorTipo('aluno')
+  }
+
+  function filtrarProfessores() {
+    return filtrarCadastrosPorTipo('professor')
+  }
+
+  function limparFiltrosAlunos() {
+    setBuscaAluno('')
+    setFiltroClasseAluno('')
+  }
+
+  function buscarProfessoresDaIgreja() {
+    return alunos
+      .filter((pessoa) => pessoa.tipoPessoa === 'professor')
+      .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
+  }
+
+  function alterarPresencaProfessor(perfilId, status) {
+    setPresencasProfessores({
+      ...presencasProfessores,
+      [perfilId]: status,
+    })
+  }
+
+  function buscarDataUltimaChamadaProfessores() {
+    if (chamadasProfessores.length === 0) {
+      return buscarDataAtual()
+    }
+
+    const ultimaChamada = chamadasProfessores[chamadasProfessores.length - 1]
+    return ultimaChamada.data || buscarDataAtual()
+  }
+
+  function calcularTotalProfessoresPresentes() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalPresentes),
+      0
+    )
+  }
+
+  function calcularTotalProfessoresFaltas() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalFaltas),
+      0
+    )
+  }
+
+  function calcularTotalProfessoresJustificadas() {
+    return chamadasProfessores.reduce(
+      (total, chamada) => total + converterNumero(chamada.totalJustificadas),
+      0
+    )
+  }
+
+  function buscarUltimaChamadaProfessores() {
+    if (chamadasProfessores.length === 0) {
+      return null
+    }
+
+    return chamadasProfessores[chamadasProfessores.length - 1]
+  }
+
+  function calcularResumoUltimaChamadaProfessores() {
+    const ultimaChamada = buscarUltimaChamadaProfessores()
+
+    if (!ultimaChamada) {
+      return {
+        totalProfessores: professoresSomente().length,
+        presentes: 0,
+        faltaram: 0,
+        justificaram: 0,
+        data: buscarDataAtual(),
+        registros: [],
+      }
+    }
+
+    return {
+      totalProfessores: ultimaChamada.totalProfessores,
+      presentes: ultimaChamada.totalPresentes,
+      faltaram: ultimaChamada.totalFaltas,
+      justificaram: ultimaChamada.totalJustificadas,
+      data: ultimaChamada.data,
+      registros: ultimaChamada.registros || [],
+    }
+  }
+
+  function traduzirStatusProfessor(status) {
+    if (status === 'presente') return 'Presente'
+    if (status === 'faltou') return 'Faltou'
+    if (status === 'justificou') return 'Justificou'
+    return 'Sem marcação'
+  }
+
+  function calcularPercentualPresencaProfessores() {
+    const resumo = calcularResumoUltimaChamadaProfessores()
+    const total = converterNumero(resumo.totalProfessores)
+
+    if (total === 0) {
+      return 0
+    }
+
+    return Math.round((converterNumero(resumo.presentes) / total) * 100)
+  }
+
+  function alterarPresenca(alunoId, status) {
+    setPresencas((presencasAtuais) => ({
+      ...presencasAtuais,
+      [String(alunoId)]: status,
+    }))
+  }
+
+  function marcarTodosAlunos(status) {
+    if (!classeChamadaId) {
+      alert('Selecione uma classe para fazer a chamada.')
+      return
+    }
+
+    const alunosDaClasse = alunos.filter(
+      (aluno) => Number(aluno.classeId) === Number(classeChamadaId)
+    )
+
+    if (alunosDaClasse.length === 0) {
+      alert('Essa classe ainda não possui alunos cadastrados.')
+      return
+    }
+
+    setPresencas((presencasAtuais) => {
+      const novasPresencas = { ...presencasAtuais }
+
+      alunosDaClasse.forEach((aluno) => {
+        novasPresencas[String(aluno.id)] = status
+      })
+
+      return novasPresencas
+    })
+  }
+
+  function alterarDadosExtras(campo, valor) {
+    setDadosExtrasChamada({
+      ...dadosExtrasChamada,
+      [campo]: valor,
+    })
+  }
+
+  async function salvarChamada() {
+    if (usuarioEhProfessor() && !professorPodeAcessarClasse(classeChamadaId)) {
+      alert('Professor pode fazer chamada apenas das classes vinculadas pela secretaria.')
+      return
+    }
+
+    if (!classeChamadaId) {
+      alert('Selecione uma classe para fazer a chamada.')
+      return
+    }
+
+    const alunosDaClasse = alunos.filter(
+      (aluno) => Number(aluno.classeId) === Number(classeChamadaId)
+    )
+
+    if (alunosDaClasse.length === 0) {
+      alert('Essa classe ainda não possui alunos cadastrados.')
+      return
+    }
+
+    const presencasAtuais = { ...presencas }
+
+    const alunosSemMarcacao = alunosDaClasse.filter(
+      (aluno) => !presencasAtuais[String(aluno.id)]
+    )
+
+    if (alunosSemMarcacao.length > 0) {
+      alert(
+        `Ainda falta marcar ${alunosSemMarcacao.length} aluno(s): ${alunosSemMarcacao
+          .map((aluno) => aluno.nome)
+          .join(', ')}`
+      )
+      return
+    }
+
+    const totalPresentes = alunosDaClasse.filter(
+      (aluno) => presencasAtuais[String(aluno.id)] === 'presente'
+    ).length
+
+    const totalFaltas = alunosDaClasse.filter(
+      (aluno) => presencasAtuais[String(aluno.id)] === 'faltou'
+    ).length
+
+    const visitantes = converterNumero(dadosExtrasChamada.visitantes)
+    const biblias = converterNumero(dadosExtrasChamada.biblias)
+    const revistas = converterNumero(dadosExtrasChamada.revistas)
+    const ofertas = converterNumero(dadosExtrasChamada.ofertas)
+
+    const chamadaBanco = {
+      id: Date.now(),
+      data: dataAulaChamada || buscarDataAtual(),
+      igreja_id: buscarIgrejaIdAtual(),
+      classe_id: Number(classeChamadaId),
+      matricula: alunosDaClasse.length,
+      total_presentes: totalPresentes,
+      total_faltas: totalFaltas,
+      visitantes,
+      biblias,
+      revistas,
+      ofertas,
+      total_geral_classe: totalPresentes + visitantes,
+      registros: alunosDaClasse.map((aluno) => ({
+        alunoId: aluno.id,
+        nome: aluno.nome,
+        status: presencasAtuais[String(aluno.id)],
+      })),
+    }
+
+    const { error } = await supabase.from('chamadas').insert(chamadaBanco)
+
+    if (error) {
+      console.error(error)
+      alert('Erro ao salvar chamada.')
+      return
+    }
+
+    await buscarTodosOsDados()
+
+    setPresencas({})
+    setClasseChamadaId('')
+    setDataAulaChamada(new Date().toISOString().slice(0, 10))
+    setDadosExtrasChamada({
+      visitantes: '',
+      biblias: '',
+      revistas: '',
+      ofertas: '',
+    })
+
+    alert('Chamada salva com sucesso!')
+  }
+
+  function alterarConfiguracaoIgreja(campo, valor) {
+    setConfiguracaoIgreja({
+      ...configuracaoIgreja,
+      [campo]: valor,
+    })
+  }
+
+  async function salvarConfiguracaoIgreja(event) {
+    event.preventDefault()
+
+    if (!podeGerenciarCadastros()) {
+      alert('Apenas a secretaria pode alterar as configurações da igreja.')
+      return
+    }
+
+    if (!sessao?.user?.id) {
+      alert('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+      return
+    }
+
+    if (!buscarIgrejaIdAtual()) {
+      alert('Igreja não identificada. Saia e entre novamente no sistema.')
+      return
+    }
+
+    setSalvandoConfiguracaoIgreja(true)
+
+    const dadosConfiguracao = {
+      user_id: sessao.user.id,
+      igreja_id: buscarIgrejaIdAtual(),
+      nome_igreja: configuracaoIgreja.nome_igreja.trim(),
+      congregacao: configuracaoIgreja.congregacao.trim(),
+      pastor_dirigente: configuracaoIgreja.pastor_dirigente.trim(),
+      superintendente_ebd: configuracaoIgreja.superintendente_ebd.trim(),
+      cidade: configuracaoIgreja.cidade.trim(),
+      estado: configuracaoIgreja.estado.trim(),
+      bairro: configuracaoIgreja.bairro.trim(),
+      endereco: configuracaoIgreja.endereco.trim(),
+      telefone: configuracaoIgreja.telefone.trim(),
+      email: configuracaoIgreja.email.trim(),
+      updated_at: new Date().toISOString(),
+    }
+
+    try {
+      if (configuracaoIgreja.id) {
+        const { error } = await supabase
+          .from('configuracoes_igreja')
+          .update(dadosConfiguracao)
+          .eq('id', configuracaoIgreja.id)
+
+        if (error) {
+          throw error
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('configuracoes_igreja')
+          .insert(dadosConfiguracao)
+          .select()
+          .single()
+
+        if (error) {
+          throw error
+        }
+
+        setConfiguracaoIgreja({
+          id: data.id,
+          nome_igreja: data.nome_igreja || '',
+          congregacao: data.congregacao || '',
+          pastor_dirigente: data.pastor_dirigente || '',
+          superintendente_ebd: data.superintendente_ebd || '',
+          cidade: data.cidade || '',
+          estado: data.estado || '',
+          bairro: data.bairro || '',
+          endereco: data.endereco || '',
+          telefone: data.telefone || '',
+          email: data.email || '',
+        })
+      }
+
+      await buscarTodosOsDados(sessao)
+      alert('Configurações da igreja salvas com sucesso!')
+    } catch (error) {
+      console.error('Erro ao salvar configurações da igreja:', error)
+      alert(error?.message || 'Erro ao salvar configurações da igreja.')
+    } finally {
+      setSalvandoConfiguracaoIgreja(false)
+    }
+  }
+
+  function montarRelatorioPorClasse() {
+    return classes.map((classe, indice) => {
+      const chamadasDaClasse = chamadasSalvas.filter(
+        (chamada) => chamada.classeId === classe.id
+      )
+
+      const ultimaChamada = chamadasDaClasse[chamadasDaClasse.length - 1]
+      const matricula = calcularMatriculaDaClasse(classe.id)
+      const presenca = ultimaChamada ? ultimaChamada.totalPresentes : 0
+      const ausencia = ultimaChamada ? ultimaChamada.totalFaltas : 0
+      const visitantes = ultimaChamada ? ultimaChamada.visitantes : 0
+      const biblias = ultimaChamada ? ultimaChamada.biblias : 0
+      const revistas = ultimaChamada ? ultimaChamada.revistas : 0
+      const ofertas = ultimaChamada ? ultimaChamada.ofertas : 0
+      const frequencia =
+        matricula === 0 ? 0 : Math.round((presenca / matricula) * 100)
+
+      return {
+        numero: indice + 1,
+        classeId: classe.id,
+        classe: classe.nome,
+        matricula,
+        ausencia,
+        presenca,
+        visitantes,
+        total: presenca + visitantes,
+        biblias,
+        revistas,
+        ofertas,
+        frequencia,
+      }
+    })
+  }
+
+  function calcularTotaisRelatorio() {
+    const linhas = montarRelatorioPorClasse()
+
+    const totais = linhas.reduce(
+      (acc, linha) => ({
+        matricula: acc.matricula + linha.matricula,
+        ausencia: acc.ausencia + linha.ausencia,
+        presenca: acc.presenca + linha.presenca,
+        visitantes: acc.visitantes + linha.visitantes,
+        total: acc.total + linha.total,
+        biblias: acc.biblias + linha.biblias,
+        revistas: acc.revistas + linha.revistas,
+        ofertas: acc.ofertas + linha.ofertas,
+      }),
+      {
+        matricula: 0,
+        ausencia: 0,
+        presenca: 0,
+        visitantes: 0,
+        total: 0,
+        biblias: 0,
+        revistas: 0,
+        ofertas: 0,
+      }
+    )
+
+    return {
+      ...totais,
+      frequencia:
+        totais.matricula === 0
+          ? 0
+          : Math.round((totais.presenca / totais.matricula) * 100),
+    }
+  }
+
+  if (verificandoSessao) {
+    return (
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Sistema comercial pronto para igrejas</span>
+            <h2>Organize classes, alunos, chamadas e relatórios em um só lugar.</h2>
+            <p>
+              Acesse o painel para acompanhar os dados da sua EBD com uma interface
+              moderna, simples e profissional.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="check" className="icone-status" />
+          </div>
+          <h2>Verificando acesso...</h2>
+          <p>Aguarde um momento enquanto conferimos sua sessão.</p>
+        </section>
+      </div>
+    )
+  }
+
+  if (sessao && telaPublica === 'novaSenha') {
+    return (
+      <div className="tela-login tela-recuperacao-senha">
+        <section className="painel-apresentacao painel-recuperacao-senha">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Redefinição segura de senha.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Nova senha</span>
+            <h2>Crie uma nova senha de acesso.</h2>
+            <p>
+              Digite uma nova senha para continuar usando o sistema com segurança.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-recuperacao-senha">
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Definir nova senha</h2>
+              <p>Sua nova senha precisa ter pelo menos 6 caracteres.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-login" onSubmit={salvarNovaSenhaRecuperacao}>
+            <label>
+              Nova senha
+              <input
+                type="password"
+                value={novaSenhaRecuperacao}
+                onChange={(event) => setNovaSenhaRecuperacao(event.target.value)}
+                placeholder="Digite a nova senha"
+                autoComplete="new-password"
+              />
+            </label>
+
+            <label>
+              Confirmar nova senha
+              <input
+                type="password"
+                value={confirmarNovaSenhaRecuperacao}
+                onChange={(event) =>
+                  setConfirmarNovaSenhaRecuperacao(event.target.value)
+                }
+                placeholder="Digite a nova senha novamente"
+                autoComplete="new-password"
+              />
+            </label>
+
+            {erroNovaSenha && <div className="aviso aviso-cadastro-piloto">{erroNovaSenha}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoNovaSenha}
+            >
+              {carregandoNovaSenha ? 'Salvando...' : 'Salvar nova senha'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'recuperarSenha') {
+    return (
+      <div className="tela-login tela-recuperacao-senha">
+        <section className="painel-apresentacao painel-recuperacao-senha">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Recuperação de acesso.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Esqueci minha senha</span>
+            <h2>Receba um link para redefinir sua senha.</h2>
+            <p>
+              Informe o e-mail usado no cadastro. O sistema enviará um link seguro para
+              você criar uma nova senha.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-recuperacao-senha">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            ← Voltar para login
+          </button>
+
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Recuperar senha</h2>
+              <p>Digite seu e-mail para receber o link de recuperação.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-login" onSubmit={enviarLinkRecuperacaoSenha}>
+            <label>
+              E-mail cadastrado
+              <input
+                type="email"
+                value={emailRecuperacao}
+                onChange={(event) => setEmailRecuperacao(event.target.value)}
+                placeholder="seuemail@exemplo.com"
+                autoComplete="email"
+              />
+            </label>
+
+            {erroRecuperacao && <div className="aviso aviso-cadastro-piloto">{erroRecuperacao}</div>}
+            {mensagemRecuperacao && (
+              <div className="aviso aviso-sucesso-cadastro">{mensagemRecuperacao}</div>
+            )}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoRecuperacao}
+            >
+              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperação'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'cadastroEnviado') {
+    return (
+      <div className="tela-login tela-cadastro-enviado">
+        <section className="painel-apresentacao painel-cadastro-enviado">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Cadastro recebido com sucesso.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Aguardando aprovação</span>
+            <h2>Sua solicitação foi enviada.</h2>
+            <p>
+              O administrador vai conferir os dados da igreja e liberar o acesso para
+              o sistema.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-cadastro-enviado">
+          <div className="mensagem-status-icone mensagem-status-sucesso">
+            <Icone nome="check" className="icone-status" />
+          </div>
+
+          <h2>Cadastro enviado!</h2>
+
+          <p>
+            {ultimoCadastroPilotoEnviado.nomeIgreja
+              ? `Recebemos o cadastro da igreja ${ultimoCadastroPilotoEnviado.nomeIgreja}.`
+              : 'Recebemos o cadastro da sua igreja.'}
+          </p>
+
+          <div className="resumo-cadastro-enviado">
+            {ultimoCadastroPilotoEnviado.responsavel && (
+              <span>Responsável: {ultimoCadastroPilotoEnviado.responsavel}</span>
+            )}
+            {ultimoCadastroPilotoEnviado.email && (
+              <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
+            )}
+            <span>Status: aguardando aprovação</span>
+          </div>
+
+          <div className="aviso-aprovacao-cadastro">
+            <strong>O que acontece agora?</strong>
+            <p>
+              Aguarde a aprovação do administrador. Após a liberação, você poderá
+              entrar normalmente com o e-mail e a senha cadastrados.
+            </p>
+          </div>
+
+          <button
+            className="botao-principal botao-largura-total"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            Voltar para login
+          </button>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'cadastroPiloto') {
+    return (
+      <div className="tela-login tela-cadastro-piloto">
+        <section className="painel-apresentacao painel-cadastro-piloto">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Solicitação de acesso ao sistema.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Acesso mediante aprovação</span>
+            <h2>Solicite acesso para sua igreja.</h2>
+            <p>
+              Preencha o cadastro para análise do administrador. Após a liberação, sua igreja poderá organizar classes, alunos, professores, chamadas e relatórios em um só lugar.
+            </p>
+          </div>
+
+          <div className="beneficios-login">
+            <div className="beneficio-item">
+              <Icone nome="check" className="icone-beneficio" />
+              <span>Código de autorização obrigatório</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="igreja" className="icone-beneficio" />
+              <span>Sede ou congregação</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="usuarios" className="icone-beneficio" />
+              <span>Secretaria ou superintendência</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="relatorios" className="icone-beneficio" />
+              <span>Aprovação pelo administrador</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-cadastro-piloto">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('login')}
+          >
+            ← Voltar para login
+          </button>
+
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="igreja" className="icone-status" />
+            </div>
+            <div>
+              <h2>Solicitar acesso ao painel</h2>
+              <p>Preencha os dados do responsável e da igreja para análise e liberação.</p>
+            </div>
+          </div>
+
+          <form className="formulario formulario-cadastro-piloto" onSubmit={cadastrarAcessoPiloto}>
+            <div className="grupo-cadastro-piloto">
+              <h3>Responsável</h3>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={cadastroPiloto.nomeResponsavel}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      nomeResponsavel: event.target.value,
+                    })
+                  }
+                  placeholder="Seu nome completo"
+                />
+              </label>
+
+              <label>
+                Cargo
+                <select
+                  value={cadastroPiloto.cargoResponsavel}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      cargoResponsavel: event.target.value,
+                    })
+                  }
+                >
+                  <option value="secretario">Secretário(a)</option>
+                  <option value="superintendente">Superintendente</option>
+                </select>
+              </label>
+
+              <label>
+                E-mail de acesso
+                <input
+                  type="email"
+                  value={cadastroPiloto.email}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, email: event.target.value })
+                  }
+                  placeholder="seuemail@exemplo.com"
+                  autoComplete="email"
+                />
+              </label>
+
+              <div className="campo-telefone-cadastro">
+                <label>
+                  DDD
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength="2"
+                    value={cadastroPiloto.telefoneDdd || ''}
+                    onChange={(event) =>
+                      setCadastroPiloto({
+                        ...cadastroPiloto,
+                        telefoneDdd: event.target.value.replace(/\D/g, '').slice(0, 2),
+                      })
+                    }
+                    placeholder="27"
+                    required
+                  />
+                </label>
+
+                <label>
+                  WhatsApp / telefone
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={cadastroPiloto.telefoneNumero || ''}
+                    onChange={(event) =>
+                      setCadastroPiloto({
+                        ...cadastroPiloto,
+                        telefoneNumero: event.target.value.replace(/\D/g, ''),
+                      })
+                    }
+                    placeholder="999999999"
+                    required
+                  />
+                </label>
+              </div>
+
+              <label>
+                Senha
+                <input
+                  type="password"
+                  value={cadastroPiloto.senha}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, senha: event.target.value })
+                  }
+                  placeholder="Mínimo 6 caracteres"
+                  autoComplete="new-password"
+                />
+              </label>
+
+              <label>
+                Confirmar senha
+                <input
+                  type="password"
+                  value={cadastroPiloto.confirmarSenha}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      confirmarSenha: event.target.value,
+                    })
+                  }
+                  placeholder="Digite a senha novamente"
+                  autoComplete="new-password"
+                />
+              </label>
+
+              <label>
+                Código de autorização
+                <input
+                  type="text"
+                  value={cadastroPiloto.codigoPiloto}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      codigoPiloto: event.target.value,
+                    })
+                  }
+                  placeholder="Código informado pelo administrador"
+                />
+              </label>
+            </div>
+
+            <div className="grupo-cadastro-piloto">
+              <h3>Dados da igreja</h3>
+
+              <label>
+                Nome da igreja
+                <input
+                  type="text"
+                  value={cadastroPiloto.nomeIgreja}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      nomeIgreja: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Assembleia de Deus..."
+                />
+              </label>
+
+              <label>
+                Tipo
+                <select
+                  value={cadastroPiloto.tipoIgreja}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      tipoIgreja: event.target.value,
+                    })
+                  }
+                >
+                  <option value="sede">Sede</option>
+                  <option value="congregacao">Congregação</option>
+                </select>
+              </label>
+
+              <label>
+                Congregação
+                <input
+                  type="text"
+                  value={cadastroPiloto.congregacao}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      congregacao: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Sede, Betel, Vila Nova..."
+                />
+              </label>
+
+              <label>
+                Pastor/Dirigente
+                <input
+                  type="text"
+                  value={cadastroPiloto.pastorDirigente}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      pastorDirigente: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Pr. João Silva"
+                />
+              </label>
+
+              <label>
+                Cidade
+                <input
+                  type="text"
+                  value={cadastroPiloto.cidade}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, cidade: event.target.value })
+                  }
+                />
+              </label>
+
+              <label>
+                Estado
+                <select
+                  value={cadastroPiloto.estado}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, estado: event.target.value })
+                  }
+                  required
+                >
+                  <option value="">Selecione o estado</option>
+                  {ESTADOS_BRASIL.map((estado) => (
+                    <option key={estado.sigla} value={estado.sigla}>
+                      {estado.sigla} - {estado.nome}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Bairro
+                <input
+                  type="text"
+                  value={cadastroPiloto.bairro}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, bairro: event.target.value })
+                  }
+                />
+              </label>
+
+              <label className="campo-cadastro-piloto-largo">
+                Endereço
+                <input
+                  type="text"
+                  value={cadastroPiloto.endereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Rua ou avenida"
+                />
+              </label>
+
+              <label>
+                Número
+                <input
+                  type="text"
+                  value={cadastroPiloto.numeroEndereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      numeroEndereco: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 146"
+                />
+              </label>
+
+              <label className="campo-cadastro-piloto-largo">
+                Complemento
+                <input
+                  type="text"
+                  value={cadastroPiloto.complementoEndereco}
+                  onChange={(event) =>
+                    setCadastroPiloto({
+                      ...cadastroPiloto,
+                      complementoEndereco: event.target.value,
+                    })
+                  }
+                  placeholder="Opcional: sala, fundos, referência..."
+                />
+              </label>
+
+              <label>
+                CEP
+                <input
+                  type="text"
+                  value={cadastroPiloto.cep}
+                  onChange={(event) =>
+                    setCadastroPiloto({ ...cadastroPiloto, cep: event.target.value })
+                  }
+                  placeholder="Ex: 36000-000"
+                />
+              </label>
+
+              {cadastroPiloto.tipoIgreja === 'congregacao' && (
+                <>
+                  <label>
+                    Sede filiada
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaNome}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaNome: event.target.value,
+                        })
+                      }
+                      placeholder="Nome da igreja sede"
+                    />
+                  </label>
+
+                  <label className="campo-cadastro-piloto-largo">
+                    Endereço da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaEndereco}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaEndereco: event.target.value,
+                        })
+                      }
+                      placeholder="Rua ou avenida da sede"
+                    />
+                  </label>
+
+                  <label>
+                    Número da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaNumero}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaNumero: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 100"
+                    />
+                  </label>
+
+                  <label className="campo-cadastro-piloto-largo">
+                    Complemento da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaComplemento}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaComplemento: event.target.value,
+                        })
+                      }
+                      placeholder="Opcional"
+                    />
+                  </label>
+
+                  <label>
+                    CEP da sede
+                    <input
+                      type="text"
+                      value={cadastroPiloto.sedeFiliadaCep}
+                      onChange={(event) =>
+                        setCadastroPiloto({
+                          ...cadastroPiloto,
+                          sedeFiliadaCep: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 36000-000"
+                    />
+                  </label>
+                </>
+              )}
+            </div>
+
+            {erroCadastroPiloto && <div className="aviso aviso-cadastro-piloto">{erroCadastroPiloto}</div>}
+            {sucessoCadastroPiloto && <div className="aviso aviso-sucesso-cadastro">{sucessoCadastroPiloto}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoCadastroPiloto}
+            >
+              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovação'}
+            </button>
+          </form>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao && telaPublica === 'login') {
+    return (
+      <div className="tela-login">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Área segura do cliente</span>
+            <h2>Acesse o painel da sua igreja.</h2>
+            <p>
+              Entre com suas credenciais para gerenciar classes, alunos, chamadas,
+              configurações e relatórios da Escola Bíblica Dominical.
+            </p>
+          </div>
+
+          <div className="beneficios-login">
+            <div className="beneficio-item">
+              <Icone nome="classes" className="icone-beneficio" />
+              <span>Classes organizadas</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="alunos" className="icone-beneficio" />
+              <span>Alunos e professores</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="chamada" className="icone-beneficio" />
+              <span>Chamada digital</span>
+            </div>
+            <div className="beneficio-item">
+              <Icone nome="relatorios" className="icone-beneficio" />
+              <span>Relatórios modernos</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="cartao-login">
+          <button
+            className="botao-voltar-publico"
+            type="button"
+            onClick={() => setTelaPublica('landing')}
+          >
+            ← Voltar para apresentação
+          </button>
+
+          <div className="topo-cartao-login">
+            <div className="topo-cartao-icone">
+              <Icone nome="usuarios" className="icone-status" />
+            </div>
+            <div>
+              <h2>Já foi aprovado?</h2>
+              <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+            </div>
+          </div>
+
+          <div className="aviso-login-aprovado">
+            Use o login abaixo somente se sua igreja já foi aprovada.
+          </div>
+
+          <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
+            <label>
+              E-mail
+              <input
+                type="email"
+                value={emailLogin}
+                onChange={(event) => setEmailLogin(event.target.value)}
+                placeholder="seuemail@exemplo.com"
+                autoComplete="email"
+              />
+            </label>
+
+            <label>
+              Senha
+              <input
+                type="password"
+                value={senhaLogin}
+                onChange={(event) => setSenhaLogin(event.target.value)}
+                placeholder="Digite sua senha"
+                autoComplete="current-password"
+              />
+            </label>
+
+            {erroLogin && <div className="aviso">{erroLogin}</div>}
+
+            <button
+              className="botao-principal botao-largura-total"
+              type="submit"
+              disabled={carregandoLogin}
+            >
+              {carregandoLogin ? 'Entrando...' : 'Acessar painel'}
+            </button>
+          </form>
+
+          <div className="bloco-criar-piloto bloco-cadastro-destaque">
+            <span className="selo-primeiro-acesso">Primeiro acesso?</span>
+            <h3>Cadastrar minha igreja</h3>
+            <p>
+              Cadastre sua igreja para análise e liberação de acesso pelo administrador.
+            </p>
+
+            <button
+              className="botao-cadastrar-igreja botao-largura-total"
+              type="button"
+              onClick={() => setTelaPublica('cadastroPiloto')}
+            >
+              Cadastrar minha igreja
+            </button>
+          </div>
+        </section>
+      </div>
+    )
+  }
+
+  if (!sessao) {
+    return (
+      <div className="pagina-publica modelo-exato-ebd">
+        <nav className="navbar">
+          <div className="nav-container">
+            <div className="logo logo-com-imagem-oficial">
+              <div className="logo-icon logo-icon-oficial">
+                <img
+                  src="/logo-oficial-ebd-fiel.png"
+                  alt="Logo oficial EBD Fiel"
+                  className="logo-oficial-navbar"
+                />
+              </div>
+              <div>
+                <div className="logo-text">
+                  {'Painel '}<span>{'EBD Fiel'}</span>
+                </div>
+                <div className="logo-sub">{'GEST\u00c3O DA EBD'}</div>
+              </div>
+            </div>
+
+            <button
+              className={`menu-toggle ${menuPublicoAberto ? 'active' : ''}`}
+              type="button"
+              aria-label="Abrir menu"
+              onClick={() => setMenuPublicoAberto(!menuPublicoAberto)}
+            >
+              <span className="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </button>
+
+            <div className="nav-links">
+              <a href="#recursos">{'Recursos'}</a>
+              <a href="#beneficios">{'Benef\u00edcios'}</a>
+              <a href="#planos">{'Acesso'}</a>
+              <a href="#faq">{'FAQ'}</a>
+              <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
+                {'Já sou cliente'}
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        <div className={`mobile-menu ${menuPublicoAberto ? 'active' : ''}`}>
+          <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>
+            {'Recursos'}
+          </a>
+          <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>
+            {'Benef\u00edcios'}
+          </a>
+          <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
+            {'Acesso'}
+          </a>
+          <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
+            {'FAQ'}
+          </a>
+          <button
+            className="btn-nav-mobile"
+            type="button"
+            onClick={() => {
+              setMenuPublicoAberto(false)
+              setTelaPublica('login')
+            }}
+          >
+            {'Já sou cliente'}
+          </button>
+        </div>
+
+        {menuPublicoAberto && (
+          <button
+            className="menu-overlay active"
+            aria-label="Fechar menu"
+            type="button"
+            onClick={() => setMenuPublicoAberto(false)}
+          />
+        )}
+
+        <main>
+          <section className="hero">
+            <div className="hero-content">
+              <div className="hero-copy">
+
+                <h1>
+                  {'Painel EBD Fiel para organizar sua '}
+                  <span>{'Escola B\u00edblica Dominical'}</span>
+                </h1>
+
+                <p>
+                  {'Organize classes, alunos, professores, chamadas e relatórios em um só lugar, com acesso liberado mediante aprovação.'}
+                </p>
+
+                <div className="hero-ctas-publicas">
+                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
+                    <span>{'→'}</span> {'Solicitar acesso'}
+                  </button>
+                  <button className="btn-outline btn-outline-claro" type="button" onClick={() => setTelaPublica('login')}>
+                    {'Já sou cliente'}
+                  </button>
+                </div>
+
+                <div className="hero-stats">
+                  <div className="stat">
+                    <div className="stat-number">{'100%'}</div>
+                    <div className="stat-label">{'Online'}</div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-number">{'\uD83D\uDCC4'}</div>
+                    <div className="stat-label">{'Relat\u00f3rios'}</div>
+                  </div>
+                  <div className="stat">
+                    <div className="stat-number">{'24/7'}</div>
+                    <div className="stat-label">{'Online'}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hero-mockup">
+                <div className="mockup-header">
+                  <div className="mockup-dot mockup-red"></div>
+                  <div className="mockup-dot mockup-gold"></div>
+                  <div className="mockup-dot mockup-green"></div>
+                </div>
+
+                <div className="mockup-body">
+                  <div className="mockup-check">{'\u2713'}</div>
+                  <h3>{'Chamada digital'}</h3>
+                  <p>{'Presen\u00e7a registrada em tempo real'}</p>
+
+                  <hr />
+
+                  <div className="mockup-row">
+                    <span>{'24 presentes'}</span>
+                    <span>{'92% frequ\u00eancia'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section" id="recursos">
+            <div className="container">
+              <h2 className="section-title">{'Recursos que fazem a diferen\u00e7a'}</h2>
+              <p className="section-subtitle">
+                {'Tudo o que sua igreja precisa para uma gest\u00e3o eficiente da EBD.'}
+              </p>
+
+              <div className="features-grid">
+                <article className="feature-card">
+                  <div className="feature-icon">{'\u2713'}</div>
+                  <h3>{'Chamada digital simples'}</h3>
+                  <p>{'Registre a presen\u00e7a dos alunos e professores pelo computador ou celular.'}</p>
+                </article>
+
+                <article className="feature-card">
+                  <div className="feature-icon">{'\u26EA'}</div>
+                  <h3>{'Dados protegidos por igreja'}</h3>
+                  <p>{'Cada igreja acessa apenas suas próprias informações, com segurança e privacidade.'}</p>
+                </article>
+
+                <article className="feature-card">
+                  <div className="feature-icon">{'\uD83D\uDCC4'}</div>
+                  <h3>{'Relat\u00f3rios prontos em PDF'}</h3>
+                  <p>{'A secretaria gera relat\u00f3rios organizados sem montar tudo manualmente.'}</p>
+                </article>
+
+                <article className="feature-card">
+                  <div className="feature-icon">{'\uD83C\uDF10'}</div>
+                  <h3>{'Acesso online'}</h3>
+                  <p>{'Use o sistema pelo navegador, sem instala\u00e7\u00e3o complicada.'}</p>
+                </article>
+
+                <article className="feature-card">
+                  <div className="feature-icon">{'\uD83D\uDC65'}</div>
+                  <h3>{'Gest\u00e3o de classes e alunos'}</h3>
+                  <p>{'Cadastre turmas, alunos, professores e acompanhe tudo em um s\u00f3 lugar.'}</p>
+                </article>
+
+                <article className="feature-card">
+                  <div className="feature-icon">{'\uD83D\uDCCA'}</div>
+                  <h3>{'Apoio para lideran\u00e7a'}</h3>
+                  <p>{'Acompanhe frequ\u00eancia, organiza\u00e7\u00e3o e evolu\u00e7\u00e3o da EBD com mais clareza.'}</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="section section-soft">
+            <div className="container">
+              <h2 className="section-title">{'Troque planilhas e papéis por uma gestão simples da EBD'}</h2>
+
+              <div className="comparison">
+                <div className="comparison-grid">
+                  <article className="comparison-card before">
+                    <div className="comparison-icon">{'\u26A0'}</div>
+                    <h3>{'Antes'}</h3>
+                    <ul>
+                      <li>{'Listas de presen\u00e7a em papel'}</li>
+                      <li>{'Dados espalhados'}</li>
+                      <li>{'Relatórios feitos manualmente'}</li>
+                      <li>{'Dificuldade para acompanhar frequência'}</li>
+                    </ul>
+                  </article>
+
+                  <article className="comparison-card after">
+                    <div className="comparison-icon">{'\u2714'}</div>
+                    <h3>{'Depois com o EBD Fiel'}</h3>
+                    <ul>
+                      <li>{'Chamada digital'}</li>
+                      <li>{'Classes e alunos organizados'}</li>
+                      <li>{'Relatórios prontos em PDF'}</li>
+                      <li>{'Visão clara para secretaria e liderança'}</li>
+                    </ul>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section secao-como-funciona" id="como-funciona">
+            <div className="container">
+              <h2 className="section-title">{'Como funciona'}</h2>
+              <p className="section-subtitle">
+                {'Um processo simples para sua igreja começar a usar o Painel EBD Fiel com segurança.'}
+              </p>
+
+              <div className="como-funciona-grid">
+                <article>
+                  <span>{'1'}</span>
+                  <h3>{'Solicite acesso'}</h3>
+                  <p>{'Preencha o cadastro da igreja com os dados principais do responsável.'}</p>
+                </article>
+
+                <article>
+                  <span>{'2'}</span>
+                  <h3>{'Aguarde aprovação'}</h3>
+                  <p>{'O administrador analisa a solicitação e libera o acesso quando estiver tudo correto.'}</p>
+                </article>
+
+                <article>
+                  <span>{'3'}</span>
+                  <h3>{'Organize a EBD'}</h3>
+                  <p>{'Cadastre classes, alunos e professores, registre chamadas e gere relatórios.'}</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="section" id="beneficios">
+            <div className="container">
+              <h2 className="section-title">{'Feito para quem cuida da EBD'}</h2>
+
+              <div className="personas-grid">
+                <article className="persona-card">
+                  <div className="persona-avatar">{'\uD83D\uDCCB'}</div>
+                  <h3>{'Secretaria'}</h3>
+                  <p>{'Organiza cadastros, classes, relat\u00f3rios e informa\u00e7\u00f5es gerais.'}</p>
+                </article>
+
+                <article className="persona-card">
+                  <div className="persona-avatar">{'\uD83D\uDCDA'}</div>
+                  <h3>{'Professores'}</h3>
+                  <p>{'Fazem chamada, acompanham suas turmas e ajudam na organiza\u00e7\u00e3o semanal.'}</p>
+                </article>
+
+                <article className="persona-card">
+                  <div className="persona-avatar">{'\u2B50'}</div>
+                  <h3>{'Lideran\u00e7a'}</h3>
+                  <p>{'Visualiza dados importantes para cuidar melhor da Escola B\u00edblica Dominical.'}</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="section section-plans" id="planos">
+            <div className="container">
+              <h2 className="section-title">{'Acesso ao Painel EBD Fiel'}</h2>
+
+              <div className="plans-grid">
+                <article className="plan-card">
+                  <div className="plan-badge">{'Aprovação'}</div>
+                  <h3>{'Solicitar acesso'}</h3>
+                  <div className="plan-price">{'Sob análise'}</div>
+                  <p>{'Cadastre sua igreja para avaliação e liberação do administrador.'}</p>
+                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
+                    {'Solicitar acesso'}
+                  </button>
+                </article>
+
+                <article className="plan-card featured">
+                  <div className="plan-badge">{'Popular'}</div>
+                  <h3>{'Painel da Igreja'}</h3>
+                  <div className="plan-price">{'Sob consulta'}</div>
+                  <p>{'Para organizar classes, alunos, chamadas e relatórios da EBD.'}</p>
+                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
+                    {'J\u00e1 sou cliente'}
+                  </button>
+                </article>
+
+                <article className="plan-card">
+                  <h3>{'Plano Personalizado'}</h3>
+                  <div className="plan-price">{'Sob consulta'}</div>
+                  <p>{'Para igrejas com necessidades espec\u00edficas.'}</p>
+                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
+                    {'Acessar sistema'}
+                  </button>
+                </article>
+              </div>
+
+              <p className="plans-note">{'Acesso liberado somente após aprovação do administrador.'}</p>
+            </div>
+          </section>
+
+          <section className="section" id="faq">
+            <div className="container">
+              <h2 className="section-title">{'Perguntas frequentes'}</h2>
+
+              <div className="faq-list">
+                <details className="faq-item">
+                  <summary>{'Como faço para solicitar acesso?'}</summary>
+                  <p>
+                    {'Cadastre sua igreja pelo formulário. O administrador analisa os dados e libera o acesso quando estiver tudo correto.'}
+                  </p>
+                </details>
+
+                <details className="faq-item">
+                  <summary>{'O sistema funciona no celular?'}</summary>
+                  <p>{'Sim. O EBD Fiel funciona no celular, tablet e computador.'}</p>
+                </details>
+
+                <details className="faq-item">
+                  <summary>{'Os dados da minha igreja s\u00e3o seguros?'}</summary>
+                  <p>{'Sim. Cada igreja tem seus dados separados e acesso controlado por usu\u00e1rio.'}</p>
+                </details>
+
+                <details className="faq-item">
+                  <summary>{'Preciso instalar algum software?'}</summary>
+                  <p>{'N\u00e3o. O EBD Fiel \u00e9 online e acessado pelo navegador.'}</p>
+                </details>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer className="footer">
+          <div className="footer-grid">
+            <div>
+              <div className="footer-logo">{'PAINEL EBD FIEL'}</div>
+              <p>{'Fiel \u00e0 Palavra, organizado para servir melhor.'}</p>
+              <p className="footer-gold">{'Escola B\u00edblica Dominical'}</p>
+            </div>
+
+            <div className="footer-col">
+              <h4>{'Mapa do site'}</h4>
+              <a href="#recursos">{'Recursos'}</a>
+              <a href="#beneficios">{'Benef\u00edcios'}</a>
+              <a href="#planos">{'Acesso'}</a>
+              <a href="#faq">{'FAQ'}</a>
+            </div>
+
+            <div className="footer-col">
+              <h4>{'Contato'}</h4>
+              <span>{'WhatsApp'}</span>
+              <span>{'contato@ebdfiel.com.br'}</span>
+            </div>
+
+            <div className="footer-col">
+              <h4>{'Acesso ao sistema'}</h4>
+              <p>{'Cadastre sua igreja e aguarde a aprovação.'}</p>
+              <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
+                {'Solicitar acesso'}
+              </button>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <p>{'\u00a9 2026 EBD Fiel - Todos os direitos reservados.'}</p>
+          </div>
+        </footer>
+      </div>
+    )
+  }
+
+  if (carregando) {
+    return (
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="painel" className="icone-status" />
+          </div>
+          <h2>Carregando...</h2>
+          <p>Buscando dados da igreja, classes, alunos e chamadas.</p>
+        </section>
+      </div>
+    )
+  }
+
+  if (sessao && igrejaAtualPiloto?.status_piloto === 'pendente' && !usuarioEhAdminSistema()) {
+    return (
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Gestão da Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+
+          <div className="apresentacao-texto">
+            <span className="selo-apresentacao">Cadastro recebido</span>
+            <h2>Seu acesso está aguardando aprovação.</h2>
+            <p>
+              A equipe administradora vai conferir os dados da igreja e liberar o uso
+              do sistema.
+            </p>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone">
+            <Icone nome="check" className="icone-status" />
+          </div>
+          <h2>Aguardando aprovação</h2>
+          <p>
+            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
+            os testes.
+          </p>
+          <button className="botao-secundario" onClick={sairDoSistema}>
+            Sair
+          </button>
+        </section>
+      </div>
+    )
+  }
+
+  if (erroSistema) {
+    return (
+      <div className="tela-login tela-mensagem">
+        <section className="painel-apresentacao">
+          <div className="marca-login">
+            <div className="logo-simbolo">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-imagem"
+              />
+            </div>
+            <div>
+              <h1>Painel EBD Fiel</h1>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="cartao-login cartao-mensagem">
+          <div className="mensagem-status-icone mensagem-erro-icone">
+            <Icone nome="configuracoes" className="icone-status" />
+          </div>
+          <h2>Erro ao carregar</h2>
+          <p>{erroSistema}</p>
+
+          <button
+            className="botao-principal botao-largura-total"
+            onClick={() => carregarDadosOnline()}
+          >
+            Tentar novamente
+          </button>
+        </section>
+      </div>
+    )
+  }
+
+
+  function formatarDataNascimento(dataTexto) {
+    if (!dataTexto) {
+      return ''
+    }
+
+    const partes = dataTexto.split('-')
+
+    if (partes.length !== 3) {
+      return dataTexto
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`
+  }
+
+  function calcularDiasAteAniversario(dataNascimento) {
+    if (!dataNascimento) {
+      return null
+    }
+
+    const partes = dataNascimento.split('-')
+
+    if (partes.length !== 3) {
+      return null
+    }
+
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+
+    const mes = Number(partes[1]) - 1
+    const dia = Number(partes[2])
+
+    let aniversario = new Date(hoje.getFullYear(), mes, dia)
+    aniversario.setHours(0, 0, 0, 0)
+
+    if (aniversario < hoje) {
+      aniversario = new Date(hoje.getFullYear() + 1, mes, dia)
+      aniversario.setHours(0, 0, 0, 0)
+    }
+
+    const diferenca = aniversario.getTime() - hoje.getTime()
+    return Math.round(diferenca / (1000 * 60 * 60 * 24))
+  }
+
+  function buscarAniversariantesDaSemana() {
+    if (!usuarioEhSecretaria()) {
+      return []
+    }
+
+    const aniversariantesAlunos = alunos
+      .filter((aluno) => aluno.dataNascimento)
+      .map((aluno) => ({
+        id: `aluno-${aluno.id}`,
+        nome: aluno.nome,
+        tipo: aluno.tipoPessoa === 'professor' ? 'Professor' : 'Aluno',
+        detalhe: buscarNomeClasse(aluno.classeId),
+        dataNascimento: aluno.dataNascimento,
+        dias: calcularDiasAteAniversario(aluno.dataNascimento),
+      }))
+
+    const aniversariantesEquipe = perfisIgreja
+      .filter((perfil) => perfil.data_nascimento)
+      .map((perfil) => ({
+        id: `perfil-${perfil.id}`,
+        nome: perfil.nome || perfil.email,
+        tipo: perfil.perfil === 'professor' ? 'Professor' : 'Secretaria',
+        detalhe:
+          perfil.perfil === 'professor' && perfil.classe_id
+            ? buscarNomeClasse(perfil.classe_id)
+            : 'Equipe da igreja',
+        dataNascimento: perfil.data_nascimento,
+        dias: calcularDiasAteAniversario(perfil.data_nascimento),
+      }))
+
+    return [...aniversariantesAlunos, ...aniversariantesEquipe]
+      .filter((pessoa) => pessoa.dias !== null && pessoa.dias >= 0 && pessoa.dias <= 7)
+      .sort((a, b) => a.dias - b.dias || a.nome.localeCompare(b.nome))
+  }
+
+  function descreverAniversario(dias) {
+    if (dias === 0) {
+      return 'Hoje'
+    }
+
+    if (dias === 1) {
+      return 'Amanhã'
+    }
+
+    return `Em ${dias} dias`
+  }
+
+  function abrirNovoPerfil() {
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
+    setPerfilEditandoId(null)
+    setMostrarFormularioPerfil(true)
+  }
+
+  function editarPerfil(perfil) {
+    setNovoPerfil({
+      userId: perfil.user_id || '',
+      nome: perfil.nome || '',
+      email: perfil.email || '',
+      perfil: perfil.perfil || 'professor',
+      classeIds:
+        perfil.perfil === 'professor'
+          ? buscarClassesVinculadasAoProfessor(perfil.id).map(String)
+          : [],
+      dataNascimento: perfil.data_nascimento || '',
+    })
+    setPerfilEditandoId(perfil.id)
+    setMostrarFormularioPerfil(true)
+  }
+
+  function cancelarFormularioPerfil() {
+    setNovoPerfil({
+      userId: '',
+      nome: '',
+      email: '',
+      perfil: 'professor',
+      classeIds: [],
+      dataNascimento: '',
+    })
+    setPerfilEditandoId(null)
+    setMostrarFormularioPerfil(false)
+  }
+
+  async function salvarPerfilUsuario(event) {
+    event.preventDefault()
+
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode cadastrar usuários.')
+      return
+    }
+
+    if (!novoPerfil.userId.trim()) {
+      alert('Informe o User UID do usuário criado no Supabase Auth.')
+      return
+    }
+
+    if (!novoPerfil.nome.trim() || !novoPerfil.email.trim()) {
+      alert('Informe o nome e o e-mail do usuário.')
+      return
+    }
+
+    if (novoPerfil.perfil === 'professor' && novoPerfil.classeIds.length === 0) {
+      alert('Selecione pelo menos uma classe do professor.')
+      return
+    }
+
+    const dadosPerfil = {
+      user_id: novoPerfil.userId.trim(),
+      nome: novoPerfil.nome.trim(),
+      email: novoPerfil.email.trim(),
+      perfil: novoPerfil.perfil,
+      classe_id:
+        novoPerfil.perfil === 'professor'
+          ? Number(novoPerfil.classeIds[0])
+          : null,
+      data_nascimento: novoPerfil.dataNascimento || null,
+      igreja_id: buscarIgrejaIdAtual(),
+    }
+
+    const { data: perfilSalvo, error } = await supabase
+      .from('perfis_usuarios')
+      .upsert(dadosPerfil, { onConflict: 'user_id' })
+      .select()
+      .single()
+
+    if (error) {
+      mostrarErroSistema(error, 'Erro ao salvar usuário.')
+      return
+    }
+
+    const { error: erroRemoverVinculos } = await supabase
+      .from('classes_professores')
+      .delete()
+      .eq('perfil_usuario_id', perfilSalvo.id)
+
+    if (erroRemoverVinculos) {
+      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vínculos do professor.')
+      return
+    }
+
+    if (perfilSalvo.perfil === 'professor' && novoPerfil.classeIds.length > 0) {
+      const vinculosParaSalvar = novoPerfil.classeIds.map((classeId) => ({
+        igreja_id: buscarIgrejaIdAtual(),
+        classe_id: Number(classeId),
+        perfil_usuario_id: perfilSalvo.id,
+        ativo: true,
+      }))
+
+      const { error: erroInserirVinculos } = await supabase
+        .from('classes_professores')
+        .insert(vinculosParaSalvar)
+
+      if (erroInserirVinculos) {
+        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor às classes.')
+        return
+      }
+    }
+
+    await buscarTodosOsDados()
+    cancelarFormularioPerfil()
+    alert('Usuário salvo com sucesso!')
+  }
+
+  async function excluirPerfilUsuario(perfil) {
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode excluir usuários.')
+      return
+    }
+
+    if (perfil.user_id === sessao?.user?.id) {
+      alert('Você não pode excluir o seu próprio perfil de secretaria.')
+      return
+    }
+
+    const confirmar = window.confirm(
+      `Deseja remover o perfil de ${perfil.nome || perfil.email}?`
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    const { error } = await supabase
+      .from('perfis_usuarios')
+      .delete()
+      .eq('id', perfil.id)
+
+    if (error) {
+      mostrarErroSistema(error, 'Erro ao remover perfil.')
+      return
+    }
+
+    await buscarTodosOsDados()
+  }
+
+  function renderizarFeedbackPiloto() {
+    if (!igrejaEstaEmTestePiloto()) {
+      return null
+    }
+
+    return (
+      <div className="feedback-piloto-card">
+        <div className="feedback-piloto-topo">
+          <div>
+            <span className="hero-tag">Sistema</span>
+            <h3>Enviar feedback para a equipe EBD Fiel</h3>
+            <p>
+              Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
+              O administrador do sistema receberá um alerta na área Administração.
+            </p>
+          </div>
+        </div>
+
+        <form className="feedback-piloto-form feedback-piloto-form-moderno" onSubmit={enviarFeedbackPiloto}>
+          <div className="feedback-form-grid">
+            <label className="feedback-campo feedback-campo-tipo">
+              <span>Tipo de feedback</span>
+              <select
+                value={feedbackPiloto.tipo}
+                onChange={(event) =>
+                  setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
+                }
+              >
+                <option value="sugestao">Sugestão</option>
+                <option value="erro">Erro encontrado</option>
+                <option value="duvida">Dúvida</option>
+                <option value="elogio">Elogio</option>
+              </select>
+            </label>
+
+            <div className="feedback-dica">
+              <strong>Ajude a melhorar o piloto</strong>
+              <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
+            </div>
+          </div>
+
+          <label className="feedback-campo feedback-campo-mensagem">
+            <div className="feedback-label-linha">
+              <span>Mensagem</span>
+              <small>{feedbackPiloto.mensagem.length}/1000</small>
+            </div>
+
+            <textarea
+              value={feedbackPiloto.mensagem}
+              maxLength="1000"
+              onChange={(event) =>
+                setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
+              }
+              placeholder="Ex: Na chamada dos professores, senti falta de visualizar todos os professores cadastrados antes de salvar..."
+              rows="7"
+            />
+          </label>
+
+          <div className="feedback-acoes">
+            <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
+              <span>{carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}</span>
+              <strong>→</strong>
+            </button>
+
+            <p>
+              Seu feedback fica registrado para os administradores acompanharem e responderem pela própria plataforma.
+            </p>
+          </div>
+        </form>
+
+        {feedbacksIgreja.length > 0 && (
+          <div className="feedbacks-recentes-igreja">
+            <h4>Últimos feedbacks enviados</h4>
+
+            {feedbacksIgreja.slice(0, 4).map((feedback) => (
+              <div
+                className={`feedback-recente-item ${feedback.resposta_admin ? 'feedback-com-resposta' : ''}`}
+                key={feedback.id}
+              >
+                <strong>{feedback.tipo}</strong>
+                <p>{feedback.mensagem}</p>
+                <span>{formatarDataHoraFeedback(feedback.created_at)}</span>
+
+                {feedback.resposta_admin ? (
+                  <div className="feedback-resposta-igreja">
+                    <strong>Resposta da equipe EBD Fiel</strong>
+                    <p>{feedback.resposta_admin}</p>
+                    <small>{formatarDataHoraFeedback(feedback.respondido_em)}</small>
+                  </div>
+                ) : (
+                  <small className="feedback-aguardando-resposta">
+                    Aguardando resposta da equipe.
+                  </small>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function renderizarPainel() {
+    const aniversariantesDaSemana = buscarAniversariantesDaSemana()
+
+    return (
+      <section className="conteudo">
+        <div className="hero-painel">
+          <div className="hero-painel-conteudo">
+            <div className="linha-tags-painel">
+              <span className="hero-tag">Painel administrativo</span>
+              <span className="hero-tag hero-tag-clara">
+                {usuarioEhProfessor() ? 'Perfil: Professor' : 'Perfil: Secretaria'}
+              </span>
+            </div>
+            <h2>{buscarNomeIgrejaParaExibicao()}</h2>
+            <p>
+              Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
+              com uma estrutura pronta para uso e comercialização.
+            </p>
+
+            <div className="hero-acoes">
+              {usuarioEhSecretaria() && (
+                <button className="botao-principal" onClick={() => navegarParaPagina('configuracoes')}>
+                  Ajustar dados da igreja
+                </button>
+              )}
+              <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
+                Ver relatórios
+              </button>
+
+              <button className="botao-secundario botao-manual-painel" onClick={() => navegarParaPagina('manual')}>
+                Abrir manual do usuário
+              </button>
+            </div>
+          </div>
+
+          <div className="hero-painel-destaque">
+            <div className="hero-icone-area">
+              <Icone nome="biblia" className="icone-hero" />
+            </div>
+            <h3>Resumo rápido</h3>
+            <p>Dados sincronizados automaticamente no Supabase.</p>
+            <ul>
+              <li>{classes.length} classes ativas</li>
+              <li>{alunosSomente().length} alunos cadastrados</li>
+              <li>{professoresSomente().length} professores cadastrados</li>
+              <li>{chamadasSalvas.length} chamadas registradas</li>
+              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="cards cards-estatisticas">
+          <CardResumo
+            icone="classes"
+            titulo="Classes"
+            valor={classes.length}
+            descricao="Turmas organizadas para a EBD."
+          />
+          <CardResumo
+            icone="alunos"
+            titulo="Alunos"
+            valor={alunos.length}
+            descricao="Participantes cadastrados no sistema."
+          />
+          <CardResumo
+            icone="usuarios"
+            titulo="Professores"
+            valor={professoresSomente().length}
+            descricao="Participantes da chamada dos professores."
+          />
+
+          <CardResumo
+            icone="chamada"
+            titulo="Chamadas"
+            valor={chamadasSalvas.length}
+            descricao="Registros salvos de presença."
+          />
+          <CardResumo
+            icone="check"
+            titulo="Frequência geral"
+            valor={`${calcularFrequenciaGeral()}%`}
+            descricao="Média de presença nas chamadas lançadas."
+            destaque
+          />
+        </div>
+
+        {usuarioEhSecretaria() && (
+          <div className="alerta-aniversariantes">
+            <div className="topo-alerta-aniversariantes">
+              <div>
+                <span className="hero-tag">Aniversariantes da semana</span>
+                <h3>Alunos, professores e secretarias</h3>
+              </div>
+              <strong>{aniversariantesDaSemana.length}</strong>
+            </div>
+
+            {aniversariantesDaSemana.length > 0 ? (
+              <div className="lista-aniversariantes">
+                {aniversariantesDaSemana.map((pessoa) => (
+                  <div className="item-aniversariante" key={pessoa.id}>
+                    <div>
+                      <strong>{pessoa.nome}</strong>
+                      <p>
+                        {pessoa.tipo} - {pessoa.detalhe}
+                      </p>
+                    </div>
+                    <span>
+                      {formatarDataNascimento(pessoa.dataNascimento)} - {descreverAniversario(pessoa.dias)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="texto-sem-aniversariantes">
+                Nenhum aniversário cadastrado para os próximos 7 dias.
+              </p>
+            )}
+          </div>
+        )}
+
+        {renderizarFeedbackPiloto()}
+
+        <div className="grade-resumos-comerciais">
+          <div className="resumo resumo-comercial resumo-alerta-claro">
+            <h3>Personalização da igreja</h3>
+            <p>
+              {configuracaoIgreja.nome_igreja
+                ? 'Os dados da igreja já estão configurados e serão usados nos relatórios e PDFs.'
+                : 'Preencha os dados da igreja em Configurações para exibir nome, endereço e contatos nos relatórios.'}
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarFormularioProfessorClasse() {
+    if (!mostrarFormularioAluno || !['professor', 'aluno'].includes(novoAluno.tipoPessoa)) {
+      return null
+    }
+
+    const formularioProfessor = novoAluno.tipoPessoa === 'professor'
+
+    return (
+      <form className="formulario formulario-professor-classe formulario-pessoa-classe" onSubmit={salvarAluno}>
+        <div className="topo-formulario-inline">
+          <div>
+            <h3>
+              {alunoEditandoId
+                ? formularioProfessor
+                  ? 'Editar professor'
+                  : 'Editar aluno'
+                : formularioProfessor
+                  ? 'Novo professor'
+                  : 'Novo aluno'}
+            </h3>
+            <p>
+              {formularioProfessor
+                ? 'Este cadastro também aparece no menu Professores e na Chamada dos professores.'
+                : 'Este aluno será cadastrado diretamente na classe selecionada e aparecerá na chamada dos alunos.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="grade-campos grade-campos-configuracoes">
+          <label>
+            Nome
+            <input
+              type="text"
+              value={novoAluno.nome}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, nome: event.target.value })
+              }
+              placeholder={formularioProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
+            />
+          </label>
+
+          <label>
+            Classe de referência
+            <select
+              value={novoAluno.classeId}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, classeId: event.target.value })
+              }
+            >
+              <option value="">Selecione uma classe</option>
+
+              {classes.map((classe) => (
+                <option key={classe.id} value={classe.id}>
+                  {classe.nome}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Telefone
+            <input
+              type="text"
+              value={novoAluno.telefone}
+              onChange={(event) =>
+                setNovoAluno({ ...novoAluno, telefone: event.target.value })
+              }
+              placeholder="Ex: (11) 99999-0000"
+            />
+          </label>
+
+          <label>
+            Data de nascimento
+            <input
+              type="date"
+              value={novoAluno.dataNascimento}
+              onChange={(event) =>
+                setNovoAluno({
+                  ...novoAluno,
+                  dataNascimento: event.target.value,
+                })
+              }
+            />
+          </label>
+        </div>
+
+        <div className="grupo-botoes">
+          <button className="botao-principal" type="submit">
+            {alunoEditandoId
+              ? 'Salvar alterações'
+              : formularioProfessor
+                ? 'Salvar professor'
+                : 'Salvar aluno'}
+          </button>
+
+          <button
+            className="botao-secundario"
+            type="button"
+            onClick={cancelarFormularioAluno}
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    )
+  }
+
+  function renderizarClasses() {
+    if (!podeGerenciarCadastros()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>O cadastro de classes é gerenciado pela secretaria.</p>
+        </section>
+      )
+    }
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Classes</h2>
+            <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
+          </div>
+
+          {!mostrarFormularioClasse && (
+            <button className="botao-principal" onClick={abrirNovaClasse}>
+              Nova classe
+            </button>
+          )}
+        </div>
+
+        {mostrarFormularioClasse && (
+          <form className="formulario formulario-editar-classe" onSubmit={salvarClasse}>
+            <div className="cabecalho-formulario-editar-classe">
+              <span>{classeEditandoId ? 'Editar classe' : 'Nova classe'}</span>
+              <h3>{classeEditandoId ? 'Alterar nome da classe' : 'Cadastrar nova classe'}</h3>
+              <p>
+                {classeEditandoId
+                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarão nesta mesma turma.'
+                  : 'Crie uma nova turma para organizar alunos, professores e chamadas da EBD.'}
+              </p>
+            </div>
+
+            <label>
+              Nome da classe
+              <input
+                type="text"
+                value={novaClasse.nome}
+                onChange={(event) =>
+                  setNovaClasse({ ...novaClasse, nome: event.target.value })
+                }
+                placeholder="Ex: Jovens, Adultos, Crianças..."
+                autoFocus
+              />
+            </label>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {classeEditandoId ? 'Salvar novo nome da classe' : 'Salvar classe'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={cancelarFormularioClasse}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        {renderizarFormularioProfessorClasse()}
+
+        <div className="aviso aviso-classes-professores aviso-classes-moderno">
+          <p>
+            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrícula de cada turma.
+          </p>
+        </div>
+
+        <div className="lista lista-classes-modernas">
+          {classes.map((classe, indiceClasse) => {
+            const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
+
+            return (
+            <div
+              className={`item-lista item-com-acoes classe-card-moderno classe-cor-${(indiceClasse % 4) + 1}`}
+              key={classe.id}
+            >
+              <div className="classe-card-topo">
+                <div className="classe-card-titulo-bloco">
+                  <span className="classe-card-selo">Classe</span>
+                  <h3>{classe.nome}</h3>
+                </div>
+
+                <div className="classe-card-matricula">
+                  <strong>{calcularMatriculaDaClasse(classe.id)}</strong>
+                  <span>alunos</span>
+                </div>
+              </div>
+
+              <div className="classe-card-resumo">
+                <div className="classe-card-resumo-item">
+                  <strong>Professores</strong>
+                  <span>{buscarTextoProfessoresDaClasse(classe.id)}</span>
+                </div>
+
+                <div className="classe-card-resumo-item">
+                  <strong>Matrícula</strong>
+                  <span>{calcularMatriculaDaClasse(classe.id)} alunos</span>
+                </div>
+              </div>
+
+              <div className="professores-na-classe">
+                {professoresDaClasse.length > 0 ? (
+                  professoresDaClasse.map((professor) => (
+                    <div className="professor-classe-linha" key={professor.id}>
+                      <span className="professor-classe-nome">{professor.nome}</span>
+
+                      <div className="professor-classe-acoes">
+                        <button
+                          className="botao-editar botao-pequeno"
+                          onClick={() => editarProfessorDaClasse(professor)}
+                        >
+                          Editar
+                        </button>
+
+                        <button
+                          className="botao-excluir botao-pequeno"
+                          onClick={() => excluirAluno(professor.id)}
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="texto-sem-professor">
+                    Nenhum professor vinculado a esta classe.
+                  </p>
+                )}
+              </div>
+
+              <div className="classe-card-acoes">
+                <button
+                  className="botao-principal botao-sem-margem"
+                  onClick={() => abrirNovoAlunoDaClasse(classe.id)}
+                >
+                  Novo aluno
+                </button>
+
+                <button
+                  className="botao-principal botao-verde"
+                  onClick={() => abrirNovoProfessorDaClasse(classe.id)}
+                >
+                  Novo professor
+                </button>
+
+                <button
+                  className="botao-editar"
+                  onClick={() => editarClasse(classe)}
+                >
+                  Alterar nome
+                </button>
+
+                <button
+                  className="botao-excluir"
+                  onClick={() => excluirClasse(classe.id)}
+                >
+                  Excluir classe
+                </button>
+              </div>
+            </div>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarCadastroPessoas(tipoPessoaPagina) {
+    const ehPaginaProfessor = tipoPessoaPagina === 'professor'
+    const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
+    const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
+    const descricaoPagina = ehPaginaProfessor
+      ? 'Cadastre, edite e organize os professores. A classe de referência também atualiza a lista de professores em Classes.'
+      : usuarioEhProfessor()
+        ? 'Veja os alunos vinculados às suas classes.'
+        : 'Cadastre, edite, busque e organize os alunos por classe.'
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>{tituloPagina}</h2>
+            <p>{descricaoPagina}</p>
+          </div>
+
+          {podeGerenciarCadastros() && !mostrarFormularioAluno && (
+            <button
+              className="botao-principal"
+              onClick={() => abrirNovoAluno(tipoPessoaPagina)}
+            >
+              {ehPaginaProfessor ? 'Novo professor' : 'Novo aluno'}
+            </button>
+          )}
+        </div>
+
+        {mostrarFormularioAluno && novoAluno.tipoPessoa === tipoPessoaPagina && (
+          <form className="formulario" onSubmit={salvarAluno}>
+            <label>
+              Nome
+              <input
+                type="text"
+                value={novoAluno.nome}
+                onChange={(event) =>
+                  setNovoAluno({ ...novoAluno, nome: event.target.value })
+                }
+                placeholder={ehPaginaProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
+              />
+            </label>
+
+            <label>
+              Tipo
+              <select
+                value={novoAluno.tipoPessoa}
+                onChange={(event) =>
+                  setNovoAluno({ ...novoAluno, tipoPessoa: event.target.value })
+                }
+              >
+                <option value="aluno">Aluno</option>
+                <option value="professor">Professor</option>
+              </select>
+            </label>
+
+            <label>
+              Classe de referência
+              <select
+                value={novoAluno.classeId}
+                onChange={(event) =>
+                  setNovoAluno({ ...novoAluno, classeId: event.target.value })
+                }
+              >
+                <option value="">Selecione uma classe</option>
+
+                {classes.map((classe) => (
+                  <option key={classe.id} value={classe.id}>
+                    {classe.nome}
+                  </option>
+                ))}
+              </select>
+              <small className="texto-ajuda-campo">
+                Aluno aparece na chamada dos alunos. Professor aparece na chamada dos professores e na lista de professores da classe.
+              </small>
+            </label>
+
+            <label>
+              Telefone
+              <input
+                type="text"
+                value={novoAluno.telefone}
+                onChange={(event) =>
+                  setNovoAluno({ ...novoAluno, telefone: event.target.value })
+                }
+                placeholder="Ex: (11) 99999-0000"
+              />
+            </label>
+
+            <label>
+              Data de nascimento
+              <input
+                type="date"
+                value={novoAluno.dataNascimento}
+                onChange={(event) =>
+                  setNovoAluno({
+                    ...novoAluno,
+                    dataNascimento: event.target.value,
+                  })
+                }
+              />
+            </label>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={cancelarFormularioAluno}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="filtros">
+          <label>
+            Buscar {ehPaginaProfessor ? 'professor' : 'aluno'}
+            <input
+              type="text"
+              value={buscaAluno}
+              onChange={(event) => setBuscaAluno(event.target.value)}
+              placeholder={ehPaginaProfessor ? 'Digite o nome do professor' : 'Digite o nome do aluno'}
+            />
+          </label>
+
+          {usuarioEhSecretaria() && (
+            <label>
+              Filtrar por classe
+              <select
+                value={filtroClasseAluno}
+                onChange={(event) => setFiltroClasseAluno(event.target.value)}
+              >
+                <option value="">Todas as classes</option>
+
+                {classes.map((classe) => (
+                  <option key={classe.id} value={classe.id}>
+                    {classe.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
+          <button className="botao-secundario" onClick={limparFiltrosAlunos}>
+            Limpar filtros
+          </button>
+        </div>
+
+        <p className="contador-resultados">
+          Mostrando {cadastrosFiltrados.length} de{' '}
+          {ehPaginaProfessor ? professoresSomente().length : alunosSomente().length}{' '}
+          {ehPaginaProfessor ? 'professores' : 'alunos'}
+        </p>
+
+        <div className="lista">
+          {cadastrosFiltrados.map((aluno) => (
+            <div className="item-lista item-com-acoes" key={aluno.id}>
+              <div>
+                <h3>{aluno.nome}</h3>
+                <p>
+                  Tipo: {(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}
+                </p>
+                <p>Classe de referência: {buscarNomeClasse(aluno.classeId)}</p>
+                {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
+                {aluno.dataNascimento && (
+                  <p>Nascimento: {formatarDataNascimento(aluno.dataNascimento)}</p>
+                )}
+              </div>
+
+              {podeGerenciarCadastros() && (
+                <div className="acoes-item">
+                  <button
+                    className="botao-editar"
+                    onClick={() => editarAluno(aluno)}
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    className="botao-excluir"
+                    onClick={() => excluirAluno(aluno.id)}
+                  >
+                    Excluir
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarAlunos() {
+    return renderizarCadastroPessoas('aluno')
+  }
+
+  function renderizarProfessores() {
+    return renderizarCadastroPessoas('professor')
+  }
+
+  function renderizarUsuarios() {
+    if (!usuarioEhSecretaria()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>O cadastro de usuários é gerenciado pela secretaria.</p>
+        </section>
+      )
+    }
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Usuários</h2>
+            <p>
+              Cadastre secretarias e professores da igreja. O login precisa existir
+              primeiro em Authentication no Supabase.
+            </p>
+          </div>
+
+          {!mostrarFormularioPerfil && (
+            <button className="botao-principal" onClick={abrirNovoPerfil}>
+              Novo usuário
+            </button>
+          )}
+        </div>
+
+        <div className="aviso aviso-usuarios">
+          <p>
+            <strong>Importante:</strong> primeiro crie o usuário em
+            Supabase → Authentication → Users. Depois copie o User UID e cadastre
+            aqui para vincular o perfil, a classe e a data de nascimento.
+          </p>
+        </div>
+
+        {mostrarFormularioPerfil && (
+          <form className="formulario" onSubmit={salvarPerfilUsuario}>
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                User UID do Supabase
+                <input
+                  type="text"
+                  value={novoPerfil.userId}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, userId: event.target.value })
+                  }
+                  placeholder="Ex: 5fd49a5b-b331-4d66-aace-e458384f2f51"
+                />
+              </label>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={novoPerfil.nome}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, nome: event.target.value })
+                  }
+                  placeholder="Ex: Leandro Silva"
+                />
+              </label>
+
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  value={novoPerfil.email}
+                  onChange={(event) =>
+                    setNovoPerfil({ ...novoPerfil, email: event.target.value })
+                  }
+                  placeholder="Ex: professor@igreja.com"
+                />
+              </label>
+
+              <label>
+                Perfil
+                <select
+                  value={novoPerfil.perfil}
+                  onChange={(event) =>
+                    setNovoPerfil({
+                      ...novoPerfil,
+                      perfil: event.target.value,
+                      classeIds:
+                        event.target.value === 'secretaria'
+                          ? []
+                          : novoPerfil.classeIds,
+                    })
+                  }
+                >
+                  <option value="professor">Professor</option>
+                  <option value="secretaria">Secretaria</option>
+                </select>
+              </label>
+
+              {novoPerfil.perfil === 'professor' && (
+                <div className="campo-classes-professor">
+                  <span>Classes do professor</span>
+                  <div className="lista-checkboxes-classes">
+                    {classes.map((classe) => {
+                      const classeIdTexto = String(classe.id)
+                      const selecionada = novoPerfil.classeIds.includes(classeIdTexto)
+
+                      return (
+                        <label key={classe.id} className="checkbox-classe-professor">
+                          <input
+                            type="checkbox"
+                            checked={selecionada}
+                            onChange={(event) => {
+                              const novasClasses = event.target.checked
+                                ? [...novoPerfil.classeIds, classeIdTexto]
+                                : novoPerfil.classeIds.filter((id) => id !== classeIdTexto)
+
+                              setNovoPerfil({
+                                ...novoPerfil,
+                                classeIds: novasClasses,
+                              })
+                            }}
+                          />
+                          <span>{classe.nome}</span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <label>
+                Data de nascimento
+                <input
+                  type="date"
+                  value={novoPerfil.dataNascimento}
+                  onChange={(event) =>
+                    setNovoPerfil({
+                      ...novoPerfil,
+                      dataNascimento: event.target.value,
+                    })
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {perfilEditandoId ? 'Salvar alterações' : 'Salvar usuário'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={cancelarFormularioPerfil}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="lista">
+          {perfisIgreja.map((perfil) => (
+            <div className="item-lista item-com-acoes" key={perfil.id}>
+              <div>
+                <h3>{perfil.nome || perfil.email}</h3>
+                <p>E-mail: {perfil.email}</p>
+                <p>
+                  Perfil:{' '}
+                  {perfil.perfil === 'professor' ? 'Professor' : 'Secretaria'}
+                </p>
+                {perfil.perfil === 'professor' && (
+                  <p>
+                    Classes:{' '}
+                    {buscarNomesClassesDoProfessor(perfil.id, perfil.classe_id) ||
+                      'Nenhuma classe vinculada'}
+                  </p>
+                )}
+                {perfil.data_nascimento && (
+                  <p>
+                    Nascimento: {formatarDataNascimento(perfil.data_nascimento)}
+                  </p>
+                )}
+              </div>
+
+              <div className="acoes-item">
+                <button
+                  className="botao-editar"
+                  onClick={() => editarPerfil(perfil)}
+                >
+                  Editar
+                </button>
+
+                <button
+                  className="botao-excluir"
+                  onClick={() => excluirPerfilUsuario(perfil)}
+                >
+                  Remover perfil
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  async function salvarChamadaProfessores() {
+    if (!usuarioEhSecretaria()) {
+      alert('Apenas a secretaria pode salvar a chamada dos professores.')
+      return
+    }
+
+    const professores = buscarProfessoresDaIgreja()
+
+    if (professores.length === 0) {
+      alert('Ainda não há professores cadastrados em Usuários.')
+      return
+    }
+
+    const professoresSemMarcacao = professores.filter(
+      (professor) => !presencasProfessores[professor.id]
+    )
+
+    if (professoresSemMarcacao.length > 0) {
+      alert('Marque Presente, Faltou ou Justificou para todos os professores.')
+      return
+    }
+
+    const totalPresentes = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'presente'
+    ).length
+
+    const totalFaltas = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'faltou'
+    ).length
+
+    const totalJustificadas = professores.filter(
+      (professor) => presencasProfessores[professor.id] === 'justificou'
+    ).length
+
+    const chamadaBanco = {
+      id: Date.now(),
+      igreja_id: buscarIgrejaIdAtual(),
+      data: dataAulaChamada || buscarDataAtual(),
+      total_professores: professores.length,
+      total_presentes: totalPresentes,
+      total_faltas: totalFaltas,
+      total_justificadas: totalJustificadas,
+      observacoes: observacoesChamadaProfessores.trim(),
+      registros: professores.map((professor) => ({
+        pessoaId: professor.id,
+        nome: professor.nome,
+        telefone: professor.telefone || '',
+        status: presencasProfessores[professor.id],
+        classeReferencia: buscarNomeClasse(professor.classeId),
+      })),
+    }
+
+    const { error } = await supabase
+      .from('chamadas_professores')
+      .insert(chamadaBanco)
+
+    if (error) {
+      mostrarErroSistema(error, 'Erro ao salvar chamada dos professores.')
+      return
+    }
+
+    await buscarTodosOsDados()
+
+    setPresencasProfessores({})
+    setObservacoesChamadaProfessores('')
+
+    alert('Chamada dos professores salva com sucesso!')
+  }
+
+  function renderizarChamada() {
+    const alunosDaClasse = alunos.filter(
+      (aluno) =>
+        aluno.classeId === Number(classeChamadaId) &&
+        (aluno.tipoPessoa || 'aluno') === 'aluno'
+    )
+    const professoresDaIgreja = buscarProfessoresDaIgreja()
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Chamada</h2>
+            <p>
+              {usuarioEhProfessor()
+                ? 'Faça a chamada das classes vinculadas pela secretaria.'
+                : 'Registre a chamada dos alunos e a chamada separada dos professores.'}
+            </p>
+          </div>
+        </div>
+
+        {usuarioEhSecretaria() && (
+          <div className="abas-chamada">
+            <button
+              className={tipoChamada === 'alunos' ? 'ativo' : ''}
+              type="button"
+              onClick={() => setTipoChamada('alunos')}
+            >
+              Chamada dos alunos
+            </button>
+
+            <button
+              className={tipoChamada === 'professores' ? 'ativo' : ''}
+              type="button"
+              onClick={() => setTipoChamada('professores')}
+            >
+              Chamada dos professores
+            </button>
+          </div>
+        )}
+
+        {(tipoChamada === 'alunos' || usuarioEhProfessor()) && (
+          <>
+            <div className="formulario">
+              <label>
+                Classe
+                <select
+                  value={classeChamadaId}
+                  onChange={(event) => {
+                    setClasseChamadaId(event.target.value)
+                    setPresencas({})
+                    setDadosExtrasChamada({
+                      visitantes: '',
+                      biblias: '',
+                      revistas: '',
+                      ofertas: '',
+                    })
+                  }}
+                >
+                  <option value="">Selecione uma classe</option>
+
+                  {classes.map((classe) => (
+                    <option key={classe.id} value={classe.id}>
+                      {classe.nome}
+                    </option>
+                  ))}
+                </select>
+                {usuarioEhProfessor() && (
+                  <small className="texto-ajuda-campo">
+                    Você só verá as classes vinculadas pela secretaria.
+                  </small>
+                )}
+              </label>
+
+              <label>
+                Data da aula
+                <input
+                  type="date"
+                  value={dataAulaChamada}
+                  onChange={(event) => setDataAulaChamada(event.target.value)}
+                />
+                <small className="texto-ajuda-campo">
+                  O sistema preenche com a data de hoje, mas você pode alterar.
+                </small>
+              </label>
+
+              {classeChamadaId && (
+                <div className="grade-campos">
+                  <label>
+                    Visitantes
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.visitantes}
+                      onChange={(event) =>
+                        alterarDadosExtras('visitantes', event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Bíblias
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.biblias}
+                      onChange={(event) =>
+                        alterarDadosExtras('biblias', event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Revistas
+                    <input
+                      type="number"
+                      min="0"
+                      value={dadosExtrasChamada.revistas}
+                      onChange={(event) =>
+                        alterarDadosExtras('revistas', event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Ofertas R$
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={dadosExtrasChamada.ofertas}
+                      onChange={(event) =>
+                        alterarDadosExtras('ofertas', event.target.value)
+                      }
+                      placeholder="Ex: 25.50"
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+
+            {classeChamadaId && alunosDaClasse.length === 0 && (
+              <div className="aviso">
+                <p>Essa classe ainda não possui alunos cadastrados.</p>
+              </div>
+            )}
+
+            {alunosDaClasse.length > 0 && (
+              <>
+                <div className="resumo-chamada">
+                  <p>
+                    <strong>Matrícula:</strong> {alunosDaClasse.length}
+                  </p>
+
+                  <p>
+                    <strong>Visitantes:</strong>{' '}
+                    {converterNumero(dadosExtrasChamada.visitantes)}
+                  </p>
+
+                  <p>
+                    <strong>Ofertas:</strong>{' '}
+                    {formatarMoeda(dadosExtrasChamada.ofertas)}
+                  </p>
+                </div>
+
+                <div className="acoes-chamada-rapida">
+                  <button
+                    type="button"
+                    className="botao-marcar-todos presente"
+                    onClick={() => marcarTodosAlunos('presente')}
+                  >
+                    Marcar todos como presentes
+                  </button>
+
+                  <button
+                    type="button"
+                    className="botao-marcar-todos faltou"
+                    onClick={() => marcarTodosAlunos('faltou')}
+                  >
+                    Marcar todos como faltaram
+                  </button>
+                </div>
+
+                <div className="lista">
+                  {alunosDaClasse.map((aluno) => (
+                    <div className="item-lista item-chamada" key={aluno.id}>
+                      <div>
+                        <h3>{aluno.nome}</h3>
+                        <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
+                      </div>
+
+                      <div className="acoes-chamada">
+                        <button
+                          className={
+                            presencas[String(aluno.id)] === 'presente'
+                              ? 'botao-presenca ativo-presente'
+                              : 'botao-presenca'
+                          }
+                          onClick={() => alterarPresenca(aluno.id, 'presente')}
+                        >
+                          Presente
+                        </button>
+
+                        <button
+                          className={
+                            presencas[String(aluno.id)] === 'faltou'
+                              ? 'botao-falta ativo-falta'
+                              : 'botao-falta'
+                          }
+                          onClick={() => alterarPresenca(aluno.id, 'faltou')}
+                        >
+                          Faltou
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="botao-principal" onClick={salvarChamada}>
+                  Salvar chamada dos alunos
+                </button>
+              </>
+            )}
+          </>
+        )}
+
+        {usuarioEhSecretaria() && tipoChamada === 'professores' && (
+          <>
+            <div className="formulario formulario-data-chamada">
+              <label>
+                Data da aula
+                <input
+                  type="date"
+                  value={dataAulaChamada}
+                  onChange={(event) => setDataAulaChamada(event.target.value)}
+                />
+                <small className="texto-ajuda-campo">
+                  Use a data do domingo/aula referente à chamada.
+                </small>
+              </label>
+            </div>
+
+            <div className="resumo-chamada resumo-professores">
+              <p>
+                <strong>Professores cadastrados:</strong> {professoresDaIgreja.length}
+              </p>
+              <p>
+                <strong>Última chamada:</strong> {buscarDataUltimaChamadaProfessores()}
+              </p>
+              <p>
+                <strong>Chamadas salvas:</strong> {chamadasProfessores.length}
+              </p>
+            </div>
+
+            {professoresDaIgreja.length === 0 && (
+              <div className="aviso">
+                <p>
+                  Nenhum professor cadastrado. Vá em Alunos e Professores,
+                  cadastre uma pessoa com tipo Professor.
+                </p>
+              </div>
+            )}
+
+            {professoresDaIgreja.length > 0 && (
+              <>
+                <div className="lista">
+                  {professoresDaIgreja.map((professor) => (
+                    <div className="item-lista item-chamada" key={professor.id}>
+                      <div>
+                        <h3>{professor.nome}</h3>
+                        {professor.telefone && <p>Telefone: {professor.telefone}</p>}
+                        <p>Classe de referência: {buscarNomeClasse(professor.classeId)}</p>
+                      </div>
+
+                      <div className="acoes-chamada acoes-chamada-professores">
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'presente'
+                              ? 'botao-presenca ativo-presente'
+                              : 'botao-presenca'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'presente')
+                          }
+                        >
+                          Presente
+                        </button>
+
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'faltou'
+                              ? 'botao-falta ativo-falta'
+                              : 'botao-falta'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'faltou')
+                          }
+                        >
+                          Faltou
+                        </button>
+
+                        <button
+                          className={
+                            presencasProfessores[professor.id] === 'justificou'
+                              ? 'botao-justificou ativo-justificou'
+                              : 'botao-justificou'
+                          }
+                          onClick={() =>
+                            alterarPresencaProfessor(professor.id, 'justificou')
+                          }
+                        >
+                          Justificou
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="formulario formulario-observacao-professores">
+                  <label>
+                    Observações da chamada dos professores
+                    <input
+                      type="text"
+                      value={observacoesChamadaProfessores}
+                      onChange={(event) =>
+                        setObservacoesChamadaProfessores(event.target.value)
+                      }
+                      placeholder="Ex: troca de professor, viagem, justificativa geral..."
+                    />
+                  </label>
+                </div>
+
+                <button
+                  className="botao-principal"
+                  onClick={salvarChamadaProfessores}
+                >
+                  Salvar chamada dos professores
+                </button>
+              </>
+            )}
+          </>
+        )}
+      </section>
+    )
+  }
+
+  function renderizarRelatorios() {
+    const linhasRelatorio = montarRelatorioPorClasse()
+    const totaisRelatorio = calcularTotaisRelatorio()
+    const dataRelatorio = buscarDataUltimaChamada()
+    const dataRelatorioFormatada = formatarDataRelatorio(dataRelatorio)
+    const resumoProfessores = calcularResumoUltimaChamadaProfessores()
+    const percentualProfessores = calcularPercentualPresencaProfessores()
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina no-print">
+          <div>
+            <h2>Relatórios</h2>
+            <p>
+              {usuarioEhProfessor()
+                ? 'Relatório da sua classe no modelo da Escola Bíblica Dominical.'
+                : 'Relatório geral no modelo da Escola Bíblica Dominical.'}
+            </p>
+          </div>
+
+          <div className="grupo-botoes">
+            <button
+              className="botao-principal"
+              onClick={abrirRelatorioParaImpressao}
+            >
+              Imprimir / Salvar PDF
+            </button>
+
+            <button className="botao-secundario" onClick={baixarRelatorioPDF}>
+              Baixar PDF
+            </button>
+          </div>
+        </div>
+
+        <div className="relatorios-dashboard no-print">
+          <div className="relatorios-hero">
+            <div>
+              <span className="selo-publico">Relatórios da EBD</span>
+              <h3>Resumo geral da Escola Bíblica Dominical</h3>
+              <p>
+                Acompanhe alunos, classes, frequência e presença dos professores
+                com uma visualização mais clara e moderna.
+              </p>
+            </div>
+
+            <div className="relatorios-percentual">
+              <strong>{calcularFrequenciaGeral()}%</strong>
+              <span>frequência geral</span>
+            </div>
+          </div>
+
+          <div className="cards cards-relatorios-modernas">
+            <div className="card card-relatorio-moderna">
+              <span>Classes</span>
+              <strong>{classes.length}</strong>
+              <p>classes cadastradas</p>
+            </div>
+
+            <div className="card card-relatorio-moderna">
+              <span>Alunos</span>
+              <strong>{alunosSomente().length}</strong>
+              <p>alunos na chamada</p>
+            </div>
+
+            <div className="card card-relatorio-moderna">
+              <span>Chamadas</span>
+              <strong>{chamadasSalvas.length}</strong>
+              <p>chamadas de alunos salvas</p>
+            </div>
+
+            <div className="card card-relatorio-moderna destaque">
+              <span>Frequência</span>
+              <strong>{calcularFrequenciaGeral()}%</strong>
+              <p>média geral de presença</p>
+            </div>
+          </div>
+
+          {usuarioEhSecretaria() && (
+            <div className="relatorio-professores-moderno">
+              <div className="cabecalho-relatorio-professores">
+                <div>
+                  <span className="selo-publico">Professores</span>
+                  <h3>Resumo da última chamada dos professores</h3>
+                  <p>Data da chamada: {formatarDataRelatorio(resumoProfessores.data)}</p>
+                </div>
+
+                <div className="circulo-presenca-professores">
+                  <strong>{percentualProfessores}%</strong>
+                  <span>presentes</span>
+                </div>
+              </div>
+
+              <div className="grade-professores-resumo">
+                <div>
+                  <span>Total de professores</span>
+                  <strong>{resumoProfessores.totalProfessores}</strong>
+                </div>
+
+                <div>
+                  <span>Presentes</span>
+                  <strong>{resumoProfessores.presentes}</strong>
+                </div>
+
+                <div>
+                  <span>Faltaram</span>
+                  <strong>{resumoProfessores.faltaram}</strong>
+                </div>
+
+                <div>
+                  <span>Justificaram</span>
+                  <strong>{resumoProfessores.justificaram}</strong>
+                </div>
+              </div>
+
+              {resumoProfessores.registros.length > 0 && (
+                <div className="lista-professores-relatorio">
+                  {resumoProfessores.registros.map((registro, indice) => (
+                    <div className="linha-professor-relatorio" key={`${registro.nome}-${indice}`}>
+                      <div>
+                        <strong>{registro.nome}</strong>
+                        {registro.classeReferencia && <p>{registro.classeReferencia}</p>}
+                        {registro.classes && <p>{registro.classes}</p>}
+                      </div>
+
+                      <span className={`status-professor status-${registro.status}`}>
+                        {traduzirStatusProfessor(registro.status)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="relatorio-folha">
+          <div className="cabecalho-relatorio">
+            <img
+              src="/logo-oficial-ebd-fiel.png"
+              alt="Logo EBD Fiel"
+              className="logo-relatorio"
+            />
+            <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
+            {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
+            {configuracaoIgreja.pastor_dirigente && (
+              <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
+            )}
+            {configuracaoIgreja.superintendente_ebd && (
+              <p>Superintendente da EBD: {configuracaoIgreja.superintendente_ebd}</p>
+            )}
+            {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
+            {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
+              <p>
+                {[configuracaoIgreja.telefone, configuracaoIgreja.email]
+                  .filter(Boolean)
+                  .join(' | ')}
+              </p>
+            )}
+            <p>{dataRelatorioFormatada}</p>
+          </div>
+
+          <div className="tabela-container">
+            <table className="tabela tabela-ebd">
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Classes</th>
+                  <th>Matrícula</th>
+                  <th>Ausência</th>
+                  <th>Presença</th>
+                  <th>Visitante</th>
+                  <th>Total</th>
+                  <th>Bíblia</th>
+                  <th>Revista</th>
+                  <th>Ofertas</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {linhasRelatorio.map((linha) => (
+                  <tr key={linha.classeId}>
+                    <td>{linha.numero}</td>
+                    <td>{linha.classe}</td>
+                    <td>{linha.matricula}</td>
+                    <td>{linha.ausencia}</td>
+                    <td>{linha.presenca}</td>
+                    <td>{linha.visitantes}</td>
+                    <td>{linha.total}</td>
+                    <td>{linha.biblias}</td>
+                    <td>{linha.revistas}</td>
+                    <td>{formatarMoeda(linha.ofertas)}</td>
+                    <td>{linha.frequencia}%</td>
+                  </tr>
+                ))}
+
+                <tr className="linha-total">
+                  <td colSpan="2">TOTAL GERAL</td>
+                  <td>{totaisRelatorio.matricula}</td>
+                  <td>{totaisRelatorio.ausencia}</td>
+                  <td>{totaisRelatorio.presenca}</td>
+                  <td>{totaisRelatorio.visitantes}</td>
+                  <td>{totaisRelatorio.total}</td>
+                  <td>{totaisRelatorio.biblias}</td>
+                  <td>{totaisRelatorio.revistas}</td>
+                  <td>{formatarMoeda(totaisRelatorio.ofertas)}</td>
+                  <td>{totaisRelatorio.frequencia}%</td>
+                </tr>
+
+                <tr className="linha-domingo-anterior">
+                  <td colSpan="11">DOMINGO anterior</td>
+                </tr>
+
+                {usuarioEhSecretaria() && (
+                  <>
+                    <tr className="linha-professores-titulo">
+                      <td colSpan="11">
+                        CHAMADA DOS PROFESSORES - Total: {resumoProfessores.totalProfessores} •
+                        Presentes: {resumoProfessores.presentes} - Faltaram:{' '}
+                        {resumoProfessores.faltaram} - Justificaram:{' '}
+                        {resumoProfessores.justificaram} - Frequência:{' '}
+                        {percentualProfessores}%
+                      </td>
+                    </tr>
+
+                    <tr className="linha-professores-cabecalho">
+                      <td>Nº</td>
+                      <td>Professor</td>
+                      <td colSpan="3">Classe de referência</td>
+                      <td colSpan="3">Status</td>
+                      <td colSpan="3">Data</td>
+                    </tr>
+
+                    {resumoProfessores.registros.length > 0 ? (
+                      resumoProfessores.registros.map((registro, indice) => (
+                        <tr
+                          className="linha-professor-relatorio"
+                          key={`${registro.nome}-${indice}`}
+                        >
+                          <td>{indice + 1}</td>
+                          <td>{registro.nome}</td>
+                          <td colSpan="3">
+                            {registro.classeReferencia || registro.classes || '-'}
+                          </td>
+                          <td colSpan="3">{traduzirStatusProfessor(registro.status)}</td>
+                          <td colSpan="3">{formatarDataRelatorio(resumoProfessores.data)}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="linha-professor-relatorio">
+                        <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
+                      </tr>
+                    )}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarConfiguracoes() {
+    if (!podeGerenciarCadastros()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>As configurações da igreja são gerenciadas pela secretaria.</p>
+        </section>
+      )
+    }
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Configurações da Igreja</h2>
+            <p>Preencha os dados que aparecerão nos relatórios e PDFs.</p>
+          </div>
+        </div>
+
+        <form className="formulario" onSubmit={salvarConfiguracaoIgreja}>
+          <div className="grade-campos grade-campos-configuracoes">
+            <label>
+              Nome da igreja
+              <input
+                type="text"
+                value={configuracaoIgreja.nome_igreja}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('nome_igreja', event.target.value)
+                }
+                placeholder="Ex: Assembleia de Deus Ministério..."
+              />
+            </label>
+
+            <label>
+              Congregação / departamento
+              <input
+                type="text"
+                value={configuracaoIgreja.congregacao}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('congregacao', event.target.value)
+                }
+                placeholder="Ex: Escola Bíblica Dominical"
+              />
+            </label>
+
+            <label>
+              Pastor ou dirigente
+              <input
+                type="text"
+                value={configuracaoIgreja.pastor_dirigente}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja(
+                    'pastor_dirigente',
+                    event.target.value
+                  )
+                }
+                placeholder="Ex: Pr. João Silva"
+              />
+            </label>
+
+            <label>
+              Superintendente da EBD
+              <input
+                type="text"
+                value={configuracaoIgreja.superintendente_ebd}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja(
+                    'superintendente_ebd',
+                    event.target.value
+                  )
+                }
+                placeholder="Ex: Irmã Maria Helena"
+              />
+            </label>
+
+            <label>
+              Telefone / WhatsApp
+              <input
+                type="text"
+                value={configuracaoIgreja.telefone}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('telefone', event.target.value)
+                }
+                placeholder="Ex: (11) 99999-0000"
+              />
+            </label>
+
+            <label>
+              E-mail
+              <input
+                type="email"
+                value={configuracaoIgreja.email}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('email', event.target.value)
+                }
+                placeholder="Ex: contato@igreja.com.br"
+              />
+            </label>
+
+            <label>
+              Endereço
+              <input
+                type="text"
+                value={configuracaoIgreja.endereco}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('endereco', event.target.value)
+                }
+                placeholder="Ex: Rua das Flores, 123"
+              />
+            </label>
+
+            <label>
+              Bairro
+              <input
+                type="text"
+                value={configuracaoIgreja.bairro}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('bairro', event.target.value)
+                }
+                placeholder="Ex: Centro"
+              />
+            </label>
+
+            <label>
+              Cidade
+              <input
+                type="text"
+                value={configuracaoIgreja.cidade}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('cidade', event.target.value)
+                }
+                placeholder="Ex: São Paulo"
+              />
+            </label>
+
+            <label>
+              Estado
+              <select
+                value={configuracaoIgreja.estado}
+                onChange={(event) =>
+                  alterarConfiguracaoIgreja('estado', event.target.value)
+                }
+              >
+                <option value="">Selecione o estado</option>
+                {ESTADOS_BRASIL.map((estado) => (
+                  <option key={estado.sigla} value={estado.sigla}>
+                    {estado.sigla} - {estado.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="grupo-botoes">
+            <button
+              className="botao-principal"
+              type="submit"
+              disabled={salvandoConfiguracaoIgreja}
+            >
+              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configurações'}
+            </button>
+          </div>
+        </form>
+
+        <div className="resumo">
+          <h3>Prévia do cabeçalho</h3>
+          <p>
+            <strong>{buscarNomeIgrejaParaExibicao()}</strong>
+          </p>
+          {configuracaoIgreja.congregacao && (
+            <p>{configuracaoIgreja.congregacao}</p>
+          )}
+          {configuracaoIgreja.pastor_dirigente && (
+            <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
+          )}
+          {configuracaoIgreja.superintendente_ebd && (
+            <p>Superintendente da EBD: {configuracaoIgreja.superintendente_ebd}</p>
+          )}
+          {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarAlertasFeedbackAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return null
+    }
+
+    const feedbacksNaoLidos = feedbacksAdmin.filter((feedback) => !feedback.lido)
+
+    return (
+      <div className="admin-feedback-alertas">
+        <div className="admin-feedback-topo">
+          <div>
+            <span className="selo-admin">Alertas do piloto</span>
+            <h3>Feedbacks recebidos</h3>
+            <p>
+              Toda mensagem enviada pelas igrejas em teste aparece aqui para acompanhamento.
+            </p>
+          </div>
+
+          <strong>{feedbacksNaoLidos.length}</strong>
+        </div>
+
+        {feedbacksAdmin.length === 0 ? (
+          <p className="texto-sem-feedback">Nenhum feedback recebido ainda.</p>
+        ) : (
+          <div className="lista-feedbacks-admin">
+            {feedbacksAdmin.slice(0, 12).map((feedback) => (
+              <article
+                className={`feedback-admin-item ${feedback.lido ? 'feedback-lido' : 'feedback-novo'}`}
+                key={feedback.id}
+              >
+                <div className="feedback-admin-conteudo">
+                  <div className="linha-feedback-admin">
+                    <strong>{buscarNomeIgrejaFeedback(feedback)}</strong>
+                    <span>
+                      {feedback.resposta_admin ? 'Respondido' : feedback.lido ? 'Lido' : 'Novo'}
+                    </span>
+                  </div>
+
+                  <p>{feedback.mensagem}</p>
+
+                  <small>
+                    {feedback.tipo} - {feedback.nome_usuario || feedback.email_usuario || 'Usuário'} •{' '}
+                    {formatarDataHoraFeedback(feedback.created_at)}
+                  </small>
+
+                  {feedback.resposta_admin && (
+                    <div className="feedback-resposta-admin">
+                      <strong>Resposta enviada:</strong>
+                      <p>{feedback.resposta_admin}</p>
+                      <small>
+                        Respondido por {feedback.respondido_por || 'administrador'} em{' '}
+                        {formatarDataHoraFeedback(feedback.respondido_em)}
+                        {feedback.notificado_em
+                          ? ` - Notificado em ${formatarDataHoraFeedback(feedback.notificado_em)}`
+                          : ''}
+                      </small>
+                    </div>
+                  )}
+
+                  {feedbackRespondendoId === feedback.id && (
+                    <div className="feedback-responder-box">
+                      <label>
+                        Resposta ao feedback
+                        <textarea
+                          value={respostaFeedbackAdmin}
+                          onChange={(event) => setRespostaFeedbackAdmin(event.target.value)}
+                          placeholder="Escreva a resposta que a igreja verá na área de feedback..."
+                          rows="5"
+                        />
+                      </label>
+
+                      <div className="feedback-responder-acoes">
+                        <button
+                          type="button"
+                          className="botao-principal"
+                          disabled={enviandoRespostaFeedback}
+                          onClick={() => salvarRespostaFeedback(feedback)}
+                        >
+                          {enviandoRespostaFeedback ? 'Salvando...' : 'Salvar resposta'}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="botao-secundario"
+                          onClick={cancelarRespostaFeedback}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="acoes-feedback-admin">
+                  {!feedback.lido && (
+                    <button
+                      className="botao-secundario"
+                      onClick={() => marcarFeedbackComoLido(feedback.id)}
+                    >
+                      Marcar como lido
+                    </button>
+                  )}
+
+                  <button
+                    className="botao-secundario"
+                    onClick={() => abrirRespostaFeedback(feedback)}
+                  >
+                    {feedback.resposta_admin ? 'Editar resposta' : 'Responder'}
+                  </button>
+
+                  {feedback.resposta_admin && (
+                    <>
+                      <button
+                        className="botao-secundario"
+                        onClick={() => copiarRespostaFeedback(feedback)}
+                      >
+                        Copiar resposta
+                      </button>
+
+                      <button
+                        className="botao-secundario"
+                        onClick={() => enviarRespostaEmailFeedback(feedback)}
+                      >
+                        Enviar e-mail
+                      </button>
+
+                      <button
+                        className="botao-verde"
+                        onClick={() => enviarRespostaWhatsAppFeedback(feedback)}
+                      >
+                        WhatsApp
+                      </button>
+                    </>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function renderizarUsuariosVinculadosIgreja(igreja) {
+    const acessosDaIgreja = buscarAcessosDaIgrejaAdmin(igreja.id)
+
+    return (
+      <div className="usuarios-vinculados-igreja">
+        <div className="usuarios-vinculados-topo">
+          <div>
+            <strong>Usuários vinculados a esta igreja</strong>
+            <span>{acessosDaIgreja.length} usuário(s)</span>
+          </div>
+
+          <button
+            type="button"
+            className="botao-secundario"
+            onClick={() => abrirNovoAcessoAdmin(igreja)}
+          >
+            Novo acesso para esta igreja
+          </button>
+        </div>
+
+        {acessosDaIgreja.length === 0 && (
+          <div className="aviso usuarios-vinculados-vazio">
+            <p>Nenhum usuário vinculado a esta igreja.</p>
+          </div>
+        )}
+
+        {acessosDaIgreja.map((acesso) => (
+          <article className="usuario-vinculado-card" key={acesso.user_id}>
+            <div>
+              <div className="linha-acesso-admin">
+                <h4>{acesso.nome || acesso.email}</h4>
+                <span>{acesso.perfil}</span>
+              </div>
+
+              <p>{acesso.email}</p>
+              <small>User UID: {acesso.user_id}</small>
+            </div>
+
+            <div className="acoes-usuario-vinculado">
+              <button
+                className="botao-secundario"
+                onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}
+              >
+                Enviar recuperação
+              </button>
+
+              <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
+                WhatsApp
+              </button>
+
+              <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
+                Copiar contato
+              </button>
+
+              <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
+                Editar acesso
+              </button>
+
+              <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
+                Remover acesso
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+    )
+  }
+
+  function copiarCadastroIncompletoAdmin(cadastro) {
+    const texto = [
+      `User UID: ${cadastro.user_id}`,
+      `E-mail: ${cadastro.email || 'Sem e-mail'}`,
+      `Criado em: ${formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}`,
+    ].join('\n')
+
+    navigator.clipboard
+      ?.writeText(texto)
+      .then(() => alert('Dados do cadastro incompleto copiados.'))
+      .catch(() => window.prompt('Copie os dados abaixo:', texto))
+  }
+
+  function prepararVinculoCadastroIncompleto(cadastro) {
+    setNovoAcessoAdmin({
+      userId: cadastro.user_id || '',
+      nome: '',
+      email: cadastro.email || '',
+      perfil: 'secretaria',
+      igrejaId: '',
+      classeId: '',
+      dataNascimento: '',
+    })
+    setAcessoAdminEditandoUserId(null)
+    setMostrarFormularioAcessoAdmin(true)
+
+    window.setTimeout(() => {
+      const formulario = document.querySelector('.formulario-admin-acesso')
+
+      if (formulario) {
+        formulario.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 120)
+  }
+
+  function renderizarCadastrosIncompletosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return null
+    }
+
+    return (
+      <div className="admin-acessos-bloco">
+        <div className="admin-acessos-bloco-topo">
+          <div>
+            <span className="selo-admin">Auditoria de acessos</span>
+            <h3>Cadastros incompletos</h3>
+            <p>
+              Usuários que existem no Supabase Authentication, mas ainda não possuem perfil
+              em perfis_usuarios. No piloto, a solução mais limpa costuma ser excluir o
+              usuário no Authentication e pedir novo cadastro.
+            </p>
+          </div>
+
+          <strong>{cadastrosIncompletosAdmin.length}</strong>
+        </div>
+
+        <div className="grupo-botoes">
+          <button
+            className="botao-secundario"
+            type="button"
+            onClick={carregarCadastrosIncompletosAdmin}
+            disabled={carregandoCadastrosIncompletosAdmin}
+          >
+            {carregandoCadastrosIncompletosAdmin ? 'Atualizando...' : 'Atualizar auditoria'}
+          </button>
+        </div>
+
+        {erroCadastrosIncompletosAdmin && (
+          <div className="aviso aviso-cadastro-piloto">
+            <p>{erroCadastrosIncompletosAdmin}</p>
+          </div>
+        )}
+
+        {!erroCadastrosIncompletosAdmin && cadastrosIncompletosAdmin.length === 0 && (
+          <div className="aviso aviso-sucesso-cadastro">
+            <p>Nenhum cadastro incompleto encontrado agora.</p>
+          </div>
+        )}
+
+        {cadastrosIncompletosAdmin.length > 0 && (
+          <div className="lista-acessos-admin">
+            {cadastrosIncompletosAdmin.map((cadastro) => (
+              <article className="acesso-admin-card" key={cadastro.user_id}>
+                <div>
+                  <div className="linha-acesso-admin">
+                    <h4>{cadastro.email || 'Usuário sem e-mail'}</h4>
+                    <span>Sem perfil</span>
+                  </div>
+
+                  <p>Criado em: {formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}</p>
+                  <small>User UID: {cadastro.user_id}</small>
+                </div>
+
+                <div className="acoes-acesso-admin">
+                  <button
+                    className="botao-secundario"
+                    type="button"
+                    onClick={() => copiarCadastroIncompletoAdmin(cadastro)}
+                  >
+                    Copiar dados
+                  </button>
+
+                  <button
+                    className="botao-editar"
+                    type="button"
+                    onClick={() => prepararVinculoCadastroIncompleto(cadastro)}
+                  >
+                    Preparar vínculo
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function renderizarAcessosAdmin() {
+    if (!usuarioEhAdminSistema()) {
+      return null
+    }
+
+    const acessosFiltrados = filtrarAcessosAdmin()
+    const totalSecretarias = acessosAdmin.filter((acesso) => acesso.perfil === 'secretaria').length
+    const totalProfessores = acessosAdmin.filter((acesso) => acesso.perfil === 'professor').length
+
+    return (
+      <div className="admin-acessos-bloco">
+        <div className="admin-acessos-topo">
+          <div>
+            <span className="selo-admin">Igrejas e acessos</span>
+            <h3>Controle comercial de usuários</h3>
+            <p>
+              Vincule secretarias e professores às igrejas cadastradas. Para criar o login,
+              primeiro crie o usuário em Supabase → Authentication → Users e cole o User UID aqui.
+            </p>
+          </div>
+
+          <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin()}>
+            Novo acesso
+          </button>
+        </div>
+
+        <div className="admin-acessos-resumo">
+          <div>
+            <strong>{acessosAdmin.length}</strong>
+            <span>acessos vinculados</span>
+          </div>
+
+          <div>
+            <strong>{totalSecretarias}</strong>
+            <span>secretarias</span>
+          </div>
+
+          <div>
+            <strong>{totalProfessores}</strong>
+            <span>professores</span>
+          </div>
+        </div>
+
+        {mostrarFormularioAcessoAdmin && (
+          <form className="formulario formulario-admin-acesso" onSubmit={salvarAcessoAdmin}>
+            <div className="topo-formulario-inline">
+              <div>
+                <h3>{acessoAdminEditandoUserId ? 'Editar acesso' : 'Novo acesso'}</h3>
+                <p>
+                  Este vínculo define qual igreja o usuário acessa e qual perfil ele terá no sistema.
+                </p>
+              </div>
+            </div>
+
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                Igreja
+                <select
+                  value={novoAcessoAdmin.igrejaId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, igrejaId: event.target.value })
+                  }
+                >
+                  <option value="">Selecione uma igreja</option>
+                  {igrejasAdmin.map((igreja) => (
+                    <option value={igreja.id} key={igreja.id}>
+                      {igreja.nome_igreja || igreja.nome} {igreja.congregacao ? `- ${igreja.congregacao}` : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Perfil
+                <select
+                  value={novoAcessoAdmin.perfil}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, perfil: event.target.value })
+                  }
+                >
+                  <option value="secretaria">Secretaria</option>
+                  <option value="professor">Professor</option>
+                  <option value="admin">Administrador local</option>
+                </select>
+              </label>
+
+              <label>
+                User UID do Supabase
+                <input
+                  type="text"
+                  value={novoAcessoAdmin.userId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, userId: event.target.value })
+                  }
+                  placeholder="Ex: 9a764fab-2000-4fb4-8ee0-9275a139e0f6"
+                />
+              </label>
+
+              <label>
+                Nome
+                <input
+                  type="text"
+                  value={novoAcessoAdmin.nome}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, nome: event.target.value })
+                  }
+                  placeholder="Ex: Secretaria da igreja"
+                />
+              </label>
+
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  value={novoAcessoAdmin.email}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, email: event.target.value })
+                  }
+                  placeholder="Ex: secretaria@igreja.com"
+                />
+              </label>
+
+              <label>
+                ID da classe
+                <input
+                  type="number"
+                  value={novoAcessoAdmin.classeId}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({ ...novoAcessoAdmin, classeId: event.target.value })
+                  }
+                  placeholder="Opcional, normalmente só para professor"
+                />
+              </label>
+
+              <label>
+                Data de nascimento
+                <input
+                  type="date"
+                  value={novoAcessoAdmin.dataNascimento}
+                  onChange={(event) =>
+                    setNovoAcessoAdmin({
+                      ...novoAcessoAdmin,
+                      dataNascimento: event.target.value,
+                    })
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                Salvar acesso
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={limparFormularioAcessoAdmin}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="filtros filtros-admin-acessos">
+          <label>
+            Buscar acesso
+            <input
+              type="text"
+              value={buscaAcessoAdmin}
+              onChange={(event) => setBuscaAcessoAdmin(event.target.value)}
+              placeholder="Buscar por nome, e-mail, telefone, WhatsApp, perfil ou igreja"
+            />
+          </label>
+
+          <button className="botao-secundario" onClick={carregarAcessosAdmin}>
+            Atualizar acessos
+          </button>
+        </div>
+
+        <div className="lista-acessos-admin">
+          {acessosFiltrados.map((acesso) => (
+            <article className="acesso-admin-card" key={acesso.user_id}>
+              <div>
+                <div className="linha-acesso-admin">
+                  <h4>{acesso.nome || acesso.email}</h4>
+                  <span>{acesso.perfil}</span>
+                </div>
+
+                <p>{acesso.email}</p>
+                <p>Igreja: {buscarNomeIgrejaAdmin(acesso.igreja_id)}</p>
+
+                {(() => {
+                  const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
+
+                  return (
+                    <div className="contato-acesso-admin">
+                      {contato.responsavel && (
+                        <p>Responsável: {contato.responsavel}</p>
+                      )}
+
+                      {contato.whatsapp && (
+                        <p>WhatsApp: {contato.whatsapp}</p>
+                      )}
+
+                      {contato.telefone && contato.telefone !== contato.whatsapp && (
+                        <p>Telefone: {contato.telefone}</p>
+                      )}
+
+                      {contato.email && contato.email !== acesso.email && (
+                        <p>E-mail da igreja: {contato.email}</p>
+                      )}
+                    </div>
+                  )
+                })()}
+
+                <small>User UID: {acesso.user_id}</small>
+              </div>
+
+              <div className="acoes-acesso-admin">
+                <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
+                  Enviar recuperação
+                </button>
+
+                <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
+                  WhatsApp
+                </button>
+
+                <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
+                  Copiar contato
+                </button>
+
+                <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
+                  Editar
+                </button>
+
+                <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
+                  Remover
+                </button>
+              </div>
+            </article>
+          ))}
+
+          {acessosFiltrados.length === 0 && (
+            <div className="aviso">
+              <p>Nenhum acesso encontrado.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  function renderizarAdministracao() {
+    if (!usuarioEhAdminSistema()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>Esta área é exclusiva para administradores do sistema.</p>
+        </section>
+      )
+    }
+
+    const igrejasFiltradas = filtrarIgrejasAdmin()
+    const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente').length
+    const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
+    const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
+    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina topo-admin-sistema">
+          <div>
+            <span className="selo-admin">Administração do sistema</span>
+            <h2>Administração comercial</h2>
+            <p>
+              Gerencie igrejas, sedes, congregações, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
+            </p>
+          </div>
+
+          {!mostrarFormularioIgrejaAdmin && (
+            <button className="botao-principal" onClick={abrirNovaIgrejaAdmin}>
+              Nova igreja
+            </button>
+          )}
+        </div>
+
+        <div className="cards cards-admin-sistema">
+          <div className="card card-admin">
+            <span>Total</span>
+            <strong>{igrejasAdmin.length}</strong>
+            <p>igrejas cadastradas</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Pendentes</span>
+            <strong>{igrejasPendentes}</strong>
+            <p>aguardando aprovação</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Em teste</span>
+            <strong>{igrejasTeste}</strong>
+            <p>participando do piloto</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Ativas</span>
+            <strong>{igrejasAtivas}</strong>
+            <p>liberadas para uso</p>
+          </div>
+
+          <div className="card card-admin">
+            <span>Pausadas</span>
+            <strong>{igrejasPausadas}</strong>
+            <p>aguardando retorno</p>
+          </div>
+        </div>
+
+        {renderizarAlertasFeedbackAdmin()}
+
+        {renderizarCadastrosIncompletosAdmin()}
+
+        {/* Usuários vinculados agora aparecem dentro de cada igreja. */}
+
+        {mostrarFormularioIgrejaAdmin && (
+          <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
+            <div className="topo-formulario-inline">
+              <div>
+                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja do piloto'}</h3>
+                <p>
+                  Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
+                  Depois crie o usuário em Supabase → Authentication → Users e vincule o acesso.
+                </p>
+              </div>
+            </div>
+
+            <div className="grade-campos grade-campos-configuracoes">
+              <label>
+                Nome da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.nome_igreja}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      nome_igreja: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Assembleia de Deus Campo..."
+                />
+              </label>
+
+              <label>
+                Congregação
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.congregacao}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      congregacao: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Sede, Betel, Vila Nova..."
+                />
+              </label>
+
+              <label>
+                Pastor/Dirigente
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.pastor_dirigente}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      pastor_dirigente: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: Pr. João Silva"
+                />
+              </label>
+
+              <label>
+                Status do piloto
+                <select
+                  value={novaIgrejaAdmin.status_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      status_piloto: event.target.value,
+                    })
+                  }
+                >
+                  <option value="pendente">Pendente</option>
+                  <option value="teste">Teste</option>
+                  <option value="ativa">Ativa</option>
+                  <option value="pausada">Pausada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </label>
+
+              <label>
+                Cidade
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.cidade}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      cidade: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Estado
+                <select
+                  value={novaIgrejaAdmin.estado}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      estado: event.target.value,
+                    })
+                  }
+                >
+                  <option value="">Selecione o estado</option>
+                  {ESTADOS_BRASIL.map((estado) => (
+                    <option key={estado.sigla} value={estado.sigla}>
+                      {estado.sigla} - {estado.nome}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Bairro
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.bairro}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      bairro: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label className="campo-sede-filiada">
+                Endereço da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Rua ou avenida"
+                />
+              </label>
+
+              <label>
+                Número
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.numero_endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      numero_endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 146"
+                />
+              </label>
+
+              <label className="campo-sede-filiada">
+                Complemento
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.complemento_endereco}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      complemento_endereco: event.target.value,
+                    })
+                  }
+                  placeholder="Opcional"
+                />
+              </label>
+
+              <label>
+                CEP da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.cep}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      cep: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 36000-000"
+                />
+              </label>
+
+              <label>
+                Tipo de igreja
+                <select
+                  value={novaIgrejaAdmin.tipo_igreja}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      tipo_igreja: event.target.value,
+                    })
+                  }
+                >
+                  <option value="sede">Sede</option>
+                  <option value="congregacao">Congregação</option>
+                </select>
+              </label>
+
+              {novaIgrejaAdmin.tipo_igreja === 'congregacao' && (
+                <>
+                  <label>
+                    Sede filiada
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_nome}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_nome: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: Assembleia de Deus Sede"
+                    />
+                  </label>
+
+                  <label className="campo-sede-filiada">
+                    Endereço da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_endereco}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_endereco: event.target.value,
+                        })
+                      }
+                      placeholder="Rua ou avenida da sede"
+                    />
+                  </label>
+
+                  <label>
+                    Número da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_numero}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_numero: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 100"
+                    />
+                  </label>
+
+                  <label className="campo-sede-filiada">
+                    Complemento da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_complemento}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_complemento: event.target.value,
+                        })
+                      }
+                      placeholder="Opcional"
+                    />
+                  </label>
+
+                  <label>
+                    CEP da sede
+                    <input
+                      type="text"
+                      value={novaIgrejaAdmin.sede_filiada_cep}
+                      onChange={(event) =>
+                        setNovaIgrejaAdmin({
+                          ...novaIgrejaAdmin,
+                          sede_filiada_cep: event.target.value,
+                        })
+                      }
+                      placeholder="Ex: 36000-000"
+                    />
+                  </label>
+                </>
+              )}
+
+              <label>
+                Telefone da igreja
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.telefone}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      telefone: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                E-mail da igreja
+                <input
+                  type="email"
+                  value={novaIgrejaAdmin.email}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      email: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Responsável
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.responsavel_nome}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_nome: event.target.value,
+                    })
+                  }
+                  placeholder="Nome da secretaria responsável"
+                />
+              </label>
+
+              <label>
+                E-mail do responsável
+                <input
+                  type="email"
+                  value={novaIgrejaAdmin.responsavel_email}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_email: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                WhatsApp do responsável
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.responsavel_whatsapp}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      responsavel_whatsapp: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: 27 99999-9999"
+                />
+              </label>
+
+              <label>
+                Limite de usuários
+                <input
+                  type="number"
+                  min="1"
+                  value={novaIgrejaAdmin.limite_usuarios}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      limite_usuarios: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Início do piloto
+                <input
+                  type="date"
+                  value={novaIgrejaAdmin.data_inicio_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      data_inicio_piloto: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label>
+                Fim do piloto
+                <input
+                  type="date"
+                  value={novaIgrejaAdmin.data_fim_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      data_fim_piloto: event.target.value,
+                    })
+                  }
+                />
+              </label>
+
+              <label className="campo-observacoes-admin">
+                Observações do piloto
+                <input
+                  type="text"
+                  value={novaIgrejaAdmin.observacoes_piloto}
+                  onChange={(event) =>
+                    setNovaIgrejaAdmin({
+                      ...novaIgrejaAdmin,
+                      observacoes_piloto: event.target.value,
+                    })
+                  }
+                  placeholder="Ex: igreja convidada para teste de 30 dias"
+                />
+              </label>
+            </div>
+
+            <div className="grupo-botoes">
+              <button className="botao-principal" type="submit">
+                {igrejaAdminEditandoId ? 'Salvar alterações' : 'Salvar igreja'}
+              </button>
+
+              <button
+                className="botao-secundario"
+                type="button"
+                onClick={limparFormularioIgrejaAdmin}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="filtros filtros-admin">
+          <label>
+            Buscar igreja
+            <input
+              type="text"
+              value={buscaIgrejaAdmin}
+              onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
+              placeholder="Buscar por igreja, congregação, responsável ou e-mail"
+            />
+          </label>
+
+          <button className="botao-secundario" onClick={carregarIgrejasAdmin}>
+            Atualizar lista
+          </button>
+        </div>
+
+        <div className="lista lista-admin-igrejas">
+          {igrejasFiltradas.map((igreja) => (
+            <div className="item-lista item-com-acoes igreja-admin-card" key={igreja.id}>
+              <div>
+                <div className="linha-titulo-admin">
+                  <h3>{igreja.nome_igreja}</h3>
+                  <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
+                    {igreja.status_piloto || 'teste'}
+                  </span>
+                  {igreja.status_piloto === 'pendente' && (
+                    <span className="selo-aguardando-aprovacao">
+                      aguardando decisão
+                    </span>
+                  )}
+                </div>
+
+                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
+                {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
+                <div className="dados-igreja-admin">
+                  <p>
+                    Tipo:{' '}
+                    <strong>
+                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
+                    </strong>
+                  </p>
+
+                  {(igreja.cidade || igreja.estado) && (
+                    <p>
+                      Local: {igreja.cidade}
+                      {igreja.estado ? `/${igreja.estado}` : ''}
+                    </p>
+                  )}
+
+                  {(igreja.endereco || igreja.bairro || igreja.cep) && (
+                    <p>
+                      Endereço: {igreja.endereco}
+                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
+                      {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
+                      {igreja.bairro ? `, ${igreja.bairro}` : ''}
+                      {igreja.cep ? ` - CEP ${igreja.cep}` : ''}
+                    </p>
+                  )}
+
+                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_nome && (
+                    <p>
+                      Sede filiada: <strong>{igreja.sede_filiada_nome}</strong>
+                    </p>
+                  )}
+
+                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
+                    <p>
+                      Endereço da sede: {igreja.sede_filiada_endereco}
+                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
+                      {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
+                      {igreja.sede_filiada_cep ? ` - CEP ${igreja.sede_filiada_cep}` : ''}
+                    </p>
+                  )}
+                </div>
+
+                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
+                {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
+                {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
+                <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
+                {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
+                  <p>
+                    Piloto: {igreja.data_inicio_piloto || 'sem início'} até{' '}
+                    {igreja.data_fim_piloto || 'sem fim'}
+                  </p>
+                )}
+              </div>
+
+              <div className="acoes-item acoes-aprovacao-igreja">
+                {igreja.status_piloto === 'pendente' && (
+                  <div className="grupo-aprovacao-rapida">
+                    <button
+                      className="botao-aprovar-igreja"
+                      onClick={() => aprovarIgrejaPiloto(igreja)}
+                    >
+                      Aprovar
+                    </button>
+
+                    <button
+                      className="botao-nao-aprovar-igreja"
+                      onClick={() => naoAprovarIgrejaPiloto(igreja)}
+                    >
+                      Não aprovar
+                    </button>
+                  </div>
+                )}
+
+                {igreja.status_piloto !== 'pendente' && igreja.status_piloto !== 'teste' && (
+                  <button
+                    className="botao-aprovar-igreja"
+                    onClick={() => aprovarIgrejaPiloto(igreja)}
+                  >
+                    Aprovar para teste
+                  </button>
+                )}
+
+                {igreja.status_piloto === 'teste' && (
+                  <div className="grupo-aviso-aprovacao">
+                    <button
+                      className="botao-whatsapp-admin"
+                      onClick={() => abrirWhatsAppAprovacao(igreja)}
+                    >
+                      Avisar WhatsApp
+                    </button>
+
+                    <button
+                      className="botao-copiar-admin"
+                      onClick={() => copiarMensagemAprovacao(igreja)}
+                    >
+                      Copiar mensagem
+                    </button>
+                  </div>
+                )}
+
+                <button className="botao-acessar-igreja" onClick={() => acessarIgrejaComoSuporte(igreja)}>
+                  Acessar igreja
+                </button>
+
+                <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
+                  Vincular acesso
+                </button>
+
+                <button
+                  className="botao-secundario botao-usuarios-vinculados"
+                  type="button"
+                  onClick={() => alternarUsuariosDaIgreja(igreja.id)}
+                >
+                  {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
+                    ? 'Ocultar usuários'
+                    : `Usuários vinculados (${contarAcessosDaIgreja(igreja.id)})`}
+                </button>
+
+                <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
+                  Editar dados
+                </button>
+
+                <button className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
+                  Excluir
+                </button>
+              </div>
+
+              {Number(igrejaUsuariosAbertaId) === Number(igreja.id) &&
+                renderizarUsuariosVinculadosIgreja(igreja)}
+            </div>
+          ))}
+
+          {igrejasFiltradas.length === 0 && (
+            <div className="aviso">
+              <p>Nenhuma igreja encontrada.</p>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarManualUsuario() {
+    const passosManual = [
+      {
+        numero: '01',
+        titulo: 'Confira os dados da igreja',
+        texto:
+          'Ao entrar no sistema, confira se o nome da igreja, congregação, dirigente, cidade e demais dados estão corretos.',
+        local: 'Painel ou Configurações',
+      },
+      {
+        numero: '02',
+        titulo: 'Cadastre as classes da EBD',
+        texto:
+          'Crie as turmas da Escola Bíblica Dominical. Exemplo: Crianças, Adolescentes, Jovens, Adultos, Novos Convertidos.',
+        local: 'Menu Classes',
+      },
+      {
+        numero: '03',
+        titulo: 'Cadastre os alunos',
+        texto:
+          'Inclua os alunos em suas respectivas classes. O cadastro pode ser feito pelo menu Alunos ou diretamente dentro da classe.',
+        local: 'Menu Alunos ou Classes',
+      },
+      {
+        numero: '04',
+        titulo: 'Cadastre os professores',
+        texto:
+          'Cadastre os professores da EBD e vincule cada professor à classe em que ele atua. Uma classe pode ter mais de um professor.',
+        local: 'Menu Professores ou Classes',
+      },
+      {
+        numero: '05',
+        titulo: 'Faça a chamada dos alunos',
+        texto:
+          'Na data da EBD, registre presença, falta, visitantes, Bíblias, revistas, ofertas e demais informações da chamada.',
+        local: 'Menu Chamada',
+      },
+      {
+        numero: '06',
+        titulo: 'Faça a chamada dos professores',
+        texto:
+          'Registre também a presença dos professores em uma chamada separada, facilitando o acompanhamento da equipe docente.',
+        local: 'Menu Chamada',
+      },
+      {
+        numero: '07',
+        titulo: 'Acompanhe aniversariantes',
+        texto:
+          'Use o painel para acompanhar aniversariantes cadastrados e facilitar os avisos da secretaria da EBD.',
+        local: 'Painel',
+      },
+      {
+        numero: '08',
+        titulo: 'Gere relatórios',
+        texto:
+          'Depois de registrar as chamadas, gere o relatório em PDF com os dados da EBD, incluindo alunos e professores.',
+        local: 'Menu Relatórios',
+      },
+      {
+        numero: '09',
+        titulo: 'Envie feedback do piloto',
+        texto:
+          'Durante o sistema, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
+        local: 'Painel',
+      },
+    ]
+
+    return (
+      <section className="conteudo manual-usuario-pagina">
+        <div className="manual-hero">
+          <div>
+            <span className="selo-manual">Primeiros passos</span>
+            <h2>Manual do usuário EBD Fiel</h2>
+            <p>
+              Siga este roteiro para configurar sua igreja e começar a usar o sistema
+              na rotina da Escola Bíblica Dominical.
+            </p>
+          </div>
+
+          <button className="botao-principal" onClick={() => navegarParaPagina('classes')}>
+            Começar pelas classes
+          </button>
+        </div>
+
+        <div className="manual-alerta">
+          <strong>Ordem recomendada:</strong>
+          <span>
+            primeiro confira os dados da igreja, depois cadastre classes, alunos,
+            professores, faça a chamada e gere os relatórios.
+          </span>
+        </div>
+
+        <div className="manual-grid">
+          {passosManual.map((passo) => (
+            <article className="manual-card" key={passo.numero}>
+              <div className="manual-numero">{passo.numero}</div>
+
+              <div>
+                <span className="manual-local">{passo.local}</span>
+                <h3>{passo.titulo}</h3>
+                <p>{passo.texto}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="manual-final">
+          <div>
+            <h3>Dica para o sistema</h3>
+            <p>
+              Use o sistema em uma rotina real da EBD e envie feedback sempre que
+              encontrar algo confuso, difícil ou que possa melhorar.
+            </p>
+          </div>
+
+          <button className="botao-secundario" onClick={() => navegarParaPagina('painel')}>
+            Voltar ao painel
+          </button>
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarPagina() {
+    if (paginaAtual === 'administracao' && !usuarioEhAdminSistema()) {
+      return renderizarPainel()
+    }
+
+    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id && paginaAtual !== 'administracao') {
+      return renderizarAdministracao()
+    }
+
+    if (!usuarioEhSecretaria() && ['classes', 'professores', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
+      return renderizarPainel()
+    }
+
+    if (paginaAtual === 'painel') return renderizarPainel()
+    if (paginaAtual === 'classes') return renderizarClasses()
+    if (paginaAtual === 'alunos') return renderizarAlunos()
+    if (paginaAtual === 'professores') return renderizarProfessores()
+    if (paginaAtual === 'usuarios') return renderizarUsuarios()
+    if (paginaAtual === 'chamada') return renderizarChamada()
+    if (paginaAtual === 'relatorios') return renderizarRelatorios()
+    if (paginaAtual === 'manual') return renderizarManualUsuario()
+    if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
+    if (paginaAtual === 'administracao') return renderizarAdministracao()
+
+    return renderizarPainel()
+  }
+
+  return (
+    <div className="app">
+      <aside className="menu-lateral">
+        <div className="marca-sidebar">
+          <div className="logo-simbolo logo-simbolo-sidebar">
+            <img
+              src="/logo-oficial-ebd-fiel.png"
+              alt="Logo EBD Fiel"
+              className="logo-imagem"
+            />
+          </div>
+          <div>
+            <h1>Painel EBD Fiel</h1>
+            <p>Gestão da Escola Bíblica</p>
+          </div>
+        </div>
+
+        <nav className="menu-navegacao">
+          {menu.filter(menuPermitidoParaUsuario).map((item) => (
+            <button
+              key={item.id}
+              className={paginaAtual === item.id ? 'ativo' : ''}
+              onClick={() => navegarParaPagina(item.id)}
+            >
+              <span className="icone-menu">
+                <Icone nome={item.icone} className="icone-svg" />
+              </span>
+              <span>{item.nome}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="cartao-usuario-sidebar">
+          <p className="titulo-usuario-sidebar">Logado como</p>
+          <strong>{sessao?.user?.email}</strong>
+          <span className="selo-perfil-sidebar">
+            {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
+          </span>
+
+          <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
+            <Icone nome="sair" className="icone-svg" />
+            <span>Sair</span>
+          </button>
+        </div>
+      </aside>
+
+      <main className="area-principal">
+        {modoSuporteAdminAtivo() && (
+          <div className="banner-modo-suporte">
+            <div>
+              <span>Modo suporte ativo</span>
+              <strong>
+                Você está visualizando a igreja{' '}
+                {igrejaSuporteAdmin?.nome_igreja ||
+                  igrejaAtualPiloto?.nome_igreja ||
+                  buscarNomeIgrejaParaExibicao()}
+              </strong>
+              <p>Você continua logado como administrador do sistema.</p>
+            </div>
+
+            <button className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
+              Sair do modo suporte
+            </button>
+          </div>
+        )}
+
+        {renderizarPagina()}
+      </main>
+    </div>
+  )
+}
+
+export default App
