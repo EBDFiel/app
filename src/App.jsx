@@ -3384,7 +3384,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Chamada por classe - EBD Fiel</title>
+          <title>PDF por classe - EBD Fiel</title>
           <style>
             * { box-sizing: border-box; }
             body {
@@ -3521,7 +3521,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const iframe = document.createElement('iframe')
     iframe.id = 'iframe-impressao-chamada-classe'
-    iframe.title = 'Impressão da chamada por classe'
+    iframe.title = 'Impressão da PDF por classe'
     iframe.style.position = 'fixed'
     iframe.style.right = '0'
     iframe.style.bottom = '0'
