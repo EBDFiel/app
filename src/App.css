@@ -11817,3 +11817,287 @@ button.botao-principal {
     border-radius: 30px !important;
   }
 }
+
+/* =========================================================
+   CLASSES - CARDS COMPACTOS SEM COLUNA LATERAL DE BOTOES
+   ========================================================= */
+
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 16px !important;
+}
+
+.lista-classes-modernas .classe-card-moderno {
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  padding: 16px 18px !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at top right, rgba(245, 166, 35, 0.10), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 0 12px 28px rgba(26, 26, 26, 0.07) !important;
+}
+
+.lista-classes-modernas .classe-card-moderno::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 14px !important;
+  bottom: 14px !important;
+  width: 5px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #d4af37, #00bcd4, #4caf50) !important;
+}
+
+.lista-classes-modernas .classe-card-topo {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+}
+
+.lista-classes-modernas .classe-card-titulo-bloco {
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin: 0 0 6px 0 !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(212, 175, 55, 0.14) !important;
+  color: #8a5b00 !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.lista-classes-modernas .classe-card-topo h3 {
+  margin: 0 !important;
+  color: #1a1a1a !important;
+  font-size: clamp(24px, 2.4vw, 34px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.035em !important;
+  text-shadow: none !important;
+  word-break: break-word !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  flex-shrink: 0 !important;
+  min-width: 78px !important;
+  min-height: 68px !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 10px 12px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #d4af37, #f5a623, #b8860b) !important;
+  color: #1a1a1a !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 12px 24px rgba(212, 175, 55, 0.20) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula strong {
+  color: #1a1a1a !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+}
+
+.lista-classes-modernas .classe-card-matricula span {
+  margin-top: 3px !important;
+  color: #1a1a1a !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.lista-classes-modernas .classe-card-resumo {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.5fr) minmax(170px, 0.7fr) !important;
+  gap: 10px !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item {
+  margin: 0 !important;
+  padding: 11px 14px !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item strong,
+.lista-classes-modernas .classe-card-resumo-item span {
+  display: block !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item strong {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item span {
+  margin-top: 4px !important;
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 850 !important;
+}
+
+.lista-classes-modernas .professores-na-classe {
+  margin: 0 !important;
+  padding: 10px !important;
+  border-radius: 16px !important;
+  background: rgba(248, 250, 252, 0.95) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-height: auto !important;
+  padding: 9px 12px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #edf2f7 !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .professor-classe-linha + .professor-classe-linha {
+  margin-top: 8px !important;
+}
+
+.lista-classes-modernas .professor-classe-nome {
+  color: #0f172a !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.lista-classes-modernas .professor-classe-acoes {
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.lista-classes-modernas .professor-classe-acoes .botao-pequeno {
+  min-height: 30px !important;
+  padding: 6px 10px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+}
+
+.lista-classes-modernas .texto-sem-professor {
+  margin: 0 !important;
+  padding: 4px 2px !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.lista-classes-modernas .classe-card-acoes {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  padding-top: 2px !important;
+}
+
+.lista-classes-modernas .classe-card-acoes button {
+  width: auto !important;
+  min-width: 140px !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 0 14px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.lista-classes-modernas .classe-card-acoes .botao-principal {
+  background: linear-gradient(135deg, #d4af37, #f5a623, #b8860b) !important;
+  color: #1a1a1a !important;
+  border: none !important;
+  box-shadow: 0 10px 22px rgba(212, 175, 55, 0.20) !important;
+}
+
+.lista-classes-modernas .classe-card-acoes .botao-verde {
+  background: linear-gradient(135deg, #008c44, #4caf50) !important;
+  color: #ffffff !important;
+}
+
+.lista-classes-modernas .classe-card-acoes .botao-editar {
+  background: #ffffff !important;
+  color: #8a5b00 !important;
+  border: 1px solid rgba(212, 175, 55, 0.38) !important;
+}
+
+.lista-classes-modernas .classe-card-acoes .botao-excluir {
+  background: #fff7f4 !important;
+  color: #e64a19 !important;
+  border: 1px solid rgba(255, 87, 34, 0.30) !important;
+}
+
+@media (max-width: 1024px) {
+  .lista-classes-modernas .classe-card-topo {
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .classe-card-resumo {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .lista-classes-modernas .classe-card-moderno {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .lista-classes-modernas .classe-card-topo {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: auto !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+
+  .lista-classes-modernas .professor-classe-linha {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .professor-classe-acoes {
+    width: 100% !important;
+  }
+
+  .lista-classes-modernas .professor-classe-acoes button,
+  .lista-classes-modernas .classe-card-acoes button {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .lista-classes-modernas .classe-card-acoes {
+    flex-direction: column !important;
+  }
+}
