@@ -11000,3 +11000,266 @@ button.botao-principal {
   background: #dcfce7 !important;
   transform: none !important;
 }
+
+/* =========================================================
+   Repaginacao operacional interna - versao limpa
+   ========================================================= */
+:root {
+  --ebd-navy: #103058;
+  --ebd-navy-2: #173f66;
+  --ebd-gold-ui: #e6b325;
+  --ebd-green-ui: #16a34a;
+  --ebd-cyan-ui: #0ea5e9;
+  --ebd-red-ui: #ef4444;
+  --ebd-page: #f4f8fc;
+  --ebd-card: #ffffff;
+  --ebd-line: #d8e4ef;
+  --ebd-muted: #64748b;
+}
+
+.app {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(14, 165, 233, 0.12), transparent 26%),
+    radial-gradient(circle at 90% 10%, rgba(230, 179, 37, 0.16), transparent 24%),
+    linear-gradient(180deg, #f6fbff 0%, #eef5fb 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(230, 179, 37, 0.18), transparent 30%),
+    linear-gradient(180deg, #0d223a 0%, #071827 100%) !important;
+}
+
+.menu-navegacao button {
+  min-height: 48px;
+  border-radius: 16px !important;
+}
+
+.menu-navegacao button.ativo {
+  background: linear-gradient(135deg, #103058 0%, #0ea5e9 100%) !important;
+  color: #ffffff !important;
+}
+
+.area-principal {
+  padding: clamp(16px, 2.5vw, 34px) !important;
+}
+
+.conteudo {
+  display: grid;
+  gap: 22px;
+  border-radius: 30px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(216, 228, 239, 0.95) !important;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08) !important;
+}
+
+.banner-modo-suporte {
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 90% 15%, rgba(230, 179, 37, 0.26), transparent 26%),
+    linear-gradient(135deg, #111827 0%, #103058 100%) !important;
+}
+
+.topo-pagina,
+.hero-painel-conteudo,
+.manual-hero {
+  border-radius: 28px !important;
+}
+
+.hero-painel {
+  grid-template-columns: minmax(0, 1fr) 300px !important;
+  gap: 18px !important;
+  margin-bottom: 0 !important;
+}
+
+.hero-painel-conteudo {
+  padding: clamp(22px, 3vw, 34px) !important;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(230, 179, 37, 0.16), transparent 28%),
+    linear-gradient(135deg, #16437a 0%, #1d4ed8 58%, #103058 100%) !important;
+  box-shadow: 0 20px 48px rgba(16, 48, 88, 0.18);
+}
+
+.hero-painel-conteudo h2 {
+  font-size: clamp(30px, 4vw, 46px) !important;
+  letter-spacing: -0.04em;
+}
+
+.hero-painel-destaque {
+  padding: 24px !important;
+  border-radius: 28px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--ebd-line) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06) !important;
+}
+
+.cards,
+.cards-estatisticas {
+  gap: 16px !important;
+}
+
+.card-estatistica,
+.card-admin {
+  min-height: 132px;
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--ebd-line) !important;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06) !important;
+}
+
+.card-estatistica .card-icone,
+.card-icone {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #f2c94c, #d49b12) !important;
+  color: #111827 !important;
+}
+
+.card-valor {
+  color: #103058;
+  font-size: 34px !important;
+}
+
+.feedback-piloto-card {
+  display: grid;
+  gap: 18px;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 95% 5%, rgba(230, 179, 37, 0.18), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f4fbff 100%) !important;
+  border: 1px solid #cfe3f2 !important;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08) !important;
+}
+
+.feedback-piloto-topo h3 {
+  color: #103058 !important;
+  font-size: clamp(28px, 3.5vw, 42px) !important;
+}
+
+.feedback-form-grid {
+  grid-template-columns: 260px minmax(0, 1fr) !important;
+}
+
+.feedback-campo textarea {
+  min-height: 170px !important;
+  border-radius: 22px !important;
+}
+
+.feedback-acoes {
+  align-items: center !important;
+  padding-top: 4px;
+}
+
+.botao-feedback-enviar,
+.botao-principal,
+button.botao-principal {
+  background: linear-gradient(135deg, #103058 0%, #0ea5e9 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.botao-feedback-enviar {
+  min-height: 54px !important;
+  border-radius: 18px !important;
+}
+
+.feedbacks-recentes-igreja,
+.admin-feedback-alertas,
+.admin-acessos-bloco {
+  border-radius: 28px !important;
+}
+
+.feedback-recente-item,
+.feedback-admin-item,
+.acesso-admin-card,
+.igreja-admin-card,
+.item-lista {
+  border-radius: 22px !important;
+  border: 1px solid var(--ebd-line) !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05) !important;
+}
+
+.feedback-resposta-igreja,
+.feedback-resposta-admin {
+  background: #fff9df !important;
+  border-color: rgba(230, 179, 37, 0.35) !important;
+}
+
+.formulario,
+.filtros {
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--ebd-line) !important;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea,
+.filtros input,
+.filtros select {
+  min-height: 48px;
+  border-radius: 14px !important;
+  border: 1px solid #cbddeb !important;
+}
+
+.botao-secundario,
+.botao-editar,
+.botao-excluir {
+  min-height: 44px;
+  border-radius: 14px !important;
+}
+
+.botao-editar {
+  color: #103058 !important;
+  border-color: #bcd7ee !important;
+}
+
+.botao-excluir {
+  color: #b42318 !important;
+  border-color: #fecaca !important;
+}
+
+.lista-classes-modernas .classe-card-moderno {
+  border-radius: 24px !important;
+  border: 1px solid var(--ebd-line) !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 16%, rgba(230, 179, 37, 0.24), transparent 25%),
+    linear-gradient(135deg, #103058 0%, #1d4ed8 100%) !important;
+}
+
+@media (max-width: 980px) {
+  .hero-painel {
+    grid-template-columns: 1fr !important;
+  }
+
+  .feedback-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .area-principal {
+    padding: 12px !important;
+  }
+
+  .conteudo {
+    padding: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .hero-painel-conteudo,
+  .hero-painel-destaque,
+  .feedback-piloto-card,
+  .topo-pagina {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .cards,
+  .cards-estatisticas {
+    grid-template-columns: 1fr !important;
+  }
+}
