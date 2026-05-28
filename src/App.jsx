@@ -5,9 +5,9 @@ import './App.css'
 import { supabase } from './lib/supabase'
 
 const classesIniciais = [
-  { id: 1, nome: 'Jovens', professor: '' },
-  { id: 2, nome: 'Adultos', professor: '' },
-  { id: 3, nome: 'CrianÃ§as', professor: '' },
+  { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
+  { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
+  { id: 3, nome: 'CrianÃ§as', professor: 'IrmÃ£ Ana' },
 ]
 
 const ESTADOS_BRASIL = [
@@ -412,6 +412,7 @@ function App() {
   const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
   const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
   const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
+  const [igrejaUsuariosAbertaId, setIgrejaUsuariosAbertaId] = useState(null)
   const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
     nome_igreja: '',
     congregacao: '',
@@ -1055,7 +1056,7 @@ function App() {
       igreja_id: igrejaAtualId,
       user_id: sessaoAtual?.user?.id,
       nome: classe.nome,
-      professor: classe.professor || '',
+      professor: classe.professor,
     }))
 
     const alunosParaSalvar = alunosIniciais.map((aluno) => ({
@@ -2528,7 +2529,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       (classesBanco || []).map((classe) => ({
         id: Number(classe.id),
         nome: classe.nome,
-        professor: classe.professor || '',
+        professor: classe.professor,
       }))
     )
 
@@ -2614,52 +2615,6 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     )
 
     return classeEncontrada ? classeEncontrada.nome : 'Sem classe'
-  }
-
-  function professorEhExemploInicial(nome) {
-    return ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana'].includes(String(nome || '').trim())
-  }
-
-  async function removerProfessoresExemploDaIgreja() {
-    if (!confirm('Remover os professores de exemplo Ev. Lucas, Pr. Carlos e IrmÃ£ Ana das classes?')) {
-      return
-    }
-
-    const nomesExemplo = ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana']
-
-    const vinculosExemplo = vinculosProfessores.filter((vinculo) =>
-      nomesExemplo.includes(String(vinculo.nome_professor || '').trim())
-    )
-
-    for (const vinculo of vinculosExemplo) {
-      if (vinculo.id) {
-        const { error } = await supabase
-          .from('professores_classes')
-          .delete()
-          .eq('id', vinculo.id)
-
-        if (error) {
-          mostrarErroSistema(error, 'NÃ£o foi possÃ­vel remover os professores de exemplo.')
-          return
-        }
-      }
-    }
-
-    const classesAtualizadas = classes.map((classe) =>
-      professorEhExemploInicial(classe.professor)
-        ? { ...classe, professor: '' }
-        : classe
-    )
-
-    setClasses(classesAtualizadas)
-    setVinculosProfessores((atuais) =>
-      atuais.filter(
-        (vinculo) => !nomesExemplo.includes(String(vinculo.nome_professor || '').trim())
-      )
-    )
-
-    alert('Professores de exemplo removidos.')
-    await carregarDados()
   }
 
   function buscarProfessoresDaClasse(classeId) {
@@ -3101,7 +3056,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
   function editarClasse(classe) {
     setNovaClasse({
       nome: classe.nome,
-      professor: classe.professor || '',
+      professor: classe.professor,
     })
     setClasseEditandoId(classe.id)
     setMostrarFormularioClasse(true)
@@ -5494,11 +5449,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                     <div>
                       <strong>{pessoa.nome}</strong>
                       <p>
-                        {pessoa.tipo} â€¢ {pessoa.detalhe}
+                        {pessoa.tipo} - {pessoa.detalhe}
                       </p>
                     </div>
                     <span>
-                      {formatarDataNascimento(pessoa.dataNascimento)} â€¢ {descreverAniversario(pessoa.dias)}
+                      {formatarDataNascimento(pessoa.dataNascimento)} - {descreverAniversario(pessoa.dias)}
                     </span>
                   </div>
                 ))}
@@ -5653,23 +5608,9 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           </div>
 
           {!mostrarFormularioClasse && (
-            <div className="acoes-topo-classes">
-              <button className="botao-principal" onClick={abrirNovaClasse}>
-                Nova classe
-              </button>
-
-              {vinculosProfessores.some((vinculo) =>
-                ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana'].includes(String(vinculo.nome_professor || '').trim())
-              ) && (
-                <button
-                  className="botao-secundario botao-limpar-exemplos"
-                  type="button"
-                  onClick={removerProfessoresExemploDaIgreja}
-                >
-                  Remover professores de exemplo
-                </button>
-              )}
-            </div>
+            <button className="botao-principal" onClick={abrirNovaClasse}>
+              Nova classe
+            </button>
           )}
         </div>
 
@@ -6862,10 +6803,10 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                   <>
                     <tr className="linha-professores-titulo">
                       <td colSpan="11">
-                        CHAMADA DOS PROFESSORES â€¢ Total: {resumoProfessores.totalProfessores} â€¢
-                        Presentes: {resumoProfessores.presentes} â€¢ Faltaram:{' '}
-                        {resumoProfessores.faltaram} â€¢ Justificaram:{' '}
-                        {resumoProfessores.justificaram} â€¢ FrequÃªncia:{' '}
+                        CHAMADA DOS PROFESSORES - Total: {resumoProfessores.totalProfessores} â€¢
+                        Presentes: {resumoProfessores.presentes} - Faltaram:{' '}
+                        {resumoProfessores.faltaram} - Justificaram:{' '}
+                        {resumoProfessores.justificaram} - FrequÃªncia:{' '}
                         {percentualProfessores}%
                       </td>
                     </tr>
@@ -7133,7 +7074,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                   <p>{feedback.mensagem}</p>
 
                   <small>
-                    {feedback.tipo} â€¢ {feedback.nome_usuario || feedback.email_usuario || 'UsuÃ¡rio'} â€¢{' '}
+                    {feedback.tipo} - {feedback.nome_usuario || feedback.email_usuario || 'UsuÃ¡rio'} â€¢{' '}
                     {formatarDataHoraFeedback(feedback.created_at)}
                   </small>
 
@@ -7145,7 +7086,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                         Respondido por {feedback.respondido_por || 'administrador'} em{' '}
                         {formatarDataHoraFeedback(feedback.respondido_em)}
                         {feedback.notificado_em
-                          ? ` â€¢ Notificado em ${formatarDataHoraFeedback(feedback.notificado_em)}`
+                          ? ` - Notificado em ${formatarDataHoraFeedback(feedback.notificado_em)}`
                           : ''}
                       </small>
                     </div>
@@ -7231,6 +7172,74 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
             ))}
           </div>
         )}
+      </div>
+    )
+  }
+
+  function renderizarUsuariosVinculadosIgreja(igreja) {
+    const acessosDaIgreja = buscarAcessosDaIgrejaAdmin(igreja.id)
+
+    return (
+      <div className="usuarios-vinculados-igreja">
+        <div className="usuarios-vinculados-topo">
+          <div>
+            <strong>UsuÃ¡rios vinculados a esta igreja</strong>
+            <span>{acessosDaIgreja.length} usuÃ¡rio(s)</span>
+          </div>
+
+          <button
+            type="button"
+            className="botao-secundario"
+            onClick={() => abrirNovoAcessoAdmin(igreja)}
+          >
+            Novo acesso para esta igreja
+          </button>
+        </div>
+
+        {acessosDaIgreja.length === 0 && (
+          <div className="aviso usuarios-vinculados-vazio">
+            <p>Nenhum usuÃ¡rio vinculado a esta igreja.</p>
+          </div>
+        )}
+
+        {acessosDaIgreja.map((acesso) => (
+          <article className="usuario-vinculado-card" key={acesso.user_id}>
+            <div>
+              <div className="linha-acesso-admin">
+                <h4>{acesso.nome || acesso.email}</h4>
+                <span>{acesso.perfil}</span>
+              </div>
+
+              <p>{acesso.email}</p>
+              <small>User UID: {acesso.user_id}</small>
+            </div>
+
+            <div className="acoes-usuario-vinculado">
+              <button
+                className="botao-secundario"
+                onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}
+              >
+                Enviar recuperaÃ§Ã£o
+              </button>
+
+              <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
+                WhatsApp
+              </button>
+
+              <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
+                Copiar contato
+              </button>
+
+              <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
+                Editar acesso
+              </button>
+
+              <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
+                Remover acesso
+              </button>
+            </div>
+          </article>
+        ))}
       </div>
     )
   }
@@ -7557,7 +7566,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
         {renderizarAlertasFeedbackAdmin()}
 
-        {renderizarAcessosAdmin()}
+        {/* UsuÃ¡rios vinculados agora aparecem dentro de cada igreja. */}
 
         {mostrarFormularioIgrejaAdmin && (
           <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
@@ -8041,7 +8050,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                       {igreja.numero_endereco ? `, nÂº ${igreja.numero_endereco}` : ''}
                       {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
                       {igreja.bairro ? `, ${igreja.bairro}` : ''}
-                      {igreja.cep ? ` â€¢ CEP ${igreja.cep}` : ''}
+                      {igreja.cep ? ` - CEP ${igreja.cep}` : ''}
                     </p>
                   )}
 
@@ -8056,7 +8065,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                       EndereÃ§o da sede: {igreja.sede_filiada_endereco}
                       {igreja.sede_filiada_numero ? `, nÂº ${igreja.sede_filiada_numero}` : ''}
                       {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
-                      {igreja.sede_filiada_cep ? ` â€¢ CEP ${igreja.sede_filiada_cep}` : ''}
+                      {igreja.sede_filiada_cep ? ` - CEP ${igreja.sede_filiada_cep}` : ''}
                     </p>
                   )}
                 </div>
@@ -8064,7 +8073,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                 {igreja.responsavel_nome && <p>ResponsÃ¡vel: {igreja.responsavel_nome}</p>}
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
-                <p>Acessos vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
+                <p>UsuÃ¡rios vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
                     Piloto: {igreja.data_inicio_piloto || 'sem inÃ­cio'} atÃ©{' '}
@@ -8127,6 +8136,16 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                   Vincular acesso
                 </button>
 
+                <button
+                  className="botao-secundario botao-usuarios-vinculados"
+                  type="button"
+                  onClick={() => alternarUsuariosDaIgreja(igreja.id)}
+                >
+                  {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
+                    ? 'Ocultar usuÃ¡rios'
+                    : `UsuÃ¡rios vinculados (${contarAcessosDaIgreja(igreja.id)})`}
+                </button>
+
                 <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
                   Editar dados
                 </button>
@@ -8135,6 +8154,9 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                   Excluir
                 </button>
               </div>
+
+              {Number(igrejaUsuariosAbertaId) === Number(igreja.id) &&
+                renderizarUsuariosVinculadosIgreja(igreja)}
             </div>
           ))}
 
