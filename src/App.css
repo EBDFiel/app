@@ -11535,244 +11535,285 @@ button.botao-principal {
   padding: 3px !important;
 }
 
-
 /* =========================================================
-   LOGIN MAIS CLARO, COMERCIAL E OPERACIONAL
+   Painel EBD Fiel - ajustes de produto e conversao
    ========================================================= */
-@media (min-width: 1001px) {
-  .tela-login {
-    grid-template-columns: minmax(0, 1fr) minmax(420px, 480px) !important;
-  }
-
-  .tela-login .painel-apresentacao {
-    padding: 46px 54px !important;
-  }
-
-  .tela-login .cartao-login {
-    padding: 42px 40px !important;
-  }
+.modelo-exato-ebd .logo-text {
+  letter-spacing: -0.02em;
 }
 
-.tela-login .painel-apresentacao {
-  position: relative;
-  overflow: hidden;
+.modelo-exato-ebd .logo-sub {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.modelo-exato-ebd .hero-ctas-publicas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.modelo-exato-ebd .hero-ctas-publicas .btn-primary,
+.modelo-exato-ebd .hero-ctas-publicas .btn-outline {
+  min-height: 52px;
+}
+
+.modelo-exato-ebd .btn-outline-claro {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.modelo-exato-ebd .btn-outline-claro:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+
+.modelo-exato-ebd .secao-como-funciona {
   background:
-    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.10), transparent 42%),
-    radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.035), transparent 34%),
-    linear-gradient(135deg, #1a1a1a 0%, #242424 54%, #1b1b1b 100%) !important;
+    radial-gradient(circle at 8% 12%, rgba(212, 175, 55, 0.10), transparent 28%),
+    radial-gradient(circle at 92% 82%, rgba(0, 188, 212, 0.10), transparent 28%),
+    #ffffff;
 }
 
-.tela-login .painel-apresentacao::after {
+.modelo-exato-ebd .como-funciona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin-top: 2rem;
+}
+
+.modelo-exato-ebd .como-funciona-grid article {
+  position: relative;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.06);
+  overflow: hidden;
+}
+
+.modelo-exato-ebd .como-funciona-grid article::after {
   content: "";
   position: absolute;
-  width: 420px;
-  height: 420px;
-  left: -180px;
-  bottom: -120px;
+  right: -34px;
+  bottom: -34px;
+  width: 110px;
+  height: 110px;
   border-radius: 999px;
-  background: rgba(212, 175, 55, 0.08);
-  pointer-events: none;
+  background: rgba(212, 175, 55, 0.10);
 }
 
-.tela-login .marca-login,
-.tela-login .apresentacao-texto,
-.tela-login .beneficios-login {
+.modelo-exato-ebd .como-funciona-grid span {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
+  color: #1A1A1A;
+  font-weight: 950;
+  margin-bottom: 1rem;
+}
+
+.modelo-exato-ebd .como-funciona-grid h3 {
+  margin: 0 0 0.6rem;
+  color: #1A1A1A;
+  font-size: 1.25rem;
+}
+
+.modelo-exato-ebd .como-funciona-grid p {
+  margin: 0;
+  color: #4A4A4A;
+  line-height: 1.6;
+}
+
+.modelo-exato-ebd .section-plans {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 5rem !important;
+}
+
+.modelo-exato-ebd .faq-list {
   position: relative;
   z-index: 1;
 }
 
-.tela-login .marca-login {
-  align-items: center !important;
+.modelo-exato-ebd .plan-card .btn-primary,
+.modelo-exato-ebd .plan-card .btn-outline,
+.modelo-exato-ebd .footer-button {
+  min-height: 48px;
+  justify-content: center;
 }
 
-.tela-login .marca-login .logo-simbolo {
-  width: 64px !important;
-  height: 64px !important;
-  min-width: 64px !important;
-  border-radius: 18px !important;
-  background: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.42) !important;
-  box-shadow: none !important;
-  filter: none !important;
-  padding: 5px !important;
-}
-
-.tela-login .marca-login .logo-imagem {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  border-radius: 14px !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-.tela-login .marca-login h1 {
-  font-size: 30px !important;
-  line-height: 1 !important;
-  color: #ffffff !important;
-}
-
-.tela-login .marca-login p {
-  max-width: 430px;
-  color: rgba(255, 255, 255, 0.86) !important;
-  font-size: 16px !important;
-  line-height: 1.35 !important;
-}
-
-.tela-login .apresentacao-texto {
-  max-width: 760px !important;
-  align-self: center;
-}
-
-.tela-login .selo-apresentacao {
-  background: rgba(212, 175, 55, 0.15) !important;
-  border: 1px solid rgba(212, 175, 55, 0.30) !important;
-  color: #ffffff !important;
-  box-shadow: none !important;
-}
-
-.tela-login .apresentacao-texto h2 {
-  max-width: 780px;
-  font-size: clamp(42px, 5.7vw, 74px) !important;
-  line-height: 0.98 !important;
-  letter-spacing: -0.065em !important;
-  color: #ffffff !important;
-}
-
-.tela-login .apresentacao-texto p {
-  max-width: 680px !important;
-  color: rgba(255, 255, 255, 0.86) !important;
-  font-size: clamp(17px, 1.5vw, 21px) !important;
-  line-height: 1.7 !important;
-}
-
-.tela-login .beneficios-login {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 12px !important;
-}
-
-.tela-login .beneficio-item {
-  min-height: 56px;
-  padding: 14px 16px !important;
-  border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.095) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  box-shadow: none !important;
-}
-
-.tela-login .cartao-login {
+.bloco-cadastro-destaque {
   background:
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.08), transparent 36%),
-    #ffffff !important;
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border-color: rgba(212, 175, 55, 0.24) !important;
 }
 
-.tela-login .botao-voltar-publico {
-  color: #2563eb !important;
+.selo-primeiro-acesso {
+  background: rgba(212, 175, 55, 0.16) !important;
+  color: #5f4306 !important;
 }
 
-.tela-login .topo-cartao-login h2 {
-  color: #111827 !important;
-  font-size: 32px !important;
-  line-height: 1.06 !important;
-  letter-spacing: -0.04em !important;
-}
-
-.tela-login .topo-cartao-login p {
-  color: #475569 !important;
-  font-size: 16px !important;
-  line-height: 1.55 !important;
-}
-
-.tela-login .topo-cartao-icone {
-  width: 58px !important;
-  height: 58px !important;
-  min-width: 58px !important;
-  border-radius: 18px !important;
-  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
-  color: #111827 !important;
-}
-
-.tela-login .aviso-login-aprovado {
-  background: #f8fbff !important;
-  border: 1px solid #bfdbfe !important;
-  color: #334155 !important;
-  font-weight: 800 !important;
-}
-
-.tela-login .formulario-login {
-  border-radius: 24px !important;
-  border: 1px solid rgba(212, 175, 55, 0.20) !important;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08) !important;
-}
-
-.tela-login .formulario-login input {
-  min-height: 54px !important;
-  border-radius: 16px !important;
-}
-
-.tela-login .formulario-login .botao-principal {
-  min-height: 56px !important;
-  border-radius: 18px !important;
-  color: #111827 !important;
-  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
-  box-shadow: 0 16px 32px rgba(217, 119, 6, 0.20) !important;
-}
-
-.tela-login .bloco-cadastro-destaque {
-  padding: 20px !important;
-  border-radius: 24px !important;
-  background:
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 34%),
-    #f8fcff !important;
-  border: 1px solid rgba(14, 165, 233, 0.22) !important;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06) !important;
-}
-
-.tela-login .bloco-cadastro-destaque::before {
-  width: 5px !important;
-  background: linear-gradient(180deg, #0ea5e9, #16a34a) !important;
-}
-
-.tela-login .selo-primeiro-acesso {
-  background: #e0f2fe !important;
-  color: #075985 !important;
-}
-
-.tela-login .bloco-cadastro-destaque h3 {
-  color: #0f3e63 !important;
-  font-size: 28px !important;
-  line-height: 1.05 !important;
-}
-
-.tela-login .bloco-cadastro-destaque p {
-  color: #334155 !important;
-  font-weight: 800 !important;
-}
-
-.tela-login .botao-cadastrar-igreja {
-  min-height: 54px !important;
-  border-radius: 17px !important;
-  background: linear-gradient(135deg, #0f3e63, #0ea5e9) !important;
-  color: #ffffff !important;
-  box-shadow: 0 14px 30px rgba(14, 165, 233, 0.22) !important;
-}
-
-@media (max-width: 1000px) {
-  .tela-login .painel-apresentacao {
-    padding: 34px 24px !important;
+@media (max-width: 768px) {
+  .modelo-exato-ebd .hero-ctas-publicas,
+  .modelo-exato-ebd .hero-ctas-publicas .btn-primary,
+  .modelo-exato-ebd .hero-ctas-publicas .btn-outline {
+    width: 100%;
   }
 
-  .tela-login .apresentacao-texto h2 {
-    font-size: clamp(36px, 11vw, 54px) !important;
+  .modelo-exato-ebd .como-funciona-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 720px) {
-  .tela-login .beneficios-login {
+/* =========================================================
+   Solicitação de acesso - formulário amplo no desktop
+   ========================================================= */
+@media (min-width: 1100px) {
+  .tela-cadastro-piloto {
+    grid-template-columns: minmax(420px, 0.85fr) minmax(720px, 1.15fr) !important;
+    min-height: 100vh !important;
+    background:
+      radial-gradient(circle at 14% 55%, rgba(212, 175, 55, 0.14), transparent 30%),
+      linear-gradient(90deg, #1A1A1A 0%, #242424 52%, #f8fafc 52%, #eef6fb 100%) !important;
+  }
+
+  .tela-cadastro-piloto .painel-cadastro-piloto {
+    padding: clamp(34px, 4vw, 58px) !important;
+  }
+
+  .tela-cadastro-piloto .apresentacao-texto {
+    max-width: 720px !important;
+  }
+
+  .tela-cadastro-piloto .apresentacao-texto h2 {
+    font-size: clamp(44px, 4.8vw, 72px) !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.065em !important;
+  }
+
+  .tela-cadastro-piloto .apresentacao-texto p {
+    max-width: 660px !important;
+    font-size: 19px !important;
+    line-height: 1.75 !important;
+  }
+
+  .tela-cadastro-piloto .beneficios-login {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    max-width: 760px !important;
+  }
+
+  .cartao-cadastro-piloto {
+    width: 100% !important;
+    max-width: none !important;
+    padding: clamp(28px, 3vw, 46px) !important;
+    border-radius: 34px 0 0 34px !important;
+    background:
+      radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 30%),
+      #ffffff !important;
+  }
+
+  .cartao-cadastro-piloto .topo-cartao-login {
+    margin-bottom: 22px !important;
+    padding: 22px 24px !important;
+    border-radius: 28px !important;
+    background:
+      radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 36%),
+      linear-gradient(135deg, #ffffff 0%, #f8fcff 100%) !important;
+    border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  }
+
+  .cartao-cadastro-piloto .topo-cartao-login h2 {
+    font-size: clamp(30px, 3vw, 44px) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .formulario-cadastro-piloto {
+    width: 100% !important;
+    max-width: none !important;
+    display: grid !important;
+    gap: 22px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .grupo-cadastro-piloto {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    padding: 24px !important;
+    border-radius: 28px !important;
+    background:
+      radial-gradient(circle at top right, rgba(212, 175, 55, 0.11), transparent 34%),
+      #ffffff !important;
+    border: 1px solid rgba(0, 188, 212, 0.16) !important;
+    box-shadow: 0 18px 46px rgba(26, 26, 26, 0.07) !important;
+  }
+
+  .grupo-cadastro-piloto h3 {
+    grid-column: 1 / -1 !important;
+    font-size: 24px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid rgba(0, 188, 212, 0.14) !important;
+  }
+
+  .campo-cadastro-piloto-largo {
+    grid-column: 1 / -1 !important;
+  }
+
+  .campo-telefone-cadastro {
+    grid-column: span 2 !important;
+    grid-template-columns: 110px minmax(0, 1fr) !important;
+  }
+
+  .formulario-cadastro-piloto input,
+  .formulario-cadastro-piloto select {
+    min-height: 54px !important;
+    border-radius: 16px !important;
+  }
+
+  .formulario-cadastro-piloto label {
+    min-width: 0 !important;
+  }
+
+  .cartao-cadastro-piloto .botao-principal {
+    min-height: 60px !important;
+    border-radius: 18px !important;
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 1100px) and (max-width: 1320px) {
+  .tela-cadastro-piloto {
+    grid-template-columns: minmax(360px, 0.75fr) minmax(650px, 1.25fr) !important;
+  }
+
+  .grupo-cadastro-piloto {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .campo-telefone-cadastro {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 1099px) {
+  .tela-cadastro-piloto {
     grid-template-columns: 1fr !important;
   }
 
-  .tela-login .topo-cartao-login {
-    display: grid !important;
+  .cartao-cadastro-piloto {
+    width: min(100% - 24px, 860px) !important;
+    margin: 0 auto 24px !important;
+    border-radius: 30px !important;
   }
 }
