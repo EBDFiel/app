@@ -5,9 +5,9 @@ import './App.css'
 import { supabase } from './lib/supabase'
 
 const classesIniciais = [
-  { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
-  { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
-  { id: 3, nome: 'CrianÃ§as', professor: 'IrmÃ£ Ana' },
+  { id: 1, nome: 'Jovens', professor: '' },
+  { id: 2, nome: 'Adultos', professor: '' },
+  { id: 3, nome: 'CrianÃ§as', professor: '' },
 ]
 
 const ESTADOS_BRASIL = [
@@ -1055,7 +1055,7 @@ function App() {
       igreja_id: igrejaAtualId,
       user_id: sessaoAtual?.user?.id,
       nome: classe.nome,
-      professor: classe.professor,
+      professor: classe.professor || '',
     }))
 
     const alunosParaSalvar = alunosIniciais.map((aluno) => ({
@@ -2528,7 +2528,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       (classesBanco || []).map((classe) => ({
         id: Number(classe.id),
         nome: classe.nome,
-        professor: classe.professor,
+        professor: classe.professor || '',
       }))
     )
 
@@ -2614,6 +2614,52 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     )
 
     return classeEncontrada ? classeEncontrada.nome : 'Sem classe'
+  }
+
+  function professorEhExemploInicial(nome) {
+    return ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana'].includes(String(nome || '').trim())
+  }
+
+  async function removerProfessoresExemploDaIgreja() {
+    if (!confirm('Remover os professores de exemplo Ev. Lucas, Pr. Carlos e IrmÃ£ Ana das classes?')) {
+      return
+    }
+
+    const nomesExemplo = ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana']
+
+    const vinculosExemplo = vinculosProfessores.filter((vinculo) =>
+      nomesExemplo.includes(String(vinculo.nome_professor || '').trim())
+    )
+
+    for (const vinculo of vinculosExemplo) {
+      if (vinculo.id) {
+        const { error } = await supabase
+          .from('professores_classes')
+          .delete()
+          .eq('id', vinculo.id)
+
+        if (error) {
+          mostrarErroSistema(error, 'NÃ£o foi possÃ­vel remover os professores de exemplo.')
+          return
+        }
+      }
+    }
+
+    const classesAtualizadas = classes.map((classe) =>
+      professorEhExemploInicial(classe.professor)
+        ? { ...classe, professor: '' }
+        : classe
+    )
+
+    setClasses(classesAtualizadas)
+    setVinculosProfessores((atuais) =>
+      atuais.filter(
+        (vinculo) => !nomesExemplo.includes(String(vinculo.nome_professor || '').trim())
+      )
+    )
+
+    alert('Professores de exemplo removidos.')
+    await carregarDados()
   }
 
   function buscarProfessoresDaClasse(classeId) {
@@ -3055,7 +3101,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
   function editarClasse(classe) {
     setNovaClasse({
       nome: classe.nome,
-      professor: classe.professor,
+      professor: classe.professor || '',
     })
     setClasseEditandoId(classe.id)
     setMostrarFormularioClasse(true)
@@ -5607,9 +5653,23 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           </div>
 
           {!mostrarFormularioClasse && (
-            <button className="botao-principal" onClick={abrirNovaClasse}>
-              Nova classe
-            </button>
+            <div className="acoes-topo-classes">
+              <button className="botao-principal" onClick={abrirNovaClasse}>
+                Nova classe
+              </button>
+
+              {vinculosProfessores.some((vinculo) =>
+                ['Ev. Lucas', 'Pr. Carlos', 'IrmÃ£ Ana'].includes(String(vinculo.nome_professor || '').trim())
+              ) && (
+                <button
+                  className="botao-secundario botao-limpar-exemplos"
+                  type="button"
+                  onClick={removerProfessoresExemploDaIgreja}
+                >
+                  Remover professores de exemplo
+                </button>
+              )}
+            </div>
           )}
         </div>
 
