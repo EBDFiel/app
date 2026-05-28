@@ -10904,3 +10904,29 @@ button.botao-principal {
     gap: 10px;
   }
 }
+
+
+/* AÃ§Ãµes do topo de classes */
+.acoes-topo-classes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.botao-limpar-exemplos {
+  background: #fff7ed !important;
+  color: #9a3412 !important;
+  border-color: rgba(234, 88, 12, 0.25) !important;
+}
+
+@media (max-width: 700px) {
+  .acoes-topo-classes {
+    justify-content: stretch;
+  }
+
+  .acoes-topo-classes button {
+    width: 100%;
+  }
+}
