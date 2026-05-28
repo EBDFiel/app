@@ -12024,3 +12024,22 @@ button.botao-principal {
     width: 100% !important;
   }
 }
+
+
+/* =========================================================
+   RELATÓRIOS - BOTÃO CHAMADA POR CLASSE
+   ========================================================= */
+.relatorio-acoes-botoes {
+  align-items: center;
+}
+
+.relatorio-acoes-botoes .botao-secundario {
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .relatorio-acoes-botoes .botao-secundario,
+  .relatorio-acoes-botoes .botao-principal {
+    width: 100%;
+  }
+}
