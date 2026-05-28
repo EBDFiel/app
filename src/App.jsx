@@ -778,29 +778,25 @@ function App() {
             password: cadastroPiloto.senha,
           })
 
-        if (erroLoginCadastro) {
-          setSucessoCadastroPiloto(
-            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
-          )
-          return
+        if (!erroLoginCadastro) {
+          sessaoCadastro = loginCadastro.session
+          usuarioCadastro = loginCadastro.user || usuarioCadastro
         }
-
-        sessaoCadastro = loginCadastro.session
-        usuarioCadastro = loginCadastro.user
       }
 
-      if (!usuarioCadastro?.id || !sessaoCadastro) {
-        setSucessoCadastroPiloto(
-          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
+      if (!usuarioCadastro?.id) {
+        throw new Error(
+          'usuario_auth_sem_id: não foi possível identificar o usuário criado. Tente novamente ou fale com o administrador.'
         )
-        return
       }
 
       const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
 
       const { data: igrejaCriadaId, error: erroCadastroPilotoRpc } = await supabase.rpc(
-        'criar_cadastro_piloto',
+        'criar_solicitacao_acesso_publica',
         {
+          p_user_id: usuarioCadastro.id,
+          p_email: emailCadastro,
           p_nome: cadastroPiloto.nomeIgreja.trim(),
           p_slug: `${slugBase}-${Date.now()}`,
           p_nome_igreja: cadastroPiloto.nomeIgreja.trim(),
