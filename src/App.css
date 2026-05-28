@@ -10906,27 +10906,78 @@ button.botao-principal {
 }
 
 
-/* AÃ§Ãµes do topo de classes */
-.acoes-topo-classes {
+/* UsuÃ¡rios vinculados dentro do card da igreja */
+.botao-usuarios-vinculados {
+  border-color: rgba(0, 174, 239, 0.35) !important;
+  color: #005f8c !important;
+  background: #f0fbff !important;
+}
+
+.usuarios-vinculados-igreja {
+  grid-column: 1 / -1;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.10), transparent 38%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.usuarios-vinculados-topo {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.botao-limpar-exemplos {
-  background: #fff7ed !important;
-  color: #9a3412 !important;
-  border-color: rgba(234, 88, 12, 0.25) !important;
+.usuarios-vinculados-topo strong {
+  display: block;
+  color: #003B66;
+  font-size: 16px;
 }
 
-@media (max-width: 700px) {
-  .acoes-topo-classes {
-    justify-content: stretch;
+.usuarios-vinculados-topo span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.usuario-vinculado-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(207, 227, 242, 0.9);
+}
+
+.acoes-usuario-vinculado {
+  display: grid;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.acoes-usuario-vinculado button {
+  width: 100%;
+}
+
+.usuarios-vinculados-vazio {
+  margin: 0;
+}
+
+@media (max-width: 850px) {
+  .usuarios-vinculados-topo,
+  .usuario-vinculado-card {
+    grid-template-columns: 1fr;
+    display: grid;
   }
 
-  .acoes-topo-classes button {
-    width: 100%;
+  .acoes-usuario-vinculado {
+    min-width: 0;
   }
 }
