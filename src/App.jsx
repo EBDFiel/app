@@ -3263,7 +3263,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           })
           .sort((a, b) => String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR'))
 
-        const totalLinhasPorClasse = Math.max(alunosDaClasse.length + 5, 5)
+        const totalLinhasPorClasse = alunosDaClasse.length > 0 ? alunosDaClasse.length + 5 : 20
 
         const linhasAlunos = Array.from({ length: totalLinhasPorClasse })
           .map((_, indice) => {
@@ -3378,15 +3378,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       : [classesDisponiveis[escolhaNumerica - 1]]
 
     const htmlChamada = montarChamadaPorClasseEmBrancoHTML(classesSelecionadas)
-    const janela = window.open('', '_blank')
-
-    if (!janela) {
-      alert('O navegador bloqueou a abertura da impressão. Permita pop-ups para imprimir a chamada por classe.')
-      return
-    }
-
-    janela.document.open()
-    janela.document.write(`
+    const documentoChamada = `
       <!doctype html>
       <html lang="pt-BR">
         <head>
@@ -3401,26 +3393,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               font-family: Arial, sans-serif;
               color: #000;
               background: #fff;
-            }
-            .area-acoes {
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-bottom: 20px;
-            }
-            .area-acoes button {
-              border: 0;
-              border-radius: 8px;
-              padding: 12px 18px;
-              font-size: 15px;
-              font-weight: 700;
-              cursor: pointer;
-              background: #103058;
-              color: #fff;
-            }
-            .area-acoes .secundario {
-              background: #e5e7eb;
-              color: #111827;
             }
             .folha-chamada-classe {
               width: 100%;
@@ -3531,27 +3503,70 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
             @media print {
               body { padding: 0; }
-              .area-acoes { display: none; }
               .folha-chamada-classe { max-width: none; margin-bottom: 0; }
               @page { size: A4 portrait; margin: 10mm; }
             }
           </style>
         </head>
         <body>
-          <div class="area-acoes">
-            <button onclick="window.print()">Imprimir / Salvar PDF</button>
-            <button class="secundario" onclick="window.close()">Fechar</button>
-          </div>
           ${htmlChamada}
-          <script>
-            setTimeout(function () {
-              try { window.print() } catch (error) { console.log(error) }
-            }, 800)
-          </script>
         </body>
       </html>
-    `)
-    janela.document.close()
+    `
+
+    const iframeAnterior = document.getElementById('iframe-impressao-chamada-classe')
+    if (iframeAnterior) {
+      iframeAnterior.remove()
+    }
+
+    const iframe = document.createElement('iframe')
+    iframe.id = 'iframe-impressao-chamada-classe'
+    iframe.title = 'Impressão da chamada por classe'
+    iframe.style.position = 'fixed'
+    iframe.style.right = '0'
+    iframe.style.bottom = '0'
+    iframe.style.width = '0'
+    iframe.style.height = '0'
+    iframe.style.border = '0'
+    iframe.style.visibility = 'hidden'
+
+    document.body.appendChild(iframe)
+
+    const documentoIframe = iframe.contentWindow?.document
+
+    if (!documentoIframe) {
+      alert('Não foi possível preparar a impressão. Tente novamente.')
+      iframe.remove()
+      return
+    }
+
+    documentoIframe.open()
+    documentoIframe.write(documentoChamada)
+    documentoIframe.close()
+
+    const imprimirIframe = () => {
+      try {
+        iframe.contentWindow?.focus()
+        iframe.contentWindow?.print()
+      } catch (error) {
+        console.error('Erro ao imprimir chamada por classe:', error)
+        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
+      }
+
+      setTimeout(() => {
+        iframe.remove()
+      }, 1500)
+    }
+
+    iframe.onload = () => {
+      setTimeout(imprimirIframe, 400)
+    }
+
+    setTimeout(() => {
+      if (document.body.contains(iframe)) {
+        imprimirIframe()
+      }
+    }, 900)
   }
 
 
