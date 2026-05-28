@@ -10690,3 +10690,984 @@ button.botao-principal {
 .modelo-exato-ebd .comparison-card li::before {
   content: "" !important;
 }
+
+
+/* Ações rápidas da chamada dos alunos */
+.acoes-chamada-rapida {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.botao-marcar-todos {
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-marcar-todos.presente {
+  background: #eafaf0;
+  color: #087b39;
+  border-color: rgba(8, 123, 57, 0.22);
+}
+
+.botao-marcar-todos.faltou {
+  background: #fff1f0;
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.22);
+}
+
+@media (max-width: 700px) {
+  .acoes-chamada-rapida {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Campo de data da aula/chamada */
+.formulario-data-chamada {
+  margin-bottom: 18px;
+}
+
+.texto-ajuda-campo {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cabecalho-relatorio p {
+  line-height: 1.35;
+}
+
+
+/* Respostas aos feedbacks do piloto */
+.feedback-admin-conteudo {
+  min-width: 0;
+}
+
+.acoes-feedback-admin {
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 170px;
+}
+
+.acoes-feedback-admin button {
+  width: 100%;
+}
+
+.feedback-responder-box {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.feedback-responder-box label {
+  display: grid;
+  gap: 8px;
+  color: #003B66;
+  font-weight: 900;
+}
+
+.feedback-responder-box textarea {
+  width: 100%;
+  min-height: 110px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 12px 14px;
+  resize: vertical;
+  font: inherit;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.feedback-responder-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.feedback-resposta-admin,
+.feedback-resposta-igreja {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #fffbe8;
+  border: 1px solid rgba(255, 210, 0, 0.35);
+}
+
+.feedback-resposta-admin strong,
+.feedback-resposta-igreja strong {
+  display: block;
+  color: #8a5b00;
+  margin-bottom: 4px;
+}
+
+.feedback-resposta-admin p,
+.feedback-resposta-igreja p {
+  margin: 4px 0;
+  color: #334155;
+}
+
+.feedback-com-resposta {
+  border-color: rgba(0, 140, 68, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(0, 140, 68, 0.10), transparent 34%),
+    #ffffff;
+}
+
+.feedback-aguardando-resposta {
+  display: inline-block;
+  margin-top: 8px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+@media (max-width: 800px) {
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-feedback-admin {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+
+/* Contato/WhatsApp na administração */
+.contato-acesso-admin {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.contato-acesso-admin p {
+  margin: 3px 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lista-acessos-admin .acoes-acesso-admin {
+  align-self: stretch;
+}
+
+.lista-acessos-admin .acoes-acesso-admin button {
+  min-width: 150px;
+}
+
+.mockup-check {
+  font-weight: 950;
+  color: #10b981;
+}
+
+
+/* Cadastro: DDD separado e estado em lista suspensa */
+.campo-telefone-cadastro {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.campo-telefone-cadastro input {
+  width: 100%;
+}
+
+.formulario-cadastro-piloto select,
+.formulario select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .campo-telefone-cadastro {
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 10px;
+  }
+}
+
+
+/* Usuários vinculados dentro do card da igreja */
+.botao-usuarios-vinculados {
+  border-color: rgba(0, 174, 239, 0.35) !important;
+  color: #005f8c !important;
+  background: #f0fbff !important;
+}
+
+.usuarios-vinculados-igreja {
+  grid-column: 1 / -1;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.10), transparent 38%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.usuarios-vinculados-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.usuarios-vinculados-topo strong {
+  display: block;
+  color: #003B66;
+  font-size: 16px;
+}
+
+.usuarios-vinculados-topo span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.usuario-vinculado-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(207, 227, 242, 0.9);
+}
+
+.acoes-usuario-vinculado {
+  display: grid;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.acoes-usuario-vinculado button {
+  width: 100%;
+}
+
+.usuarios-vinculados-vazio {
+  margin: 0;
+}
+
+@media (max-width: 850px) {
+  .usuarios-vinculados-topo,
+  .usuario-vinculado-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .acoes-usuario-vinculado {
+    min-width: 0;
+  }
+}
+
+
+/* Botão WhatsApp mais discreto na Administração */
+.acoes-aprovacao-igreja .botao-whatsapp-admin,
+.igreja-admin-card .botao-whatsapp-admin {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 101, 52, 0.22) !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.acoes-aprovacao-igreja .botao-whatsapp-admin:hover,
+.igreja-admin-card .botao-whatsapp-admin:hover {
+  background: #dcfce7 !important;
+  transform: none !important;
+}
+
+/* =========================================================
+   Administracao - melhoria visual segura v1
+   Apenas CSS. Nao altera regras de negocio nem funcoes JS.
+   ========================================================= */
+
+/* Container geral da Administracao */
+.conteudo:has(.topo-admin-sistema),
+.conteudo:has(.admin-acessos-bloco),
+.conteudo:has(.lista-admin-igrejas) {
+  background:
+    radial-gradient(circle at 6% 0%, rgba(212, 175, 55, 0.12), transparent 28%),
+    radial-gradient(circle at 96% 10%, rgba(0, 188, 212, 0.10), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+}
+
+/* Topo da tela de Administracao */
+.topo-admin-sistema {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px !important;
+  padding: clamp(22px, 3vw, 36px) !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(212, 175, 55, 0.24), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.24) !important;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08) !important;
+}
+
+.topo-admin-sistema::after {
+  content: "";
+  position: absolute;
+  right: -42px;
+  bottom: -42px;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.13);
+  pointer-events: none;
+}
+
+.topo-admin-sistema > div,
+.topo-admin-sistema > button {
+  position: relative;
+  z-index: 1;
+}
+
+.selo-admin {
+  margin-bottom: 12px !important;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(0, 188, 212, 0.10)) !important;
+  color: #103058 !important;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+}
+
+.topo-admin-sistema h2 {
+  max-width: 980px;
+  color: #103058 !important;
+  font-size: clamp(34px, 4.4vw, 58px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.055em !important;
+}
+
+.topo-admin-sistema p {
+  max-width: 920px;
+  color: #475569 !important;
+  font-weight: 700;
+}
+
+/* Cards de resumo da Administracao */
+.cards-admin-sistema {
+  gap: 16px !important;
+  margin: 22px 0 26px !important;
+}
+
+.cards-admin-sistema .card,
+.cards-admin-sistema .card-admin {
+  min-height: 130px;
+  display: grid;
+  align-content: space-between;
+  border-radius: 24px !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  background:
+    radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.15), transparent 35%),
+    #ffffff !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07) !important;
+}
+
+.cards-admin-sistema .card:nth-child(1) { border-bottom: 4px solid #d4af37 !important; }
+.cards-admin-sistema .card:nth-child(2) { border-bottom: 4px solid #00bcd4 !important; }
+.cards-admin-sistema .card:nth-child(3) { border-bottom: 4px solid #ff5722 !important; }
+.cards-admin-sistema .card:nth-child(4) { border-bottom: 4px solid #4caf50 !important; }
+.cards-admin-sistema .card:nth-child(5) { border-bottom: 4px solid #b8860b !important; }
+
+.cards-admin-sistema .card strong,
+.cards-admin-sistema .card-admin strong {
+  color: #103058 !important;
+  font-size: 36px !important;
+  line-height: 1;
+}
+
+.cards-admin-sistema .card span,
+.cards-admin-sistema .card-admin span,
+.cards-admin-sistema .card p,
+.cards-admin-sistema .card-admin p {
+  color: #64748b !important;
+  font-weight: 800;
+}
+
+/* Blocos principais: feedbacks, auditoria e acessos */
+.admin-feedback-alertas,
+.admin-acessos-bloco,
+.feedback-piloto-card {
+  border-radius: 30px !important;
+  border: 1px solid rgba(0, 188, 212, 0.18) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.18), transparent 32%),
+    radial-gradient(circle at 0% 100%, rgba(0, 188, 212, 0.10), transparent 34%),
+    #ffffff !important;
+  box-shadow: 0 24px 58px rgba(15, 23, 42, 0.08) !important;
+}
+
+.admin-feedback-topo h3,
+.admin-acessos-topo h3,
+.feedback-piloto-topo h3 {
+  color: #103058 !important;
+  letter-spacing: -0.04em;
+}
+
+.admin-feedback-topo p,
+.admin-acessos-topo p,
+.feedback-piloto-topo p {
+  color: #475569 !important;
+  font-weight: 700;
+}
+
+.admin-feedback-topo > strong {
+  background: linear-gradient(135deg, #d4af37, #f5a623) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 18px 38px rgba(212, 175, 55, 0.22) !important;
+}
+
+/* Itens de feedback */
+.feedback-admin-item,
+.feedback-recente-item,
+.feedback-resposta-admin,
+.feedback-resposta-igreja {
+  border-radius: 20px !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05) !important;
+}
+
+.feedback-novo {
+  border-color: rgba(255, 87, 34, 0.30) !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 87, 34, 0.07), transparent 35%),
+    #ffffff !important;
+}
+
+.feedback-com-resposta,
+.feedback-lido {
+  border-color: rgba(76, 175, 80, 0.25) !important;
+}
+
+/* Auditoria de cadastros incompletos */
+.admin-acessos-bloco .acesso-admin-card,
+.lista-acessos-admin .acesso-admin-card {
+  border-radius: 22px !important;
+  border: 1px solid rgba(0, 188, 212, 0.18) !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06) !important;
+}
+
+.admin-acessos-bloco .linha-acesso-admin h4,
+.lista-acessos-admin .linha-acesso-admin h4 {
+  color: #103058 !important;
+}
+
+.admin-acessos-bloco .linha-acesso-admin span,
+.lista-acessos-admin .linha-acesso-admin span,
+.status-teste,
+.status-pendente,
+.status-ativa,
+.status-pausada,
+.status-cancelada,
+.status-piloto {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  font-weight: 950 !important;
+}
+
+/* Busca da Administracao */
+.filtros-admin,
+.filtros-admin-acessos {
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 280px) !important;
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.16) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05) !important;
+}
+
+.filtros-admin input,
+.filtros-admin-acessos input,
+.filtros-admin select,
+.filtros-admin-acessos select {
+  min-height: 48px;
+}
+
+/* Cards de igrejas */
+.lista-admin-igrejas {
+  gap: 18px !important;
+}
+
+.igreja-admin-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px !important;
+  padding: 20px !important;
+  border: 1px solid rgba(0, 188, 212, 0.18) !important;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07) !important;
+}
+
+.igreja-admin-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 6px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #d4af37, #00bcd4, #4caf50);
+}
+
+.igreja-admin-card > div,
+.igreja-admin-card > section {
+  position: relative;
+  z-index: 1;
+}
+
+.linha-titulo-admin h3 {
+  color: #103058 !important;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.dados-igreja-admin {
+  border-radius: 18px !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 36%),
+    #f8fafc !important;
+}
+
+.dados-igreja-admin strong {
+  color: #103058 !important;
+}
+
+/* Usuarios vinculados */
+.usuarios-vinculados-igreja {
+  border-radius: 22px !important;
+  border: 1px solid rgba(0, 188, 212, 0.20) !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 188, 212, 0.08), transparent 34%),
+    #f8fbff !important;
+}
+
+.usuario-vinculado-card {
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.9) !important;
+}
+
+/* Botoes da Administracao */
+.igreja-admin-card .botao-principal,
+.admin-acessos-bloco .botao-principal,
+.admin-feedback-alertas .botao-principal,
+.botao-acessar-igreja,
+.botao-aprovar-igreja {
+  background: linear-gradient(135deg, #103058, #173f66) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 14px 30px rgba(16, 48, 88, 0.20) !important;
+}
+
+.igreja-admin-card .botao-secundario,
+.admin-acessos-bloco .botao-secundario,
+.admin-feedback-alertas .botao-secundario,
+.botao-usuarios-vinculados,
+.botao-copiar-admin {
+  background: #ffffff !important;
+  color: #103058 !important;
+  border: 1px solid rgba(0, 188, 212, 0.24) !important;
+  box-shadow: none !important;
+}
+
+.igreja-admin-card .botao-editar,
+.admin-acessos-bloco .botao-editar {
+  color: #8a5b00 !important;
+  border-color: rgba(212, 175, 55, 0.42) !important;
+}
+
+.igreja-admin-card .botao-excluir,
+.admin-acessos-bloco .botao-excluir {
+  color: #b42318 !important;
+  border-color: rgba(255, 87, 34, 0.32) !important;
+}
+
+/* Deixa a coluna de acoes mais organizada */
+.acoes-aprovacao-igreja,
+.acoes-acesso-admin,
+.acoes-feedback-admin,
+.acoes-usuario-vinculado {
+  gap: 10px !important;
+}
+
+.acoes-aprovacao-igreja button,
+.acoes-acesso-admin button,
+.acoes-feedback-admin button,
+.acoes-usuario-vinculado button {
+  min-height: 42px;
+  border-radius: 14px !important;
+  font-weight: 900 !important;
+}
+
+/* Responsivo da Administracao */
+@media (max-width: 900px) {
+  .topo-admin-sistema {
+    display: grid !important;
+    gap: 16px;
+  }
+
+  .topo-admin-sistema .botao-principal,
+  .topo-admin-sistema .botao-secundario {
+    width: 100%;
+  }
+
+  .filtros-admin,
+  .filtros-admin-acessos {
+    grid-template-columns: 1fr !important;
+  }
+
+  .igreja-admin-card {
+    padding: 18px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .topo-admin-sistema h2 {
+    font-size: 34px !important;
+  }
+
+  .cards-admin-sistema .card,
+  .cards-admin-sistema .card-admin {
+    min-height: auto;
+  }
+
+  .admin-feedback-alertas,
+  .admin-acessos-bloco,
+  .feedback-piloto-card {
+    padding: 18px !important;
+  }
+}
+
+/* =========================================================
+   Ajuste final da marca no menu lateral
+   Remove brilho/sombra laranja da logo para um visual mais limpo
+   ========================================================= */
+.logo-simbolo-sidebar,
+.logo-simbolo-sidebar img,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo img,
+.marca-sidebar .logo-imagem,
+.menu-lateral .logo-simbolo-sidebar,
+.menu-lateral .logo-simbolo-sidebar img,
+.menu-lateral .marca-sidebar .logo-imagem {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.logo-simbolo-sidebar,
+.menu-lateral .logo-simbolo-sidebar,
+.marca-sidebar .logo-simbolo {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.marca-sidebar,
+.menu-lateral .marca-sidebar {
+  box-shadow: none !important;
+}
+
+.marca-sidebar::before,
+.marca-sidebar::after,
+.menu-lateral .marca-sidebar::before,
+.menu-lateral .marca-sidebar::after,
+.logo-simbolo-sidebar::before,
+.logo-simbolo-sidebar::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* =========================================================
+   Marca do menu lateral - logo limpa sem fundo dourado
+   ========================================================= */
+.menu-lateral .marca-sidebar,
+.marca-sidebar {
+  box-shadow: none !important;
+}
+
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar {
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding: 3px !important;
+  overflow: hidden !important;
+}
+
+.menu-lateral .marca-sidebar .logo-imagem,
+.menu-lateral .marca-sidebar img,
+.marca-sidebar .logo-imagem,
+.marca-sidebar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.menu-lateral .marca-sidebar .logo-simbolo::before,
+.menu-lateral .marca-sidebar .logo-simbolo::after,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar::before,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar::after,
+.marca-sidebar .logo-simbolo::before,
+.marca-sidebar .logo-simbolo::after,
+.marca-sidebar .logo-simbolo-sidebar::before,
+.marca-sidebar .logo-simbolo-sidebar::after {
+  display: none !important;
+  content: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* =========================================================
+   Logo limpa em todas as telas: menu lateral, login e pagina publica
+   Remove fundo dourado/laranja, brilho e sombra da marca
+   ========================================================= */
+.logo-simbolo,
+.logo-simbolo-sidebar,
+.logo-publica,
+.tela-login .marca-login .logo-simbolo,
+.marca-login .logo-simbolo,
+.marca-publica .logo-publica,
+.topo-publico .logo-simbolo,
+.topo-publico .logo-publica,
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar {
+  background: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  overflow: hidden !important;
+}
+
+.logo-simbolo img,
+.logo-simbolo-sidebar img,
+.logo-publica img,
+.logo-imagem,
+.tela-login .marca-login .logo-imagem,
+.marca-login .logo-imagem,
+.marca-publica .logo-imagem,
+.menu-lateral .marca-sidebar .logo-imagem,
+.menu-lateral .marca-sidebar img,
+.marca-sidebar .logo-imagem,
+.marca-sidebar img {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  object-fit: contain !important;
+}
+
+.logo-simbolo::before,
+.logo-simbolo::after,
+.logo-simbolo-sidebar::before,
+.logo-simbolo-sidebar::after,
+.logo-publica::before,
+.logo-publica::after,
+.tela-login .marca-login .logo-simbolo::before,
+.tela-login .marca-login .logo-simbolo::after,
+.marca-login .logo-simbolo::before,
+.marca-login .logo-simbolo::after,
+.marca-publica .logo-publica::before,
+.marca-publica .logo-publica::after,
+.menu-lateral .marca-sidebar .logo-simbolo::before,
+.menu-lateral .marca-sidebar .logo-simbolo::after,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar::before,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar::after {
+  display: none !important;
+  content: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.tela-login .marca-login .logo-simbolo {
+  width: 68px !important;
+  height: 68px !important;
+  border-radius: 18px !important;
+  padding: 5px !important;
+}
+
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar {
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  border-radius: 16px !important;
+  padding: 3px !important;
+}
+
+/* =========================================================
+   Landing EBD Fiel - ajustes de conversao e organizacao v2
+   ========================================================= */
+.modelo-exato-ebd .hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+}
+
+.modelo-exato-ebd .btn-outline-light {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.58) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.modelo-exato-ebd .btn-outline-light:hover {
+  color: #103058 !important;
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.modelo-exato-ebd .section-flow {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.12), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+}
+
+.modelo-exato-ebd .flow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 2rem;
+}
+
+.modelo-exato-ebd .flow-card {
+  position: relative;
+  min-height: 210px;
+  padding: 1.65rem;
+  border-radius: 1.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.06);
+}
+
+.modelo-exato-ebd .flow-card span {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
+  color: #1A1A1A;
+  font-weight: 950;
+  margin-bottom: 1rem;
+}
+
+.modelo-exato-ebd .flow-card h3 {
+  margin: 0 0 0.55rem;
+  color: #103058;
+  font-size: 1.12rem;
+}
+
+.modelo-exato-ebd .flow-card p {
+  margin: 0;
+  color: #4A4A4A;
+  line-height: 1.58;
+}
+
+.modelo-exato-ebd .section-plans {
+  padding-bottom: 6rem !important;
+}
+
+.modelo-exato-ebd .plans-grid-clean {
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important;
+  align-items: stretch;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modelo-exato-ebd .plans-grid-clean .plan-card {
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.modelo-exato-ebd .plans-grid-clean .plan-card.featured {
+  transform: none !important;
+  border-width: 2px;
+}
+
+.modelo-exato-ebd #faq {
+  padding-top: 5rem !important;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(0, 188, 212, 0.10), transparent 28%),
+    #f8f9fa;
+}
+
+.modelo-exato-ebd .faq-list {
+  position: relative;
+  z-index: 1;
+}
+
+.modelo-exato-ebd .footer-col .footer-button {
+  width: fit-content;
+  min-width: 220px;
+  text-align: center;
+  justify-content: center;
+}
+
+@media (max-width: 1000px) {
+  .modelo-exato-ebd .flow-grid,
+  .modelo-exato-ebd .plans-grid-clean {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .modelo-exato-ebd .hero-actions,
+  .modelo-exato-ebd .flow-grid,
+  .modelo-exato-ebd .plans-grid-clean {
+    grid-template-columns: 1fr !important;
+    display: grid !important;
+  }
+
+  .modelo-exato-ebd .flow-card {
+    min-height: auto;
+  }
+
+  .modelo-exato-ebd .section-plans {
+    padding-bottom: 4rem !important;
+  }
+}
