@@ -4474,10 +4474,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Área segura do cliente</span>
-            <h2>Acesse o painel da sua igreja.</h2>
+            <h2>Organize sua Escola Bíblica Dominical em poucos minutos.</h2>
             <p>
-              Entre com suas credenciais para gerenciar classes, alunos, chamadas,
-              configurações e relatórios da Escola Bíblica Dominical.
+              Gerencie classes, alunos, professores, chamadas e relatórios em um único
+              sistema simples para sua igreja.
             </p>
           </div>
 
@@ -4515,13 +4515,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <Icone nome="usuarios" className="icone-status" />
             </div>
             <div>
-              <h2>Já foi aprovado?</h2>
-              <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+              <h2>Entrar no sistema</h2>
+              <p>Use o e-mail e a senha cadastrados após a aprovação da sua igreja.</p>
             </div>
           </div>
 
           <div className="aviso-login-aprovado">
-            Use o login abaixo somente se sua igreja já foi aprovada.
+            O acesso é liberado somente para igrejas já aprovadas.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -4554,7 +4554,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               type="submit"
               disabled={carregandoLogin}
             >
-              {carregandoLogin ? 'Entrando...' : 'Entrar'}
+              {carregandoLogin ? 'Entrando...' : 'Acessar painel'}
             </button>
           </form>
 
@@ -4562,8 +4562,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <span className="selo-primeiro-acesso">Primeiro acesso?</span>
             <h3>Cadastrar minha igreja</h3>
             <p>
-              Se você recebeu o código do piloto, cadastre sua igreja para análise
-              e aprovação do administrador.
+              Preencha o cadastro da sua igreja, aguarde a análise do administrador
+              e receba a liberação para acessar o painel.
             </p>
 
             <button
