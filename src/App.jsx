@@ -10,6 +10,37 @@ const classesIniciais = [
   { id: 3, nome: 'CrianÃ§as', professor: 'IrmÃ£ Ana' },
 ]
 
+const ESTADOS_BRASIL = [
+  { sigla: 'AC', nome: 'Acre' },
+  { sigla: 'AL', nome: 'Alagoas' },
+  { sigla: 'AP', nome: 'AmapÃ¡' },
+  { sigla: 'AM', nome: 'Amazonas' },
+  { sigla: 'BA', nome: 'Bahia' },
+  { sigla: 'CE', nome: 'CearÃ¡' },
+  { sigla: 'DF', nome: 'Distrito Federal' },
+  { sigla: 'ES', nome: 'EspÃ­rito Santo' },
+  { sigla: 'GO', nome: 'GoiÃ¡s' },
+  { sigla: 'MA', nome: 'MaranhÃ£o' },
+  { sigla: 'MT', nome: 'Mato Grosso' },
+  { sigla: 'MS', nome: 'Mato Grosso do Sul' },
+  { sigla: 'MG', nome: 'Minas Gerais' },
+  { sigla: 'PA', nome: 'ParÃ¡' },
+  { sigla: 'PB', nome: 'ParaÃ­ba' },
+  { sigla: 'PR', nome: 'ParanÃ¡' },
+  { sigla: 'PE', nome: 'Pernambuco' },
+  { sigla: 'PI', nome: 'PiauÃ­' },
+  { sigla: 'RJ', nome: 'Rio de Janeiro' },
+  { sigla: 'RN', nome: 'Rio Grande do Norte' },
+  { sigla: 'RS', nome: 'Rio Grande do Sul' },
+  { sigla: 'RO', nome: 'RondÃ´nia' },
+  { sigla: 'RR', nome: 'Roraima' },
+  { sigla: 'SC', nome: 'Santa Catarina' },
+  { sigla: 'SP', nome: 'SÃ£o Paulo' },
+  { sigla: 'SE', nome: 'Sergipe' },
+  { sigla: 'TO', nome: 'Tocantins' },
+]
+
+
 const alunosIniciais = [
   { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
   { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
@@ -729,41 +760,12 @@ function App() {
         password: cadastroPiloto.senha,
       })
 
-      let sessaoCadastro = cadastroAuth?.session || null
-      let usuarioCadastro = cadastroAuth?.user || null
-      let aproveitandoUsuarioExistente = false
-
       if (erroCadastroAuth) {
-        const mensagemErroCadastro = String(erroCadastroAuth.message || '').toLowerCase()
-        const emailJaExiste =
-          mensagemErroCadastro.includes('already') ||
-          mensagemErroCadastro.includes('registered') ||
-          mensagemErroCadastro.includes('exists') ||
-          mensagemErroCadastro.includes('user already')
-
-        if (!emailJaExiste) {
-          throw erroCadastroAuth
-        }
-
-        aproveitandoUsuarioExistente = true
-
-        const { data: loginCadastroExistente, error: erroLoginCadastroExistente } =
-          await supabase.auth.signInWithPassword({
-            email: emailCadastro,
-            password: cadastroPiloto.senha,
-          })
-
-        if (erroLoginCadastroExistente) {
-          setErroCadastroPiloto(
-            'Este e-mail jÃ¡ iniciou um cadastro anteriormente. Para continuar, use a mesma senha cadastrada antes ou clique em â€œEsqueci minha senhaâ€.'
-          )
-          setCarregandoCadastroPiloto(false)
-          return
-        }
-
-        sessaoCadastro = loginCadastroExistente.session
-        usuarioCadastro = loginCadastroExistente.user
+        throw erroCadastroAuth
       }
+
+      let sessaoCadastro = cadastroAuth.session
+      let usuarioCadastro = cadastroAuth.user
 
       if (!sessaoCadastro) {
         const { data: loginCadastro, error: erroLoginCadastro } =
@@ -840,9 +842,7 @@ function App() {
       }
 
       setSucessoCadastroPiloto(
-        aproveitandoUsuarioExistente
-          ? 'Cadastro recuperado e enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
-          : 'Cadastro enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -868,7 +868,7 @@ function App() {
         String(error?.details || '').includes('usuario_ja_possui_perfil')
       ) {
         setErroCadastroPiloto(
-          'Este e-mail jÃ¡ possui um cadastro ativo no sistema. Use â€œEsqueci minha senhaâ€ para acessar ou fale com o administrador.'
+          'Este e-mail jÃ¡ iniciou um cadastro anteriormente. Use â€œEsqueci minha senhaâ€ para recuperar o acesso ou fale com o administrador para concluir o vÃ­nculo.'
         )
       } else {
         setErroCadastroPiloto(
@@ -4079,7 +4079,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                     type="text"
                     inputMode="numeric"
                     maxLength="2"
-                    value={cadastroPiloto.telefoneDdd}
+                    value={cadastroPiloto.telefoneDdd || ''}
                     onChange={(event) =>
                       setCadastroPiloto({
                         ...cadastroPiloto,
@@ -4096,7 +4096,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                   <input
                     type="text"
                     inputMode="numeric"
-                    value={cadastroPiloto.telefoneNumero}
+                    value={cadastroPiloto.telefoneNumero || ''}
                     onChange={(event) =>
                       setCadastroPiloto({
                         ...cadastroPiloto,
