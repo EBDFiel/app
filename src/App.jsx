@@ -4619,7 +4619,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <a href="#planos">{'Planos'}</a>
               <a href="#faq">{'FAQ'}</a>
               <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
-                {'Entrar no sistema'}
+                {'Já sou cliente'}
               </button>
             </div>
           </div>
@@ -4646,7 +4646,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               setTelaPublica('login')
             }}
           >
-            {'Entrar no sistema'}
+            {'Já sou cliente'}
           </button>
         </div>
 
@@ -4674,9 +4674,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   {'Cadastre classes, alunos e professores, registre chamadas e gere relat\u00f3rios em PDF em uma plataforma simples para igrejas.'}
                 </p>
 
-                <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                  <span>{'→'}</span> {'Entrar no sistema'}
-                </button>
+                <div className="hero-actions">
+                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
+                    <span>{'→'}</span> {'Participar do teste piloto'}
+                  </button>
+                  <button className="btn-outline btn-outline-light" type="button" onClick={() => setTelaPublica('login')}>
+                    {'Já sou cliente'}
+                  </button>
+                </div>
 
                 <div className="hero-stats">
                   <div className="stat">
@@ -4766,7 +4771,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <section className="section section-soft">
             <div className="container">
-              <h2 className="section-title">{'Chega de planilhas, pap\u00e9is e relat\u00f3rios manuais'}</h2>
+              <h2 className="section-title">{'Troque planilhas e papéis por uma gestão simples da EBD'}</h2>
 
               <div className="comparison">
                 <div className="comparison-grid">
@@ -4790,6 +4795,41 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     </ul>
                   </article>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section section-flow" id="como-funciona">
+            <div className="container">
+              <h2 className="section-title">{'Como funciona'}</h2>
+              <p className="section-subtitle">
+                {'Um fluxo simples para sua igreja começar a usar o EBD Fiel com segurança.'}
+              </p>
+
+              <div className="flow-grid">
+                <article className="flow-card">
+                  <span>{'1'}</span>
+                  <h3>{'Cadastre sua igreja'}</h3>
+                  <p>{'Preencha os dados da igreja e do responsável pelo acesso.'}</p>
+                </article>
+
+                <article className="flow-card">
+                  <span>{'2'}</span>
+                  <h3>{'Aguarde aprovação'}</h3>
+                  <p>{'O administrador confere as informações e libera o acesso.'}</p>
+                </article>
+
+                <article className="flow-card">
+                  <span>{'3'}</span>
+                  <h3>{'Organize a EBD'}</h3>
+                  <p>{'Cadastre classes, alunos, professores e registre as chamadas.'}</p>
+                </article>
+
+                <article className="flow-card">
+                  <span>{'4'}</span>
+                  <h3>{'Gere relatórios'}</h3>
+                  <p>{'Acompanhe frequência, totais e relatórios prontos para impressão.'}</p>
+                </article>
               </div>
             </div>
           </section>
@@ -4822,40 +4862,33 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <section className="section section-plans" id="planos">
             <div className="container">
-              <h2 className="section-title">{'Teste piloto'}</h2>
+              <h2 className="section-title">{'Teste piloto do EBD Fiel'}</h2>
+              <p className="section-subtitle">
+                {'Participe do piloto fechado, cadastre sua igreja e aguarde a aprovação do administrador.'}
+              </p>
 
-              <div className="plans-grid">
-                <article className="plan-card">
-                  <div className="plan-badge">{'Fechado'}</div>
-                  <h3>{'Teste piloto'}</h3>
-                  <div className="plan-price">{'Gratuito'}</div>
-                  <p>{'Para igrejas do grupo selecionadas.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Entrar'}
-                  </button>
-                </article>
-
+              <div className="plans-grid plans-grid-clean">
                 <article className="plan-card featured">
-                  <div className="plan-badge">{'Popular'}</div>
-                  <h3>{'Plano Igreja'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para uso completo na rotina da EBD.'}</p>
-                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                    {'J\u00e1 sou cliente'}
+                  <div className="plan-badge">{'Piloto fechado'}</div>
+                  <h3>{'Participar do teste piloto'}</h3>
+                  <div className="plan-price">{'Gratuito'}</div>
+                  <p>{'Para igrejas convidadas que desejam avaliar o sistema na rotina da EBD.'}</p>
+                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
+                    {'Quero participar do teste piloto'}
                   </button>
                 </article>
 
                 <article className="plan-card">
-                  <h3>{'Plano Personalizado'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para igrejas com necessidades espec\u00edficas.'}</p>
+                  <h3>{'Já sou cliente'}</h3>
+                  <div className="plan-price">{'Acesso liberado'}</div>
+                  <p>{'Use seu e-mail e senha após a aprovação da sua igreja.'}</p>
                   <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Acessar sistema'}
+                    {'Entrar no sistema'}
                   </button>
                 </article>
               </div>
 
-              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
+              <p className="plans-note">{'O cadastro público permanece controlado. A liberação é feita manualmente pelo administrador.'}</p>
             </div>
           </section>
 
