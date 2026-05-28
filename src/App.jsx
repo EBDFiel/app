@@ -691,7 +691,7 @@ function App() {
     const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
 
     if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
+      setErroCadastroPiloto('Código de autorização inválido. Confira o código informado no grupo.')
       return
     }
 
@@ -753,7 +753,7 @@ function App() {
 
       if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
         )
         setCarregandoCadastroPiloto(false)
         return
@@ -865,7 +865,7 @@ function App() {
         String(error?.details || '').includes('limite_piloto_atingido')
       ) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
         )
       } else if (
         String(error?.message || '').includes('usuario_ja_possui_perfil') ||
@@ -876,7 +876,7 @@ function App() {
         )
       } else {
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
+          traduzirErroSistema(error, 'Não foi possível criar a solicitação de acesso.')
         )
       }
     } finally {
@@ -1695,7 +1695,7 @@ function App() {
     const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
     const textoAcao =
       novoStatus === 'teste'
-        ? 'aprovar esta igreja para o teste piloto'
+        ? 'aprovar esta igreja para o sistema'
         : novoStatus === 'cancelada'
           ? 'não aprovar esta igreja'
           : `alterar o status para ${novoStatus}`
@@ -1720,7 +1720,7 @@ function App() {
 
     if (novoStatus === 'teste') {
       const avisarAgora = window.confirm(
-        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
+        'Igreja aprovada para o sistema. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
       )
 
       if (avisarAgora) {
@@ -1746,7 +1746,7 @@ function App() {
 
     return `Paz do Senhor!
 
-O cadastro da ${nomeIgreja} no teste piloto do EBD Fiel foi aprovado.
+O cadastro da ${nomeIgreja} no sistema do EBD Fiel foi aprovado.
 
 Acesse o sistema pelo link:
 
@@ -1764,7 +1764,7 @@ Manual rápido para começar:
 6. Vá em Chamada para registrar a presença dos alunos.
 7. Use Chamada dos professores para registrar a presença dos professores.
 8. Em Relatórios, gere o relatório da EBD em PDF.
-9. Durante o teste piloto, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
+9. Durante o sistema, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -1994,7 +1994,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A área de feedback está disponível para igrejas em teste piloto.')
+      alert('A área de feedback está disponível para igrejas em sistema.')
       return
     }
 
@@ -2025,7 +2025,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
     await carregarFeedbacksDaIgreja()
-    alert('Feedback enviado com sucesso. Obrigado por ajudar no teste piloto!')
+    alert('Feedback enviado com sucesso. Obrigado por ajudar no sistema!')
   }
 
   async function marcarFeedbackComoLido(feedbackId) {
@@ -2084,7 +2084,7 @@ Obrigado pelo feedback enviado sobre o EBD Fiel.
 Resposta da equipe:
 ${resposta}
 
-Seguimos à disposição para ajudar no teste piloto.
+Seguimos à disposição para ajudar no sistema.
 
 EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
@@ -3953,7 +3953,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Sua solicitação foi enviada.</h2>
             <p>
               O administrador vai conferir os dados da igreja e liberar o acesso para
-              o teste piloto.
+              o sistema.
             </p>
           </div>
         </section>
@@ -4020,18 +4020,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Exclusivo para o grupo</span>
-            <h2>Crie o acesso da sua igreja para avaliação.</h2>
+            <span className="selo-apresentacao">Acesso mediante aprovação</span>
+            <h2>Solicite acesso para sua igreja.</h2>
             <p>
-              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
-              testar classes, alunos, professores, chamadas, relatórios e feedbacks.
+              Preencha o cadastro para análise do administrador. Após a liberação, sua igreja poderá organizar classes, alunos, professores, chamadas e relatórios em um só lugar.
             </p>
           </div>
 
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="check" className="icone-beneficio" />
-              <span>Código do piloto obrigatório</span>
+              <span>Código de autorização obrigatório</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
@@ -4062,8 +4061,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <Icone nome="igreja" className="icone-status" />
             </div>
             <div>
-              <h2>Criar acesso do piloto</h2>
-              <p>Preencha seus dados e os dados da igreja participante.</p>
+              <h2>Solicitar acesso ao painel</h2>
+              <p>Preencha os dados do responsável e da igreja para análise e liberação.</p>
             </div>
           </div>
 
@@ -4182,7 +4181,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label>
-                Código do piloto
+                Código de autorização
                 <input
                   type="text"
                   value={cadastroPiloto.codigoPiloto}
@@ -4192,7 +4191,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                       codigoPiloto: event.target.value,
                     })
                   }
-                  placeholder="Código informado no grupo"
+                  placeholder="Código informado pelo administrador"
                 />
               </label>
             </div>
@@ -5016,7 +5015,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
-              do sistema para o teste piloto.
+              do sistema.
             </p>
           </div>
         </section>
@@ -5329,7 +5328,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       <div className="feedback-piloto-card">
         <div className="feedback-piloto-topo">
           <div>
-            <span className="hero-tag">Teste piloto</span>
+            <span className="hero-tag">Sistema</span>
             <h3>Enviar feedback para a equipe EBD Fiel</h3>
             <p>
               Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
@@ -8428,7 +8427,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         numero: '09',
         titulo: 'Envie feedback do piloto',
         texto:
-          'Durante o teste piloto, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
+          'Durante o sistema, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
         local: 'Painel',
       },
     ]
@@ -8474,7 +8473,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
         <div className="manual-final">
           <div>
-            <h3>Dica para o teste piloto</h3>
+            <h3>Dica para o sistema</h3>
             <p>
               Use o sistema em uma rotina real da EBD e envie feedback sempre que
               encontrar algo confuso, difícil ou que possa melhorar.
