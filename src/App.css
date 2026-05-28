@@ -10981,3 +10981,22 @@ button.botao-principal {
     min-width: 0;
   }
 }
+
+
+/* BotÃ£o WhatsApp mais discreto na AdministraÃ§Ã£o */
+.acoes-aprovacao-igreja .botao-whatsapp-admin,
+.igreja-admin-card .botao-whatsapp-admin {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 101, 52, 0.22) !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.acoes-aprovacao-igreja .botao-whatsapp-admin:hover,
+.igreja-admin-card .botao-whatsapp-admin:hover {
+  background: #dcfce7 !important;
+  transform: none !important;
+}
