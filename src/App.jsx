@@ -3521,7 +3521,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const iframe = document.createElement('iframe')
     iframe.id = 'iframe-impressao-chamada-classe'
-    iframe.title = 'Impressão da PDF por classe'
+    iframe.title = 'Impressão da chamada por classe'
     iframe.style.position = 'fixed'
     iframe.style.right = '0'
     iframe.style.bottom = '0'
@@ -7483,14 +7483,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               className="botao-secundario"
               onClick={abrirRelatorioEmBrancoParaImpressao}
             >
-              Modelo em branco
+              Relatório em branco
             </button>
 
             <button
               className="botao-secundario"
               onClick={abrirChamadaPorClasseParaImpressao}
             >
-              Chamada por classe
+              PDF por classe
             </button>
           </div>
         </div>
