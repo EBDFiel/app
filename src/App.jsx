@@ -3247,6 +3247,268 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
   }
 
 
+  function montarChamadaPorClasseEmBrancoHTML() {
+    const endereco = montarEnderecoIgreja()
+    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'EBD Fiel'
+    const linhasClasses = classes.length > 0 ? classes : classesIniciais
+    const totalLinhasPorClasse = 25
+
+    const paginasClasses = linhasClasses
+      .map((classe) => {
+        const linhasAlunos = Array.from({ length: totalLinhasPorClasse })
+          .map((_, indice) => `
+            <tr>
+              <td>${String(indice + 1).padStart(2, '0')}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          `)
+          .join('')
+
+        return `
+          <section class="folha-chamada-classe">
+            <div class="cabecalho-relatorio cabecalho-chamada-classe">
+              <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
+              <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
+              ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
+              ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
+              ${configuracaoIgreja.superintendente_ebd ? `<p>Superintendente da EBD: ${escaparHtmlRelatorio(configuracaoIgreja.superintendente_ebd)}</p>` : ''}
+              ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
+              <p class="titulo-chamada-classe">CHAMADA DA CLASSE</p>
+            </div>
+
+            <div class="dados-chamada-classe">
+              <p><strong>Classe:</strong> ${escaparHtmlRelatorio(classe.nome)}</p>
+              <p><strong>Professor(a):</strong> ___________________________________________</p>
+              <p><strong>Data:</strong> ____ / ____ / ______</p>
+            </div>
+
+            <table class="tabela-chamada-classe">
+              <thead>
+                <tr>
+                  <th>NÂº</th>
+                  <th>Nome do aluno</th>
+                  <th>Presente</th>
+                  <th>Falta</th>
+                  <th>BÃ­blia</th>
+                  <th>Revista</th>
+                  <th>ObservaÃ§Ã£o</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${linhasAlunos}
+              </tbody>
+            </table>
+
+            <div class="resumo-chamada-classe">
+              <div><strong>Presentes:</strong> ______</div>
+              <div><strong>Faltas:</strong> ______</div>
+              <div><strong>Visitantes:</strong> ______</div>
+              <div><strong>BÃ­blias:</strong> ______</div>
+              <div><strong>Revistas:</strong> ______</div>
+              <div><strong>Oferta:</strong> R$ ______</div>
+            </div>
+
+            <div class="observacoes-chamada-classe">
+              <strong>ObservaÃ§Ãµes:</strong>
+              <div></div>
+              <div></div>
+            </div>
+          </section>
+        `
+      })
+      .join('')
+
+    return `
+      <div class="chamadas-por-classe-em-branco">
+        ${paginasClasses}
+      </div>
+    `
+  }
+
+  function abrirChamadaPorClasseParaImpressao() {
+    const htmlChamada = montarChamadaPorClasseEmBrancoHTML()
+    const janela = window.open('', '_blank')
+
+    if (!janela) {
+      alert('O navegador bloqueou a abertura da impressÃ£o. Permita pop-ups para imprimir a chamada por classe.')
+      return
+    }
+
+    janela.document.open()
+    janela.document.write(`
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Chamada por classe - EBD Fiel</title>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              padding: 24px;
+              font-family: Arial, sans-serif;
+              color: #000;
+              background: #fff;
+            }
+            .area-acoes {
+              display: flex;
+              gap: 12px;
+              justify-content: center;
+              margin-bottom: 20px;
+            }
+            .area-acoes button {
+              border: 0;
+              border-radius: 8px;
+              padding: 12px 18px;
+              font-size: 15px;
+              font-weight: 700;
+              cursor: pointer;
+              background: #103058;
+              color: #fff;
+            }
+            .area-acoes .secundario {
+              background: #e5e7eb;
+              color: #111827;
+            }
+            .folha-chamada-classe {
+              width: 100%;
+              max-width: 980px;
+              margin: 0 auto 28px;
+              padding: 0;
+              background: #fff;
+              page-break-after: always;
+            }
+            .folha-chamada-classe:last-child {
+              page-break-after: auto;
+            }
+            .cabecalho-relatorio {
+              text-align: center;
+              margin-bottom: 14px;
+              padding-bottom: 8px;
+              border-bottom: 2px dotted #000;
+            }
+            .logo-relatorio {
+              width: 68px;
+              height: 68px;
+              object-fit: contain;
+              display: block;
+              margin: 0 auto 6px;
+            }
+            .cabecalho-relatorio h3 {
+              margin: 0 0 5px 0;
+              font-size: 19px;
+              font-weight: 700;
+              text-transform: uppercase;
+            }
+            .cabecalho-relatorio p {
+              margin: 0;
+              font-size: 12px;
+              font-weight: 600;
+            }
+            .titulo-chamada-classe {
+              margin-top: 6px !important;
+              font-size: 14px !important;
+              font-weight: 800 !important;
+              letter-spacing: 0.04em;
+            }
+            .dados-chamada-classe {
+              display: grid;
+              grid-template-columns: 1.4fr 1fr 0.7fr;
+              gap: 10px;
+              margin-bottom: 12px;
+              font-size: 12px;
+              font-weight: 600;
+            }
+            .dados-chamada-classe p {
+              margin: 0;
+              padding: 8px;
+              border: 1px solid #000;
+              min-height: 34px;
+            }
+            .tabela-chamada-classe {
+              width: 100%;
+              border-collapse: collapse;
+              table-layout: fixed;
+              font-size: 11px;
+            }
+            .tabela-chamada-classe th,
+            .tabela-chamada-classe td {
+              border: 1px solid #000;
+              padding: 6px 5px;
+              text-align: center;
+              height: 28px;
+              vertical-align: middle;
+            }
+            .tabela-chamada-classe th {
+              background: #f3f4f6;
+              font-weight: 700;
+            }
+            .tabela-chamada-classe th:nth-child(1),
+            .tabela-chamada-classe td:nth-child(1) {
+              width: 42px;
+            }
+            .tabela-chamada-classe th:nth-child(2),
+            .tabela-chamada-classe td:nth-child(2) {
+              width: 34%;
+              text-align: left;
+            }
+            .resumo-chamada-classe {
+              display: grid;
+              grid-template-columns: repeat(6, 1fr);
+              gap: 8px;
+              margin-top: 12px;
+              font-size: 11px;
+            }
+            .resumo-chamada-classe div {
+              border: 1px solid #000;
+              padding: 8px;
+              min-height: 34px;
+            }
+            .observacoes-chamada-classe {
+              margin-top: 10px;
+              font-size: 12px;
+              page-break-inside: avoid;
+            }
+            .observacoes-chamada-classe strong {
+              display: block;
+              margin-bottom: 6px;
+            }
+            .observacoes-chamada-classe div {
+              height: 22px;
+              border-bottom: 1px solid #000;
+            }
+            @media print {
+              body { padding: 0; }
+              .area-acoes { display: none; }
+              .folha-chamada-classe { max-width: none; margin-bottom: 0; }
+              @page { size: A4 portrait; margin: 10mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="area-acoes">
+            <button onclick="window.print()">Imprimir / Salvar PDF</button>
+            <button class="secundario" onclick="window.close()">Fechar</button>
+          </div>
+          ${htmlChamada}
+          <script>
+            setTimeout(function () {
+              try { window.print() } catch (error) { console.log(error) }
+            }, 800)
+          </script>
+        </body>
+      </html>
+    `)
+    janela.document.close()
+  }
+
+
   async function baixarRelatorioPDF() {
     const relatorioOriginal = document.querySelector('.relatorio-folha')
 
@@ -7161,6 +7423,13 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
               onClick={abrirRelatorioEmBrancoParaImpressao}
             >
               Modelo em branco
+            </button>
+
+            <button
+              className="botao-secundario"
+              onClick={abrirChamadaPorClasseParaImpressao}
+            >
+              Chamada por classe
             </button>
           </div>
         </div>
