@@ -11536,56 +11536,81 @@ button.botao-principal {
 }
 
 /* =========================================================
-   Landing EBD Fiel - ajustes de conversao e organizacao v2
+   Painel EBD Fiel - ajustes de produto e conversao
    ========================================================= */
-.modelo-exato-ebd .hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin: 0 0 22px;
+.modelo-exato-ebd .logo-text {
+  letter-spacing: -0.02em;
 }
 
-.modelo-exato-ebd .btn-outline-light {
+.modelo-exato-ebd .logo-sub {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.modelo-exato-ebd .hero-ctas-publicas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.modelo-exato-ebd .hero-ctas-publicas .btn-primary,
+.modelo-exato-ebd .hero-ctas-publicas .btn-outline {
+  min-height: 52px;
+}
+
+.modelo-exato-ebd .btn-outline-claro {
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.58) !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
   background: rgba(255, 255, 255, 0.08) !important;
 }
 
-.modelo-exato-ebd .btn-outline-light:hover {
-  color: #103058 !important;
-  background: #ffffff !important;
-  border-color: #ffffff !important;
+.modelo-exato-ebd .btn-outline-claro:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
 }
 
-.modelo-exato-ebd .section-flow {
+.modelo-exato-ebd .secao-como-funciona {
   background:
-    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.12), transparent 28%),
-    linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+    radial-gradient(circle at 8% 12%, rgba(212, 175, 55, 0.10), transparent 28%),
+    radial-gradient(circle at 92% 82%, rgba(0, 188, 212, 0.10), transparent 28%),
+    #ffffff;
 }
 
-.modelo-exato-ebd .flow-grid {
+.modelo-exato-ebd .como-funciona-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.4rem;
   margin-top: 2rem;
 }
 
-.modelo-exato-ebd .flow-card {
+.modelo-exato-ebd .como-funciona-grid article {
   position: relative;
-  min-height: 210px;
-  padding: 1.65rem;
+  padding: 2rem;
   border-radius: 1.5rem;
   background: #ffffff;
   border: 1px solid rgba(212, 175, 55, 0.18);
-  box-shadow: 0 12px 32px rgba(26, 26, 26, 0.06);
+  box-shadow: 0 10px 28px rgba(26, 26, 26, 0.06);
+  overflow: hidden;
 }
 
-.modelo-exato-ebd .flow-card span {
+.modelo-exato-ebd .como-funciona-grid article::after {
+  content: "";
+  position: absolute;
+  right: -34px;
+  bottom: -34px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.10);
+}
+
+.modelo-exato-ebd .como-funciona-grid span {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   border-radius: 16px;
   background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
   color: #1A1A1A;
@@ -11593,47 +11618,22 @@ button.botao-principal {
   margin-bottom: 1rem;
 }
 
-.modelo-exato-ebd .flow-card h3 {
-  margin: 0 0 0.55rem;
-  color: #103058;
-  font-size: 1.12rem;
+.modelo-exato-ebd .como-funciona-grid h3 {
+  margin: 0 0 0.6rem;
+  color: #1A1A1A;
+  font-size: 1.25rem;
 }
 
-.modelo-exato-ebd .flow-card p {
+.modelo-exato-ebd .como-funciona-grid p {
   margin: 0;
   color: #4A4A4A;
-  line-height: 1.58;
+  line-height: 1.6;
 }
 
 .modelo-exato-ebd .section-plans {
-  padding-bottom: 6rem !important;
-}
-
-.modelo-exato-ebd .plans-grid-clean {
-  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important;
-  align-items: stretch;
-  max-width: 980px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.modelo-exato-ebd .plans-grid-clean .plan-card {
-  min-height: 310px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.modelo-exato-ebd .plans-grid-clean .plan-card.featured {
-  transform: none !important;
-  border-width: 2px;
-}
-
-.modelo-exato-ebd #faq {
-  padding-top: 5rem !important;
-  background:
-    radial-gradient(circle at 88% 8%, rgba(0, 188, 212, 0.10), transparent 28%),
-    #f8f9fa;
+  position: relative;
+  z-index: 2;
+  padding-bottom: 5rem !important;
 }
 
 .modelo-exato-ebd .faq-list {
@@ -11641,33 +11641,33 @@ button.botao-principal {
   z-index: 1;
 }
 
-.modelo-exato-ebd .footer-col .footer-button {
-  width: fit-content;
-  min-width: 220px;
-  text-align: center;
+.modelo-exato-ebd .plan-card .btn-primary,
+.modelo-exato-ebd .plan-card .btn-outline,
+.modelo-exato-ebd .footer-button {
+  min-height: 48px;
   justify-content: center;
 }
 
-@media (max-width: 1000px) {
-  .modelo-exato-ebd .flow-grid,
-  .modelo-exato-ebd .plans-grid-clean {
-    grid-template-columns: 1fr 1fr !important;
-  }
+.bloco-cadastro-destaque {
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.16), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border-color: rgba(212, 175, 55, 0.24) !important;
+}
+
+.selo-primeiro-acesso {
+  background: rgba(212, 175, 55, 0.16) !important;
+  color: #5f4306 !important;
 }
 
 @media (max-width: 768px) {
-  .modelo-exato-ebd .hero-actions,
-  .modelo-exato-ebd .flow-grid,
-  .modelo-exato-ebd .plans-grid-clean {
-    grid-template-columns: 1fr !important;
-    display: grid !important;
+  .modelo-exato-ebd .hero-ctas-publicas,
+  .modelo-exato-ebd .hero-ctas-publicas .btn-primary,
+  .modelo-exato-ebd .hero-ctas-publicas .btn-outline {
+    width: 100%;
   }
 
-  .modelo-exato-ebd .flow-card {
-    min-height: auto;
-  }
-
-  .modelo-exato-ebd .section-plans {
-    padding-bottom: 4rem !important;
+  .modelo-exato-ebd .como-funciona-grid {
+    grid-template-columns: 1fr;
   }
 }
