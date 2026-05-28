@@ -691,7 +691,7 @@ function App() {
     const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
 
     if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('Código de autorização inválido. Confira o código informado no grupo.')
+      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
       return
     }
 
@@ -753,7 +753,7 @@ function App() {
 
       if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
         setErroCadastroPiloto(
-          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
         setCarregandoCadastroPiloto(false)
         return
@@ -778,25 +778,29 @@ function App() {
             password: cadastroPiloto.senha,
           })
 
-        if (!erroLoginCadastro) {
-          sessaoCadastro = loginCadastro.session
-          usuarioCadastro = loginCadastro.user || usuarioCadastro
+        if (erroLoginCadastro) {
+          setSucessoCadastroPiloto(
+            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
+          )
+          return
         }
+
+        sessaoCadastro = loginCadastro.session
+        usuarioCadastro = loginCadastro.user
       }
 
-      if (!usuarioCadastro?.id) {
-        throw new Error(
-          'usuario_auth_sem_id: não foi possível identificar o usuário criado. Tente novamente ou fale com o administrador.'
+      if (!usuarioCadastro?.id || !sessaoCadastro) {
+        setSucessoCadastroPiloto(
+          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
         )
+        return
       }
 
       const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
 
       const { data: igrejaCriadaId, error: erroCadastroPilotoRpc } = await supabase.rpc(
-        'criar_solicitacao_acesso_publica',
+        'criar_cadastro_piloto',
         {
-          p_user_id: usuarioCadastro.id,
-          p_email: emailCadastro,
           p_nome: cadastroPiloto.nomeIgreja.trim(),
           p_slug: `${slugBase}-${Date.now()}`,
           p_nome_igreja: cadastroPiloto.nomeIgreja.trim(),
@@ -861,7 +865,7 @@ function App() {
         String(error?.details || '').includes('limite_piloto_atingido')
       ) {
         setErroCadastroPiloto(
-          'O limite inicial de solicitações foi atingido. Aguarde a liberação de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
       } else if (
         String(error?.message || '').includes('usuario_ja_possui_perfil') ||
@@ -872,7 +876,7 @@ function App() {
         )
       } else {
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'Não foi possível criar a solicitação de acesso.')
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
         )
       }
     } finally {
@@ -1691,7 +1695,7 @@ function App() {
     const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
     const textoAcao =
       novoStatus === 'teste'
-        ? 'aprovar esta igreja para o sistema'
+        ? 'aprovar esta igreja para o teste piloto'
         : novoStatus === 'cancelada'
           ? 'não aprovar esta igreja'
           : `alterar o status para ${novoStatus}`
@@ -1716,7 +1720,7 @@ function App() {
 
     if (novoStatus === 'teste') {
       const avisarAgora = window.confirm(
-        'Igreja aprovada para o sistema. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
+        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
       )
 
       if (avisarAgora) {
@@ -1742,7 +1746,7 @@ function App() {
 
     return `Paz do Senhor!
 
-O cadastro da ${nomeIgreja} no sistema do EBD Fiel foi aprovado.
+O cadastro da ${nomeIgreja} no teste piloto do EBD Fiel foi aprovado.
 
 Acesse o sistema pelo link:
 
@@ -1760,7 +1764,7 @@ Manual rápido para começar:
 6. Vá em Chamada para registrar a presença dos alunos.
 7. Use Chamada dos professores para registrar a presença dos professores.
 8. Em Relatórios, gere o relatório da EBD em PDF.
-9. Durante o sistema, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
+9. Durante o teste piloto, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -1990,7 +1994,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A área de feedback está disponível para igrejas em sistema.')
+      alert('A área de feedback está disponível para igrejas em teste piloto.')
       return
     }
 
@@ -2021,7 +2025,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
     await carregarFeedbacksDaIgreja()
-    alert('Feedback enviado com sucesso. Obrigado por ajudar no sistema!')
+    alert('Feedback enviado com sucesso. Obrigado por ajudar no teste piloto!')
   }
 
   async function marcarFeedbackComoLido(feedbackId) {
@@ -2080,7 +2084,7 @@ Obrigado pelo feedback enviado sobre o EBD Fiel.
 Resposta da equipe:
 ${resposta}
 
-Seguimos à disposição para ajudar no sistema.
+Seguimos à disposição para ajudar no teste piloto.
 
 EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
@@ -2870,7 +2874,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .relatorio-folha {
-              width: Online;
+              width: 100%;
               max-width: 980px;
               margin: 0 auto;
               background: #fff;
@@ -2904,12 +2908,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .tabela-container {
-              width: Online;
+              width: 100%;
               overflow-x: visible;
             }
 
             table {
-              width: Online;
+              width: 100%;
               border-collapse: collapse;
               table-layout: fixed;
               font-size: 11px;
@@ -2988,6 +2992,261 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     janela.document.close()
   }
 
+
+  function escaparHtmlRelatorio(valor) {
+    return String(valor ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
+
+  function montarRelatorioEmBrancoHTML() {
+    const endereco = montarEnderecoIgreja()
+    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'Relatório em branco'
+    const linhasClasses = classes.length > 0 ? classes : classesIniciais
+
+    const linhasTabela = linhasClasses
+      .map((classe, indice) => `
+        <tr>
+          <td>${indice + 1}</td>
+          <td>${escaparHtmlRelatorio(classe.nome)}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      `)
+      .join('')
+
+    const linhasProfessores = Array.from({ length: Math.max(8, professoresSomente().length || 0) })
+      .map((_, indice) => {
+        const professor = professoresSomente()[indice]
+        return `
+          <tr>
+            <td>${indice + 1}</td>
+            <td>${escaparHtmlRelatorio(professor?.nome || '')}</td>
+            <td colspan="3">${escaparHtmlRelatorio(buscarNomeClasse(professor?.classeId))}</td>
+            <td colspan="2"></td>
+            <td colspan="2"></td>
+            <td colspan="2"></td>
+          </tr>
+        `
+      })
+      .join('')
+
+    return `
+      <div class="relatorio-folha relatorio-folha-em-branco">
+        <div class="cabecalho-relatorio">
+          <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
+          <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
+          ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
+          ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
+          ${configuracaoIgreja.superintendente_ebd ? `<p>Superintendente da EBD: ${escaparHtmlRelatorio(configuracaoIgreja.superintendente_ebd)}</p>` : ''}
+          ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
+          <p>RELATÓRIO EM BRANCO PARA RASCUNHO</p>
+          <p>Data: ____ / ____ / ______</p>
+        </div>
+
+        <div class="tabela-container">
+          <table class="tabela tabela-ebd">
+            <thead>
+              <tr>
+                <th>Nº</th>
+                <th>Classes</th>
+                <th>Matrícula</th>
+                <th>Ausência</th>
+                <th>Presença</th>
+                <th>Visitante</th>
+                <th>Total</th>
+                <th>Bíblia</th>
+                <th>Revista</th>
+                <th>Ofertas</th>
+                <th>%</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${linhasTabela}
+              <tr class="linha-total">
+                <td colspan="2">TOTAL GERAL</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr class="linha-domingo-anterior">
+                <td colspan="11">DOMINGO anterior</td>
+              </tr>
+              <tr class="linha-professores-titulo">
+                <td colspan="11">CHAMADA DOS PROFESSORES</td>
+              </tr>
+              <tr class="linha-professores-cabecalho">
+                <td>Nº</td>
+                <td>Professor</td>
+                <td colspan="3">Classe de referência</td>
+                <td colspan="2">Presente</td>
+                <td colspan="2">Faltou</td>
+                <td colspan="2">Justificou</td>
+              </tr>
+              ${linhasProfessores}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="area-observacoes-rascunho">
+          <strong>Observações:</strong>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    `
+  }
+
+  function abrirRelatorioEmBrancoParaImpressao() {
+    const htmlRelatorio = montarRelatorioEmBrancoHTML()
+    const janela = window.open('', '_blank')
+
+    if (!janela) {
+      alert('O navegador bloqueou a abertura da impressão. Permita pop-ups para imprimir o modelo em branco.')
+      return
+    }
+
+    janela.document.open()
+    janela.document.write(`
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Relatório em branco - EBD Fiel</title>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              padding: 24px;
+              font-family: Arial, sans-serif;
+              color: #000;
+              background: #fff;
+            }
+            .area-acoes {
+              display: flex;
+              gap: 12px;
+              justify-content: center;
+              margin-bottom: 20px;
+            }
+            .area-acoes button {
+              border: 0;
+              border-radius: 8px;
+              padding: 12px 18px;
+              font-size: 15px;
+              font-weight: 700;
+              cursor: pointer;
+              background: #103058;
+              color: #fff;
+            }
+            .area-acoes .secundario {
+              background: #e5e7eb;
+              color: #111827;
+            }
+            .relatorio-folha {
+              width: 100%;
+              max-width: 1100px;
+              margin: 0 auto;
+              background: #fff;
+            }
+            .cabecalho-relatorio {
+              text-align: center;
+              margin-bottom: 16px;
+              padding-bottom: 8px;
+              border-bottom: 2px dotted #000;
+            }
+            .logo-relatorio {
+              width: 76px;
+              height: 76px;
+              object-fit: contain;
+              display: block;
+              margin: 0 auto 8px;
+            }
+            .cabecalho-relatorio h3 {
+              margin: 0 0 6px 0;
+              font-size: 20px;
+              font-weight: 700;
+              text-transform: uppercase;
+            }
+            .cabecalho-relatorio p {
+              margin: 0;
+              font-size: 13px;
+              font-weight: 600;
+            }
+            .tabela-container { width: 100%; overflow: visible; }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              table-layout: fixed;
+              font-size: 11px;
+            }
+            th, td {
+              border: 1px solid #000;
+              padding: 7px 5px;
+              text-align: center;
+              vertical-align: middle;
+              height: 28px;
+              word-break: break-word;
+            }
+            th { font-weight: 700; background: #f3f4f6; }
+            td:nth-child(2), th:nth-child(2) { text-align: left; width: 22%; }
+            .linha-total td, .linha-professores-titulo td, .linha-professores-cabecalho td {
+              font-weight: 700;
+              background: #f3f4f6;
+            }
+            .linha-domingo-anterior td { font-weight: 700; text-align: left; }
+            .area-observacoes-rascunho {
+              margin-top: 14px;
+              font-size: 12px;
+              page-break-inside: avoid;
+            }
+            .area-observacoes-rascunho strong { display: block; margin-bottom: 8px; }
+            .area-observacoes-rascunho div {
+              height: 24px;
+              border-bottom: 1px solid #000;
+            }
+            @media print {
+              body { padding: 0; }
+              .area-acoes { display: none; }
+              .relatorio-folha { max-width: none; }
+              @page { size: A4 landscape; margin: 10mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="area-acoes">
+            <button onclick="window.print()">Imprimir / Salvar PDF</button>
+            <button class="secundario" onclick="window.close()">Fechar</button>
+          </div>
+          ${htmlRelatorio}
+          <script>
+            setTimeout(function () {
+              try { window.print() } catch (error) { console.log(error) }
+            }, 800)
+          </script>
+        </body>
+      </html>
+    `)
+    janela.document.close()
+  }
+
   async function baixarRelatorioPDF() {
     const relatorioOriginal = document.querySelector('.relatorio-folha')
 
@@ -3016,12 +3275,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       const tabelaContainer = relatorioClone.querySelector('.tabela-container')
       if (tabelaContainer) {
         tabelaContainer.style.overflow = 'visible'
-        tabelaContainer.style.width = 'Online'
+        tabelaContainer.style.width = '100%'
       }
 
       const tabela = relatorioClone.querySelector('table')
       if (tabela) {
-        tabela.style.width = 'Online'
+        tabela.style.width = '100%'
         tabela.style.tableLayout = 'fixed'
         tabela.style.borderCollapse = 'collapse'
       }
@@ -3745,7 +4004,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
@@ -3784,7 +4043,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Redefinição segura de senha.</p>
             </div>
           </div>
@@ -3862,7 +4121,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Recuperação de acesso.</p>
             </div>
           </div>
@@ -3939,7 +4198,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Cadastro recebido com sucesso.</p>
             </div>
           </div>
@@ -3949,7 +4208,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Sua solicitação foi enviada.</h2>
             <p>
               O administrador vai conferir os dados da igreja e liberar o acesso para
-              o sistema.
+              o teste piloto.
             </p>
           </div>
         </section>
@@ -4010,23 +4269,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
-              <p>Solicitação de acesso ao sistema.</p>
+              <h1>EBD Fiel</h1>
+              <p>Cadastro do teste piloto fechado.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Acesso mediante aprovação</span>
-            <h2>Solicite acesso para sua igreja.</h2>
+            <span className="selo-apresentacao">Exclusivo para o grupo</span>
+            <h2>Crie o acesso da sua igreja para avaliação.</h2>
             <p>
-              Preencha o cadastro para análise do administrador. Após a liberação, sua igreja poderá organizar classes, alunos, professores, chamadas e relatórios em um só lugar.
+              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
+              testar classes, alunos, professores, chamadas, relatórios e feedbacks.
             </p>
           </div>
 
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="check" className="icone-beneficio" />
-              <span>Código de autorização obrigatório</span>
+              <span>Código do piloto obrigatório</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
@@ -4057,8 +4317,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <Icone nome="igreja" className="icone-status" />
             </div>
             <div>
-              <h2>Solicitar acesso ao painel</h2>
-              <p>Preencha os dados do responsável e da igreja para análise e liberação.</p>
+              <h2>Criar acesso do piloto</h2>
+              <p>Preencha seus dados e os dados da igreja participante.</p>
             </div>
           </div>
 
@@ -4177,7 +4437,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label>
-                Código de autorização
+                Código do piloto
                 <input
                   type="text"
                   value={cadastroPiloto.codigoPiloto}
@@ -4187,7 +4447,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                       codigoPiloto: event.target.value,
                     })
                   }
-                  placeholder="Código informado pelo administrador"
+                  placeholder="Código informado no grupo"
                 />
               </label>
             </div>
@@ -4462,7 +4722,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
@@ -4549,7 +4809,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               type="submit"
               disabled={carregandoLogin}
             >
-              {carregandoLogin ? 'Entrando...' : 'Acessar painel'}
+              {carregandoLogin ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
 
@@ -4557,7 +4817,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <span className="selo-primeiro-acesso">Primeiro acesso?</span>
             <h3>Cadastrar minha igreja</h3>
             <p>
-              Cadastre sua igreja para análise e liberação de acesso pelo administrador.
+              Se você recebeu o código do piloto, cadastre sua igreja para análise
+              e aprovação do administrador.
             </p>
 
             <button
@@ -4588,9 +4849,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </div>
               <div>
                 <div className="logo-text">
-                  {'Painel '}<span>{'EBD Fiel'}</span>
+                  {'EBD '}<span>{'Fiel'}</span>
                 </div>
-                <div className="logo-sub">{'GEST\u00c3O DA EBD'}</div>
+                <div className="logo-sub">{'ESCOLA B\u00cdBLICA DOMINICAL'}</div>
               </div>
             </div>
 
@@ -4610,10 +4871,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <div className="nav-links">
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Acesso'}</a>
+              <a href="#planos">{'Planos'}</a>
               <a href="#faq">{'FAQ'}</a>
               <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
-                {'Já sou cliente'}
+                {'Entrar no sistema'}
               </button>
             </div>
           </div>
@@ -4627,7 +4888,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {'Benef\u00edcios'}
           </a>
           <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
-            {'Acesso'}
+            {'Planos'}
           </a>
           <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
             {'FAQ'}
@@ -4640,7 +4901,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               setTelaPublica('login')
             }}
           >
-            {'Já sou cliente'}
+            {'Entrar no sistema'}
           </button>
         </div>
 
@@ -4659,27 +4920,23 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <div className="hero-copy">
 
                 <h1>
-                  {'Painel EBD Fiel para organizar sua '}
+                  {'Organize sua '}
                   <span>{'Escola B\u00edblica Dominical'}</span>
+                  {' sem planilhas e sem retrabalho'}
                 </h1>
 
                 <p>
-                  {'Organize classes, alunos, professores, chamadas e relatórios em um só lugar, com acesso liberado mediante aprovação.'}
+                  {'Cadastre classes, alunos e professores, registre chamadas e gere relat\u00f3rios em PDF em uma plataforma simples para igrejas.'}
                 </p>
 
-                <div className="hero-ctas-publicas">
-                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
-                    <span>{'→'}</span> {'Solicitar acesso'}
-                  </button>
-                  <button className="btn-outline btn-outline-claro" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Já sou cliente'}
-                  </button>
-                </div>
+                <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
+                  <span>{'→'}</span> {'Entrar no sistema'}
+                </button>
 
                 <div className="hero-stats">
                   <div className="stat">
-                    <div className="stat-number">{'100%'}</div>
-                    <div className="stat-label">{'Online'}</div>
+                    <div className="stat-number">{'10'}</div>
+                    <div className="stat-label">{'Igrejas no piloto'}</div>
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'\uD83D\uDCC4'}</div>
@@ -4731,8 +4988,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                 <article className="feature-card">
                   <div className="feature-icon">{'\u26EA'}</div>
-                  <h3>{'Dados protegidos por igreja'}</h3>
-                  <p>{'Cada igreja acessa apenas suas próprias informações, com segurança e privacidade.'}</p>
+                  <h3>{'Dados separados por igreja'}</h3>
+                  <p>{'Cada igreja tem suas pr\u00f3prias informa\u00e7\u00f5es organizadas com seguran\u00e7a.'}</p>
                 </article>
 
                 <article className="feature-card">
@@ -4764,7 +5021,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <section className="section section-soft">
             <div className="container">
-              <h2 className="section-title">{'Troque planilhas e papéis por uma gestão simples da EBD'}</h2>
+              <h2 className="section-title">{'Chega de planilhas, pap\u00e9is e relat\u00f3rios manuais'}</h2>
 
               <div className="comparison">
                 <div className="comparison-grid">
@@ -4774,8 +5031,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     <ul>
                       <li>{'Listas de presen\u00e7a em papel'}</li>
                       <li>{'Dados espalhados'}</li>
-                      <li>{'Relatórios feitos manualmente'}</li>
-                      <li>{'Dificuldade para acompanhar frequência'}</li>
+                      <li>{'Relat\u00f3rios feitos manualmente'}</li>
                     </ul>
                   </article>
 
@@ -4785,40 +5041,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     <ul>
                       <li>{'Chamada digital'}</li>
                       <li>{'Classes e alunos organizados'}</li>
-                      <li>{'Relatórios prontos em PDF'}</li>
-                      <li>{'Visão clara para secretaria e liderança'}</li>
+                      <li>{'Relat\u00f3rios prontos em PDF'}</li>
                     </ul>
                   </article>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section secao-como-funciona" id="como-funciona">
-            <div className="container">
-              <h2 className="section-title">{'Como funciona'}</h2>
-              <p className="section-subtitle">
-                {'Um processo simples para sua igreja começar a usar o Painel EBD Fiel com segurança.'}
-              </p>
-
-              <div className="como-funciona-grid">
-                <article>
-                  <span>{'1'}</span>
-                  <h3>{'Solicite acesso'}</h3>
-                  <p>{'Preencha o cadastro da igreja com os dados principais do responsável.'}</p>
-                </article>
-
-                <article>
-                  <span>{'2'}</span>
-                  <h3>{'Aguarde aprovação'}</h3>
-                  <p>{'O administrador analisa a solicitação e libera o acesso quando estiver tudo correto.'}</p>
-                </article>
-
-                <article>
-                  <span>{'3'}</span>
-                  <h3>{'Organize a EBD'}</h3>
-                  <p>{'Cadastre classes, alunos e professores, registre chamadas e gere relatórios.'}</p>
-                </article>
               </div>
             </div>
           </section>
@@ -4851,24 +5077,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <section className="section section-plans" id="planos">
             <div className="container">
-              <h2 className="section-title">{'Acesso ao Painel EBD Fiel'}</h2>
+              <h2 className="section-title">{'Teste piloto'}</h2>
 
               <div className="plans-grid">
                 <article className="plan-card">
-                  <div className="plan-badge">{'Aprovação'}</div>
-                  <h3>{'Solicitar acesso'}</h3>
-                  <div className="plan-price">{'Sob análise'}</div>
-                  <p>{'Cadastre sua igreja para avaliação e liberação do administrador.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
-                    {'Solicitar acesso'}
+                  <div className="plan-badge">{'Fechado'}</div>
+                  <h3>{'Teste piloto'}</h3>
+                  <div className="plan-price">{'Gratuito'}</div>
+                  <p>{'Para igrejas do grupo selecionadas.'}</p>
+                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
+                    {'Entrar'}
                   </button>
                 </article>
 
                 <article className="plan-card featured">
                   <div className="plan-badge">{'Popular'}</div>
-                  <h3>{'Painel da Igreja'}</h3>
+                  <h3>{'Plano Igreja'}</h3>
                   <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para organizar classes, alunos, chamadas e relatórios da EBD.'}</p>
+                  <p>{'Para uso completo na rotina da EBD.'}</p>
                   <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
                     {'J\u00e1 sou cliente'}
                   </button>
@@ -4884,7 +5110,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </article>
               </div>
 
-              <p className="plans-note">{'Acesso liberado somente após aprovação do administrador.'}</p>
+              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
             </div>
           </section>
 
@@ -4894,9 +5120,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
               <div className="faq-list">
                 <details className="faq-item">
-                  <summary>{'Como faço para solicitar acesso?'}</summary>
+                  <summary>{'Como fa\u00e7o para participar do teste piloto?'}</summary>
                   <p>
-                    {'Cadastre sua igreja pelo formulário. O administrador analisa os dados e libera o acesso quando estiver tudo correto.'}
+                    {'O teste piloto \u00e9 exclusivo para participantes do grupo de WhatsApp da EBD Fiel.'}
                   </p>
                 </details>
 
@@ -4922,7 +5148,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         <footer className="footer">
           <div className="footer-grid">
             <div>
-              <div className="footer-logo">{'PAINEL EBD FIEL'}</div>
+              <div className="footer-logo">{'EBD FIEL'}</div>
               <p>{'Fiel \u00e0 Palavra, organizado para servir melhor.'}</p>
               <p className="footer-gold">{'Escola B\u00edblica Dominical'}</p>
             </div>
@@ -4931,7 +5157,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <h4>{'Mapa do site'}</h4>
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Acesso'}</a>
+              <a href="#planos">{'Planos'}</a>
               <a href="#faq">{'FAQ'}</a>
             </div>
 
@@ -4942,10 +5168,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="footer-col">
-              <h4>{'Acesso ao sistema'}</h4>
-              <p>{'Cadastre sua igreja e aguarde a aprovação.'}</p>
-              <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('cadastroPiloto')}>
-                {'Solicitar acesso'}
+              <h4>{'Teste exclusivo'}</h4>
+              <p>{'Grupo fechado para participantes'}</p>
+              <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('login')}>
+                {'J\u00e1 sou cliente'}
               </button>
             </div>
           </div>
@@ -4971,7 +5197,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
@@ -5001,7 +5227,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Gestão da Escola Bíblica Dominical.</p>
             </div>
           </div>
@@ -5011,7 +5237,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
-              do sistema.
+              do sistema para o teste piloto.
             </p>
           </div>
         </section>
@@ -5046,7 +5272,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               />
             </div>
             <div>
-              <h1>Painel EBD Fiel</h1>
+              <h1>EBD Fiel</h1>
               <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
@@ -5324,7 +5550,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       <div className="feedback-piloto-card">
         <div className="feedback-piloto-topo">
           <div>
-            <span className="hero-tag">Sistema</span>
+            <span className="hero-tag">Teste piloto</span>
             <h3>Enviar feedback para a equipe EBD Fiel</h3>
             <p>
               Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
@@ -5737,96 +5963,99 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         <div className="lista lista-classes-modernas">
           {classes.map((classe, indiceClasse) => {
             const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
+            const matriculaClasse = calcularMatriculaDaClasse(classe.id)
 
             return (
-            <div
-              className={`item-lista item-com-acoes classe-card-moderno classe-cor-${(indiceClasse % 4) + 1}`}
-              key={classe.id}
-            >
-              <div className="classe-card-topo">
-                <div className="classe-card-titulo-bloco">
-                  <span className="classe-card-selo">Classe</span>
-                  <h3>{classe.nome}</h3>
+              <div
+                className={`item-lista classe-card-moderno classe-cor-${(indiceClasse % 5) + 1}`}
+                key={classe.id}
+              >
+                <div className="classe-card-faixa">
+                  <div className="classe-card-titulo-bloco">
+                    <span className="classe-card-selo">Classe</span>
+                    <h3>{classe.nome}</h3>
+                  </div>
+
+                  <div className="classe-card-matricula">
+                    <strong>{matriculaClasse}</strong>
+                    <span>alunos</span>
+                  </div>
                 </div>
 
-                <div className="classe-card-matricula">
-                  <strong>{calcularMatriculaDaClasse(classe.id)}</strong>
-                  <span>alunos</span>
-                </div>
-              </div>
-
-              <div className="classe-card-resumo">
-                <div className="classe-card-resumo-item">
-                  <strong>Professores</strong>
-                  <span>{buscarTextoProfessoresDaClasse(classe.id)}</span>
-                </div>
-
-                <div className="classe-card-resumo-item">
-                  <strong>Matrícula</strong>
-                  <span>{calcularMatriculaDaClasse(classe.id)} alunos</span>
-                </div>
-              </div>
-
-              <div className="professores-na-classe">
-                {professoresDaClasse.length > 0 ? (
-                  professoresDaClasse.map((professor) => (
-                    <div className="professor-classe-linha" key={professor.id}>
-                      <span className="professor-classe-nome">{professor.nome}</span>
-
-                      <div className="professor-classe-acoes">
-                        <button
-                          className="botao-editar botao-pequeno"
-                          onClick={() => editarProfessorDaClasse(professor)}
-                        >
-                          Editar
-                        </button>
-
-                        <button
-                          className="botao-excluir botao-pequeno"
-                          onClick={() => excluirAluno(professor.id)}
-                        >
-                          Excluir
-                        </button>
-                      </div>
+                <div className="classe-card-corpo">
+                  <div className="classe-card-resumo">
+                    <div className="classe-card-resumo-item">
+                      <strong>Professores</strong>
+                      <span>{buscarTextoProfessoresDaClasse(classe.id)}</span>
                     </div>
-                  ))
-                ) : (
-                  <p className="texto-sem-professor">
-                    Nenhum professor vinculado a esta classe.
-                  </p>
-                )}
+
+                    <div className="classe-card-resumo-item resumo-matricula">
+                      <strong>Matrícula</strong>
+                      <span>{matriculaClasse} alunos</span>
+                    </div>
+                  </div>
+
+                  <div className="professores-na-classe professores-na-classe-compacto">
+                    {professoresDaClasse.length > 0 ? (
+                      professoresDaClasse.map((professor) => (
+                        <div className="professor-classe-linha" key={professor.id}>
+                          <span className="professor-classe-nome">{professor.nome}</span>
+
+                          <div className="professor-classe-acoes">
+                            <button
+                              className="botao-editar botao-pequeno"
+                              onClick={() => editarProfessorDaClasse(professor)}
+                            >
+                              Editar
+                            </button>
+
+                            <button
+                              className="botao-excluir botao-pequeno"
+                              onClick={() => excluirAluno(professor.id)}
+                            >
+                              Excluir
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="texto-sem-professor">
+                        Nenhum professor vinculado a esta classe.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="classe-card-acoes">
+                    <button
+                      className="botao-principal botao-sem-margem"
+                      onClick={() => abrirNovoAlunoDaClasse(classe.id)}
+                    >
+                      Novo aluno
+                    </button>
+
+                    <button
+                      className="botao-principal botao-verde"
+                      onClick={() => abrirNovoProfessorDaClasse(classe.id)}
+                    >
+                      Novo professor
+                    </button>
+
+                    <button
+                      className="botao-editar"
+                      onClick={() => editarClasse(classe)}
+                    >
+                      Alterar nome
+                    </button>
+
+                    <button
+                      className="botao-excluir"
+                      onClick={() => excluirClasse(classe.id)}
+                    >
+                      Excluir classe
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <div className="classe-card-acoes">
-                <button
-                  className="botao-principal botao-sem-margem"
-                  onClick={() => abrirNovoAlunoDaClasse(classe.id)}
-                >
-                  Novo aluno
-                </button>
-
-                <button
-                  className="botao-principal botao-verde"
-                  onClick={() => abrirNovoProfessorDaClasse(classe.id)}
-                >
-                  Novo professor
-                </button>
-
-                <button
-                  className="botao-editar"
-                  onClick={() => editarClasse(classe)}
-                >
-                  Alterar nome
-                </button>
-
-                <button
-                  className="botao-excluir"
-                  onClick={() => excluirClasse(classe.id)}
-                >
-                  Excluir classe
-                </button>
-              </div>
-            </div>
             )
           })}
         </div>
@@ -6678,7 +6907,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </p>
           </div>
 
-          <div className="grupo-botoes">
+          <div className="grupo-botoes grupo-botoes-relatorios">
             <button
               className="botao-principal"
               onClick={abrirRelatorioParaImpressao}
@@ -6688,6 +6917,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
             <button className="botao-secundario" onClick={baixarRelatorioPDF}>
               Baixar PDF
+            </button>
+
+            <button
+              className="botao-secundario"
+              onClick={abrirRelatorioEmBrancoParaImpressao}
+            >
+              Modelo em branco
             </button>
           </div>
         </div>
@@ -8424,7 +8660,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         numero: '09',
         titulo: 'Envie feedback do piloto',
         texto:
-          'Durante o sistema, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
+          'Durante o teste piloto, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
         local: 'Painel',
       },
     ]
@@ -8470,7 +8706,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
         <div className="manual-final">
           <div>
-            <h3>Dica para o sistema</h3>
+            <h3>Dica para o teste piloto</h3>
             <p>
               Use o sistema em uma rotina real da EBD e envie feedback sempre que
               encontrar algo confuso, difícil ou que possa melhorar.
@@ -8524,7 +8760,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             />
           </div>
           <div>
-            <h1>Painel EBD Fiel</h1>
+            <h1>EBD Fiel</h1>
             <p>Gestão da Escola Bíblica</p>
           </div>
         </div>
