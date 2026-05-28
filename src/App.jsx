@@ -3247,26 +3247,40 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
 
-  function montarChamadaPorClasseEmBrancoHTML() {
+  function montarChamadaPorClasseEmBrancoHTML(classesSelecionadas = null) {
     const endereco = montarEnderecoIgreja()
     const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'EBD Fiel'
-    const linhasClasses = classes.length > 0 ? classes : classesIniciais
-    const totalLinhasPorClasse = 25
+    const linhasClassesBase = classes.length > 0 ? classes : classesIniciais
+    const linhasClasses = classesSelecionadas && classesSelecionadas.length > 0 ? classesSelecionadas : linhasClassesBase
 
     const paginasClasses = linhasClasses
       .map((classe) => {
+        const alunosDaClasse = alunos
+          .filter((aluno) => {
+            const classeDoAluno = aluno.classeId ?? aluno.classe_id
+            const tipoPessoa = (aluno.tipoPessoa || aluno.tipo_pessoa || 'aluno').toLowerCase()
+            return classeDoAluno === classe.id && tipoPessoa !== 'professor'
+          })
+          .sort((a, b) => String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR'))
+
+        const totalLinhasPorClasse = Math.max(alunosDaClasse.length + 5, 5)
+
         const linhasAlunos = Array.from({ length: totalLinhasPorClasse })
-          .map((_, indice) => `
-            <tr>
-              <td>${String(indice + 1).padStart(2, '0')}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          `)
+          .map((_, indice) => {
+            const aluno = alunosDaClasse[indice]
+
+            return `
+              <tr>
+                <td>${String(indice + 1).padStart(2, '0')}</td>
+                <td>${aluno?.nome ? escaparHtmlRelatorio(aluno.nome) : ''}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            `
+          })
           .join('')
 
         return `
@@ -3331,7 +3345,39 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   function abrirChamadaPorClasseParaImpressao() {
-    const htmlChamada = montarChamadaPorClasseEmBrancoHTML()
+    const classesDisponiveis = classes.length > 0 ? classes : classesIniciais
+
+    if (!classesDisponiveis.length) {
+      alert('Nenhuma classe encontrada para gerar a chamada.')
+      return
+    }
+
+    const textoOpcoes = [
+      '0 - Todas as classes',
+      ...classesDisponiveis.map((classe, indice) => `${indice + 1} - ${classe.nome}`),
+    ].join('\n')
+
+    const escolha = window.prompt(
+      `Qual chamada deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todas ou o número de uma classe.`,
+      '0'
+    )
+
+    if (escolha === null) {
+      return
+    }
+
+    const escolhaNumerica = Number.parseInt(escolha, 10)
+
+    if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > classesDisponiveis.length) {
+      alert('Opção inválida. Tente novamente e escolha um número da lista.')
+      return
+    }
+
+    const classesSelecionadas = escolhaNumerica === 0
+      ? classesDisponiveis
+      : [classesDisponiveis[escolhaNumerica - 1]]
+
+    const htmlChamada = montarChamadaPorClasseEmBrancoHTML(classesSelecionadas)
     const janela = window.open('', '_blank')
 
     if (!janela) {
