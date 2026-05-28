@@ -11772,3 +11772,255 @@ button.botao-principal {
     width: 100% !important;
   }
 }
+
+
+/* =========================================================
+   CORRECAO FINAL V4 - CLASSES COMPACTAS COLORIDAS
+   Objetivo: faixa colorida baixa, corpo abaixo, botoes no rodape.
+   ========================================================= */
+
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+.lista-classes-modernas .classe-card-moderno,
+.lista-classes-modernas .item-lista.classe-card-moderno {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(14, 165, 233, 0.20) !important;
+  box-shadow: 0 10px 24px rgba(7, 59, 99, 0.07) !important;
+}
+
+.lista-classes-modernas .classe-card-faixa {
+  width: 100% !important;
+  min-height: 78px !important;
+  height: auto !important;
+  max-height: 120px !important;
+  margin: 0 !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  border-radius: 18px 18px 0 0 !important;
+  overflow: hidden !important;
+}
+
+.lista-classes-modernas .classe-card-faixa::after {
+  width: 92px !important;
+  height: 92px !important;
+  right: -24px !important;
+  bottom: -48px !important;
+}
+
+.lista-classes-modernas .classe-card-faixa h3,
+.lista-classes-modernas .classe-card-moderno h3 {
+  font-size: clamp(20px, 1.7vw, 27px) !important;
+  line-height: 1.08 !important;
+  color: #ffffff !important;
+  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.22) !important;
+  letter-spacing: -0.025em !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  margin-bottom: 5px !important;
+  padding: 3px 8px !important;
+  font-size: 9px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  width: 58px !important;
+  min-width: 58px !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula strong {
+  font-size: 20px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula span {
+  font-size: 8px !important;
+}
+
+.lista-classes-modernas .classe-card-corpo {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 12px 14px 14px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+  background: #ffffff !important;
+}
+
+.lista-classes-modernas .classe-card-resumo {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 150px !important;
+  gap: 10px !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item {
+  min-height: 48px !important;
+  padding: 9px 12px !important;
+  border-radius: 12px !important;
+  background: #f8fcff !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item strong {
+  font-size: 9px !important;
+  margin-bottom: 3px !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item span {
+  font-size: 13px !important;
+}
+
+.lista-classes-modernas .professores-na-classe,
+.lista-classes-modernas .professores-na-classe-compacto {
+  min-height: 0 !important;
+  padding: 8px !important;
+  background: #f9fdff !important;
+  border-radius: 13px !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  min-height: 38px !important;
+  padding: 7px 9px !important;
+}
+
+.lista-classes-modernas .classe-card-acoes {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding-top: 2px !important;
+  margin: 0 !important;
+}
+
+.lista-classes-modernas .classe-card-acoes button {
+  width: auto !important;
+  min-width: 118px !important;
+  min-height: 36px !important;
+  padding: 0 11px !important;
+  border-radius: 11px !important;
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+}
+
+/* Neutraliza estruturas antigas caso algum cache ainda use item-com-acoes. */
+.lista-classes-modernas .item-com-acoes,
+.lista-classes-modernas .classe-card-moderna,
+.lista-classes-modernas .classe-destaque-card {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: 1fr !important;
+}
+
+.lista-classes-modernas .acoes-item,
+.lista-classes-modernas .acoes-classe-card {
+  position: static !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  background: transparent !important;
+}
+
+.relatorio-orientacao {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.relatorio-acoes-rodape {
+  margin: 18px auto 0;
+  padding: 16px;
+  max-width: 1150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  box-shadow: 0 12px 28px rgba(7, 59, 99, 0.07);
+}
+
+.relatorio-acoes-rodape strong,
+.relatorio-acoes-rodape span {
+  display: block;
+}
+
+.relatorio-acoes-rodape strong {
+  color: var(--logo-azul-escuro);
+  font-size: 16px;
+}
+
+.relatorio-acoes-rodape span {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.relatorio-acoes-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .lista-classes-modernas .classe-card-resumo {
+    grid-template-columns: 1fr !important;
+  }
+
+  .relatorio-acoes-rodape {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .relatorio-acoes-botoes {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .lista-classes-modernas .classe-card-faixa {
+    min-height: 72px !important;
+    max-height: none !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 44px !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .lista-classes-modernas .classe-card-acoes button,
+  .relatorio-acoes-botoes button {
+    width: 100% !important;
+  }
+}
