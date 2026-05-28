@@ -9045,6 +9045,109 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           ))}
         </div>
 
+        <div className="manual-secao-detalhada">
+          <div className="manual-secao-cabecalho">
+            <span className="selo-manual">Professor</span>
+            <h3>Como o professor faz a chamada da classe</h3>
+            <p>
+              O professor consegue registrar chamada apenas das classes em que estiver
+              vinculado pela secretaria ou administração da igreja.
+            </p>
+          </div>
+
+          <div className="manual-lista-passos">
+            <article>
+              <strong>1. Entrar no sistema</strong>
+              <p>
+                O professor deve acessar o sistema usando o e-mail e a senha cadastrados
+                pela igreja.
+              </p>
+            </article>
+
+            <article>
+              <strong>2. Abrir o menu Chamada</strong>
+              <p>
+                Depois do login, clique em <b>Chamada</b>. O sistema mostrará somente a
+                classe ou as classes vinculadas ao professor.
+              </p>
+            </article>
+
+            <article>
+              <strong>3. Selecionar a classe e preencher a chamada</strong>
+              <p>
+                Escolha a classe, marque presença, falta ou justificativa para cada aluno
+                e preencha os campos adicionais, como visitantes, Bíblias, revistas,
+                ofertas e observações.
+              </p>
+            </article>
+
+            <article>
+              <strong>4. Conferir e salvar</strong>
+              <p>
+                Antes de salvar, confira a data, a classe selecionada e os totais. Depois
+                clique em <b>Salvar chamada</b>. A informação ficará disponível para os
+                relatórios da igreja.
+              </p>
+            </article>
+          </div>
+
+          <div className="manual-observacao">
+            <strong>Importante:</strong> se nenhuma classe aparecer para o professor, a
+            secretaria precisa verificar se ele está vinculado à classe correta.
+          </div>
+        </div>
+
+        <div className="manual-secao-detalhada manual-secao-secretaria">
+          <div className="manual-secao-cabecalho">
+            <span className="selo-manual">Secretaria</span>
+            <h3>Como vincular o professor à classe</h3>
+            <p>
+              Para que o professor consiga fazer chamada, ele precisa estar cadastrado e
+              ligado à classe correta dentro da igreja.
+            </p>
+          </div>
+
+          <div className="manual-lista-passos">
+            <article>
+              <strong>1. Acessar a página Classes</strong>
+              <p>
+                No menu principal, clique em <b>Classes</b> e localize a classe onde o
+                professor atua.
+              </p>
+            </article>
+
+            <article>
+              <strong>2. Clicar em Novo professor</strong>
+              <p>
+                Dentro do card da classe, clique em <b>Novo professor</b> para cadastrar
+                ou vincular o professor naquela turma.
+              </p>
+            </article>
+
+            <article>
+              <strong>3. Informar os dados do professor</strong>
+              <p>
+                Preencha o nome do professor e, quando solicitado, o e-mail de acesso.
+                Confirme se a classe exibida é realmente a classe correta.
+              </p>
+            </article>
+
+            <article>
+              <strong>4. Salvar e conferir o vínculo</strong>
+              <p>
+                Depois de salvar, o nome do professor deve aparecer dentro da classe.
+                Esse vínculo é o que libera a chamada daquela turma para o professor.
+              </p>
+            </article>
+          </div>
+
+          <div className="manual-observacao">
+            <strong>Quando o professor não enxergar a classe:</strong> confira se o usuário
+            dele está cadastrado como <b>professor</b>, se o e-mail está correto, se a
+            classe ainda existe e se o vínculo foi salvo na classe certa.
+          </div>
+        </div>
+
         <div className="manual-final">
           <div>
             <h3>Dica para o teste piloto</h3>
