@@ -182,84 +182,216 @@ function CardResumo({ icone, titulo, valor, descricao, destaque = false }) {
 
 
 function iniciarCorrecaoGlobalDeAcentos() {
-  if (typeof window === 'undefined' || window.__ebdFielCorretorAcentosAtivo) {
+  if (typeof window === 'undefined') {
     return
   }
 
-  window.__ebdFielCorretorAcentosAtivo = true
+  // Versão reforçada: não depende do corretor antigo que podia ficar preso no cache do navegador.
+  window.__ebdFielCorretorAcentosAtivoV4 = true
 
-  const c = (...codigos) => String.fromCharCode(...codigos)
+  const mapaWindows1252 = {
+    0x20ac: 0x80,
+    0x201a: 0x82,
+    0x0192: 0x83,
+    0x201e: 0x84,
+    0x2026: 0x85,
+    0x2020: 0x86,
+    0x2021: 0x87,
+    0x02c6: 0x88,
+    0x2030: 0x89,
+    0x0160: 0x8a,
+    0x2039: 0x8b,
+    0x0152: 0x8c,
+    0x017d: 0x8e,
+    0x2018: 0x91,
+    0x2019: 0x92,
+    0x201c: 0x93,
+    0x201d: 0x94,
+    0x2022: 0x95,
+    0x2013: 0x96,
+    0x2014: 0x97,
+    0x02dc: 0x98,
+    0x2122: 0x99,
+    0x0161: 0x9a,
+    0x203a: 0x9b,
+    0x0153: 0x9c,
+    0x017e: 0x9e,
+    0x0178: 0x9f,
+  }
 
-  const pares = [
-    [c(0x00C3, 0x0081), c(0x00C1)],
-    [c(0x00C3, 0x0080), c(0x00C0)],
-    [c(0x00C3, 0x0082), c(0x00C2)],
-    [c(0x00C3, 0x0083), c(0x00C3)],
-    [c(0x00C3, 0x0089), c(0x00C9)],
-    [c(0x00C3, 0x008A), c(0x00CA)],
-    [c(0x00C3, 0x008D), c(0x00CD)],
-    [c(0x00C3, 0x0093), c(0x00D3)],
-    [c(0x00C3, 0x0094), c(0x00D4)],
-    [c(0x00C3, 0x0095), c(0x00D5)],
-    [c(0x00C3, 0x009A), c(0x00DA)],
-    [c(0x00C3, 0x0087), c(0x00C7)],
-    [c(0x00C3, 0x00A1), c(0x00E1)],
-    [c(0x00C3, 0x00A0), c(0x00E0)],
-    [c(0x00C3, 0x00A2), c(0x00E2)],
-    [c(0x00C3, 0x00A3), c(0x00E3)],
-    [c(0x00C3, 0x00A9), c(0x00E9)],
-    [c(0x00C3, 0x00AA), c(0x00EA)],
-    [c(0x00C3, 0x00AD), c(0x00ED)],
-    [c(0x00C3, 0x00B3), c(0x00F3)],
-    [c(0x00C3, 0x00B4), c(0x00F4)],
-    [c(0x00C3, 0x00B5), c(0x00F5)],
-    [c(0x00C3, 0x00BA), c(0x00FA)],
-    [c(0x00C3, 0x00A7), c(0x00E7)],
-    [c(0x00C2, 0x00BA), c(0x00BA)],
-    [c(0x00C2, 0x00AA), c(0x00AA)],
-    [c(0x00C2, 0x00B7), c(0x00B7)],
-    [c(0x00C2), ''],
-    [c(0x00E2, 0x0086, 0x0092), c(0x2192)],
-    [c(0x00E2, 0x009C, 0x0093), c(0x2713)],
-    [c(0x00E2, 0x0080, 0x00A2), c(0x2022)],
+  const substituicoesDiretas = [
+
+    ['ÃƒÂ ', 'à'],
+    ['ÃƒÂ€', 'À'],
+    ['ÃƒÂ ', 'Í'],
+    ['ÃƒÂº', 'ú'],
+    ['ÃƒÂº', 'ú'],
+    ['ÃƒÂ§', 'ç'],
+    ['ÃƒÂ£', 'ã'],
+    ['ÃƒÂµ', 'õ'],
+    ['ÃƒÂª', 'ê'],
+    ['ÃƒÂ¡', 'á'],
+    ['ÃƒÂ¢', 'â'],
+    ['ÃƒÂ£', 'ã'],
+    ['ÃƒÂ©', 'é'],
+    ['ÃƒÂª', 'ê'],
+    ['ÃƒÂ­', 'í'],
+    ['ÃƒÂ³', 'ó'],
+    ['ÃƒÂ´', 'ô'],
+    ['ÃƒÂµ', 'õ'],
+    ['ÃƒÂº', 'ú'],
+    ['ÃƒÂ§', 'ç'],
+    ['ÃƒÂ', 'Á'],
+    ['ÃƒÂ‰', 'É'],
+    ['ÃƒÂ“', 'Ó'],
+    ['ÃƒÂš', 'Ú'],
+    ['ÃƒÂ‡', 'Ç'],
+    ['Ã¡', 'á'],
+    ['Ã¢', 'â'],
+    ['Ã£', 'ã'],
+    ['Ã©', 'é'],
+    ['Ãª', 'ê'],
+    ['Ã­', 'í'],
+    ['Ã³', 'ó'],
+    ['Ã´', 'ô'],
+    ['Ãµ', 'õ'],
+    ['Ãº', 'ú'],
+    ['Ã§', 'ç'],
+    ['Ã', 'Á'],
+    ['Ã‰', 'É'],
+    ['Ã“', 'Ó'],
+    ['Ãš', 'Ú'],
+    ['Ã‡', 'Ç'],
+    ['Âº', 'º'],
+    ['Âª', 'ª'],
+    ['Â·', '·'],
+    ['Â', ''],
+    ['â€“', '–'],
+    ['â€”', '—'],
+    ['â€œ', '“'],
+    ['â€', '”'],
+    ['â€˜', '‘'],
+    ['â€™', '’'],
+    ['â€¦', '…'],
+    ['â€¢', '•'],
+    ['â†', '←'],
+    ['â†’', '→'],
+    ['âœ“', '✓'],
+    ['âœ', '✝'],
+    ['âŒ„', '⌄'],
+    ['âŒƒ', '⌃'],
   ]
 
-  const palavras = [
-    ['B' + c(0x00C3, 0x00AD) + 'blica', 'B' + c(0x00ED) + 'blica'],
-    ['Gest' + c(0x00C3, 0x00A3) + 'o', 'Gest' + c(0x00E3) + 'o'],
-    ['Administra' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'Administra' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['Configura' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'Configura' + c(0x00E7) + c(0x00F5) + 'es'],
-    ['Relat' + c(0x00C3, 0x00B3) + 'rios', 'Relat' + c(0x00F3) + 'rios'],
-    ['usu' + c(0x00C3, 0x00A1) + 'rios', 'usu' + c(0x00E1) + 'rios'],
-    ['usu' + c(0x00C3, 0x00A1) + 'rio', 'usu' + c(0x00E1) + 'rio'],
-    ['aprova' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'aprova' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['recupera' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'recupera' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'congrega' + c(0x00E7) + c(0x00F5) + 'es'],
-    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'congrega' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['respons' + c(0x00C3, 0x00A1) + 'vel', 'respons' + c(0x00E1) + 'vel'],
-    ['Voc' + c(0x00C3, 0x00AA), 'Voc' + c(0x00EA)],
-    ['voc' + c(0x00C3, 0x00AA), 'voc' + c(0x00EA)],
-    ['c' + c(0x00C3, 0x00B3) + 'digo', 'c' + c(0x00F3) + 'digo'],
-    ['j' + c(0x00C3, 0x00A1), 'j' + c(0x00E1)],
-    ['J' + c(0x00C3, 0x00A1), 'J' + c(0x00E1)],
-  ]
+  function pontuarMojibake(texto) {
+    const encontrados = texto.match(/[ÃÂâ ƒ€œ]/g)
+    return encontrados ? encontrados.length : 0
+  }
+
+  function decodificarComoUtf8(texto) {
+    if (typeof TextDecoder === 'undefined') {
+      return texto
+    }
+
+    try {
+      const bytes = []
+
+      for (const caractere of texto) {
+        const codigo = caractere.charCodeAt(0)
+        bytes.push(mapaWindows1252[codigo] ?? (codigo <= 255 ? codigo : codigo & 0xff))
+      }
+
+      return new TextDecoder('utf-8', { fatal: false }).decode(new Uint8Array(bytes))
+    } catch {
+      return texto
+    }
+  }
 
   function corrigir(texto) {
     if (!texto || typeof texto !== 'string') {
       return texto
     }
 
-    let novo = texto
+    let melhor = texto
 
-    pares.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
+    for (let rodada = 0; rodada < 3; rodada += 1) {
+      let tentativa = melhor
+
+      substituicoesDiretas.forEach(([errado, certo]) => {
+        tentativa = tentativa.split(errado).join(certo)
+      })
+
+      const decodificada = decodificarComoUtf8(tentativa)
+      const melhorPontuacao = pontuarMojibake(tentativa)
+      const novaPontuacao = pontuarMojibake(decodificada)
+
+      if (novaPontuacao < melhorPontuacao) {
+        tentativa = decodificada
+      }
+
+      substituicoesDiretas.forEach(([errado, certo]) => {
+        tentativa = tentativa.split(errado).join(certo)
+      })
+
+      if (tentativa === melhor) {
+        break
+      }
+
+      melhor = tentativa
+    }
+
+    const palavrasComuns = [
+      ['VocÃƒÂª', 'Você'],
+      ['vocÃƒÂª', 'você'],
+      ['estÃƒÂ¡', 'está'],
+      ['nÃƒÂ£o', 'não'],
+      ['ÃƒÂ¡rea', 'área'],
+      ['ÃƒÂºnico', 'único'],
+      ['usuÃƒÂ¡rio', 'usuário'],
+      ['usuÃƒÂ¡rios', 'usuários'],
+      ['UsuÃƒÂ¡rios', 'Usuários'],
+      ['relatÃƒÂ³rio', 'relatório'],
+      ['relatÃƒÂ³rios', 'relatórios'],
+      ['RelatÃƒÂ³rios', 'Relatórios'],
+      ['AdministraÃƒÂ§ÃƒÂ£o', 'Administração'],
+      ['ConfiguraÃƒÂ§ÃƒÂµes', 'Configurações'],
+      ['FrequÃƒÂªncia', 'Frequência'],
+      ['frequÃƒÂªncia', 'frequência'],
+      ['BÃƒÂ­blica', 'Bíblica'],
+      ['comercializaÃƒÂ§ÃƒÂ£o', 'comercialização'],
+      ['prÃƒÂ³ximos', 'próximos'],
+      ['aniversÃƒÂ¡rio', 'aniversário'],
+      ['SugestÃƒÂ£o', 'Sugestão'],
+      ['sugestÃƒÂ£o', 'sugestão'],
+      ['receberÃƒÂ¡', 'receberá'],
+      ['prÃƒÂ³pria', 'própria'],
+      ['ÃƒÂºltimos', 'últimos'],
+      ['JÃƒÂ¡', 'Já'],
+      ['jÃƒÂ¡', 'já'],
+      ['serÃƒÂ£o', 'serão'],
+      ['estÃƒÂ£o', 'estão'],
+      ['informaÃƒÂ§ÃƒÂµes', 'informações'],
+      ['gestÃƒÂ£o', 'gestão'],
+      ['GestÃƒÂ£o', 'Gestão'],
+      ['BÃƒÂ¡blica', 'Bíblica'],
+      ['presenÃƒÂ§a', 'presença'],
+      ['ausÃƒÂªncia', 'ausência'],
+      ['aÃƒÂ§ÃƒÂ£o', 'ação'],
+      ['recuperaÃƒÂ§ÃƒÂ£o', 'recuperação'],
+      ['aprovaÃƒÂ§ÃƒÂ£o', 'aprovação'],
+      ['CongregaÃƒÂ§ÃƒÂ£o', 'Congregação'],
+      ['congregaÃƒÂ§ÃƒÂ£o', 'congregação'],
+      ['ÃƒÂ ', 'à'],
+      ['â€', '”'],
+      ['â€œ', '“'],
+      ['â€”', '—'],
+      ['â€“', '–'],
+    ]
+
+    palavrasComuns.forEach(([errado, certo]) => {
+      melhor = melhor.split(errado).join(certo)
     })
 
-    palavras.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
-    })
-
-    return novo
+    return melhor
   }
 
   function varrer() {
@@ -267,7 +399,7 @@ function iniciarCorrecaoGlobalDeAcentos() {
       return
     }
 
-    const walker = document.createTreeWalker(document.body, 4)
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
     const nodes = []
 
     while (walker.nextNode()) {
@@ -285,6 +417,10 @@ function iniciarCorrecaoGlobalDeAcentos() {
       if (campo.placeholder) {
         campo.placeholder = corrigir(campo.placeholder)
       }
+
+      if (campo.value && campo.defaultValue === campo.value) {
+        campo.value = corrigir(campo.value)
+      }
     })
 
     document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
@@ -300,9 +436,34 @@ function iniciarCorrecaoGlobalDeAcentos() {
     })
   }
 
-  window.setInterval(varrer, 250)
+  const observador = new MutationObserver(() => varrer())
+
+  window.setInterval(varrer, 350)
   window.addEventListener('load', varrer)
   window.requestAnimationFrame(varrer)
+
+  if (document.body) {
+    observador.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['placeholder', 'title', 'aria-label', 'alt'],
+    })
+  } else {
+    window.addEventListener('DOMContentLoaded', () => {
+      if (document.body) {
+        observador.observe(document.body, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: ['placeholder', 'title', 'aria-label', 'alt'],
+        })
+      }
+      varrer()
+    })
+  }
 }
 
 iniciarCorrecaoGlobalDeAcentos()
