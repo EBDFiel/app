@@ -1023,7 +1023,7 @@ button:disabled {
 
 
 
-/* Logo oficial da marca na Ã¡rea pÃºblica */
+/* Logo oficial da marca na área pública */
 .marca-login .logo-simbolo,
 .marca-publica .logo-publica {
   background: #ffffff;
@@ -1212,7 +1212,7 @@ button:disabled {
   }
 }
 
-/* Landing page pÃºblica */
+/* Landing page pública */
 .pagina-publica {
   min-height: 100vh;
   background:
@@ -1783,7 +1783,7 @@ button:disabled {
   min-height: auto !important;
 }
 
-/* Cadastro de usuÃ¡rios */
+/* Cadastro de usuários */
 .aviso-usuarios {
   background: #eff6ff;
   border-color: #bfdbfe;
@@ -1877,7 +1877,7 @@ button:disabled {
   }
 }
 
-/* Perfis de usuÃ¡rio */
+/* Perfis de usuário */
 .linha-tags-painel {
   display: flex;
   gap: 10px;
@@ -1917,7 +1917,7 @@ input:disabled {
 }
 
 
-/* Ajuste para estrutura multiusuÃ¡rio por igreja */
+/* Ajuste para estrutura multiusuário por igreja */
 .aviso-perfil {
   margin-top: 18px;
   padding: 14px 16px;
@@ -1947,7 +1947,7 @@ input:disabled {
 }
 
 
-/* Professores tambÃ©m gerenciados pela tela de Classes */
+/* Professores também gerenciados pela tela de Classes */
 .formulario-professor-classe {
   margin-bottom: 22px;
   background: #ffffff;
@@ -2021,7 +2021,7 @@ input:disabled {
 }
 
 
-/* MigraÃ§Ã£o automÃ¡tica de professores das classes */
+/* Migração automática de professores das classes */
 .aviso-edicao-classe {
   margin-top: 0;
   background: #f8fbff;
@@ -2034,7 +2034,7 @@ input:disabled {
 }
 
 
-/* RelatÃ³rios modernos */
+/* Relatórios modernos */
 .relatorios-dashboard {
   margin-top: 24px;
   display: grid;
@@ -2288,7 +2288,7 @@ input:disabled {
 }
 
 
-/* PÃ¡gina pÃºblica premium */
+/* Página pública premium */
 .pagina-publica {
   background:
     radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
@@ -2519,7 +2519,7 @@ input:disabled {
 }
 
 .lista-beneficios-publicos li::before {
-  content: "âœ“";
+  content: "✓";
   display: grid;
   width: 24px;
   height: 24px;
@@ -2584,7 +2584,7 @@ input:disabled {
 }
 
 
-/* PÃ¡gina principal ultra moderna e mais colorida */
+/* Página principal ultra moderna e mais colorida */
 .pagina-publica {
   position: relative;
   overflow-x: hidden;
@@ -2858,7 +2858,7 @@ input:disabled {
 }
 
 
-/* Redesign estratÃ©gico inspirado em plataforma SaaS */
+/* Redesign estratégico inspirado em plataforma SaaS */
 :root {
   --landing-primary: #0B3B5F;
   --landing-primary-light: #2B5C8A;
@@ -3170,7 +3170,7 @@ input:disabled {
 }
 
 
-/* Ajustes finais da pÃ¡gina pÃºblica: contraste, CTA, mockup e seÃ§Ãµes */
+/* Ajustes finais da página pública: contraste, CTA, mockup e seções */
 .hero-publico-card {
   transform: perspective(1000px) rotateY(-4deg) rotateX(2deg) scale(1.04);
   box-shadow: 0 44px 100px rgba(11, 59, 95, 0.34);
@@ -3395,7 +3395,7 @@ input:disabled {
 }
 
 
-/* CorreÃ§Ã£o do bloco escuro: texto claro e melhor contraste */
+/* Correção do bloco escuro: texto claro e melhor contraste */
 .impacto-card-principal h2,
 .impacto-card-principal h3,
 .impacto-card-principal strong {
@@ -3424,7 +3424,7 @@ input:disabled {
 }
 
 
-/* RepaginaÃ§Ã£o moderna da Ã¡rea interna */
+/* Repaginação moderna da área interna */
 .aplicacao,
 .app,
 .layout-app {
@@ -3672,7 +3672,7 @@ textarea:focus {
 }
 
 
-/* RelatÃ³rio responsivo e professores integrados */
+/* Relatório responsivo e professores integrados */
 .area-relatorio,
 .relatorio,
 .relatorio-ebd,
@@ -3906,7 +3906,7 @@ textarea:focus {
 }
 
 
-/* RelatÃ³rio em formato vertical no celular */
+/* Relatório em formato vertical no celular */
 @media (max-width: 760px) {
   .tabela-container,
   .tabela-relatorio-wrapper {
@@ -3985,17 +3985,17 @@ textarea:focus {
 
   .tabela-ebd td:nth-child(2)::before,
   .tabela td:nth-child(2)::before {
-    content: "MatrÃ­cula";
+    content: "Matrícula";
   }
 
   .tabela-ebd td:nth-child(3)::before,
   .tabela td:nth-child(3)::before {
-    content: "AusÃªncia";
+    content: "Ausência";
   }
 
   .tabela-ebd td:nth-child(4)::before,
   .tabela td:nth-child(4)::before {
-    content: "PresenÃ§a";
+    content: "Presença";
   }
 
   .tabela-ebd td:nth-child(5)::before,
@@ -4010,7 +4010,7 @@ textarea:focus {
 
   .tabela-ebd td:nth-child(7)::before,
   .tabela td:nth-child(7)::before {
-    content: "BÃ­blia";
+    content: "Bíblia";
   }
 
   .tabela-ebd td:nth-child(8)::before,
@@ -4062,7 +4062,7 @@ textarea:focus {
 }
 
 
-/* NavegaÃ§Ã£o mobile: ao escolher uma opÃ§Ã£o, a pÃ¡gina abre no topo */
+/* Navegação mobile: ao escolher uma opção, a página abre no topo */
 html {
   scroll-behavior: smooth;
 }
@@ -4077,7 +4077,7 @@ html {
 }
 
 
-/* CorreÃ§Ã£o definitiva: menu mobile rola para a Ã¡rea principal */
+/* Correção definitiva: menu mobile rola para a área principal */
 html {
   scroll-behavior: smooth;
 }
@@ -4093,7 +4093,7 @@ html {
 }
 
 
-/* AdministraÃ§Ã£o do sistema */
+/* Administração do sistema */
 .selo-admin {
   display: inline-flex;
   width: fit-content;
@@ -4204,7 +4204,7 @@ html {
 }
 
 
-/* CorreÃ§Ã£o do logo no menu lateral */
+/* Correção do logo no menu lateral */
 .marca-sidebar h1,
 .menu-lateral .marca-sidebar h1,
 .sidebar .marca-sidebar h1 {
@@ -4221,13 +4221,13 @@ html {
   color: #ffffff;
 }
 
-/* Destacar melhor a AdministraÃ§Ã£o quando aparecer */
+/* Destacar melhor a Administração quando aparecer */
 .menu-navegacao button:last-child {
   margin-top: 8px;
 }
 
 
-/* Tela cheia no PC: pÃ¡gina pÃºblica e Ã¡rea logada */
+/* Tela cheia no PC: página pública e área logada */
 @media (min-width: 1024px) {
   html,
   body,
@@ -4350,7 +4350,7 @@ html {
   }
 }
 
-/* No celular mantÃ©m layout em coluna, sem forÃ§ar largura de PC */
+/* No celular mantém layout em coluna, sem forçar largura de PC */
 @media (max-width: 1023px) {
   .app {
     display: block;
@@ -4371,7 +4371,7 @@ html {
 }
 
 
-/* CorreÃ§Ã£o da pÃ¡gina inicial no celular */
+/* Correção da página inicial no celular */
 @media (max-width: 760px) {
   .pagina-publica {
     overflow-x: hidden;
@@ -4588,7 +4588,7 @@ html {
 }
 
 
-/* PÃ¡gina pÃºblica inspirada no modelo Sistema EBD */
+/* Página pública inspirada no modelo Sistema EBD */
 .hero-modelo-sistema-ebd {
   position: relative;
   align-items: center;
@@ -5135,7 +5135,7 @@ html {
   color: var(--logo-azul-escuro) !important;
 }
 
-/* Manual interativo no lugar do vÃ­deo */
+/* Manual interativo no lugar do vídeo */
 .manual-card-modelo {
   position: relative;
   overflow: hidden;
@@ -5340,7 +5340,7 @@ html {
 }
 
 
-/* Ãrea interna modernizada com cores da logo oficial */
+/* Área interna modernizada com cores da logo oficial */
 :root {
   --logo-azul: #12A8E0;
   --logo-amarelo: #FFCB05;
@@ -5649,7 +5649,7 @@ button.botao-principal {
   --logo-azul-escuro: #003B66;
 }
 
-/* PÃ¡gina inicial com cores mais vivas */
+/* Página inicial com cores mais vivas */
 .pagina-publica {
   background:
     radial-gradient(circle at 6% 7%, rgba(255, 210, 0, 0.34), transparent 25%),
@@ -5704,7 +5704,7 @@ button.botao-principal {
   color: var(--logo-azul-escuro) !important;
 }
 
-/* Ãrea interna com cores mais fortes */
+/* Área interna com cores mais fortes */
 .app {
   background:
     radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
@@ -5894,7 +5894,7 @@ button.botao-principal {
   box-shadow: 0 34px 72px rgba(0, 59, 102, 0.18) !important;
 }
 
-/* Cards e formulÃ¡rios mais vivos */
+/* Cards e formulários mais vivos */
 .card,
 .resumo,
 .formulario,
@@ -6371,7 +6371,7 @@ textarea:focus {
   line-height: 1.75;
 }
 
-/* Ãrea interna refinada */
+/* Área interna refinada */
 .app {
   background:
     radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
@@ -6635,7 +6635,7 @@ button.botao-principal {
   font-weight: 800;
 }
 
-/* Professores dentro da mesma tabela do relatÃ³rio */
+/* Professores dentro da mesma tabela do relatório */
 .linha-professores-titulo td {
   background:
     linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
@@ -6709,7 +6709,7 @@ button.botao-principal {
 }
 
 
-/* Feedback piloto - formulÃ¡rio largo, moderno e profissional */
+/* Feedback piloto - formulário largo, moderno e profissional */
 .feedback-piloto-card {
   position: relative;
   overflow: hidden;
@@ -6956,7 +6956,7 @@ button.botao-principal {
 }
 
 
-/* AdministraÃ§Ã£o comercial definitiva */
+/* Administração comercial definitiva */
 .admin-acessos-bloco {
   margin: 24px 0;
   padding: clamp(22px, 3vw, 32px);
@@ -7116,7 +7116,7 @@ button.botao-principal {
 }
 
 
-/* Teste fechado - sem solicitaÃ§Ã£o pÃºblica de acesso */
+/* Teste fechado - sem solicitação pública de acesso */
 .aviso-teste-fechado {
   display: inline-flex;
   align-items: center;
@@ -7154,7 +7154,7 @@ button.botao-principal {
 }
 
 
-/* Cadastro de igrejas AD: sede, congregaÃ§Ã£o e endereÃ§o completo */
+/* Cadastro de igrejas AD: sede, congregação e endereço completo */
 .campo-sede-filiada {
   grid-column: span 2;
 }
@@ -7298,7 +7298,7 @@ button.botao-principal {
 }
 
 
-/* RecuperaÃ§Ã£o de senha */
+/* Recuperação de senha */
 .tela-recuperacao-senha {
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
 }
@@ -7337,7 +7337,7 @@ button.botao-principal {
 }
 
 
-/* AprovaÃ§Ã£o rÃ¡pida de igrejas no painel administrativo */
+/* Aprovação rápida de igrejas no painel administrativo */
 .acoes-aprovacao-igreja {
   gap: 10px !important;
 }
@@ -7405,7 +7405,7 @@ button.botao-principal {
 }
 
 
-/* Mensagem pÃ³s-cadastro e aviso de aprovaÃ§Ã£o */
+/* Mensagem pós-cadastro e aviso de aprovação */
 .tela-cadastro-enviado {
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
 }
@@ -7602,7 +7602,7 @@ button.botao-principal {
 }
 
 
-/* Manual do usuÃ¡rio */
+/* Manual do usuário */
 .botao-manual-painel {
   border-color: rgba(255, 255, 255, 0.50) !important;
 }
@@ -7799,7 +7799,7 @@ button.botao-principal {
 }
 
 
-/* EndereÃ§o com nÃºmero separado */
+/* Endereço com número separado */
 .formulario-cadastro-piloto .campo-cadastro-piloto-largo,
 .formulario-admin-igreja .campo-sede-filiada {
   min-width: 0;
@@ -7977,7 +7977,7 @@ button.botao-principal {
   }
 }
 
-/* CompactaÃ§Ã£o extra para qualquer card de classe com o visual atual */
+/* Compactação extra para qualquer card de classe com o visual atual */
 @media (min-width: 761px) {
   .lista-classes .item-lista,
   .classes-lista .item-lista {
@@ -8062,7 +8062,7 @@ button.botao-principal {
   --classe-fundo-suave: #f3fbff;
 }
 
-/* Deixa a Ã¡rea de classes mais limpa */
+/* Deixa a área de classes mais limpa */
 .conteudo:has(.lista-classes),
 .conteudo:has(.classes-lista) {
   background:
@@ -8102,7 +8102,7 @@ button.botao-principal {
   z-index: 4 !important;
 }
 
-/* CabeÃ§alho dos cards */
+/* Cabeçalho dos cards */
 .classe-card .classe-header,
 .classe-card-moderna .classe-header,
 .classe-destaque-card .classe-header,
@@ -8135,7 +8135,7 @@ button.botao-principal {
   filter: blur(0.2px) !important;
 }
 
-/* TÃ­tulo da classe */
+/* Título da classe */
 .classe-card h3,
 .card-classe h3,
 .item-classe h3,
@@ -8198,7 +8198,7 @@ button.botao-principal {
   box-shadow: 0 14px 28px rgba(6, 43, 73, 0.06) !important;
 }
 
-/* TÃ­tulos internos */
+/* Títulos internos */
 .classe-card strong,
 .classe-card-moderna strong,
 .classe-destaque-card strong,
@@ -8235,7 +8235,7 @@ button.botao-principal {
   box-shadow: 0 10px 24px rgba(6, 43, 73, 0.06) !important;
 }
 
-/* BotÃµes dos cards */
+/* Botões dos cards */
 .acoes-classe-card .botao-principal,
 .classe-card .acoes-item .botao-principal,
 .classe-card-moderna .acoes-item .botao-principal,
@@ -8624,7 +8624,7 @@ button.botao-principal {
 }
 
 
-/* FormulÃ¡rio claro para editar o nome da classe */
+/* Formulário claro para editar o nome da classe */
 .formulario-editar-classe {
   position: relative;
   overflow: hidden;
@@ -8763,7 +8763,7 @@ button.botao-principal {
   white-space: nowrap;
 }
 
-/* Visual comercial impactante - pÃ¡gina principal */
+/* Visual comercial impactante - página principal */
 .pagina-publica {
   background:
     radial-gradient(circle at 7% 7%, rgba(255, 210, 0, 0.44), transparent 24%),
@@ -8972,7 +8972,7 @@ button.botao-principal {
 }
 
 
-/* BotÃ£o Alterar nome da classe */
+/* Botão Alterar nome da classe */
 .lista-classes-modernas .acoes-classe-card .botao-editar,
 .acoes-classe-card .botao-editar {
   white-space: normal !important;
@@ -8984,7 +8984,7 @@ button.botao-principal {
 
 /* =========================================================
    MODELO COMERCIAL DOURADO - Inspirado no modelo enviado
-   PÃ¡gina inicial + parte interna
+   Página inicial + parte interna
    ========================================================= */
 
 :root {
@@ -9010,7 +9010,7 @@ button.botao-principal {
   --ebd-shadow-dark: 0 24px 70px rgba(26, 26, 26, 0.18);
 }
 
-/* PÃGINA PRINCIPAL */
+/* PÁGINA PRINCIPAL */
 .pagina-publica {
   background:
     radial-gradient(circle at 8% 6%, rgba(212, 175, 55, 0.30), transparent 24%),
@@ -9091,7 +9091,7 @@ button.botao-principal {
 
 .hero-publico::after,
 .hero-ebd-oficial::after {
-  content: "âœ" !important;
+  content: "✝" !important;
   position: absolute !important;
   right: 28px !important;
   bottom: 12px !important;
@@ -9563,7 +9563,7 @@ button.botao-principal {
 }
 
 .modelo-exato-ebd .logo-icon::before {
-  content: "âœ";
+  content: "✝";
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
@@ -9795,7 +9795,7 @@ button.botao-principal {
 }
 
 .modelo-exato-ebd .hero::after {
-  content: "âœ";
+  content: "✝";
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -10153,13 +10153,13 @@ button.botao-principal {
 }
 
 .modelo-exato-ebd .faq-item summary::after {
-  content: "âŒ„";
+  content: "⌄";
   float: right;
   color: var(--gold);
 }
 
 .modelo-exato-ebd .faq-item[open] summary::after {
-  content: "âŒƒ";
+  content: "⌃";
 }
 
 .modelo-exato-ebd .faq-item p {
@@ -10462,7 +10462,7 @@ button.botao-principal {
   gap: 0.85rem;
 }
 
-/* Garante a logo oficial tambÃ©m nas telas internas e de login */
+/* Garante a logo oficial também nas telas internas e de login */
 .logo-simbolo img.logo-imagem,
 .logo-publica img.logo-imagem,
 .logo-simbolo-sidebar img.logo-imagem {
@@ -10478,7 +10478,7 @@ button.botao-principal {
   --texto-claro-suave-ebd: rgba(255, 255, 255, 0.86);
 }
 
-/* Hero/pÃ¡gina principal com a cor do modelo enviado */
+/* Hero/página principal com a cor do modelo enviado */
 .modelo-exato-ebd .hero {
   background: var(--fundo-principal-ebd) !important;
 }
@@ -10544,7 +10544,7 @@ button.botao-principal {
   color: #D4AF37 !important;
 }
 
-/* BotÃµes em Ã¡reas escuras com contraste */
+/* Botões em áreas escuras com contraste */
 .modelo-exato-ebd .hero .btn-primary {
   background: #14395e !important;
   color: #ffffff !important;
@@ -10596,7 +10596,7 @@ button.botao-principal {
   border-color: rgba(255, 255, 255, 0.24) !important;
 }
 
-/* Login/apresentaÃ§Ã£o com fundo escuro e letras claras */
+/* Login/apresentação com fundo escuro e letras claras */
 .painel-apresentacao h1,
 .painel-apresentacao h2,
 .painel-apresentacao h3,
@@ -10611,7 +10611,7 @@ button.botao-principal {
 }
 
 
-/* CorreÃ§Ã£o definitiva: textos da pÃ¡gina principal renderizados por Unicode escape */
+/* Correção definitiva: textos da página principal renderizados por Unicode escape */
 .modelo-exato-ebd .feature-icon,
 .modelo-exato-ebd .persona-avatar,
 .modelo-exato-ebd .comparison-icon {
@@ -10634,7 +10634,7 @@ button.botao-principal {
 }
 
 
-/* RevisÃ£o visual segura dos sÃ­mbolos */
+/* Revisão visual segura dos símbolos */
 .modelo-exato-ebd .feature-icon,
 .modelo-exato-ebd .persona-avatar,
 .modelo-exato-ebd .comparison-icon {
@@ -10662,7 +10662,7 @@ button.botao-principal {
 }
 
 
-/* Remover selo de teste piloto da pÃ¡gina inicial */
+/* Remover selo de teste piloto da página inicial */
 .modelo-exato-ebd .hero-badge {
   display: none !important;
 }
@@ -10692,7 +10692,7 @@ button.botao-principal {
 }
 
 
-/* AÃ§Ãµes rÃ¡pidas da chamada dos alunos */
+/* Ações rápidas da chamada dos alunos */
 .acoes-chamada-rapida {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -10844,7 +10844,7 @@ button.botao-principal {
 }
 
 
-/* Contato/WhatsApp na administraÃ§Ã£o */
+/* Contato/WhatsApp na administração */
 .contato-acesso-admin {
   margin: 8px 0;
   padding: 10px 12px;
@@ -10906,7 +10906,7 @@ button.botao-principal {
 }
 
 
-/* UsuÃ¡rios vinculados dentro do card da igreja */
+/* Usuários vinculados dentro do card da igreja */
 .botao-usuarios-vinculados {
   border-color: rgba(0, 174, 239, 0.35) !important;
   color: #005f8c !important;
@@ -10983,7 +10983,7 @@ button.botao-principal {
 }
 
 
-/* BotÃ£o WhatsApp mais discreto na AdministraÃ§Ã£o */
+/* Botão WhatsApp mais discreto na Administração */
 .acoes-aprovacao-igreja .botao-whatsapp-admin,
 .igreja-admin-card .botao-whatsapp-admin {
   background: #f0fdf4 !important;
