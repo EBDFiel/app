@@ -11534,3 +11534,245 @@ button.botao-principal {
   border-radius: 16px !important;
   padding: 3px !important;
 }
+
+
+/* =========================================================
+   LOGIN MAIS CLARO, COMERCIAL E OPERACIONAL
+   ========================================================= */
+@media (min-width: 1001px) {
+  .tela-login {
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 480px) !important;
+  }
+
+  .tela-login .painel-apresentacao {
+    padding: 46px 54px !important;
+  }
+
+  .tela-login .cartao-login {
+    padding: 42px 40px !important;
+  }
+}
+
+.tela-login .painel-apresentacao {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.10), transparent 42%),
+    radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.035), transparent 34%),
+    linear-gradient(135deg, #1a1a1a 0%, #242424 54%, #1b1b1b 100%) !important;
+}
+
+.tela-login .painel-apresentacao::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: -180px;
+  bottom: -120px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.08);
+  pointer-events: none;
+}
+
+.tela-login .marca-login,
+.tela-login .apresentacao-texto,
+.tela-login .beneficios-login {
+  position: relative;
+  z-index: 1;
+}
+
+.tela-login .marca-login {
+  align-items: center !important;
+}
+
+.tela-login .marca-login .logo-simbolo {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding: 5px !important;
+}
+
+.tela-login .marca-login .logo-imagem {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.tela-login .marca-login h1 {
+  font-size: 30px !important;
+  line-height: 1 !important;
+  color: #ffffff !important;
+}
+
+.tela-login .marca-login p {
+  max-width: 430px;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+.tela-login .apresentacao-texto {
+  max-width: 760px !important;
+  align-self: center;
+}
+
+.tela-login .selo-apresentacao {
+  background: rgba(212, 175, 55, 0.15) !important;
+  border: 1px solid rgba(212, 175, 55, 0.30) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.tela-login .apresentacao-texto h2 {
+  max-width: 780px;
+  font-size: clamp(42px, 5.7vw, 74px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.065em !important;
+  color: #ffffff !important;
+}
+
+.tela-login .apresentacao-texto p {
+  max-width: 680px !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: clamp(17px, 1.5vw, 21px) !important;
+  line-height: 1.7 !important;
+}
+
+.tela-login .beneficios-login {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.tela-login .beneficio-item {
+  min-height: 56px;
+  padding: 14px 16px !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.095) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: none !important;
+}
+
+.tela-login .cartao-login {
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.08), transparent 36%),
+    #ffffff !important;
+}
+
+.tela-login .botao-voltar-publico {
+  color: #2563eb !important;
+}
+
+.tela-login .topo-cartao-login h2 {
+  color: #111827 !important;
+  font-size: 32px !important;
+  line-height: 1.06 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.tela-login .topo-cartao-login p {
+  color: #475569 !important;
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+}
+
+.tela-login .topo-cartao-icone {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
+  color: #111827 !important;
+}
+
+.tela-login .aviso-login-aprovado {
+  background: #f8fbff !important;
+  border: 1px solid #bfdbfe !important;
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+.tela-login .formulario-login {
+  border-radius: 24px !important;
+  border: 1px solid rgba(212, 175, 55, 0.20) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08) !important;
+}
+
+.tela-login .formulario-login input {
+  min-height: 54px !important;
+  border-radius: 16px !important;
+}
+
+.tela-login .formulario-login .botao-principal {
+  min-height: 56px !important;
+  border-radius: 18px !important;
+  color: #111827 !important;
+  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
+  box-shadow: 0 16px 32px rgba(217, 119, 6, 0.20) !important;
+}
+
+.tela-login .bloco-cadastro-destaque {
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 34%),
+    #f8fcff !important;
+  border: 1px solid rgba(14, 165, 233, 0.22) !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+.tela-login .bloco-cadastro-destaque::before {
+  width: 5px !important;
+  background: linear-gradient(180deg, #0ea5e9, #16a34a) !important;
+}
+
+.tela-login .selo-primeiro-acesso {
+  background: #e0f2fe !important;
+  color: #075985 !important;
+}
+
+.tela-login .bloco-cadastro-destaque h3 {
+  color: #0f3e63 !important;
+  font-size: 28px !important;
+  line-height: 1.05 !important;
+}
+
+.tela-login .bloco-cadastro-destaque p {
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+.tela-login .botao-cadastrar-igreja {
+  min-height: 54px !important;
+  border-radius: 17px !important;
+  background: linear-gradient(135deg, #0f3e63, #0ea5e9) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 30px rgba(14, 165, 233, 0.22) !important;
+}
+
+@media (max-width: 1000px) {
+  .tela-login .painel-apresentacao {
+    padding: 34px 24px !important;
+  }
+
+  .tela-login .apresentacao-texto h2 {
+    font-size: clamp(36px, 11vw, 54px) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .tela-login .beneficios-login {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tela-login .topo-cartao-login {
+    display: grid !important;
+  }
+}
