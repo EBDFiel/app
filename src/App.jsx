@@ -2874,7 +2874,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .relatorio-folha {
-              width: 100%;
+              width: Online;
               max-width: 980px;
               margin: 0 auto;
               background: #fff;
@@ -2908,12 +2908,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .tabela-container {
-              width: 100%;
+              width: Online;
               overflow-x: visible;
             }
 
             table {
-              width: 100%;
+              width: Online;
               border-collapse: collapse;
               table-layout: fixed;
               font-size: 11px;
@@ -2992,261 +2992,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     janela.document.close()
   }
 
-
-  function escaparHtmlRelatorio(valor) {
-    return String(valor ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;')
-  }
-
-  function montarRelatorioEmBrancoHTML() {
-    const endereco = montarEnderecoIgreja()
-    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'Relatório em branco'
-    const linhasClasses = classes.length > 0 ? classes : classesIniciais
-
-    const linhasTabela = linhasClasses
-      .map((classe, indice) => `
-        <tr>
-          <td>${indice + 1}</td>
-          <td>${escaparHtmlRelatorio(classe.nome)}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      `)
-      .join('')
-
-    const linhasProfessores = Array.from({ length: Math.max(8, professoresSomente().length || 0) })
-      .map((_, indice) => {
-        const professor = professoresSomente()[indice]
-        return `
-          <tr>
-            <td>${indice + 1}</td>
-            <td>${escaparHtmlRelatorio(professor?.nome || '')}</td>
-            <td colspan="3">${escaparHtmlRelatorio(buscarNomeClasse(professor?.classeId))}</td>
-            <td colspan="2"></td>
-            <td colspan="2"></td>
-            <td colspan="2"></td>
-          </tr>
-        `
-      })
-      .join('')
-
-    return `
-      <div class="relatorio-folha relatorio-folha-em-branco">
-        <div class="cabecalho-relatorio">
-          <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
-          <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
-          ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
-          ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
-          ${configuracaoIgreja.superintendente_ebd ? `<p>Superintendente da EBD: ${escaparHtmlRelatorio(configuracaoIgreja.superintendente_ebd)}</p>` : ''}
-          ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
-          <p>RELATÓRIO EM BRANCO PARA RASCUNHO</p>
-          <p>Data: ____ / ____ / ______</p>
-        </div>
-
-        <div class="tabela-container">
-          <table class="tabela tabela-ebd">
-            <thead>
-              <tr>
-                <th>Nº</th>
-                <th>Classes</th>
-                <th>Matrícula</th>
-                <th>Ausência</th>
-                <th>Presença</th>
-                <th>Visitante</th>
-                <th>Total</th>
-                <th>Bíblia</th>
-                <th>Revista</th>
-                <th>Ofertas</th>
-                <th>%</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${linhasTabela}
-              <tr class="linha-total">
-                <td colspan="2">TOTAL GERAL</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr class="linha-domingo-anterior">
-                <td colspan="11">DOMINGO anterior</td>
-              </tr>
-              <tr class="linha-professores-titulo">
-                <td colspan="11">CHAMADA DOS PROFESSORES</td>
-              </tr>
-              <tr class="linha-professores-cabecalho">
-                <td>Nº</td>
-                <td>Professor</td>
-                <td colspan="3">Classe de referência</td>
-                <td colspan="2">Presente</td>
-                <td colspan="2">Faltou</td>
-                <td colspan="2">Justificou</td>
-              </tr>
-              ${linhasProfessores}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="area-observacoes-rascunho">
-          <strong>Observações:</strong>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    `
-  }
-
-  function abrirRelatorioEmBrancoParaImpressao() {
-    const htmlRelatorio = montarRelatorioEmBrancoHTML()
-    const janela = window.open('', '_blank')
-
-    if (!janela) {
-      alert('O navegador bloqueou a abertura da impressão. Permita pop-ups para imprimir o modelo em branco.')
-      return
-    }
-
-    janela.document.open()
-    janela.document.write(`
-      <!doctype html>
-      <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Relatório em branco - EBD Fiel</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              margin: 0;
-              padding: 24px;
-              font-family: Arial, sans-serif;
-              color: #000;
-              background: #fff;
-            }
-            .area-acoes {
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-bottom: 20px;
-            }
-            .area-acoes button {
-              border: 0;
-              border-radius: 8px;
-              padding: 12px 18px;
-              font-size: 15px;
-              font-weight: 700;
-              cursor: pointer;
-              background: #103058;
-              color: #fff;
-            }
-            .area-acoes .secundario {
-              background: #e5e7eb;
-              color: #111827;
-            }
-            .relatorio-folha {
-              width: 100%;
-              max-width: 1100px;
-              margin: 0 auto;
-              background: #fff;
-            }
-            .cabecalho-relatorio {
-              text-align: center;
-              margin-bottom: 16px;
-              padding-bottom: 8px;
-              border-bottom: 2px dotted #000;
-            }
-            .logo-relatorio {
-              width: 76px;
-              height: 76px;
-              object-fit: contain;
-              display: block;
-              margin: 0 auto 8px;
-            }
-            .cabecalho-relatorio h3 {
-              margin: 0 0 6px 0;
-              font-size: 20px;
-              font-weight: 700;
-              text-transform: uppercase;
-            }
-            .cabecalho-relatorio p {
-              margin: 0;
-              font-size: 13px;
-              font-weight: 600;
-            }
-            .tabela-container { width: 100%; overflow: visible; }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              font-size: 11px;
-            }
-            th, td {
-              border: 1px solid #000;
-              padding: 7px 5px;
-              text-align: center;
-              vertical-align: middle;
-              height: 28px;
-              word-break: break-word;
-            }
-            th { font-weight: 700; background: #f3f4f6; }
-            td:nth-child(2), th:nth-child(2) { text-align: left; width: 22%; }
-            .linha-total td, .linha-professores-titulo td, .linha-professores-cabecalho td {
-              font-weight: 700;
-              background: #f3f4f6;
-            }
-            .linha-domingo-anterior td { font-weight: 700; text-align: left; }
-            .area-observacoes-rascunho {
-              margin-top: 14px;
-              font-size: 12px;
-              page-break-inside: avoid;
-            }
-            .area-observacoes-rascunho strong { display: block; margin-bottom: 8px; }
-            .area-observacoes-rascunho div {
-              height: 24px;
-              border-bottom: 1px solid #000;
-            }
-            @media print {
-              body { padding: 0; }
-              .area-acoes { display: none; }
-              .relatorio-folha { max-width: none; }
-              @page { size: A4 landscape; margin: 10mm; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="area-acoes">
-            <button onclick="window.print()">Imprimir / Salvar PDF</button>
-            <button class="secundario" onclick="window.close()">Fechar</button>
-          </div>
-          ${htmlRelatorio}
-          <script>
-            setTimeout(function () {
-              try { window.print() } catch (error) { console.log(error) }
-            }, 800)
-          </script>
-        </body>
-      </html>
-    `)
-    janela.document.close()
-  }
-
   async function baixarRelatorioPDF() {
     const relatorioOriginal = document.querySelector('.relatorio-folha')
 
@@ -3275,12 +3020,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       const tabelaContainer = relatorioClone.querySelector('.tabela-container')
       if (tabelaContainer) {
         tabelaContainer.style.overflow = 'visible'
-        tabelaContainer.style.width = '100%'
+        tabelaContainer.style.width = 'Online'
       }
 
       const tabela = relatorioClone.querySelector('table')
       if (tabela) {
-        tabela.style.width = '100%'
+        tabela.style.width = 'Online'
         tabela.style.tableLayout = 'fixed'
         tabela.style.borderCollapse = 'collapse'
       }
@@ -6907,7 +6652,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </p>
           </div>
 
-          <div className="grupo-botoes grupo-botoes-relatorios">
+          <div className="grupo-botoes">
             <button
               className="botao-principal"
               onClick={abrirRelatorioParaImpressao}
@@ -6917,13 +6662,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
             <button className="botao-secundario" onClick={baixarRelatorioPDF}>
               Baixar PDF
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirRelatorioEmBrancoParaImpressao}
-            >
-              Modelo em branco
             </button>
           </div>
         </div>
