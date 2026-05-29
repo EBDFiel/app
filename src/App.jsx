@@ -311,6 +311,7 @@ function App() {
   const [paginaAtual, setPaginaAtual] = useState('painel')
   const [carregando, setCarregando] = useState(true)
   const [erroSistema, setErroSistema] = useState('')
+  const [alertaPainelFechado, setAlertaPainelFechado] = useState(false)
 
   const [sessao, setSessao] = useState(null)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
@@ -1163,6 +1164,10 @@ function App() {
 
   function navegarParaPagina(paginaId) {
     setPaginaAtual(paginaId)
+
+    if (paginaId === 'painel') {
+      setAlertaPainelFechado(false)
+    }
 
     if (paginaId === 'administracao') {
       carregarIgrejasAdmin()
@@ -6583,6 +6588,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
   function renderizarPainel() {
     const aniversariantesDaSemana = buscarAniversariantesDaSemana()
+    const aniversariantesDoMesPainel = usuarioEhSecretaria() ? buscarAniversariantesDoMes() : []
+    const aniversariantesHojePainel = aniversariantesDaSemana.filter((pessoa) => Number(pessoa.dias) === 0)
+    const alertasDeFaltasPainel = usuarioEhSecretaria() ? buscarAlertasDeFaltas() : []
+    const destaquesDeFrequenciaPainel = usuarioEhSecretaria() ? buscarDestaquesFrequencia() : []
+    const mostrarAlertaFlutuanteSecretaria =
+      usuarioEhSecretaria() &&
+      !alertaPainelFechado &&
+      (aniversariantesHojePainel.length > 0 || alertasDeFaltasPainel.length > 0)
 
     return (
       <section className="conteudo">
@@ -6666,6 +6679,100 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             destaque
           />
         </div>
+
+        {usuarioEhSecretaria() && (
+          <div className="alertas-ebd-painel">
+            <div className="alertas-ebd-cabecalho">
+              <div>
+                <span className="hero-tag">Acompanhamento da secretaria</span>
+                <h3>Alertas da EBD</h3>
+                <p>
+                  Acompanhe aniversariantes, faltas recorrentes e alunos com boa frequência.
+                </p>
+              </div>
+              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
+                Abrir relatórios
+              </button>
+            </div>
+
+            <div className="alertas-ebd-grade">
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesMes}>
+                <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
+                <div>
+                  <strong>Aniversariantes</strong>
+                  <p>
+                    {aniversariantesDoMesPainel.length > 0
+                      ? `${aniversariantesDoMesPainel.length} pessoa${aniversariantesDoMesPainel.length === 1 ? '' : 's'} com aniversário neste mês.`
+                      : 'Nenhum aniversariante encontrado neste mês.'}
+                  </p>
+                </div>
+                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Mês'}</em>
+              </button>
+
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
+                <span className="alerta-ebd-icone alerta-ebd-icone-faltas">⚠️</span>
+                <div>
+                  <strong>Alertas de faltas</strong>
+                  <p>
+                    {alertasDeFaltasPainel.length > 0
+                      ? `${alertasDeFaltasPainel.length} aluno${alertasDeFaltasPainel.length === 1 ? '' : 's'} precisando de atenção.`
+                      : 'Nenhum alerta de faltas no momento.'}
+                  </p>
+                </div>
+                <em>{alertasDeFaltasPainel.length}</em>
+              </button>
+
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioDestaquesFrequencia}>
+                <span className="alerta-ebd-icone alerta-ebd-icone-destaque">⭐</span>
+                <div>
+                  <strong>Destaques de frequência</strong>
+                  <p>
+                    {destaquesDeFrequenciaPainel.length > 0
+                      ? `${destaquesDeFrequenciaPainel.length} aluno${destaquesDeFrequenciaPainel.length === 1 ? '' : 's'} com boa frequência.`
+                      : 'Sem destaques calculados ainda.'}
+                  </p>
+                </div>
+                <em>{destaquesDeFrequenciaPainel.length}</em>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {mostrarAlertaFlutuanteSecretaria && (
+          <div className="alerta-flutuante-secretaria" role="status" aria-live="polite">
+            <button
+              className="alerta-flutuante-fechar"
+              type="button"
+              onClick={() => setAlertaPainelFechado(true)}
+              aria-label="Fechar alerta"
+            >
+              ×
+            </button>
+            <strong>Alertas importantes</strong>
+            {aniversariantesHojePainel.length > 0 && (
+              <p>
+                🎂 {aniversariantesHojePainel.length} aniversariante{aniversariantesHojePainel.length === 1 ? '' : 's'} hoje.
+              </p>
+            )}
+            {alertasDeFaltasPainel.length > 0 && (
+              <p>
+                ⚠️ {alertasDeFaltasPainel.length} aluno{alertasDeFaltasPainel.length === 1 ? '' : 's'} com alerta de faltas.
+              </p>
+            )}
+            <div className="alerta-flutuante-acoes">
+              {aniversariantesHojePainel.length > 0 && (
+                <button type="button" onClick={abrirRelatorioAniversariantesMes}>
+                  Ver aniversários
+                </button>
+              )}
+              {alertasDeFaltasPainel.length > 0 && (
+                <button type="button" onClick={abrirRelatorioAlertasFaltas}>
+                  Ver faltas
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         {usuarioEhSecretaria() && (
           <div className="alerta-aniversariantes">
