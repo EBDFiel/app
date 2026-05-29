@@ -481,6 +481,7 @@ function App() {
 
   const [mostrarFormularioAluno, setMostrarFormularioAluno] = useState(false)
   const [alunoEditandoId, setAlunoEditandoId] = useState(null)
+  const [salvandoAluno, setSalvandoAluno] = useState(false)
   const [novoAluno, setNovoAluno] = useState({
     nome: '',
     classeId: '',
@@ -4451,54 +4452,135 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     setMostrarFormularioAluno(false)
   }
 
+  function normalizarNomeCadastro(valor) {
+    return String(valor || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase()
+  }
+
+  async function existePessoaDuplicadaNaClasse({ nome, classeId, tipoPessoa, ignorarId = null }) {
+    const igrejaAtualId = buscarIgrejaIdAtual()
+
+    if (!igrejaAtualId || !nome || !classeId) {
+      return false
+    }
+
+    const nomeNormalizado = normalizarNomeCadastro(nome)
+
+    const duplicadoLocal = alunos.some((aluno) => {
+      return (
+        Number(aluno.igreja_id || igrejaAtualId) === Number(igrejaAtualId) &&
+        Number(aluno.classeId || aluno.classe_id) === Number(classeId) &&
+        String(aluno.tipoPessoa || aluno.tipo_pessoa || 'aluno') === String(tipoPessoa || 'aluno') &&
+        normalizarNomeCadastro(aluno.nome) === nomeNormalizado &&
+        String(aluno.id) !== String(ignorarId || '')
+      )
+    })
+
+    if (duplicadoLocal) {
+      return true
+    }
+
+    const { data, error } = await supabase
+      .from('alunos')
+      .select('id, nome')
+      .eq('igreja_id', igrejaAtualId)
+      .eq('classe_id', Number(classeId))
+      .eq('tipo_pessoa', tipoPessoa || 'aluno')
+
+    if (error) {
+      console.error('Erro ao verificar duplicidade:', error)
+      return false
+    }
+
+    return (data || []).some((registro) => {
+      return (
+        normalizarNomeCadastro(registro.nome) === nomeNormalizado &&
+        String(registro.id) !== String(ignorarId || '')
+      )
+    })
+  }
+
   async function salvarAluno(event) {
     event.preventDefault()
+
+    if (salvandoAluno) {
+      return
+    }
 
     if (!podeGerenciarCadastros()) {
       alert('Apenas a secretaria pode cadastrar ou editar alunos.')
       return
     }
 
-    if (!novoAluno.nome.trim() || !novoAluno.classeId) {
+    const nomeLimpo = novoAluno.nome.replace(/\s+/g, ' ').trim()
+    const tipoPessoaCadastro = novoAluno.tipoPessoa || 'aluno'
+
+    if (!nomeLimpo || !novoAluno.classeId) {
       alert('Preencha o nome do aluno e selecione uma classe.')
       return
     }
 
-    const alunoBanco = {
-      nome: novoAluno.nome,
-      classe_id: Number(novoAluno.classeId),
-      telefone: novoAluno.telefone,
-      data_nascimento: novoAluno.dataNascimento || null,
-      tipo_pessoa: novoAluno.tipoPessoa || 'aluno',
-    }
+    setSalvandoAluno(true)
 
-    if (alunoEditandoId) {
-      const { error } = await supabase
-        .from('alunos')
-        .update(alunoBanco)
-        .eq('id', alunoEditandoId)
-
-      if (error) {
-        console.error(error)
-        alert('Erro ao salvar alterações do aluno.')
-        return
-      }
-    } else {
-      const { error } = await supabase.from('alunos').insert({
-        id: Date.now(),
-        ...alunoBanco,
-        igreja_id: buscarIgrejaIdAtual(),
+    try {
+      const duplicado = await existePessoaDuplicadaNaClasse({
+        nome: nomeLimpo,
+        classeId: novoAluno.classeId,
+        tipoPessoa: tipoPessoaCadastro,
+        ignorarId: alunoEditandoId,
       })
 
-      if (error) {
-        console.error(error)
-        alert('Erro ao salvar aluno.')
+      if (duplicado) {
+        alert(
+          tipoPessoaCadastro === 'professor'
+            ? 'Já existe um professor com esse nome vinculado a esta classe.'
+            : 'Já existe um aluno com esse nome matriculado nesta classe.'
+        )
         return
       }
-    }
 
-    await buscarTodosOsDados()
-    cancelarFormularioAluno()
+      const alunoBanco = {
+        nome: nomeLimpo,
+        classe_id: Number(novoAluno.classeId),
+        telefone: novoAluno.telefone,
+        data_nascimento: novoAluno.dataNascimento || null,
+        tipo_pessoa: tipoPessoaCadastro,
+      }
+
+      if (alunoEditandoId) {
+        const { error } = await supabase
+          .from('alunos')
+          .update(alunoBanco)
+          .eq('id', alunoEditandoId)
+
+        if (error) {
+          console.error(error)
+          alert('Erro ao salvar alterações do aluno.')
+          return
+        }
+      } else {
+        const { error } = await supabase.from('alunos').insert({
+          id: Date.now(),
+          ...alunoBanco,
+          igreja_id: buscarIgrejaIdAtual(),
+        })
+
+        if (error) {
+          console.error(error)
+          alert('Erro ao salvar aluno.')
+          return
+        }
+      }
+
+      await buscarTodosOsDados()
+      cancelarFormularioAluno()
+    } finally {
+      setSalvandoAluno(false)
+    }
   }
 
   async function excluirAluno(alunoId) {
@@ -6911,12 +6993,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         </div>
 
         <div className="grupo-botoes">
-          <button className="botao-principal" type="submit">
-            {alunoEditandoId
-              ? 'Salvar alterações'
-              : formularioProfessor
-                ? 'Salvar professor'
-                : 'Salvar aluno'}
+          <button className="botao-principal" type="submit" disabled={salvandoAluno}>
+            {salvandoAluno
+              ? 'Salvando...'
+              : alunoEditandoId
+                ? 'Salvar alterações'
+                : formularioProfessor
+                  ? 'Salvar professor'
+                  : 'Salvar aluno'}
           </button>
 
           <button
@@ -7211,8 +7295,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </label>
 
             <div className="grupo-botoes">
-              <button className="botao-principal" type="submit">
-                {alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
+              <button className="botao-principal" type="submit" disabled={salvandoAluno}>
+                {salvandoAluno ? 'Salvando...' : alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
               </button>
 
               <button
