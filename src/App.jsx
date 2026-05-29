@@ -537,9 +537,12 @@ function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSessao(session)
+      if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
+        return
+      }
 
       if (event === 'PASSWORD_RECOVERY') {
+        setSessao(session)
         setTelaPublica('novaSenha')
         setCarregando(false)
         setVerificandoSessao(false)
@@ -547,7 +550,21 @@ function App() {
       }
 
       if (!session) {
+        setSessao(null)
         limparDadosDoSistema()
+        return
+      }
+
+      setSessao(session)
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        limparDadosOperacionaisSemTrocarTela()
+
+        try {
+          await carregarDadosOnline(session)
+        } catch (erroCarregamentoSessao) {
+          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+        }
       }
     })
 
@@ -748,6 +765,10 @@ function App() {
 
     setCarregandoCadastroPiloto(true)
 
+    if (typeof window !== 'undefined') {
+      window.__ebdFielCadastroEmAndamento = true
+    }
+
     try {
       const { data: vagasDisponiveis, error: erroVagasDisponiveis } = await supabase.rpc(
         'vagas_piloto_disponiveis'
@@ -913,6 +934,10 @@ function App() {
         )
       }
     } finally {
+      if (typeof window !== 'undefined') {
+        window.__ebdFielCadastroEmAndamento = false
+      }
+
       setCarregandoCadastroPiloto(false)
     }
   }
@@ -1073,13 +1098,39 @@ function App() {
       await buscarTodosOsDados(sessaoParaUsar)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
-      setErroSistema(
-        error?.message ||
-          'Não foi possível carregar os dados do Supabase.'
-      )
+
+      const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
+      setErroSistema(mensagemErro)
+
+      if (
+        mensagemErro.toLowerCase().includes('cadastro incompleto') ||
+        mensagemErro.toLowerCase().includes('ainda não liberado') ||
+        mensagemErro.toLowerCase().includes('aguardando aprovação') ||
+        mensagemErro.toLowerCase().includes('sem igreja vinculada')
+      ) {
+        await supabase.auth.signOut()
+        setSessao(null)
+        limparDadosOperacionaisSemTrocarTela()
+        setTelaPublica('login')
+      }
     } finally {
       setCarregando(false)
     }
+  }
+
+
+  function limparDadosOperacionaisSemTrocarTela() {
+    setClasses([])
+    setAlunos([])
+    setChamadasSalvas([])
+    setChamadasProfessores([])
+    setPerfilUsuario(null)
+    setPerfisIgreja([])
+    setVinculosProfessores([])
+    setIgrejaId(null)
+    setIgrejaSuporteAdmin(null)
+    setIgrejaAtualPiloto(null)
+    setFeedbacksIgreja([])
   }
 
   async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
@@ -2300,6 +2351,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     if (!sessaoAtual?.user?.id) {
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
+
+    limparDadosOperacionaisSemTrocarTela()
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
