@@ -847,6 +847,38 @@ function App() {
         throw erroCadastroPilotoRpc
       }
 
+      const igrejaCriadaIdNormalizada = Array.isArray(igrejaCriadaId)
+        ? Number(igrejaCriadaId[0]?.id || igrejaCriadaId[0])
+        : Number(igrejaCriadaId)
+
+      if (!igrejaCriadaIdNormalizada) {
+        throw new Error(
+          'O cadastro da igreja foi iniciado, mas não foi possível confirmar o vínculo. Entre em contato com o administrador.'
+        )
+      }
+
+      const { error: erroCriarPerfilCadastro } = await supabase
+        .from('perfis_usuarios')
+        .upsert(
+          {
+            user_id: usuarioCadastro.id,
+            nome: cadastroPiloto.nomeResponsavel.trim(),
+            email: emailCadastro,
+            perfil: 'secretaria',
+            igreja_id: igrejaCriadaIdNormalizada,
+            classe_id: null,
+            data_nascimento: null,
+          },
+          { onConflict: 'user_id' }
+        )
+
+      if (erroCriarPerfilCadastro) {
+        throw erroCriarPerfilCadastro
+      }
+
+      await supabase.auth.signOut()
+      setSessao(null)
+
       setSucessoCadastroPiloto(
         'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
       )
@@ -858,7 +890,6 @@ function App() {
       setEmailLogin(emailCadastro)
       setSenhaLogin('')
       setTelaPublica('cadastroEnviado')
-      await supabase.auth.signOut()
     } catch (error) {
       console.error(error)
 
@@ -2358,8 +2389,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         setCarregando(false)
         return
       } else {
+        await supabase.auth.signOut()
+        setSessao(null)
+        setPerfilUsuario(null)
+        setIgrejaId(null)
+        setTelaPublica('login')
         throw new Error(
-          'Perfil do usuário sem igreja vinculada. Verifique a tabela perfis_usuarios no Supabase.'
+          'Cadastro incompleto ou ainda não liberado. Entre em contato com a administração.'
         )
       }
     }
@@ -2563,6 +2599,40 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     if (erroIgrejaPiloto) {
       console.error(erroIgrejaPiloto)
+    }
+
+    const statusPilotoAtual = String(igrejaPilotoBanco?.status_piloto || '').toLowerCase()
+    const igrejaLiberadaParaAcesso = [
+      'teste',
+      'ativa',
+      'ativo',
+      'aprovada',
+      'aprovado',
+      'liberada',
+      'liberado',
+    ].includes(statusPilotoAtual)
+
+    if (
+      !ehAdminSessaoAtual &&
+      !perfilAtual?.modo_suporte_admin &&
+      !igrejaLiberadaParaAcesso
+    ) {
+      setPerfilUsuario(null)
+      setIgrejaId(null)
+      setIgrejaAtualPiloto(null)
+      setClasses([])
+      setAlunos([])
+      setChamadasSalvas([])
+      setChamadasProfessores([])
+      setVinculosProfessores([])
+      await supabase.auth.signOut()
+      setSessao(null)
+      setTelaPublica('login')
+      throw new Error(
+        statusPilotoAtual === 'pendente'
+          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
+          : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
+      )
     }
 
     setIgrejaAtualPiloto(igrejaPilotoBanco || null)
