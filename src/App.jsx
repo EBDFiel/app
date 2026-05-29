@@ -2811,6 +2811,621 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     return Math.round((presentes / total) * 100)
   }
 
+
+  function converterDataParaObjeto(dataTexto) {
+    if (!dataTexto) {
+      return null
+    }
+
+    const texto = String(dataTexto).trim()
+
+    if (!texto) {
+      return null
+    }
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
+      const [ano, mes, dia] = texto.split('-').map(Number)
+      const data = new Date(ano, mes - 1, dia)
+      return Number.isNaN(data.getTime()) ? null : data
+    }
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
+      const [dia, mes, ano] = texto.split('/').map(Number)
+      const data = new Date(ano, mes - 1, dia)
+      return Number.isNaN(data.getTime()) ? null : data
+    }
+
+    const data = new Date(texto)
+    return Number.isNaN(data.getTime()) ? null : data
+  }
+
+  function chamadaEhDoMesAtual(chamada) {
+    const data = converterDataParaObjeto(chamada?.data)
+
+    if (!data) {
+      return false
+    }
+
+    const hoje = new Date()
+    return data.getFullYear() === hoje.getFullYear() && data.getMonth() === hoje.getMonth()
+  }
+
+  function formatarMesAtualExtenso() {
+    return new Date().toLocaleDateString('pt-BR', {
+      month: 'long',
+      year: 'numeric',
+    })
+  }
+
+  function calcularIdadePorDataNascimento(dataNascimento) {
+    if (!dataNascimento) {
+      return ''
+    }
+
+    const partes = String(dataNascimento).split('-')
+
+    if (partes.length !== 3) {
+      return ''
+    }
+
+    const hoje = new Date()
+    const ano = Number(partes[0])
+    const mes = Number(partes[1]) - 1
+    const dia = Number(partes[2])
+
+    if (!ano || Number.isNaN(mes) || !dia) {
+      return ''
+    }
+
+    let idade = hoje.getFullYear() - ano
+    const aniversarioEsteAno = new Date(hoje.getFullYear(), mes, dia)
+
+    if (hoje < aniversarioEsteAno) {
+      idade -= 1
+    }
+
+    return idade >= 0 ? idade : ''
+  }
+
+  function buscarAniversariantesDoMes() {
+    const hoje = new Date()
+    const mesAtual = hoje.getMonth() + 1
+
+    return alunosSomente()
+      .filter((aluno) => {
+        const partes = String(aluno.dataNascimento || aluno.data_nascimento || '').split('-')
+        return partes.length === 3 && Number(partes[1]) === mesAtual
+      })
+      .map((aluno) => ({
+        ...aluno,
+        classeNome: buscarNomeClasse(aluno.classeId ?? aluno.classe_id),
+        dataNascimentoFormatada: formatarDataNascimento(aluno.dataNascimento || aluno.data_nascimento),
+        idade: calcularIdadePorDataNascimento(aluno.dataNascimento || aluno.data_nascimento),
+      }))
+      .sort((a, b) => {
+        const diaA = Number(String(a.dataNascimento || a.data_nascimento || '').split('-')[2] || 0)
+        const diaB = Number(String(b.dataNascimento || b.data_nascimento || '').split('-')[2] || 0)
+        return diaA - diaB || String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
+      })
+  }
+
+  function montarMapaFrequenciaAlunos(filtrarMesAtual = true) {
+    const mapa = new Map()
+
+    alunosSomente().forEach((aluno) => {
+      mapa.set(String(aluno.id), {
+        aluno,
+        classeNome: buscarNomeClasse(aluno.classeId ?? aluno.classe_id),
+        presentes: 0,
+        faltas: 0,
+        total: 0,
+        chamadas: [],
+      })
+    })
+
+    chamadasSalvas
+      .filter((chamada) => !filtrarMesAtual || chamadaEhDoMesAtual(chamada))
+      .forEach((chamada) => {
+        const dataChamada = converterDataParaObjeto(chamada.data)
+
+        ;(chamada.registros || []).forEach((registro) => {
+          const alunoId = String(registro.alunoId ?? registro.aluno_id ?? '')
+          const item = mapa.get(alunoId)
+
+          if (!item) {
+            return
+          }
+
+          const status = String(registro.status || '').toLowerCase()
+          const presente = status === 'presente'
+          const falta = status === 'faltou' || status === 'falta' || status.includes('falt')
+
+          if (!presente && !falta) {
+            return
+          }
+
+          item.total += 1
+
+          if (presente) {
+            item.presentes += 1
+          }
+
+          if (falta) {
+            item.faltas += 1
+          }
+
+          item.chamadas.push({
+            data: dataChamada,
+            dataTexto: chamada.data,
+            status: presente ? 'presente' : 'faltou',
+          })
+        })
+      })
+
+    return mapa
+  }
+
+  function buscarDestaquesFrequencia() {
+    return Array.from(montarMapaFrequenciaAlunos(true).values())
+      .filter((item) => item.total > 0)
+      .map((item) => ({
+        ...item,
+        frequencia: Math.round((item.presentes / item.total) * 100),
+      }))
+      .filter((item) => item.frequencia >= 80)
+      .sort((a, b) =>
+        b.frequencia - a.frequencia ||
+        b.presentes - a.presentes ||
+        String(a.aluno.nome || '').localeCompare(String(b.aluno.nome || ''), 'pt-BR')
+      )
+  }
+
+  function calcularFaltasConsecutivas(chamadasAluno) {
+    const chamadasOrdenadas = [...chamadasAluno]
+      .filter((item) => item.data)
+      .sort((a, b) => b.data.getTime() - a.data.getTime())
+
+    let total = 0
+
+    for (const chamada of chamadasOrdenadas) {
+      if (chamada.status === 'faltou') {
+        total += 1
+      } else {
+        break
+      }
+    }
+
+    return total
+  }
+
+  function buscarAlertasDeFaltas() {
+    return Array.from(montarMapaFrequenciaAlunos(false).values())
+      .map((item) => {
+        const chamadasDoMes = item.chamadas.filter((chamada) => {
+          if (!chamada.data) return false
+          const hoje = new Date()
+          return chamada.data.getFullYear() === hoje.getFullYear() && chamada.data.getMonth() === hoje.getMonth()
+        })
+
+        const faltasMes = chamadasDoMes.filter((chamada) => chamada.status === 'faltou').length
+        const faltasConsecutivas = calcularFaltasConsecutivas(item.chamadas)
+        const ultimaChamada = [...item.chamadas]
+          .filter((chamada) => chamada.data)
+          .sort((a, b) => b.data.getTime() - a.data.getTime())[0]
+
+        return {
+          ...item,
+          faltasMes,
+          faltasConsecutivas,
+          ultimaData: ultimaChamada?.dataTexto || '',
+          motivo:
+            faltasConsecutivas >= 2
+              ? `${faltasConsecutivas} faltas consecutivas`
+              : `${faltasMes} faltas no mês`,
+        }
+      })
+      .filter((item) => item.faltasConsecutivas >= 2 || item.faltasMes >= 3)
+      .sort((a, b) =>
+        b.faltasConsecutivas - a.faltasConsecutivas ||
+        b.faltasMes - a.faltasMes ||
+        String(a.aluno.nome || '').localeCompare(String(b.aluno.nome || ''), 'pt-BR')
+      )
+  }
+
+  function imprimirHtmlEmIframe(htmlDocumento, idIframe = 'iframe-impressao-relatorio-extra') {
+    const iframeAnterior = document.getElementById(idIframe)
+
+    if (iframeAnterior) {
+      iframeAnterior.remove()
+    }
+
+    const iframe = document.createElement('iframe')
+    iframe.id = idIframe
+    iframe.title = 'Impressão EBD Fiel'
+    iframe.style.position = 'fixed'
+    iframe.style.right = '0'
+    iframe.style.bottom = '0'
+    iframe.style.width = '0'
+    iframe.style.height = '0'
+    iframe.style.border = '0'
+    iframe.style.visibility = 'hidden'
+
+    document.body.appendChild(iframe)
+
+    const documentoIframe = iframe.contentWindow?.document
+
+    if (!documentoIframe) {
+      alert('Não foi possível preparar a impressão. Tente novamente.')
+      iframe.remove()
+      return
+    }
+
+    documentoIframe.open()
+    documentoIframe.write(htmlDocumento)
+    documentoIframe.close()
+
+    const imprimirIframe = () => {
+      try {
+        iframe.contentWindow?.focus()
+        iframe.contentWindow?.print()
+      } catch (error) {
+        console.error('Erro ao imprimir relatório:', error)
+        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
+      }
+
+      setTimeout(() => {
+        iframe.remove()
+      }, 1500)
+    }
+
+    iframe.onload = () => {
+      setTimeout(imprimirIframe, 400)
+    }
+
+    setTimeout(() => {
+      if (document.body.contains(iframe)) {
+        imprimirIframe()
+      }
+    }, 900)
+  }
+
+  function montarDocumentoRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao = 'portrait') {
+    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'EBD Fiel'
+    const endereco = montarEnderecoIgreja()
+
+    return `
+      <!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>${escaparHtmlRelatorio(titulo)} - EBD Fiel</title>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              padding: 24px;
+              font-family: Arial, sans-serif;
+              color: #111827;
+              background: #fff;
+            }
+            .folha-extra {
+              width: 100%;
+              max-width: ${orientacao === 'landscape' ? '1120px' : '900px'};
+              margin: 0 auto;
+            }
+            .cabecalho-extra {
+              text-align: center;
+              margin-bottom: 18px;
+              padding-bottom: 10px;
+              border-bottom: 2px solid #103058;
+            }
+            .cabecalho-extra img {
+              width: 64px;
+              height: 64px;
+              object-fit: contain;
+              display: block;
+              margin: 0 auto 8px;
+            }
+            .cabecalho-extra h1 {
+              margin: 0 0 6px;
+              font-size: 22px;
+              color: #103058;
+              text-transform: uppercase;
+            }
+            .cabecalho-extra h2 {
+              margin: 0 0 5px;
+              font-size: 16px;
+              color: #111827;
+            }
+            .cabecalho-extra p {
+              margin: 2px 0;
+              font-size: 12px;
+              font-weight: 600;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              table-layout: fixed;
+              font-size: 12px;
+            }
+            th, td {
+              border: 1px solid #cbd5e1;
+              padding: 8px 7px;
+              vertical-align: middle;
+              word-break: break-word;
+            }
+            th {
+              background: #e0f2fe;
+              color: #103058;
+              text-align: left;
+              font-weight: 800;
+            }
+            td.numero, th.numero {
+              width: 44px;
+              text-align: center;
+            }
+            .texto-centro { text-align: center; }
+            .vazio {
+              padding: 26px;
+              border: 1px dashed #94a3b8;
+              border-radius: 12px;
+              text-align: center;
+              color: #475569;
+              font-weight: 700;
+            }
+            .cartoes-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 14px;
+            }
+            .cartao-aniversario {
+              min-height: 210px;
+              padding: 18px;
+              border: 2px solid #f2b705;
+              border-radius: 18px;
+              background: linear-gradient(135deg, #fff7cc, #e0f7ff 70%, #ffffff);
+              page-break-inside: avoid;
+            }
+            .cartao-aniversario h3 {
+              margin: 0 0 10px;
+              font-size: 20px;
+              color: #103058;
+            }
+            .cartao-aniversario strong {
+              display: block;
+              margin: 10px 0;
+              font-size: 24px;
+              color: #111827;
+            }
+            .cartao-aniversario p {
+              margin: 0 0 8px;
+              font-size: 14px;
+              line-height: 1.45;
+            }
+            .assinatura-cartao {
+              margin-top: 14px !important;
+              font-weight: 800;
+              color: #103058;
+            }
+            @media print {
+              body { padding: 0; }
+              .folha-extra { max-width: none; }
+              @page { size: A4 ${orientacao}; margin: 10mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <main class="folha-extra">
+            <div class="cabecalho-extra">
+              <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" />
+              <h1>${escaparHtmlRelatorio(nomeIgreja)}</h1>
+              ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
+              ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
+              ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
+              <h2>${escaparHtmlRelatorio(titulo)}</h2>
+              ${subtitulo ? `<p>${escaparHtmlRelatorio(subtitulo)}</p>` : ''}
+            </div>
+            ${conteudoHtml}
+          </main>
+        </body>
+      </html>
+    `
+  }
+
+  function abrirRelatorioAniversariantesMes() {
+    const aniversariantes = buscarAniversariantesDoMes()
+
+    const conteudo = aniversariantes.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Nome</th>
+              <th>Classe</th>
+              <th>Data</th>
+              <th>Idade</th>
+              <th>Telefone</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${aniversariantes.map((aluno, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(aluno.nome)}</td>
+                <td>${escaparHtmlRelatorio(aluno.classeNome || 'Sem classe')}</td>
+                <td>${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</td>
+                <td class="texto-centro">${escaparHtmlRelatorio(aluno.idade || '')}</td>
+                <td>${escaparHtmlRelatorio(aluno.telefone || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Aniversariantes do mês',
+        `Referência: ${formatarMesAtualExtenso()}`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-aniversariantes-mes'
+    )
+  }
+
+  function abrirRelatorioAlertasFaltas() {
+    const alertas = buscarAlertasDeFaltas()
+
+    const conteudo = alertas.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Aluno</th>
+              <th>Classe</th>
+              <th>Faltas consecutivas</th>
+              <th>Faltas no mês</th>
+              <th>Última chamada</th>
+              <th>Alerta</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${alertas.map((item, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(item.aluno.nome)}</td>
+                <td>${escaparHtmlRelatorio(item.classeNome || 'Sem classe')}</td>
+                <td class="texto-centro">${item.faltasConsecutivas}</td>
+                <td class="texto-centro">${item.faltasMes}</td>
+                <td>${escaparHtmlRelatorio(item.ultimaData || '-')}</td>
+                <td>${escaparHtmlRelatorio(item.motivo)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum alerta de faltas encontrado no momento.</div>'
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Alertas de faltas',
+        'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
+        conteudo,
+        'landscape'
+      ),
+      'iframe-alertas-faltas'
+    )
+  }
+
+  function abrirRelatorioDestaquesFrequencia() {
+    const destaques = buscarDestaquesFrequencia()
+
+    const conteudo = destaques.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Aluno</th>
+              <th>Classe</th>
+              <th>Presenças</th>
+              <th>Chamadas</th>
+              <th>Frequência</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${destaques.map((item, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(item.aluno.nome)}</td>
+                <td>${escaparHtmlRelatorio(item.classeNome || 'Sem classe')}</td>
+                <td class="texto-centro">${item.presentes}</td>
+                <td class="texto-centro">${item.total}</td>
+                <td class="texto-centro">${item.frequencia}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Destaques de frequência',
+        `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-destaques-frequencia'
+    )
+  }
+
+  function abrirCartoesAniversariantes() {
+    const aniversariantes = buscarAniversariantesDoMes()
+
+    if (aniversariantes.length === 0) {
+      alert('Nenhum aniversariante encontrado para este mês.')
+      return
+    }
+
+    const textoOpcoes = [
+      '0 - Todos os aniversariantes do mês',
+      ...aniversariantes.map((aluno, indice) => `${indice + 1} - ${aluno.nome}`),
+    ].join('\n')
+
+    const escolha = window.prompt(
+      `Quais cartões deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todos ou o número de uma pessoa.`,
+      '0'
+    )
+
+    if (escolha === null) {
+      return
+    }
+
+    const escolhaNumerica = Number.parseInt(escolha, 10)
+
+    if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > aniversariantes.length) {
+      alert('Opção inválida. Tente novamente e escolha um número da lista.')
+      return
+    }
+
+    const selecionados = escolhaNumerica === 0
+      ? aniversariantes
+      : [aniversariantes[escolhaNumerica - 1]]
+
+    const conteudo = `
+      <div class="cartoes-grid">
+        ${selecionados.map((aluno) => `
+          <article class="cartao-aniversario">
+            <h3>Feliz aniversário!</h3>
+            <p>A Escola Bíblica Dominical parabeniza:</p>
+            <strong>${escaparHtmlRelatorio(aluno.nome)}</strong>
+            <p>
+              Que Deus abençoe sua vida com graça, sabedoria e crescimento na Palavra.
+              Receba o carinho da sua igreja e da EBD.
+            </p>
+            <p><strong>Data:</strong> ${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</p>
+            <p class="assinatura-cartao">EBD Fiel</p>
+          </article>
+        `).join('')}
+      </div>
+    `
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Cartões de aniversariantes',
+        `Referência: ${formatarMesAtualExtenso()}`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-cartoes-aniversariantes'
+    )
+  }
+
   function abrirRelatorioParaImpressao() {
     const relatorio = document.querySelector('.relatorio-folha')
 
@@ -7491,6 +8106,35 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               onClick={abrirChamadaPorClasseParaImpressao}
             >
               PDF por classe
+            </button>
+
+
+            <button
+              className="botao-secundario"
+              onClick={abrirRelatorioAniversariantesMes}
+            >
+              Aniversariantes do mês
+            </button>
+
+            <button
+              className="botao-secundario"
+              onClick={abrirRelatorioAlertasFaltas}
+            >
+              Alertas de faltas
+            </button>
+
+            <button
+              className="botao-secundario"
+              onClick={abrirRelatorioDestaquesFrequencia}
+            >
+              Destaques de frequência
+            </button>
+
+            <button
+              className="botao-secundario"
+              onClick={abrirCartoesAniversariantes}
+            >
+              Cartões de aniversariantes
             </button>
           </div>
         </div>
