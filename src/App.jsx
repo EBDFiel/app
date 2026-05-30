@@ -534,17 +534,12 @@ function App() {
 
     iniciarAutenticacao()
 
-    const destravarVerificacao = window.setTimeout(() => {
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }, 8000)
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
-        setVerificandoSessao(false)
         setCarregando(false)
+        setVerificandoSessao(false)
         return
       }
 
@@ -556,7 +551,7 @@ function App() {
         return
       }
 
-      if (!session) {
+      if (event === 'SIGNED_OUT') {
         setSessao(null)
         limparDadosDoSistema()
         setCarregando(false)
@@ -564,27 +559,27 @@ function App() {
         return
       }
 
+      if (!session) {
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
+
       setSessao(session)
 
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        limparDadosOperacionaisSemTrocarTela()
-
+      if (event === 'SIGNED_IN') {
         try {
           await carregarDadosOnline(session)
         } catch (erroCarregamentoSessao) {
           console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-        } finally {
-          setCarregando(false)
-          setVerificandoSessao(false)
         }
-      } else {
-        setCarregando(false)
-        setVerificandoSessao(false)
       }
+
+      setCarregando(false)
+      setVerificandoSessao(false)
     })
 
     return () => {
-      window.clearTimeout(destravarVerificacao)
       subscription.unsubscribe()
     }
   }, [])
@@ -603,10 +598,7 @@ function App() {
       setSessao(data.session)
 
       if (data.session) {
-        await Promise.race([
-          carregarDadosOnline(data.session),
-          new Promise((resolve) => window.setTimeout(resolve, 8000)),
-        ])
+        await carregarDadosOnline(data.session)
       } else {
         limparDadosDoSistema()
       }
