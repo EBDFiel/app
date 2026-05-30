@@ -534,6 +534,11 @@ function App() {
 
     iniciarAutenticacao()
 
+    const destravarVerificacaoInicial = window.setTimeout(() => {
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }, 5000)
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -590,6 +595,7 @@ function App() {
     })
 
     return () => {
+      window.clearTimeout(destravarVerificacaoInicial)
       subscription.unsubscribe()
     }
   }, [])
@@ -599,7 +605,12 @@ function App() {
     setCarregando(true)
 
     try {
-      const { data, error } = await supabase.auth.getSession()
+      const { data, error } = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise((resolve) =>
+          window.setTimeout(() => resolve({ data: { session: null }, error: null }), 5000)
+        ),
+      ])
 
       if (error) {
         throw error
@@ -5226,7 +5237,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
   }
 
-  if (verificandoSessao) {
+  if (verificandoSessao && !sessao) {
     return (
       <div className="tela-login tela-mensagem">
         <section className="painel-apresentacao">
