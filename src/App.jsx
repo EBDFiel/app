@@ -569,9 +569,17 @@ function App() {
 
       if (event === 'SIGNED_IN') {
         try {
-          await carregarDadosOnline(session)
+          await executarComTempoLimite(
+            carregarDadosOnline(session),
+            15000,
+            'Tempo limite ao validar a sessão.'
+          )
         } catch (erroCarregamentoSessao) {
           console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+          setErroSistema(
+            erroCarregamentoSessao?.message ||
+              'Não foi possível validar sua sessão.'
+          )
         }
       }
 
@@ -598,7 +606,11 @@ function App() {
       setSessao(data.session)
 
       if (data.session) {
-        await carregarDadosOnline(data.session)
+        await executarComTempoLimite(
+          carregarDadosOnline(data.session),
+          15000,
+          'Tempo limite ao verificar a sessão. Atualize a página ou entre novamente.'
+        )
       } else {
         limparDadosDoSistema()
       }
@@ -1103,6 +1115,20 @@ function App() {
     window.location.href = '/?v=logout'
   }
 
+  function executarComTempoLimite(promessa, tempoMs, mensagem) {
+    let timeoutId
+
+    const tempoLimite = new Promise((_, reject) => {
+      timeoutId = window.setTimeout(() => {
+        reject(new Error(mensagem))
+      }, tempoMs)
+    })
+
+    return Promise.race([promessa, tempoLimite]).finally(() => {
+      window.clearTimeout(timeoutId)
+    })
+  }
+
   async function carregarDadosOnline(sessaoAtual = sessao) {
     setCarregando(true)
     setErroSistema('')
@@ -1124,7 +1150,11 @@ function App() {
         }
       }
 
-      await buscarTodosOsDados(sessaoParaUsar)
+      await executarComTempoLimite(
+        buscarTodosOsDados(sessaoParaUsar),
+        12000,
+        'Tempo limite ao carregar os dados. Atualize a página ou tente novamente.'
+      )
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
 
