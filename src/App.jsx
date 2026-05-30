@@ -1081,16 +1081,34 @@ function App() {
       return
     }
 
-    const { error } = await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut({ scope: 'global' })
+    } catch (error) {
+      console.error('Erro ao sair do Supabase:', error)
+    }
 
-    if (error) {
-      console.error('Erro ao sair:', error)
-      alert('Erro ao sair do sistema.')
-      return
+    try {
+      window.localStorage.removeItem('supabase.auth.token')
+      window.localStorage.removeItem('ebdfiel-auth-token')
+      Object.keys(window.localStorage).forEach((chave) => {
+        if (
+          chave.toLowerCase().includes('supabase') ||
+          chave.toLowerCase().includes('ebdfiel') ||
+          chave.toLowerCase().includes('auth')
+        ) {
+          window.localStorage.removeItem(chave)
+        }
+      })
+
+      window.sessionStorage.clear()
+    } catch (error) {
+      console.error('Erro ao limpar dados locais:', error)
     }
 
     setSessao(null)
     limparDadosDoSistema()
+    setTelaPublica('login')
+    window.location.href = '/?v=logout'
   }
 
   async function carregarDadosOnline(sessaoAtual = sessao) {
