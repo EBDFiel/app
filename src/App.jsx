@@ -534,10 +534,17 @@ function App() {
 
     iniciarAutenticacao()
 
+    const destravarVerificacao = window.setTimeout(() => {
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }, 8000)
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
+        setVerificandoSessao(false)
+        setCarregando(false)
         return
       }
 
@@ -552,6 +559,8 @@ function App() {
       if (!session) {
         setSessao(null)
         limparDadosDoSistema()
+        setCarregando(false)
+        setVerificandoSessao(false)
         return
       }
 
@@ -564,11 +573,18 @@ function App() {
           await carregarDadosOnline(session)
         } catch (erroCarregamentoSessao) {
           console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+        } finally {
+          setCarregando(false)
+          setVerificandoSessao(false)
         }
+      } else {
+        setCarregando(false)
+        setVerificandoSessao(false)
       }
     })
 
     return () => {
+      window.clearTimeout(destravarVerificacao)
       subscription.unsubscribe()
     }
   }, [])
@@ -587,7 +603,10 @@ function App() {
       setSessao(data.session)
 
       if (data.session) {
-        await carregarDadosOnline(data.session)
+        await Promise.race([
+          carregarDadosOnline(data.session),
+          new Promise((resolve) => window.setTimeout(resolve, 8000)),
+        ])
       } else {
         limparDadosDoSistema()
       }
