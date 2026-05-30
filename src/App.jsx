@@ -385,17 +385,7 @@ function App() {
   const [perfisIgreja, setPerfisIgreja] = useState([])
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
-  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(() => {
-    if (typeof window === 'undefined') {
-      return null
-    }
-
-    try {
-      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
-    } catch {
-      return null
-    }
-  })
+  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(null)
   const [igrejasAdmin, setIgrejasAdmin] = useState([])
   const [acessosAdmin, setAcessosAdmin] = useState([])
   const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
@@ -609,6 +599,10 @@ function App() {
   async function iniciarAutenticacao() {
     setVerificandoSessao(true)
     setCarregando(true)
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    }
 
     try {
       const { data, error } = await supabase.auth.getSession()
@@ -1365,19 +1359,7 @@ function App() {
   }
 
   function buscarIgrejaSuporteAdminSalva() {
-    if (igrejaSuporteAdmin?.id) {
-      return igrejaSuporteAdmin
-    }
-
-    if (typeof window === 'undefined') {
-      return null
-    }
-
-    try {
-      return JSON.parse(window.localStorage.getItem('ebdfiel_igreja_suporte_admin') || 'null')
-    } catch {
-      return null
-    }
+    return igrejaSuporteAdmin?.id ? igrejaSuporteAdmin : null
   }
 
   async function acessarIgrejaComoSuporte(igreja) {
@@ -1394,13 +1376,6 @@ function App() {
     }
 
     setIgrejaSuporteAdmin(igrejaSelecionada)
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(
-        'ebdfiel_igreja_suporte_admin',
-        JSON.stringify(igrejaSelecionada)
-      )
-    }
 
     setPaginaAtual('painel')
     await buscarTodosOsDados(sessao, igrejaSelecionada)
