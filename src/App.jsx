@@ -4826,6 +4826,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       .toLowerCase()
   }
 
+  function removerNomeProfessorDoTextoClasse(textoProfessores, nomeProfessor) {
+    const nomeNormalizado = normalizarNomeCadastro(nomeProfessor)
+
+    return String(textoProfessores || '')
+      .split(/,|;|\/| e /i)
+      .map((nome) => nome.trim())
+      .filter(Boolean)
+      .filter((nome) => normalizarNomeCadastro(nome) !== nomeNormalizado)
+      .join(', ')
+  }
+
   async function existePessoaDuplicadaNaClasse({ nome, classeId, tipoPessoa, ignorarId = null }) {
     const igrejaAtualId = buscarIgrejaIdAtual()
 
@@ -4948,23 +4959,54 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
   }
 
-  async function excluirAluno(alunoId) {
+    async function excluirAluno(alunoId) {
     if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode excluir alunos.')
+      alert('Apenas a secretaria pode excluir alunos ou professores.')
       return
     }
 
-    const confirmar = window.confirm('Tem certeza que deseja excluir este aluno?')
+    const cadastroEncontrado = alunos.find((aluno) => Number(aluno.id) === Number(alunoId))
+    const ehProfessor = cadastroEncontrado?.tipoPessoa === 'professor'
+
+    const confirmar = window.confirm(
+      ehProfessor
+        ? 'Tem certeza que deseja excluir este professor?'
+        : 'Tem certeza que deseja excluir este aluno?'
+    )
 
     if (!confirmar) {
       return
+    }
+
+    if (ehProfessor && cadastroEncontrado?.classeId) {
+      const classeDoProfessor = classes.find(
+        (classe) => Number(classe.id) === Number(cadastroEncontrado.classeId)
+      )
+
+      if (classeDoProfessor?.professor) {
+        const textoAtualizado = removerNomeProfessorDoTextoClasse(
+          classeDoProfessor.professor,
+          cadastroEncontrado.nome
+        )
+
+        const { error: erroAtualizarClasse } = await supabase
+          .from('classes')
+          .update({ professor: textoAtualizado })
+          .eq('id', cadastroEncontrado.classeId)
+
+        if (erroAtualizarClasse) {
+          console.error(erroAtualizarClasse)
+          alert('Erro ao remover o professor da classe.')
+          return
+        }
+      }
     }
 
     const { error } = await supabase.from('alunos').delete().eq('id', alunoId)
 
     if (error) {
       console.error(error)
-      alert('Erro ao excluir aluno.')
+      alert(ehProfessor ? 'Erro ao excluir professor.' : 'Erro ao excluir aluno.')
       return
     }
 
@@ -7488,7 +7530,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     {professoresDaClasse.length > 0 ? (
                       professoresDaClasse.map((professor) => (
                         <div className="professor-classe-linha" key={professor.id}>
-                          <span className="professor-classe-nome">{professor.nome}</span>
+                          <span className="professor-classe-nome">Professor: {professor.nome}</span>
 
                           <div className="professor-classe-acoes">
                             <button
