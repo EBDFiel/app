@@ -6359,7 +6359,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
-  if (carregando) {
+  if (carregando && !sessao) {
     return (
       <div className="tela-login tela-mensagem">
         <section className="painel-apresentacao">
