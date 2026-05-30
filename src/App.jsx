@@ -1190,7 +1190,6 @@ function App() {
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
-    setIgrejaSuporteAdmin(null)
     setIgrejaAtualPiloto(null)
     setFeedbacksIgreja([])
   }
@@ -1304,6 +1303,10 @@ function App() {
   }
 
   function buscarIgrejaIdAtual() {
+    if (usuarioEhAdminSistema() && igrejaSuporteAdmin?.id) {
+      return Number(igrejaSuporteAdmin.id)
+    }
+
     return perfilUsuario?.igreja_id || igrejaId || null
   }
 
@@ -1408,12 +1411,12 @@ function App() {
     const emailSessaoAtual = String(sessao?.user?.email || '').toLowerCase()
 
     setPerfilUsuario({
-      id: null,
+      id: perfilUsuario?.id || null,
       user_id: sessao?.user?.id,
-      nome: 'Administrador do sistema',
+      nome: perfilUsuario?.nome || 'Administrador do sistema',
       email: emailSessaoAtual,
-      perfil: 'admin',
-      igreja_id: null,
+      perfil: 'admin_sistema',
+      igreja_id: 19,
       classe_id: null,
     })
 
@@ -2428,10 +2431,36 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     let perfilAtual = perfilBanco
     const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-    const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
+    const ehAdminSessaoAtual =
+      emailsAdminSistema.includes(emailSessaoAtual) ||
+      perfilBanco?.perfil === 'admin_sistema'
     const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
 
-    if (!perfilBanco?.igreja_id) {
+    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+      perfilAtual = {
+        ...perfilBanco,
+        id: perfilBanco?.id || null,
+        user_id: sessaoAtual.user.id,
+        nome: perfilBanco?.nome || 'Administrador do sistema',
+        email: emailSessaoAtual,
+        perfil: 'secretaria',
+        igreja_id: Number(igrejaSuporteSelecionada.id),
+        classe_id: null,
+        modo_suporte_admin: true,
+      }
+
+      setIgrejaSuporteAdmin({
+        id: Number(igrejaSuporteSelecionada.id),
+        nome_igreja:
+          igrejaSuporteSelecionada.nome_igreja ||
+          igrejaSuporteSelecionada.nome ||
+          'Igreja',
+        congregacao: igrejaSuporteSelecionada.congregacao || '',
+        status_piloto: igrejaSuporteSelecionada.status_piloto || '',
+      })
+    }
+
+    if (!perfilAtual?.igreja_id) {
       if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
         perfilAtual = {
           id: null,
