@@ -386,7 +386,21 @@ function App() {
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
   const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(null)
-  const [igrejasAdmin, setIgrejasAdmin] = useState([])
+  const [igrejasAdmin, setIgrejasAdmin] = useState(() => {
+    if (typeof window === 'undefined') {
+      return []
+    }
+
+    try {
+      const igrejasSalvas = JSON.parse(
+        window.localStorage.getItem('ebdfiel_igrejas_admin_cache') || '[]'
+      )
+
+      return Array.isArray(igrejasSalvas) ? igrejasSalvas : []
+    } catch {
+      return []
+    }
+  })
   const [acessosAdmin, setAcessosAdmin] = useState([])
   const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
   const [carregandoCadastrosIncompletosAdmin, setCarregandoCadastrosIncompletosAdmin] = useState(false)
@@ -595,6 +609,12 @@ function App() {
       subscription.unsubscribe()
     }
   }, [])
+
+  useEffect(() => {
+    if (usuarioEhAdminSistema() && igrejasAdmin.length > 0) {
+      salvarIgrejasAdminCache(igrejasAdmin)
+    }
+  }, [igrejasAdmin.length, perfilUsuario?.perfil, sessao?.user?.email])
 
   useEffect(() => {
     if (
@@ -1713,25 +1733,67 @@ function App() {
     alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
   }
 
-  async function buscarIgrejasAdminBanco() {
-    const { data: igrejasRpc, error: erroRpc } = await supabase.rpc('admin_listar_igrejas')
-
-    if (!erroRpc) {
-      return igrejasRpc || []
+  function buscarIgrejasAdminCache() {
+    if (typeof window === 'undefined') {
+      return []
     }
 
-    console.error('Erro ao carregar igrejas via RPC:', erroRpc)
+    try {
+      const igrejasSalvas = JSON.parse(
+        window.localStorage.getItem('ebdfiel_igrejas_admin_cache') || '[]'
+      )
+
+      return Array.isArray(igrejasSalvas) ? igrejasSalvas : []
+    } catch {
+      return []
+    }
+  }
+
+  function salvarIgrejasAdminCache(igrejas) {
+    if (typeof window === 'undefined' || !Array.isArray(igrejas) || igrejas.length === 0) {
+      return
+    }
+
+    try {
+      window.localStorage.setItem('ebdfiel_igrejas_admin_cache', JSON.stringify(igrejas))
+    } catch (error) {
+      console.error('Erro ao salvar cache de igrejas admin:', error)
+    }
+  }
+
+  async function buscarIgrejasAdminBanco() {
+    const cacheIgrejas = buscarIgrejasAdminCache()
+
+    const { data: igrejasRpc, error: erroRpc } = await supabase.rpc('admin_listar_igrejas')
+
+    if (!erroRpc && Array.isArray(igrejasRpc) && igrejasRpc.length > 0) {
+      salvarIgrejasAdminCache(igrejasRpc)
+      return igrejasRpc
+    }
+
+    if (erroRpc) {
+      console.error('Erro ao carregar igrejas via RPC:', erroRpc)
+    }
 
     const { data: igrejasTabela, error: erroTabela } = await supabase
       .from('igrejas')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (erroTabela) {
-      throw erroTabela
+    if (!erroTabela && Array.isArray(igrejasTabela) && igrejasTabela.length > 0) {
+      salvarIgrejasAdminCache(igrejasTabela)
+      return igrejasTabela
     }
 
-    return igrejasTabela || []
+    if (erroTabela) {
+      console.error('Erro ao carregar igrejas pela tabela:', erroTabela)
+    }
+
+    if (cacheIgrejas.length > 0) {
+      return cacheIgrejas
+    }
+
+    return []
   }
 
   async function carregarIgrejasAdmin() {
@@ -1741,8 +1803,22 @@ function App() {
 
     try {
       const igrejas = await buscarIgrejasAdminBanco()
-      setIgrejasAdmin(igrejas || [])
+
+      if (igrejas.length > 0 || igrejasAdmin.length === 0) {
+        setIgrejasAdmin(igrejas || [])
+      }
+
+      if (igrejas.length > 0) {
+        salvarIgrejasAdminCache(igrejas)
+      }
     } catch (error) {
+      const cacheIgrejas = buscarIgrejasAdminCache()
+
+      if (cacheIgrejas.length > 0) {
+        setIgrejasAdmin(cacheIgrejas)
+        return
+      }
+
       mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
