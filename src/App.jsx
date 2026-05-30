@@ -1242,6 +1242,10 @@ function App() {
   }
 
   function buscarIgrejaIdAtual() {
+    if (usuarioEhAdminSistema() && igrejaSuporteAdmin?.id) {
+      return Number(igrejaSuporteAdmin.id)
+    }
+
     return perfilUsuario?.igreja_id || igrejaId || null
   }
 
@@ -2369,21 +2373,21 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
     const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
 
-    if (!perfilBanco?.igreja_id) {
-      if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-        perfilAtual = {
-          id: null,
-          user_id: sessaoAtual.user.id,
-          nome: 'Administrador do sistema',
-          email: emailSessaoAtual,
-          perfil: 'secretaria',
-          igreja_id: Number(igrejaSuporteSelecionada.id),
-          classe_id: null,
-          modo_suporte_admin: true,
-        }
+    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+      perfilAtual = {
+        id: perfilBanco?.id || null,
+        user_id: sessaoAtual.user.id,
+        nome: perfilBanco?.nome || 'Administrador do sistema',
+        email: emailSessaoAtual,
+        perfil: 'secretaria',
+        igreja_id: Number(igrejaSuporteSelecionada.id),
+        classe_id: null,
+        modo_suporte_admin: true,
+      }
 
-        setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
-      } else if (ehAdminSessaoAtual) {
+      setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+    } else if (!perfilBanco?.igreja_id) {
+      if (ehAdminSessaoAtual) {
         const perfilAdminSistema = {
           id: null,
           user_id: sessaoAtual.user.id,
