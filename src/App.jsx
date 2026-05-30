@@ -534,41 +534,54 @@ function App() {
 
     iniciarAutenticacao()
 
+    const temporizadorVerificacao = window.setTimeout(() => {
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }, 8000)
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
+        setVerificandoSessao(false)
+        setCarregando(false)
         return
       }
 
-      if (event === 'PASSWORD_RECOVERY') {
+      try {
+        if (event === 'PASSWORD_RECOVERY') {
+          setSessao(session)
+          setTelaPublica('novaSenha')
+          setCarregando(false)
+          setVerificandoSessao(false)
+          return
+        }
+
+        if (!session) {
+          setSessao(null)
+          limparDadosDoSistema()
+          setCarregando(false)
+          setVerificandoSessao(false)
+          return
+        }
+
         setSessao(session)
-        setTelaPublica('novaSenha')
+
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
+          try {
+            await carregarDadosOnline(session)
+          } catch (erroCarregamentoSessao) {
+            console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+          }
+        }
+      } finally {
         setCarregando(false)
         setVerificandoSessao(false)
-        return
-      }
-
-      if (!session) {
-        setSessao(null)
-        limparDadosDoSistema()
-        return
-      }
-
-      setSessao(session)
-
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        limparDadosOperacionaisSemTrocarTela()
-
-        try {
-          await carregarDadosOnline(session)
-        } catch (erroCarregamentoSessao) {
-          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-        }
       }
     })
 
     return () => {
+      window.clearTimeout(temporizadorVerificacao)
       subscription.unsubscribe()
     }
   }, [])
@@ -594,6 +607,7 @@ function App() {
     } catch (error) {
       console.error('Erro ao verificar sessão:', error)
       setErroSistema('Erro ao verificar login.')
+      setTelaPublica('login')
     } finally {
       setVerificandoSessao(false)
       setCarregando(false)
