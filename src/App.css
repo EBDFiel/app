@@ -12625,3 +12625,91 @@ button.botao-principal {
     line-height: 1.2 !important;
   }
 }
+
+
+/* Classes: evitar repetição de professores e permitir ver alunos da turma */
+.classe-card-resumo {
+  grid-template-columns: minmax(0, 220px) !important;
+}
+
+.alunos-da-classe {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fcff;
+  border: 1px solid rgba(18, 168, 224, 0.18);
+}
+
+.alunos-da-classe-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.alunos-da-classe-topo strong {
+  color: #003B66;
+  font-weight: 950;
+}
+
+.alunos-da-classe-topo span {
+  color: #475569;
+  font-weight: 800;
+}
+
+.alunos-da-classe-lista {
+  display: grid;
+  gap: 8px;
+}
+
+.aluno-classe-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+.aluno-classe-linha span {
+  min-width: 0;
+  color: #0f172a;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.aluno-classe-acoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 620px) {
+  .classe-card-acoes {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .classe-card-acoes button {
+    width: 100%;
+    margin-top: 0 !important;
+  }
+
+  .alunos-da-classe-topo,
+  .aluno-classe-linha {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aluno-classe-acoes {
+    justify-content: stretch;
+  }
+
+  .aluno-classe-acoes button {
+    flex: 1 1 120px;
+  }
+}
