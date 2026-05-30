@@ -1,17 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 
 if (!supabaseUrl) {
   console.error('VITE_SUPABASE_URL não foi configurada.')
 }
 
-if (!supabaseAnonKey) {
-  console.error('VITE_SUPABASE_ANON_KEY não foi configurada.')
+if (!supabaseKey) {
+  console.error('VITE_SUPABASE_PUBLISHABLE_KEY não foi configurada.')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
