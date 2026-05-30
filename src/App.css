@@ -12347,3 +12347,156 @@ button.botao-principal {
   }
 }
 
+
+
+/* Correção responsiva dos botões dos cards de igrejas no admin */
+.igreja-admin-card {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  align-items: stretch !important;
+  gap: 18px !important;
+}
+
+.igreja-admin-card > div:first-child {
+  min-width: 0;
+}
+
+.igreja-admin-card .acoes-aprovacao-igreja {
+  width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns: 1fr;
+  align-content: start;
+  align-items: stretch;
+  gap: 10px !important;
+}
+
+.igreja-admin-card .acoes-aprovacao-igreja > button,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-aprovar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-nao-aprovar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-whatsapp-admin,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-copiar-admin {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-top: 0 !important;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.igreja-admin-card .grupo-aviso-aprovacao,
+.igreja-admin-card .grupo-aprovacao-rapida {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.igreja-admin-card .dados-igreja-admin {
+  display: grid;
+  gap: 4px;
+}
+
+.igreja-admin-card .dados-igreja-admin p,
+.igreja-admin-card > div:first-child > p {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1100px) {
+  .igreja-admin-card {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 260px);
+  }
+}
+
+@media (max-width: 860px) {
+  .igreja-admin-card {
+    grid-template-columns: 1fr;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .igreja-admin-card .grupo-aviso-aprovacao,
+  .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .lista-admin-igrejas {
+    gap: 12px;
+  }
+
+  .igreja-admin-card {
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .linha-titulo-admin {
+    gap: 8px;
+  }
+
+  .linha-titulo-admin h3 {
+    width: 100%;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja {
+    grid-template-columns: 1fr;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja > button,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja {
+    min-height: 46px;
+    padding: 10px 12px !important;
+    font-size: 14px;
+  }
+
+  .filtros-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filtros-admin .botao-secundario {
+    width: 100%;
+  }
+}
+
+/* Usuários vinculados dentro das igrejas: botões responsivos */
+.usuario-vinculado-card {
+  gap: 14px;
+}
+
+.acoes-usuario-vinculado {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px !important;
+  width: 100%;
+}
+
+.acoes-usuario-vinculado button {
+  width: 100%;
+  margin-top: 0 !important;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+@media (max-width: 720px) {
+  .usuario-vinculado-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  .acoes-usuario-vinculado {
+    grid-template-columns: 1fr;
+  }
+}
