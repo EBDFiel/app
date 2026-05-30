@@ -2447,6 +2447,70 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       })
     }
 
+    if (ehAdminSessaoAtual && !igrejaSuporteSelecionada?.id) {
+      const perfilAdminSistema = {
+        ...perfilBanco,
+        id: perfilBanco?.id || null,
+        user_id: sessaoAtual.user.id,
+        nome: perfilBanco?.nome || 'Administrador do sistema',
+        email: emailSessaoAtual,
+        perfil: 'admin_sistema',
+        igreja_id: Number(perfilBanco?.igreja_id || 19),
+        classe_id: null,
+      }
+
+      setPerfilUsuario(perfilAdminSistema)
+      setIgrejaId(Number(perfilAdminSistema.igreja_id || 19))
+      setIgrejaSuporteAdmin(null)
+      setIgrejaAtualPiloto(null)
+      setClasses([])
+      setAlunos([])
+      setChamadasSalvas([])
+      setChamadasProfessores([])
+      setVinculosProfessores([])
+      setPerfisIgreja([])
+      setPaginaAtual('administracao')
+
+      const { data: igrejasAdminBanco, error: erroIgrejasAdmin } = await supabase
+        .from('igrejas')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (erroIgrejasAdmin) {
+        throw erroIgrejasAdmin
+      }
+
+      setIgrejasAdmin(igrejasAdminBanco || [])
+
+      const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
+        .from('perfis_usuarios')
+        .select('*')
+        .order('nome', { ascending: true })
+
+      if (erroAcessosAdmin) {
+        console.error(erroAcessosAdmin)
+      } else {
+        setAcessosAdmin(acessosAdminBanco || [])
+      }
+
+      const { data: feedbacksAdminBanco, error: erroFeedbacksAdmin } = await supabase
+        .from('feedbacks_piloto')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(80)
+
+      if (erroFeedbacksAdmin) {
+        console.error(erroFeedbacksAdmin)
+      } else {
+        setFeedbacksAdmin(feedbacksAdminBanco || [])
+      }
+
+      await carregarCadastrosIncompletosAdmin()
+
+      setCarregando(false)
+      return
+    }
+
     if (!perfilAtual?.igreja_id) {
       if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
         perfilAtual = {
