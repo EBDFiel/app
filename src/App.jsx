@@ -534,54 +534,41 @@ function App() {
 
     iniciarAutenticacao()
 
-    const temporizadorVerificacao = window.setTimeout(() => {
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }, 8000)
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
-        setVerificandoSessao(false)
-        setCarregando(false)
         return
       }
 
-      try {
-        if (event === 'PASSWORD_RECOVERY') {
-          setSessao(session)
-          setTelaPublica('novaSenha')
-          setCarregando(false)
-          setVerificandoSessao(false)
-          return
-        }
-
-        if (!session) {
-          setSessao(null)
-          limparDadosDoSistema()
-          setCarregando(false)
-          setVerificandoSessao(false)
-          return
-        }
-
+      if (event === 'PASSWORD_RECOVERY') {
         setSessao(session)
-
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
-          try {
-            await carregarDadosOnline(session)
-          } catch (erroCarregamentoSessao) {
-            console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-          }
-        }
-      } finally {
+        setTelaPublica('novaSenha')
         setCarregando(false)
         setVerificandoSessao(false)
+        return
+      }
+
+      if (!session) {
+        setSessao(null)
+        limparDadosDoSistema()
+        return
+      }
+
+      setSessao(session)
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        limparDadosOperacionaisSemTrocarTela()
+
+        try {
+          await carregarDadosOnline(session)
+        } catch (erroCarregamentoSessao) {
+          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+        }
       }
     })
 
     return () => {
-      window.clearTimeout(temporizadorVerificacao)
       subscription.unsubscribe()
     }
   }, [])
@@ -607,7 +594,6 @@ function App() {
     } catch (error) {
       console.error('Erro ao verificar sessão:', error)
       setErroSistema('Erro ao verificar login.')
-      setTelaPublica('login')
     } finally {
       setVerificandoSessao(false)
       setCarregando(false)
@@ -1142,6 +1128,7 @@ function App() {
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
+    setIgrejaSuporteAdmin(null)
     setIgrejaAtualPiloto(null)
     setFeedbacksIgreja([])
   }
@@ -1255,14 +1242,6 @@ function App() {
   }
 
   function buscarIgrejaIdAtual() {
-    if (usuarioEhAdminSistema()) {
-      const igrejaSuporteSelecionada = buscarIgrejaSuporteAdminSalva()
-
-      if (igrejaSuporteSelecionada?.id) {
-        return Number(igrejaSuporteSelecionada.id)
-      }
-    }
-
     return perfilUsuario?.igreja_id || igrejaId || null
   }
 
@@ -2390,21 +2369,21 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const ehAdminSessaoAtual = emailsAdminSistema.includes(emailSessaoAtual)
     const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
 
-    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-      perfilAtual = {
-        id: perfilBanco?.id || null,
-        user_id: sessaoAtual.user.id,
-        nome: perfilBanco?.nome || 'Administrador do sistema',
-        email: emailSessaoAtual,
-        perfil: 'secretaria',
-        igreja_id: Number(igrejaSuporteSelecionada.id),
-        classe_id: null,
-        modo_suporte_admin: true,
-      }
+    if (!perfilBanco?.igreja_id) {
+      if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+        perfilAtual = {
+          id: null,
+          user_id: sessaoAtual.user.id,
+          nome: 'Administrador do sistema',
+          email: emailSessaoAtual,
+          perfil: 'secretaria',
+          igreja_id: Number(igrejaSuporteSelecionada.id),
+          classe_id: null,
+          modo_suporte_admin: true,
+        }
 
-      setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
-    } else if (!perfilBanco?.igreja_id) {
-      if (ehAdminSessaoAtual) {
+        setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+      } else if (ehAdminSessaoAtual) {
         const perfilAdminSistema = {
           id: null,
           user_id: sessaoAtual.user.id,
@@ -6673,12 +6652,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
     }
 
-    const igrejaSuporteSelecionada = usuarioEhAdminSistema()
-      ? buscarIgrejaSuporteAdminSalva()
-      : null
-
-    await buscarTodosOsDados(sessao, igrejaSuporteSelecionada)
-    setPaginaAtual('usuarios')
+    await buscarTodosOsDados()
     cancelarFormularioPerfil()
     alert('Usuário salvo com sucesso!')
   }
@@ -6712,12 +6686,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       return
     }
 
-    const igrejaSuporteSelecionada = usuarioEhAdminSistema()
-      ? buscarIgrejaSuporteAdminSalva()
-      : null
-
-    await buscarTodosOsDados(sessao, igrejaSuporteSelecionada)
-    setPaginaAtual('usuarios')
+    await buscarTodosOsDados()
   }
 
   function renderizarFeedbackPiloto() {
