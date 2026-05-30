@@ -482,6 +482,7 @@ function App() {
     nome: '',
     professor: '',
   })
+  const [classeAlunosAbertaId, setClasseAlunosAbertaId] = useState(null)
 
   const [mostrarFormularioAluno, setMostrarFormularioAluno] = useState(false)
   const [alunoEditandoId, setAlunoEditandoId] = useState(null)
@@ -3102,6 +3103,22 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         aluno.classeId === Number(classeId) &&
         (aluno.tipoPessoa || 'aluno') === 'aluno'
     ).length
+  }
+
+  function buscarAlunosDaClasse(classeId) {
+    return alunos
+      .filter(
+        (aluno) =>
+          aluno.classeId === Number(classeId) &&
+          (aluno.tipoPessoa || 'aluno') === 'aluno'
+      )
+      .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
+  }
+
+  function alternarAlunosDaClasse(classeId) {
+    setClasseAlunosAbertaId((classeAtualId) =>
+      Number(classeAtualId) === Number(classeId) ? null : Number(classeId)
+    )
   }
 
   function formatarMoeda(valor) {
@@ -7461,11 +7478,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                 <div className="classe-card-corpo">
                   <div className="classe-card-resumo">
-                    <div className="classe-card-resumo-item">
-                      <strong>Professores</strong>
-                      <span>{buscarTextoProfessoresDaClasse(classe.id)}</span>
-                    </div>
-
                     <div className="classe-card-resumo-item resumo-matricula">
                       <strong>Matrícula</strong>
                       <span>{matriculaClasse} alunos</span>
@@ -7518,6 +7530,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     </button>
 
                     <button
+                      className="botao-secundario"
+                      onClick={() => alternarAlunosDaClasse(classe.id)}
+                    >
+                      {Number(classeAlunosAbertaId) === Number(classe.id)
+                        ? 'Ocultar alunos'
+                        : `Ver alunos (${matriculaClasse})`}
+                    </button>
+
+                    <button
                       className="botao-editar"
                       onClick={() => editarClasse(classe)}
                     >
@@ -7531,6 +7552,45 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                       Excluir classe
                     </button>
                   </div>
+
+                  {Number(classeAlunosAbertaId) === Number(classe.id) && (
+                    <div className="alunos-da-classe">
+                      <div className="alunos-da-classe-topo">
+                        <strong>Alunos da classe</strong>
+                        <span>{matriculaClasse} aluno(s)</span>
+                      </div>
+
+                      {buscarAlunosDaClasse(classe.id).length > 0 ? (
+                        <div className="alunos-da-classe-lista">
+                          {buscarAlunosDaClasse(classe.id).map((aluno) => (
+                            <div className="aluno-classe-linha" key={aluno.id}>
+                              <span>{aluno.nome}</span>
+
+                              <div className="aluno-classe-acoes">
+                                <button
+                                  className="botao-editar botao-pequeno"
+                                  onClick={() => editarAluno(aluno)}
+                                >
+                                  Editar
+                                </button>
+
+                                <button
+                                  className="botao-excluir botao-pequeno"
+                                  onClick={() => excluirAluno(aluno.id)}
+                                >
+                                  Excluir
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="texto-sem-professor">
+                          Nenhum aluno cadastrado nesta classe.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )
