@@ -537,7 +537,7 @@ function App() {
     const destravarVerificacaoInicial = window.setTimeout(() => {
       setVerificandoSessao(false)
       setCarregando(false)
-    }, 5000)
+    }, 6000)
 
     const {
       data: { subscription },
@@ -577,8 +577,14 @@ function App() {
       }
 
       setSessao(session)
+      setVerificandoSessao(false)
 
-      if (event === 'SIGNED_IN') {
+      if (
+        event === 'INITIAL_SESSION' ||
+        event === 'SIGNED_IN' ||
+        event === 'TOKEN_REFRESHED' ||
+        event === 'USER_UPDATED'
+      ) {
         try {
           await carregarDadosOnline(session)
         } catch (erroCarregamentoSessao) {
@@ -605,12 +611,7 @@ function App() {
     setCarregando(true)
 
     try {
-      const { data, error } = await Promise.race([
-        supabase.auth.getSession(),
-        new Promise((resolve) =>
-          window.setTimeout(() => resolve({ data: { session: null }, error: null }), 5000)
-        ),
-      ])
+      const { data, error } = await supabase.auth.getSession()
 
       if (error) {
         throw error
