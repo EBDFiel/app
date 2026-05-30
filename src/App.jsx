@@ -537,6 +537,12 @@ function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (typeof window !== 'undefined' && window.__ebdFielSaindoDoSistema) {
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
+
       if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
         setCarregando(false)
         setVerificandoSessao(false)
@@ -599,17 +605,27 @@ function App() {
         throw error
       }
 
-      setSessao(data.session)
+      const sessaoAtual = data.session || null
+      setSessao(sessaoAtual)
 
-      if (data.session) {
-        await carregarDadosOnline(data.session)
+      setVerificandoSessao(false)
+
+      if (sessaoAtual) {
+        carregarDadosOnline(sessaoAtual).catch((erroCarregamentoInicial) => {
+          console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
+          setErroSistema(
+            erroCarregamentoInicial?.message ||
+              'Não foi possível carregar os dados iniciais.'
+          )
+          setCarregando(false)
+        })
       } else {
         limparDadosDoSistema()
+        setCarregando(false)
       }
     } catch (error) {
       console.error('Erro ao verificar sessão:', error)
       setErroSistema('Erro ao verificar login.')
-    } finally {
       setVerificandoSessao(false)
       setCarregando(false)
     }
@@ -1077,34 +1093,49 @@ function App() {
       return
     }
 
-    try {
-      await supabase.auth.signOut({ scope: 'global' })
-    } catch (error) {
-      console.error('Erro ao sair do Supabase:', error)
+    if (typeof window !== 'undefined') {
+      window.__ebdFielSaindoDoSistema = true
     }
 
-    try {
-      window.localStorage.removeItem('supabase.auth.token')
-      window.localStorage.removeItem('ebdfiel-auth-token')
-      Object.keys(window.localStorage).forEach((chave) => {
-        if (
-          chave.toLowerCase().includes('supabase') ||
-          chave.toLowerCase().includes('ebdfiel') ||
-          chave.toLowerCase().includes('auth')
-        ) {
-          window.localStorage.removeItem(chave)
-        }
-      })
+    setCarregando(false)
+    setVerificandoSessao(false)
+    setSessao(null)
+    setTelaPublica('login')
 
+    try {
+      window.localStorage.clear()
       window.sessionStorage.clear()
     } catch (error) {
       console.error('Erro ao limpar dados locais:', error)
     }
 
-    setSessao(null)
+    try {
+      if (window.indexedDB?.databases) {
+        const bancos = await window.indexedDB.databases()
+
+        bancos.forEach((banco) => {
+          if (banco?.name) {
+            window.indexedDB.deleteDatabase(banco.name)
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao limpar IndexedDB:', error)
+    }
+
+    try {
+      supabase.auth.signOut({ scope: 'local' }).catch((error) => {
+        console.error('Erro ao sair do Supabase:', error)
+      })
+    } catch (error) {
+      console.error('Erro ao acionar logout do Supabase:', error)
+    }
+
     limparDadosDoSistema()
-    setTelaPublica('login')
-    window.location.href = '/?v=logout'
+
+    window.setTimeout(() => {
+      window.location.replace(`/?v=logout-${Date.now()}`)
+    }, 80)
   }
 
   async function carregarDadosOnline(sessaoAtual = sessao) {
