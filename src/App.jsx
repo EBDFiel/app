@@ -596,6 +596,16 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    if (
+      paginaAtual === 'administracao' &&
+      usuarioEhAdminSistema() &&
+      igrejasAdmin.length === 0
+    ) {
+      carregarIgrejasAdmin()
+    }
+  }, [paginaAtual, perfilUsuario?.perfil, sessao?.user?.email])
+
   async function iniciarAutenticacao() {
     setVerificandoSessao(true)
     setCarregando(true)
