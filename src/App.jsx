@@ -1307,15 +1307,15 @@ function App() {
     }, 180)
   }
 
-  const emailsAdminSistema = [
-    'gallianoalves@gmail.com',
-    'galliano.alves@gmail.com',
-    'ebdbetel7@gmail.com',
-    'ebdfiel7@gmail.com',
-  ]
+  const emailsAdminSistema = ['ebdfiel7@gmail.com']
 
   function usuarioEhAdminSistema() {
-    return emailsAdminSistema.includes(String(sessao?.user?.email || '').toLowerCase())
+    const emailSessao = String(sessao?.user?.email || '').toLowerCase()
+
+    return (
+      perfilUsuario?.perfil === 'admin_sistema' ||
+      emailsAdminSistema.includes(emailSessao)
+    )
   }
 
   function buscarIgrejaSuporteAdminSalva() {
