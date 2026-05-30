@@ -11,8 +11,15 @@ if (!supabaseKey) {
   console.error('VITE_SUPABASE_PUBLISHABLE_KEY não foi configurada.')
 }
 
+const storage =
+  typeof window !== 'undefined'
+    ? window.localStorage
+    : undefined
+
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
+    storage,
+    storageKey: 'ebdfiel-auth-token',
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
