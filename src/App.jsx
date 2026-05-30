@@ -1703,22 +1703,39 @@ function App() {
     alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
   }
 
+  async function buscarIgrejasAdminBanco() {
+    const { data: igrejasRpc, error: erroRpc } = await supabase.rpc('admin_listar_igrejas')
+
+    if (!erroRpc) {
+      return igrejasRpc || []
+    }
+
+    console.error('Erro ao carregar igrejas via RPC:', erroRpc)
+
+    const { data: igrejasTabela, error: erroTabela } = await supabase
+      .from('igrejas')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (erroTabela) {
+      throw erroTabela
+    }
+
+    return igrejasTabela || []
+  }
+
   async function carregarIgrejasAdmin() {
     if (!usuarioEhAdminSistema()) {
       return
     }
 
-    const { data, error } = await supabase
-      .from('igrejas')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
+    try {
+      const igrejas = await buscarIgrejasAdminBanco()
+      setIgrejasAdmin(igrejas || [])
+    } catch (error) {
       mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
-
-    setIgrejasAdmin(data || [])
     await carregarAcessosAdmin()
     await carregarFeedbacksAdmin()
     await carregarCadastrosIncompletosAdmin()
@@ -2471,15 +2488,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setPerfisIgreja([])
       setPaginaAtual('administracao')
 
-      const { data: igrejasAdminBanco, error: erroIgrejasAdmin } = await supabase
-        .from('igrejas')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (erroIgrejasAdmin) {
-        throw erroIgrejasAdmin
-      }
-
+      const igrejasAdminBanco = await buscarIgrejasAdminBanco()
       setIgrejasAdmin(igrejasAdminBanco || [])
 
       const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
@@ -2545,15 +2554,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         setVinculosProfessores([])
         setPaginaAtual('administracao')
 
-        const { data: igrejasAdminBanco, error: erroIgrejasAdmin } = await supabase
-          .from('igrejas')
-          .select('*')
-          .order('created_at', { ascending: false })
-
-        if (erroIgrejasAdmin) {
-          throw erroIgrejasAdmin
-        }
-
+        const igrejasAdminBanco = await buscarIgrejasAdminBanco()
         setIgrejasAdmin(igrejasAdminBanco || [])
 
         const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
