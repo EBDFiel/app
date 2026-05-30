@@ -1,13 +1,28 @@
-﻿ import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL || 'https://hfaddngnpreoolhuibuq.supabase.co'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-const supabasePublishableKey =
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  'sb_publishable_lKT40SwORQbT-DrCjVIkDA_j3tGfMX2'
+if (!supabaseUrl) {
+  console.error('VITE_SUPABASE_URL não foi configurada.')
+}
 
-console.log('Supabase URL carregada:', supabaseUrl)
-console.log('Supabase key carregada:', supabasePublishableKey ? 'SIM' : 'NÃO')
+if (!supabaseAnonKey) {
+  console.error('VITE_SUPABASE_ANON_KEY não foi configurada.')
+}
 
-export const supabase = createClient(supabaseUrl, supabasePublishableKey)
+const storage =
+  typeof window !== 'undefined'
+    ? window.localStorage
+    : undefined
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage,
+    storageKey: 'ebdfiel-auth-token',
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce',
+  },
+})
