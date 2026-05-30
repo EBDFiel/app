@@ -1108,8 +1108,6 @@ function App() {
         mensagemErro.toLowerCase().includes('aguardando aprovação') ||
         mensagemErro.toLowerCase().includes('sem igreja vinculada')
       ) {
-        await supabase.auth.signOut()
-        setSessao(null)
         limparDadosOperacionaisSemTrocarTela()
         setTelaPublica('login')
       }
@@ -2442,8 +2440,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         setCarregando(false)
         return
       } else {
-        await supabase.auth.signOut()
-        setSessao(null)
         setPerfilUsuario(null)
         setIgrejaId(null)
         setTelaPublica('login')
@@ -2678,8 +2674,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setChamadasSalvas([])
       setChamadasProfessores([])
       setVinculosProfessores([])
-      await supabase.auth.signOut()
-      setSessao(null)
       setTelaPublica('login')
       throw new Error(
         statusPilotoAtual === 'pendente'
