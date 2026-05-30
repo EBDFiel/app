@@ -1128,7 +1128,6 @@ function App() {
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
-    setIgrejaSuporteAdmin(null)
     setIgrejaAtualPiloto(null)
     setFeedbacksIgreja([])
   }
@@ -1242,8 +1241,12 @@ function App() {
   }
 
   function buscarIgrejaIdAtual() {
-    if (usuarioEhAdminSistema() && igrejaSuporteAdmin?.id) {
-      return Number(igrejaSuporteAdmin.id)
+    if (usuarioEhAdminSistema()) {
+      const igrejaSuporteSelecionada = buscarIgrejaSuporteAdminSalva()
+
+      if (igrejaSuporteSelecionada?.id) {
+        return Number(igrejaSuporteSelecionada.id)
+      }
     }
 
     return perfilUsuario?.igreja_id || igrejaId || null
@@ -6656,7 +6659,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
     }
 
-    await buscarTodosOsDados()
+    const igrejaSuporteSelecionada = usuarioEhAdminSistema()
+      ? buscarIgrejaSuporteAdminSalva()
+      : null
+
+    await buscarTodosOsDados(sessao, igrejaSuporteSelecionada)
+    setPaginaAtual('usuarios')
     cancelarFormularioPerfil()
     alert('Usuário salvo com sucesso!')
   }
@@ -6690,7 +6698,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       return
     }
 
-    await buscarTodosOsDados()
+    const igrejaSuporteSelecionada = usuarioEhAdminSistema()
+      ? buscarIgrejaSuporteAdminSalva()
+      : null
+
+    await buscarTodosOsDados(sessao, igrejaSuporteSelecionada)
+    setPaginaAtual('usuarios')
   }
 
   function renderizarFeedbackPiloto() {
