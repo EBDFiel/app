@@ -12713,3 +12713,13 @@ button.botao-principal {
     flex: 1 1 120px;
   }
 }
+
+
+/* Classes: destaque do rótulo Professor na linha */
+.professor-classe-nome {
+  overflow-wrap: anywhere;
+}
+
+.professor-classe-nome::first-letter {
+  text-transform: uppercase;
+}
