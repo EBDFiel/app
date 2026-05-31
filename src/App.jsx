@@ -499,6 +499,7 @@ function App() {
   const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
   const [alunoHistoricoSelecionadoId, setAlunoHistoricoSelecionadoId] = useState('')
   const [classeHistoricoFiltroId, setClasseHistoricoFiltroId] = useState('')
+  const [relatorioEspecialAberto, setRelatorioEspecialAberto] = useState('')
 
   const [tipoChamada, setTipoChamada] = useState('alunos')
   const [classeChamadaId, setClasseChamadaId] = useState('')
@@ -1427,6 +1428,7 @@ function App() {
     }
 
     const igrejaSelecionada = {
+      ...igreja,
       id: igrejaIdSelecionada,
       nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
       congregacao: igreja.congregacao || '',
@@ -1455,6 +1457,17 @@ function App() {
         throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
       }
 
+      const perfilSuporteImediato = {
+        id: perfilUsuario?.id || null,
+        user_id: sessaoAtual.user.id,
+        nome: perfilUsuario?.nome || 'Administrador do sistema',
+        email: String(sessaoAtual.user.email || '').toLowerCase(),
+        perfil: 'secretaria',
+        igreja_id: igrejaIdSelecionada,
+        classe_id: null,
+        modo_suporte_admin: true,
+      }
+
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(
           'ebdfiel_igreja_suporte_admin',
@@ -1463,37 +1476,30 @@ function App() {
       }
 
       setSessao(sessaoAtual)
-      setIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-
-      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
-
+      setPerfilUsuario(perfilSuporteImediato)
       setIgrejaSuporteAdmin(igrejaSelecionada)
       setIgrejaAtualPiloto(igrejaSelecionada)
       setIgrejaId(igrejaIdSelecionada)
       setPaginaAtual('painel')
+
+      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
+
+      setPerfilUsuario((perfilAtual) => ({
+        ...(perfilAtual || perfilSuporteImediato),
+        perfil: 'secretaria',
+        igreja_id: igrejaIdSelecionada,
+        modo_suporte_admin: true,
+      }))
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+      setPaginaAtual('painel')
+
       registrarAuditoriaSistema('admin_acessou_igreja_suporte', {
         igreja_id: igrejaIdSelecionada,
         igreja_nome: igrejaSelecionada.nome_igreja,
         origem: 'administracao_plataforma',
       })
-
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => {
-          const areaPrincipal =
-            document.querySelector('.area-principal') || document.querySelector('main')
-
-          if (areaPrincipal) {
-            const distanciaDoTopo =
-              areaPrincipal.getBoundingClientRect().top + window.pageYOffset - 8
-            window.scrollTo({ top: Math.max(distanciaDoTopo, 0), behavior: 'smooth' })
-            return
-          }
-
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }, 120)
-      }
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
       setErroSistema(
@@ -4142,6 +4148,278 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         'portrait'
       ),
       'iframe-cartoes-aniversariantes'
+    )
+  }
+
+  function abrirCartoesAniversariantesTodos() {
+    const aniversariantes = buscarAniversariantesDoMes()
+
+    if (aniversariantes.length === 0) {
+      alert('Nenhum aniversariante encontrado para este mês.')
+      return
+    }
+
+    const conteudo = `
+      <div class="cartoes-grid">
+        ${aniversariantes.map((aluno) => `
+          <article class="cartao-aniversario">
+            <h3>Feliz aniversário!</h3>
+            <p>A Escola Bíblica Dominical parabeniza:</p>
+            <strong>${escaparHtmlRelatorio(aluno.nome)}</strong>
+            <p>
+              Que Deus abençoe sua vida com graça, sabedoria e crescimento na Palavra.
+              Receba o carinho da sua igreja e da EBD.
+            </p>
+            <p><strong>Data:</strong> ${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</p>
+            <p class="assinatura-cartao">EBD Fiel</p>
+          </article>
+        `).join('')}
+      </div>
+    `
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Cartões de aniversariantes',
+        `Referência: ${formatarMesAtualExtenso()}`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-cartoes-aniversariantes'
+    )
+  }
+
+  function abrirVisualizacaoRelatorioEspecial(tipo) {
+    setRelatorioEspecialAberto(tipo)
+
+    if (paginaAtual !== 'relatorios') {
+      setPaginaAtual('relatorios')
+    }
+
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        const visualizacao = document.querySelector('.visualizacao-relatorio-especial')
+        if (visualizacao) {
+          visualizacao.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 120)
+    }
+  }
+
+  function fecharVisualizacaoRelatorioEspecial() {
+    setRelatorioEspecialAberto('')
+  }
+
+  function executarImpressaoRelatorioEspecial() {
+    if (relatorioEspecialAberto === 'aniversariantes') {
+      abrirRelatorioAniversariantesMes()
+      return
+    }
+
+    if (relatorioEspecialAberto === 'faltas') {
+      abrirRelatorioAlertasFaltas()
+      return
+    }
+
+    if (relatorioEspecialAberto === 'destaques') {
+      abrirRelatorioDestaquesFrequencia()
+      return
+    }
+
+    if (relatorioEspecialAberto === 'cartoes') {
+      abrirCartoesAniversariantesTodos()
+    }
+  }
+
+  function renderizarVisualizacaoRelatorioEspecial() {
+    if (!relatorioEspecialAberto || !usuarioEhSecretaria()) {
+      return null
+    }
+
+    const aniversariantes = buscarAniversariantesDoMes()
+    const alertas = buscarAlertasDeFaltas()
+    const destaques = buscarDestaquesFrequencia()
+
+    const configuracoes = {
+      aniversariantes: {
+        titulo: 'Aniversariantes do mês',
+        subtitulo: `Referência: ${formatarMesAtualExtenso()}`,
+        descricao: 'Confira os aniversariantes na plataforma antes de baixar ou imprimir.',
+        quantidade: aniversariantes.length,
+      },
+      faltas: {
+        titulo: 'Alertas de faltas',
+        subtitulo: 'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
+        descricao: 'Revise os alunos que precisam de acompanhamento antes de gerar o relatório.',
+        quantidade: alertas.length,
+      },
+      destaques: {
+        titulo: 'Destaques de frequência',
+        subtitulo: `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
+        descricao: 'Veja os alunos em destaque antes de baixar ou imprimir.',
+        quantidade: destaques.length,
+      },
+      cartoes: {
+        titulo: 'Cartões de aniversariantes',
+        subtitulo: `Referência: ${formatarMesAtualExtenso()}`,
+        descricao: 'Confira os cartões na tela antes de imprimir ou salvar em PDF.',
+        quantidade: aniversariantes.length,
+      },
+    }
+
+    const configuracao = configuracoes[relatorioEspecialAberto]
+
+    if (!configuracao) {
+      return null
+    }
+
+    return (
+      <div className="visualizacao-relatorio-especial no-print">
+        <div className="visualizacao-relatorio-topo">
+          <div>
+            <span className="selo-publico">Pré-visualização</span>
+            <h3>{configuracao.titulo}</h3>
+            <p>{configuracao.descricao}</p>
+            <small>{configuracao.subtitulo}</small>
+          </div>
+
+          <div className="visualizacao-relatorio-contador">
+            <strong>{configuracao.quantidade}</strong>
+            <span>registro{configuracao.quantidade === 1 ? '' : 's'}</span>
+          </div>
+        </div>
+
+        {relatorioEspecialAberto === 'aniversariantes' && (
+          aniversariantes.length > 0 ? (
+            <div className="tabela-container tabela-preview-container">
+              <table className="tabela tabela-preview-relatorio">
+                <thead>
+                  <tr>
+                    <th>Nº</th>
+                    <th>Nome</th>
+                    <th>Classe</th>
+                    <th>Data</th>
+                    <th>Idade</th>
+                    <th>Telefone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {aniversariantes.map((aluno, indice) => (
+                    <tr key={`preview-aniversariante-${aluno.id || indice}`}>
+                      <td>{indice + 1}</td>
+                      <td><strong>{aluno.nome}</strong></td>
+                      <td>{aluno.classeNome || 'Sem classe'}</td>
+                      <td>{aluno.dataNascimentoFormatada}</td>
+                      <td>{aluno.idade || '-'}</td>
+                      <td>{aluno.telefone || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="estado-vazio-relatorio">Nenhum aniversariante encontrado para este mês.</div>
+          )
+        )}
+
+        {relatorioEspecialAberto === 'faltas' && (
+          alertas.length > 0 ? (
+            <div className="tabela-container tabela-preview-container">
+              <table className="tabela tabela-preview-relatorio">
+                <thead>
+                  <tr>
+                    <th>Nº</th>
+                    <th>Aluno</th>
+                    <th>Classe</th>
+                    <th>Faltas consecutivas</th>
+                    <th>Faltas no mês</th>
+                    <th>Última chamada</th>
+                    <th>Alerta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {alertas.map((item, indice) => (
+                    <tr key={`preview-faltas-${item.aluno?.id || indice}`}>
+                      <td>{indice + 1}</td>
+                      <td><strong>{item.aluno.nome}</strong></td>
+                      <td>{item.classeNome || 'Sem classe'}</td>
+                      <td>{item.faltasConsecutivas}</td>
+                      <td>{item.faltasMes}</td>
+                      <td>{item.ultimaData || '-'}</td>
+                      <td>{item.motivo}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="estado-vazio-relatorio">Nenhum alerta de faltas encontrado no momento.</div>
+          )
+        )}
+
+        {relatorioEspecialAberto === 'destaques' && (
+          destaques.length > 0 ? (
+            <div className="tabela-container tabela-preview-container">
+              <table className="tabela tabela-preview-relatorio">
+                <thead>
+                  <tr>
+                    <th>Nº</th>
+                    <th>Aluno</th>
+                    <th>Classe</th>
+                    <th>Presenças</th>
+                    <th>Chamadas</th>
+                    <th>Frequência</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {destaques.map((item, indice) => (
+                    <tr key={`preview-destaque-${item.aluno?.id || indice}`}>
+                      <td>{indice + 1}</td>
+                      <td><strong>{item.aluno.nome}</strong></td>
+                      <td>{item.classeNome || 'Sem classe'}</td>
+                      <td>{item.presentes}</td>
+                      <td>{item.total}</td>
+                      <td><strong>{item.frequencia}%</strong></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="estado-vazio-relatorio">Nenhum destaque de frequência encontrado para este mês.</div>
+          )
+        )}
+
+        {relatorioEspecialAberto === 'cartoes' && (
+          aniversariantes.length > 0 ? (
+            <div className="preview-cartoes-aniversario">
+              {aniversariantes.map((aluno, indice) => (
+                <article className="preview-cartao-aniversario" key={`preview-cartao-${aluno.id || indice}`}>
+                  <span>Cartão de aniversário</span>
+                  <h4>Feliz aniversário!</h4>
+                  <p>A Escola Bíblica Dominical parabeniza:</p>
+                  <strong>{aluno.nome}</strong>
+                  <p>
+                    Que Deus abençoe sua vida com graça, sabedoria e crescimento na Palavra.
+                    Receba o carinho da sua igreja e da EBD.
+                  </p>
+                  <small>Data: {aluno.dataNascimentoFormatada}</small>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="estado-vazio-relatorio">Nenhum aniversariante encontrado para este mês.</div>
+          )
+        )}
+
+        <div className="visualizacao-relatorio-acoes">
+          <button className="botao-principal" type="button" onClick={executarImpressaoRelatorioEspecial}>
+            Baixar ou imprimir
+          </button>
+          <button className="botao-secundario" type="button" onClick={fecharVisualizacaoRelatorioEspecial}>
+            Fechar pré-visualização
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -7818,7 +8096,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesMes}>
+              <button className="alerta-ebd-card" type="button" onClick={() => abrirVisualizacaoRelatorioEspecial('aniversariantes')}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
                 <div>
                   <strong>Aniversariantes</strong>
@@ -7831,7 +8109,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Mês'}</em>
               </button>
 
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
+              <button className="alerta-ebd-card" type="button" onClick={() => abrirVisualizacaoRelatorioEspecial('faltas')}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-faltas">⚠️</span>
                 <div>
                   <strong>Alertas de faltas</strong>
@@ -7844,7 +8122,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 <em>{alertasDeFaltasPainel.length}</em>
               </button>
 
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioDestaquesFrequencia}>
+              <button className="alerta-ebd-card" type="button" onClick={() => abrirVisualizacaoRelatorioEspecial('destaques')}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-destaque">⭐</span>
                 <div>
                   <strong>Destaques de frequência</strong>
@@ -7883,12 +8161,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             )}
             <div className="alerta-flutuante-acoes">
               {aniversariantesHojePainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAniversariantesMes}>
+                <button type="button" onClick={() => abrirVisualizacaoRelatorioEspecial('aniversariantes')}>
                   Ver aniversários
                 </button>
               )}
               {alertasDeFaltasPainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAlertasFaltas}>
+                <button type="button" onClick={() => abrirVisualizacaoRelatorioEspecial('faltas')}>
                   Ver faltas
                 </button>
               )}
@@ -9225,6 +9503,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           )}
         </div>
 
+        {renderizarVisualizacaoRelatorioEspecial()}
+
         <div className="relatorio-folha">
           <div className="cabecalho-relatorio">
             <img
@@ -9385,28 +9665,28 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
             <button
               className="botao-secundario"
-              onClick={abrirRelatorioAniversariantesMes}
+              onClick={() => abrirVisualizacaoRelatorioEspecial('aniversariantes')}
             >
               Aniversariantes do mês
             </button>
 
             <button
               className="botao-secundario"
-              onClick={abrirRelatorioAlertasFaltas}
+              onClick={() => abrirVisualizacaoRelatorioEspecial('faltas')}
             >
               Alertas de faltas
             </button>
 
             <button
               className="botao-secundario"
-              onClick={abrirRelatorioDestaquesFrequencia}
+              onClick={() => abrirVisualizacaoRelatorioEspecial('destaques')}
             >
               Destaques de frequência
             </button>
 
             <button
               className="botao-secundario"
-              onClick={abrirCartoesAniversariantes}
+              onClick={() => abrirVisualizacaoRelatorioEspecial('cartoes')}
             >
               Cartões de aniversariantes
             </button>
