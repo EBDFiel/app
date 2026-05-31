@@ -515,7 +515,7 @@ function App() {
 
   const menu = [
     { id: 'painel', nome: 'Painel', icone: 'painel' },
-    { id: 'dashboard', nome: 'Dashboard', icone: 'painel' },
+    { id: 'dashboard', nome: 'Resumo geral', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
     { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
@@ -524,7 +524,7 @@ function App() {
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
     { id: 'historico', nome: 'Histórico do aluno', icone: 'alunos' },
     { id: 'financeiro', nome: 'Financeiro', icone: 'relatorios', apenasSecretaria: true },
-    { id: 'backup', nome: 'Backup e auditoria', icone: 'configuracoes', apenasSecretaria: true },
+    { id: 'backup', nome: 'Segurança e auditoria', icone: 'configuracoes', apenasSecretaria: true },
     { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
     {
       id: 'configuracoes',
@@ -1399,7 +1399,15 @@ function App() {
     return igrejaSuporteAdmin?.id ? igrejaSuporteAdmin : null
   }
 
-  async function acessarIgrejaComoSuporte(igreja) {
+  async function acessarIgrejaComoSuporte(igreja, event = null) {
+    if (event?.preventDefault) {
+      event.preventDefault()
+    }
+
+    if (event?.stopPropagation) {
+      event.stopPropagation()
+    }
+
     if (!usuarioEhAdminSistema()) {
       alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
       return
@@ -1447,6 +1455,9 @@ function App() {
       }
 
       setPaginaAtual('painel')
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
+      }
       await buscarTodosOsDados(sessao, igrejaSelecionada)
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
@@ -1990,7 +2001,7 @@ function App() {
     const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
     const textoAcao =
       novoStatus === 'teste'
-        ? 'aprovar esta igreja para o teste piloto'
+        ? 'liberar esta igreja para uso da plataforma'
         : novoStatus === 'cancelada'
           ? 'não aprovar esta igreja'
           : `alterar o status para ${novoStatus}`
@@ -2015,7 +2026,7 @@ function App() {
 
     if (novoStatus === 'teste') {
       const avisarAgora = window.confirm(
-        'Igreja aprovada para o teste piloto. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
+        'Igreja liberada para uso da plataforma. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
       )
 
       if (avisarAgora) {
@@ -2041,7 +2052,7 @@ function App() {
 
     return `Paz do Senhor!
 
-O cadastro da ${nomeIgreja} no teste piloto do EBD Fiel foi aprovado.
+O cadastro da ${nomeIgreja} no EBD Fiel foi liberado para uso.
 
 Acesse o sistema pelo link:
 
@@ -2059,7 +2070,7 @@ Manual rápido para começar:
 6. Vá em Chamada para registrar a presença dos alunos.
 7. Use Chamada dos professores para registrar a presença dos professores.
 8. Em Relatórios, gere o relatório da EBD em PDF.
-9. Durante o teste piloto, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
+9. Durante o uso da plataforma, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -2289,7 +2300,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A área de feedback está disponível para igrejas em teste piloto.')
+      alert('A área de feedback está disponível para igrejas liberadas na plataforma.')
       return
     }
 
@@ -2320,7 +2331,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
     await carregarFeedbacksDaIgreja()
-    alert('Feedback enviado com sucesso. Obrigado por ajudar no teste piloto!')
+    alert('Feedback enviado com sucesso. Obrigado por ajudar a melhorar a plataforma!')
   }
 
   async function marcarFeedbackComoLido(feedbackId) {
@@ -2379,7 +2390,7 @@ Obrigado pelo feedback enviado sobre o EBD Fiel.
 Resposta da equipe:
 ${resposta}
 
-Seguimos à disposição para ajudar no teste piloto.
+Seguimos à disposição para ajudar no uso da plataforma.
 
 EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
@@ -3405,7 +3416,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         vinculosProfessores,
       },
       observacao:
-        'Backup exportado pelo painel da igreja. Não altera dados no Supabase e serve como cópia de segurança em JSON.',
+        'Cópia de segurança exportada pelo painel da igreja. Não altera dados no Supabase e serve como arquivo de consulta em JSON.',
     }
   }
 
@@ -6937,7 +6948,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
-              do sistema para o teste piloto.
+              do sistema.
             </p>
           </div>
         </section>
@@ -6949,7 +6960,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           <h2>Aguardando aprovação</h2>
           <p>
             Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
-            os testes.
+            a validação.
           </p>
           <button className="botao-secundario" onClick={sairDoSistema}>
             Sair
@@ -7357,7 +7368,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>Dashboard da EBD</h2>
+            <h2>Resumo geral da EBD</h2>
             <p>Indicadores visuais sem alterar os cadastros existentes.</p>
           </div>
           <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
@@ -7588,14 +7599,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>Backup e auditoria</h2>
+            <h2>Segurança e auditoria</h2>
             <p>Ferramentas seguras de leitura para conferência e cópia local da igreja.</p>
           </div>
         </div>
 
         <div className="backup-v41-grid">
           <div className="backup-v41-card">
-            <span className="selo-publico">Backup local</span>
+            <span className="selo-publico">Cópia de segurança local</span>
             <h3>Exportar dados da igreja</h3>
             <p>Gera um arquivo JSON com os dados carregados na sessão atual. Não modifica cadastros no Supabase.</p>
             <button className="botao-principal" type="button" onClick={baixarBackupLocalSeguro}>
@@ -9528,10 +9539,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       <div className="admin-feedback-alertas">
         <div className="admin-feedback-topo">
           <div>
-            <span className="selo-admin">Alertas do piloto</span>
-            <h3>Feedbacks recebidos</h3>
+            <span className="selo-admin">Mensagens das igrejas</span>
+            <h3>Respostas recebidas</h3>
             <p>
-              Toda mensagem enviada pelas igrejas em teste aparece aqui para acompanhamento.
+              Toda mensagem enviada pelas igrejas aparece aqui para acompanhamento.
             </p>
           </div>
 
@@ -9776,7 +9787,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h3>Cadastros incompletos</h3>
             <p>
               Usuários que existem no Supabase Authentication, mas ainda não possuem perfil
-              em perfis_usuarios. No piloto, a solução mais limpa costuma ser excluir o
+              em perfis_usuarios. A solução mais limpa costuma ser excluir o
               usuário no Authentication e pedir novo cadastro.
             </p>
           </div>
@@ -10117,13 +10128,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
 
     return (
-      <section className="conteudo">
+      <section className="conteudo conteudo-admin-comercial">
         <div className="topo-pagina topo-admin-sistema">
           <div>
             <span className="selo-admin">Administração do sistema</span>
             <h2>Administração comercial</h2>
             <p>
-              Gerencie igrejas, sedes, congregações, acessos, status do piloto, recuperação de senha e feedbacks em um único painel.
+              Gerencie igrejas, sedes, congregações, acessos, uso da plataforma, recuperação de senha e respostas em um único lugar.
             </p>
           </div>
 
@@ -10148,9 +10159,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </div>
 
           <div className="card card-admin">
-            <span>Em teste</span>
+            <span>Em uso</span>
             <strong>{igrejasTeste}</strong>
-            <p>participando do piloto</p>
+            <p>usando a plataforma</p>
           </div>
 
           <div className="card card-admin">
@@ -10176,10 +10187,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
             <div className="topo-formulario-inline">
               <div>
-                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja do piloto'}</h3>
+                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja'}</h3>
                 <p>
                   Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
-                  Depois crie o usuário em Supabase → Authentication → Users e vincule o acesso.
+                  Depois crie o usuário no Supabase, em Authentication → Users, e vincule o acesso.
                 </p>
               </div>
             </div>
@@ -10231,7 +10242,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label>
-                Status do piloto
+                Status da plataforma
                 <select
                   value={novaIgrejaAdmin.status_piloto}
                   onChange={(event) =>
@@ -10242,7 +10253,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   }
                 >
                   <option value="pendente">Pendente</option>
-                  <option value="teste">Teste</option>
+                  <option value="teste">Em uso</option>
                   <option value="ativa">Ativa</option>
                   <option value="pausada">Pausada</option>
                   <option value="cancelada">Cancelada</option>
@@ -10540,7 +10551,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label>
-                Início do piloto
+                Início do acompanhamento
                 <input
                   type="date"
                   value={novaIgrejaAdmin.data_inicio_piloto}
@@ -10554,7 +10565,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label>
-                Fim do piloto
+                Fim do acompanhamento
                 <input
                   type="date"
                   value={novaIgrejaAdmin.data_fim_piloto}
@@ -10568,7 +10579,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </label>
 
               <label className="campo-observacoes-admin">
-                Observações do piloto
+                Observações internas
                 <input
                   type="text"
                   value={novaIgrejaAdmin.observacoes_piloto}
@@ -10578,7 +10589,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                       observacoes_piloto: event.target.value,
                     })
                   }
-                  placeholder="Ex: igreja convidada para teste de 30 dias"
+                  placeholder="Ex: igreja em implantação ou acompanhamento inicial"
                 />
               </label>
             </div>
@@ -10622,7 +10633,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 <div className="linha-titulo-admin">
                   <h3>{igreja.nome_igreja}</h3>
                   <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
-                    {igreja.status_piloto || 'teste'}
+                    {igreja.status_piloto === 'teste'
+                      ? 'Em uso'
+                      : igreja.status_piloto === 'ativa'
+                        ? 'Ativa'
+                        : igreja.status_piloto === 'pendente'
+                          ? 'Pendente'
+                          : igreja.status_piloto === 'pausada'
+                            ? 'Pausada'
+                            : igreja.status_piloto === 'cancelada'
+                              ? 'Cancelada'
+                              : 'Em uso'}
                   </span>
                   {igreja.status_piloto === 'pendente' && (
                     <span className="selo-aguardando-aprovacao">
@@ -10680,7 +10701,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
-                    Piloto: {igreja.data_inicio_piloto || 'sem início'} até{' '}
+                    Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
                     {igreja.data_fim_piloto || 'sem fim'}
                   </p>
                 )}
@@ -10710,7 +10731,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     className="botao-aprovar-igreja"
                     onClick={() => aprovarIgrejaPiloto(igreja)}
                   >
-                    Aprovar para teste
+                    Liberar uso
                   </button>
                 )}
 
@@ -10732,7 +10753,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   </div>
                 )}
 
-                <button type="button" className="botao-acessar-igreja" onClick={() => acessarIgrejaComoSuporte(igreja)}>
+                <button type="button" className="botao-acessar-igreja" onClick={(event) => acessarIgrejaComoSuporte(igreja, event)}>
                   Acessar igreja
                 </button>
 
