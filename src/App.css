@@ -14358,3 +14358,21 @@ button.botao-principal {
     height: 48px !important;
   }
 }
+
+
+/* Orientação para cópia de segurança */
+.aviso-copia-seguranca {
+  margin: 16px 0 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #eff6ff 0%, #f8fbff 100%);
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.aviso-copia-seguranca strong {
+  color: #1d4ed8;
+}
