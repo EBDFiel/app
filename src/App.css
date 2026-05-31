@@ -14263,3 +14263,98 @@ button.botao-principal {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================
+   EBD Fiel v46 - Logo com fundo branco em todas as páginas
+   Mantém a imagem atual, apenas padroniza o contêiner visual.
+   ========================================================== */
+.logo-simbolo,
+.logo-simbolo-sidebar,
+.logo-publica,
+.marca-login .logo-simbolo,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar,
+.marca-publica .logo-publica,
+.topo-publico .logo-publica,
+.logo-area,
+.logo-container {
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14) !important;
+  overflow: hidden !important;
+}
+
+.logo-simbolo,
+.logo-simbolo-sidebar,
+.logo-publica {
+  display: grid !important;
+  place-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.logo-simbolo {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 18px !important;
+  padding: 6px !important;
+}
+
+.logo-simbolo-sidebar {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 16px !important;
+  padding: 5px !important;
+}
+
+.logo-publica {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 18px !important;
+  padding: 6px !important;
+}
+
+.logo-imagem,
+.logo-simbolo img,
+.logo-simbolo-sidebar img,
+.logo-publica img,
+.marca-login img,
+.marca-sidebar img,
+.marca-publica img {
+  background: #ffffff !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  border-radius: 12px !important;
+}
+
+/* Relatórios e impressões também preservam a logo sobre fundo branco */
+.logo-relatorio,
+.cabecalho-relatorio .logo-relatorio {
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
+  object-fit: contain !important;
+}
+
+/* Ajuste específico para a barra lateral escura */
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+.menu-lateral .logo-simbolo,
+.menu-lateral .logo-simbolo-sidebar {
+  background: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+@media (max-width: 720px) {
+  .logo-simbolo,
+  .logo-publica {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .logo-simbolo-sidebar {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
