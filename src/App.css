@@ -12723,3 +12723,850 @@ button.botao-principal {
 .professor-classe-nome::first-letter {
   text-transform: uppercase;
 }
+
+
+/* Melhorias v41 - Dashboard, histórico, financeiro, backup e WhatsApp de faltosos */
+.dashboard-v41-hero {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  color: #ffffff;
+  box-shadow: 0 24px 54px rgba(37, 99, 235, 0.18);
+}
+
+.dashboard-v41-hero h3 {
+  margin: 12px 0 8px;
+  font-size: 32px;
+}
+
+.dashboard-v41-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.dashboard-v41-circulo {
+  min-width: 148px;
+  min-height: 148px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.dashboard-v41-circulo strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.dashboard-v41-circulo span {
+  display: block;
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.dashboard-v41-grid,
+.backup-v41-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.dashboard-v41-bloco,
+.financeiro-v41-bloco,
+.backup-v41-card,
+.historico-v41 {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-suave);
+}
+
+.dashboard-v41-bloco {
+  margin-top: 0;
+}
+
+.dashboard-v41-bloco h3,
+.financeiro-v41-bloco h3,
+.backup-v41-card h3 {
+  margin: 0 0 14px;
+}
+
+.lista-graficos-v41,
+.lista-dashboard-v41 {
+  display: grid;
+  gap: 14px;
+}
+
+.linha-grafico-v41-topo,
+.item-dashboard-v41,
+.historico-v41-resumo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.linha-grafico-v41 p,
+.item-dashboard-v41 p,
+.backup-v41-card p {
+  margin: 4px 0 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.barra-grafico-v41 {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.barra-grafico-v41 span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #22c55e);
+}
+
+.item-dashboard-v41 {
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+}
+
+.item-dashboard-alerta-v41 {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.filtros-historico-v41 {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.historico-v41-numeros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.historico-v41-numeros div {
+  min-width: 108px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  text-align: center;
+}
+
+.historico-v41-numeros strong {
+  display: block;
+  font-size: 24px;
+}
+
+.historico-v41-numeros span {
+  display: block;
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.aviso-financeiro-v41 {
+  margin-top: 18px;
+}
+
+.backup-v41-card {
+  margin-top: 0;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.backup-v41-card .botao-principal,
+.backup-v41-card .botao-secundario {
+  margin-top: 0;
+  width: fit-content;
+}
+
+@media (max-width: 900px) {
+  .dashboard-v41-hero,
+  .historico-v41-resumo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-v41-grid,
+  .backup-v41-grid,
+  .filtros-historico-v41 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-v41-circulo {
+    width: 140px;
+    height: 140px;
+  }
+
+  .backup-v41-card .botao-principal,
+  .backup-v41-card .botao-secundario {
+    width: 100%;
+  }
+}
+
+/* v42 - Administração comercial mais organizada e botão Acessar igreja mais confiável */
+.conteudo .lista-admin-igrejas {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.conteudo .igreja-admin-card.item-lista.item-com-acoes {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 260px) !important;
+  align-items: start !important;
+  gap: 18px !important;
+  padding: 18px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(203, 213, 225, 0.9) !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.07) !important;
+}
+
+.conteudo .igreja-admin-card.item-lista.item-com-acoes > div:first-child {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.conteudo .igreja-admin-card .linha-titulo-admin {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.conteudo .igreja-admin-card .linha-titulo-admin h3 {
+  margin: 0 !important;
+  color: #0f172a !important;
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.conteudo .igreja-admin-card .selo-status-piloto,
+.conteudo .igreja-admin-card [class*='selo'] {
+  white-space: nowrap !important;
+}
+
+.conteudo .igreja-admin-card .bloco-localizacao-admin,
+.conteudo .igreja-admin-card .dados-igreja-admin {
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+.conteudo .igreja-admin-card p {
+  margin: 0 !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+.conteudo .igreja-admin-card strong,
+.conteudo .igreja-admin-card b {
+  color: #0f172a !important;
+}
+
+.conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+  width: 100% !important;
+  max-width: 260px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  align-self: start !important;
+  padding: 10px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja button,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja {
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 13px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.conteudo .igreja-admin-card .botao-acessar-igreja {
+  background: linear-gradient(135deg, #d89a00 0%, #f2b705 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 12px 22px rgba(216, 154, 0, 0.22) !important;
+}
+
+.conteudo .igreja-admin-card .botao-acessar-igreja:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.03) !important;
+}
+
+.conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+.conteudo .igreja-admin-card .grupo-aprovacao-rapida {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.filtros-admin {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 260px) !important;
+  align-items: end !important;
+  gap: 12px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+}
+
+.filtros-admin .botao-secundario {
+  margin-top: 0 !important;
+  min-height: 46px !important;
+}
+
+.banner-modo-suporte {
+  position: sticky !important;
+  top: 12px !important;
+  z-index: 20 !important;
+}
+
+@media (max-width: 980px) {
+  .conteudo .igreja-admin-card.item-lista.item-com-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+    max-width: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+  .conteudo .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .conteudo .igreja-admin-card.item-lista.item-com-acoes {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja,
+  .conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+  .conteudo .igreja-admin-card .grupo-aprovacao-rapida,
+  .filtros-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .conteudo .igreja-admin-card .linha-titulo-admin h3 {
+    font-size: 18px !important;
+  }
+}
+
+
+/* =========================================================
+   v43 - Administração comercial mais organizada e sem termos de teste
+   Mantém a estrutura existente, apenas melhora visual e usabilidade.
+   ========================================================= */
+
+.conteudo-admin-comercial {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 90% 8%, rgba(37, 99, 235, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.96));
+  border: 1px solid rgba(219, 226, 234, 0.92);
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+}
+
+.conteudo-admin-comercial .topo-admin-sistema {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 28px;
+  margin-bottom: 22px;
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(239, 246, 255, 0.84)),
+    radial-gradient(circle at right center, rgba(37, 99, 235, 0.15), transparent 32%);
+  border: 1px solid #dbeafe;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.conteudo-admin-comercial .topo-admin-sistema h2 {
+  margin: 8px 0 6px;
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  color: #0f172a;
+}
+
+.conteudo-admin-comercial .topo-admin-sistema p {
+  max-width: 760px;
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+}
+
+.conteudo-admin-comercial .selo-admin {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.conteudo-admin-comercial .topo-admin-sistema .botao-principal {
+  min-width: 150px;
+  margin-top: 0;
+  border-radius: 16px;
+  box-shadow: 0 16px 26px rgba(37, 99, 235, 0.18);
+}
+
+.cards-admin-sistema {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 22px;
+}
+
+.cards-admin-sistema .card-admin {
+  position: relative;
+  min-height: 122px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.055);
+}
+
+.cards-admin-sistema .card-admin::after {
+  content: '';
+  position: absolute;
+  right: -22px;
+  bottom: -28px;
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, .24), rgba(37, 99, 235, .10));
+}
+
+.cards-admin-sistema .card-admin span {
+  display: block;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.cards-admin-sistema .card-admin strong {
+  display: block;
+  margin: 8px 0 4px;
+  color: #1d4ed8;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.cards-admin-sistema .card-admin p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.admin-feedback-alertas,
+.bloco-cadastros-incompletos-admin,
+.admin-auditoria-card,
+.cadastros-incompletos-admin {
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.055) !important;
+}
+
+.admin-feedback-alertas {
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.admin-feedback-topo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.admin-feedback-topo h3 {
+  margin: 8px 0 4px;
+  color: #0f172a;
+  font-size: 28px;
+  letter-spacing: -0.035em;
+}
+
+.admin-feedback-topo p {
+  margin: 0;
+  color: #64748b;
+}
+
+.admin-feedback-topo > strong {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f59e0b, #fb923c);
+  color: #fff;
+  font-size: 24px;
+  box-shadow: 0 14px 28px rgba(245, 158, 11, .22);
+}
+
+.lista-feedbacks-admin {
+  display: grid;
+  gap: 14px;
+}
+
+.feedback-admin-item {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 168px;
+  gap: 18px;
+  padding: 18px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.feedback-resposta-admin {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.acoes-feedback-admin {
+  display: grid !important;
+  align-content: start;
+  gap: 8px;
+}
+
+.acoes-feedback-admin button,
+.acoes-aprovacao-igreja button {
+  min-height: 38px;
+  margin-top: 0 !important;
+  border-radius: 12px !important;
+  white-space: nowrap;
+}
+
+.conteudo-admin-comercial .filtros-admin {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) 180px;
+  gap: 12px;
+  align-items: end;
+  padding: 16px;
+  margin: 18px 0 0;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
+}
+
+.conteudo-admin-comercial .filtros-admin label {
+  color: #334155;
+  font-size: 13px;
+}
+
+.conteudo-admin-comercial .filtros-admin input {
+  min-height: 44px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.lista-admin-igrejas {
+  gap: 0 !important;
+  margin-top: 0 !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, .06);
+}
+
+.lista-admin-igrejas::before {
+  content: 'Igrejas cadastradas';
+  display: block;
+  padding: 20px 22px 8px;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.igreja-admin-card {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 18px !important;
+  align-items: stretch !important;
+  margin: 0 !important;
+  padding: 20px 22px !important;
+  border: 0 !important;
+  border-top: 1px solid #edf2f7 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #ffffff !important;
+}
+
+.igreja-admin-card:hover {
+  background: linear-gradient(90deg, #ffffff 0%, #f8fbff 100%) !important;
+}
+
+.igreja-admin-card > div:first-child {
+  min-width: 0;
+}
+
+.linha-titulo-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.linha-titulo-admin h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.status-piloto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border: 1px solid transparent;
+}
+
+.status-teste,
+.status-ativa {
+  color: #047857 !important;
+  background: #dcfce7 !important;
+  border-color: #bbf7d0 !important;
+}
+
+.status-pendente {
+  color: #b45309 !important;
+  background: #fef3c7 !important;
+  border-color: #fde68a !important;
+}
+
+.status-pausada {
+  color: #334155 !important;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.status-cancelada {
+  color: #b91c1c !important;
+  background: #fee2e2 !important;
+  border-color: #fecaca !important;
+}
+
+.dados-igreja-admin {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.dados-igreja-admin p,
+.igreja-admin-card p {
+  margin: 2px 0;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.dados-igreja-admin p strong {
+  color: #0f172a;
+}
+
+.acoes-aprovacao-igreja {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px !important;
+  align-content: start;
+  align-self: stretch;
+  padding-left: 18px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.acoes-aprovacao-igreja .grupo-aviso-aprovacao,
+.acoes-aprovacao-igreja .grupo-aprovacao-rapida {
+  display: contents;
+}
+
+.botao-whatsapp-admin {
+  background: #16a34a !important;
+  color: #fff !important;
+  border: 1px solid #16a34a !important;
+}
+
+.botao-copiar-admin,
+.botao-usuarios-vinculados {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+.botao-acessar-igreja {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto !important;
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 22px rgba(217, 119, 6, .18);
+}
+
+.acoes-aprovacao-igreja .botao-principal {
+  background: linear-gradient(135deg, #0369a1, #0284c7) !important;
+  box-shadow: 0 10px 22px rgba(2, 132, 199, .18) !important;
+}
+
+.acoes-aprovacao-igreja .botao-editar {
+  background: #ffffff !important;
+  border-color: #fed7aa !important;
+  color: #b45309 !important;
+}
+
+.acoes-aprovacao-igreja .botao-excluir {
+  background: #fff7f7 !important;
+}
+
+.usuarios-vinculados-igreja {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+}
+
+@media (min-width: 1101px) {
+  .admin-feedback-alertas {
+    width: calc(62% - 9px);
+    display: inline-block;
+    vertical-align: top;
+    min-height: 300px;
+  }
+
+  .admin-feedback-alertas + .bloco-cadastros-incompletos-admin,
+  .admin-feedback-alertas + .cadastros-incompletos-admin,
+  .admin-feedback-alertas + .admin-auditoria-card {
+    width: calc(38% - 9px);
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 18px;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .cards-admin-sistema {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .igreja-admin-card {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-aprovacao-igreja {
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: 0;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+@media (max-width: 780px) {
+  .conteudo-admin-comercial {
+    padding: 18px;
+  }
+
+  .conteudo-admin-comercial .topo-admin-sistema,
+  .conteudo-admin-comercial .filtros-admin,
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-admin-sistema,
+  .dados-igreja-admin,
+  .acoes-aprovacao-igreja {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-aprovacao-igreja button {
+    width: 100%;
+  }
+}
