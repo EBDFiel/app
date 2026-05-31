@@ -497,6 +497,8 @@ function App() {
 
   const [buscaAluno, setBuscaAluno] = useState('')
   const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
+  const [alunoHistoricoSelecionadoId, setAlunoHistoricoSelecionadoId] = useState('')
+  const [classeHistoricoFiltroId, setClasseHistoricoFiltroId] = useState('')
 
   const [tipoChamada, setTipoChamada] = useState('alunos')
   const [classeChamadaId, setClasseChamadaId] = useState('')
@@ -513,12 +515,16 @@ function App() {
 
   const menu = [
     { id: 'painel', nome: 'Painel', icone: 'painel' },
+    { id: 'dashboard', nome: 'Dashboard', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
     { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
     { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
     { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'historico', nome: 'Histórico do aluno', icone: 'alunos' },
+    { id: 'financeiro', nome: 'Financeiro', icone: 'relatorios', apenasSecretaria: true },
+    { id: 'backup', nome: 'Backup e auditoria', icone: 'configuracoes', apenasSecretaria: true },
     { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
     {
       id: 'configuracoes',
@@ -1399,17 +1405,62 @@ function App() {
       return
     }
 
+    const igrejaIdSelecionada = Number(igreja?.id)
+
+    if (!igrejaIdSelecionada) {
+      alert('Não foi possível identificar a igreja selecionada.')
+      return
+    }
+
     const igrejaSelecionada = {
-      id: Number(igreja.id),
+      id: igrejaIdSelecionada,
       nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
       congregacao: igreja.congregacao || '',
       status_piloto: igreja.status_piloto || '',
+      cidade: igreja.cidade || '',
+      estado: igreja.estado || '',
     }
 
-    setIgrejaSuporteAdmin(igrejaSelecionada)
+    try {
+      setCarregando(true)
+      setErroSistema('')
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+      setPerfilUsuario((perfilAnterior) => ({
+        ...perfilAnterior,
+        id: perfilAnterior?.id || null,
+        user_id: sessao?.user?.id,
+        nome: perfilAnterior?.nome || 'Administrador do sistema',
+        email: String(sessao?.user?.email || '').toLowerCase(),
+        perfil: 'secretaria',
+        igreja_id: igrejaIdSelecionada,
+        classe_id: null,
+        modo_suporte_admin: true,
+      }))
 
-    setPaginaAtual('painel')
-    await buscarTodosOsDados(sessao, igrejaSelecionada)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(
+          'ebdfiel_igreja_suporte_admin',
+          JSON.stringify(igrejaSelecionada)
+        )
+      }
+
+      setPaginaAtual('painel')
+      await buscarTodosOsDados(sessao, igrejaSelecionada)
+    } catch (erroSuporte) {
+      console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
+      setErroSistema(
+        erroSuporte?.message ||
+          'Não foi possível acessar esta igreja em modo suporte agora.'
+      )
+      alert(
+        erroSuporte?.message ||
+          'Não foi possível acessar esta igreja em modo suporte agora.'
+      )
+    } finally {
+      setCarregando(false)
+    }
   }
 
   async function sairDoModoSuporteAdmin() {
@@ -3180,6 +3231,223 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     return Math.round((presentes / total) * 100)
+  }
+
+
+  function calcularPercentualSeguro(parte, total) {
+    const parteNumero = converterNumero(parte)
+    const totalNumero = converterNumero(total)
+
+    if (totalNumero <= 0) {
+      return 0
+    }
+
+    return Math.round((parteNumero / totalNumero) * 100)
+  }
+
+  function buscarChamadasDaClasse(classeId) {
+    return chamadasSalvas.filter(
+      (chamada) => Number(chamada.classeId) === Number(classeId)
+    )
+  }
+
+  function montarDashboardPorClasse() {
+    return classes.map((classe) => {
+      const chamadasDaClasse = buscarChamadasDaClasse(classe.id)
+      const presentes = chamadasDaClasse.reduce(
+        (total, chamada) => total + converterNumero(chamada.totalPresentes),
+        0
+      )
+      const faltas = chamadasDaClasse.reduce(
+        (total, chamada) => total + converterNumero(chamada.totalFaltas),
+        0
+      )
+      const total = presentes + faltas
+
+      return {
+        classe,
+        matricula: calcularMatriculaDaClasse(classe.id),
+        chamadas: chamadasDaClasse.length,
+        presentes,
+        faltas,
+        frequencia: calcularPercentualSeguro(presentes, total),
+      }
+    })
+  }
+
+  function montarResumoFinanceiroEbd() {
+    const chamadasComOferta = chamadasSalvas.filter(
+      (chamada) => converterNumero(chamada.ofertas) > 0
+    )
+    const totalOfertas = calcularTotalOfertas()
+    const mediaPorChamada = chamadasComOferta.length > 0
+      ? totalOfertas / chamadasComOferta.length
+      : 0
+
+    const porClasse = classes.map((classe) => {
+      const chamadasDaClasse = buscarChamadasDaClasse(classe.id)
+      const total = chamadasDaClasse.reduce(
+        (soma, chamada) => soma + converterNumero(chamada.ofertas),
+        0
+      )
+
+      return {
+        classe,
+        chamadas: chamadasDaClasse.length,
+        total,
+      }
+    })
+
+    return {
+      totalOfertas,
+      mediaPorChamada,
+      chamadasComOferta: chamadasComOferta.length,
+      porClasse,
+    }
+  }
+
+  function buscarAlunoHistoricoSelecionado() {
+    return alunosSomente().find(
+      (aluno) => String(aluno.id) === String(alunoHistoricoSelecionadoId)
+    ) || null
+  }
+
+  function montarHistoricoDoAluno(alunoId) {
+    const aluno = alunosSomente().find((item) => String(item.id) === String(alunoId))
+
+    if (!aluno) {
+      return null
+    }
+
+    const registros = []
+
+    chamadasSalvas.forEach((chamada) => {
+      const registro = (chamada.registros || []).find(
+        (item) => String(item.alunoId ?? item.aluno_id) === String(aluno.id)
+      )
+
+      if (registro) {
+        registros.push({
+          data: chamada.data,
+          classe: buscarNomeClasse(chamada.classeId || aluno.classeId),
+          status: registro.status === 'presente' ? 'Presente' : 'Faltou',
+          visitantes: chamada.visitantes || 0,
+          biblias: chamada.biblias || 0,
+          revistas: chamada.revistas || 0,
+        })
+      }
+    })
+
+    const presentes = registros.filter((registro) => registro.status === 'Presente').length
+    const faltas = registros.filter((registro) => registro.status !== 'Presente').length
+
+    return {
+      aluno,
+      registros: registros.reverse(),
+      presentes,
+      faltas,
+      frequencia: calcularPercentualSeguro(presentes, registros.length),
+    }
+  }
+
+  function montarMensagemFaltosoWhatsApp(item) {
+    const nomeIgreja = buscarNomeIgrejaParaExibicao()
+    return [
+      `Olá, paz do Senhor! Aqui é da secretaria da EBD ${nomeIgreja}.`,
+      `Sentimos a falta de ${item.aluno.nome} na Escola Bíblica Dominical.`,
+      `Registramos ${item.motivo.toLowerCase()} e queremos saber se está tudo bem.`,
+      'Conte conosco. Será uma alegria receber vocês novamente na próxima EBD.',
+    ].join('\n')
+  }
+
+  function abrirWhatsAppFaltoso(item) {
+    const telefone = limparNumeroWhatsApp(item.aluno.telefone || '')
+
+    if (!telefone) {
+      alert('Este aluno não possui telefone/WhatsApp cadastrado.')
+      return
+    }
+
+    const mensagem = encodeURIComponent(montarMensagemFaltosoWhatsApp(item))
+    window.open(`https://wa.me/55${telefone}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
+  }
+
+  function copiarMensagemFaltoso(item) {
+    const mensagem = montarMensagemFaltosoWhatsApp(item)
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(mensagem)
+      alert('Mensagem copiada. Agora cole no WhatsApp do aluno/responsável.')
+      return
+    }
+
+    window.prompt('Copie a mensagem abaixo:', mensagem)
+  }
+
+  function montarBackupLocalSeguro() {
+    return {
+      versao: 'v41-backup-local-seguro',
+      geradoEm: new Date().toISOString(),
+      igrejaId: buscarIgrejaIdAtual(),
+      igreja: configuracaoIgreja,
+      totais: {
+        classes: classes.length,
+        alunos: alunosSomente().length,
+        professores: professoresSomente().length,
+        chamadas: chamadasSalvas.length,
+      },
+      dados: {
+        classes,
+        alunos,
+        chamadas: chamadasSalvas,
+        chamadasProfessores,
+        perfisIgreja,
+        vinculosProfessores,
+      },
+      observacao:
+        'Backup exportado pelo painel da igreja. Não altera dados no Supabase e serve como cópia de segurança em JSON.',
+    }
+  }
+
+  function baixarBackupLocalSeguro() {
+    const backup = montarBackupLocalSeguro()
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {
+      type: 'application/json;charset=utf-8',
+    })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    const data = new Date().toISOString().slice(0, 10)
+    link.href = url
+    link.download = `backup-ebd-fiel-${buscarIgrejaIdAtual() || 'igreja'}-${data}.json`
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  function copiarResumoAuditoriaLocal() {
+    const linhas = [
+      `Igreja: ${buscarNomeIgrejaParaExibicao()}`,
+      `Igreja ID: ${buscarIgrejaIdAtual() || 'não identificado'}`,
+      `Usuário: ${sessao?.user?.email || 'não identificado'}`,
+      `Perfil: ${perfilUsuario?.perfil || 'não identificado'}`,
+      `Classes: ${classes.length}`,
+      `Alunos: ${alunosSomente().length}`,
+      `Professores: ${professoresSomente().length}`,
+      `Chamadas de alunos: ${chamadasSalvas.length}`,
+      `Chamadas de professores: ${chamadasProfessores.length}`,
+      `Gerado em: ${new Date().toLocaleString('pt-BR')}`,
+    ]
+
+    const texto = linhas.join('\n')
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto)
+      alert('Resumo de auditoria copiado.')
+      return
+    }
+
+    window.prompt('Copie o resumo de auditoria:', texto)
   }
 
 
@@ -7075,6 +7343,284 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+
+  function renderizarDashboardAvancado() {
+    const dadosClasse = montarDashboardPorClasse()
+    const maiorFrequencia = dadosClasse.reduce(
+      (maior, item) => Math.max(maior, item.frequencia),
+      0
+    )
+    const alertasFaltas = buscarAlertasDeFaltas()
+    const destaques = buscarDestaquesFrequencia().slice(0, 5)
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Dashboard da EBD</h2>
+            <p>Indicadores visuais sem alterar os cadastros existentes.</p>
+          </div>
+          <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
+            Abrir relatórios
+          </button>
+        </div>
+
+        <div className="dashboard-v41-hero">
+          <div>
+            <span className="selo-publico">Visão geral</span>
+            <h3>{buscarNomeIgrejaParaExibicao()}</h3>
+            <p>Resumo automático de presença, matrícula, classes e acompanhamento pastoral da secretaria.</p>
+          </div>
+          <div className="dashboard-v41-circulo">
+            <strong>{calcularFrequenciaGeral()}%</strong>
+            <span>frequência geral</span>
+          </div>
+        </div>
+
+        <div className="cards cards-estatisticas dashboard-v41-cards">
+          <CardResumo icone="alunos" titulo="Matrícula" valor={alunosSomente().length} descricao="alunos cadastrados" />
+          <CardResumo icone="classes" titulo="Classes" valor={classes.length} descricao="turmas ativas" />
+          <CardResumo icone="chamada" titulo="Chamadas" valor={chamadasSalvas.length} descricao="registros de alunos" />
+          <CardResumo icone="check" titulo="Alertas" valor={alertasFaltas.length} descricao="alunos para acompanhar" destaque />
+        </div>
+
+        <div className="dashboard-v41-grid">
+          <div className="dashboard-v41-bloco">
+            <h3>Frequência por classe</h3>
+            <div className="lista-graficos-v41">
+              {dadosClasse.map((item) => (
+                <div className="linha-grafico-v41" key={item.classe.id}>
+                  <div className="linha-grafico-v41-topo">
+                    <strong>{item.classe.nome}</strong>
+                    <span>{item.frequencia}%</span>
+                  </div>
+                  <div className="barra-grafico-v41" aria-label={`Frequência ${item.frequencia}%`}>
+                    <span style={{ width: `${item.frequencia}%` }} />
+                  </div>
+                  <p>{item.presentes} presenças, {item.faltas} faltas, {item.chamadas} chamada(s).</p>
+                </div>
+              ))}
+              {dadosClasse.length === 0 && <p className="texto-sem-aniversariantes">Nenhuma classe cadastrada ainda.</p>}
+            </div>
+          </div>
+
+          <div className="dashboard-v41-bloco">
+            <h3>Destaques e cuidado</h3>
+            <div className="lista-dashboard-v41">
+              {destaques.map((item) => (
+                <div className="item-dashboard-v41" key={item.aluno.id}>
+                  <div>
+                    <strong>{item.aluno.nome}</strong>
+                    <p>{item.classeNome} - {item.frequencia}% de frequência</p>
+                  </div>
+                  <span>⭐</span>
+                </div>
+              ))}
+              {alertasFaltas.slice(0, 5).map((item) => (
+                <div className="item-dashboard-v41 item-dashboard-alerta-v41" key={`alerta-${item.aluno.id}`}>
+                  <div>
+                    <strong>{item.aluno.nome}</strong>
+                    <p>{item.classeNome} - {item.motivo}</p>
+                  </div>
+                  <button className="botao-secundario botao-pequeno botao-sem-margem" type="button" onClick={() => abrirWhatsAppFaltoso(item)}>
+                    WhatsApp
+                  </button>
+                </div>
+              ))}
+              {destaques.length === 0 && alertasFaltas.length === 0 && (
+                <p className="texto-sem-aniversariantes">Faça chamadas para gerar indicadores.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarHistoricoAluno() {
+    const alunosFiltrados = alunosSomente()
+      .filter((aluno) => !classeHistoricoFiltroId || Number(aluno.classeId) === Number(classeHistoricoFiltroId))
+      .sort((a, b) => String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR'))
+    const historico = montarHistoricoDoAluno(alunoHistoricoSelecionadoId)
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Histórico individual do aluno</h2>
+            <p>Consulta somente leitura, usando chamadas já salvas.</p>
+          </div>
+        </div>
+
+        <div className="filtros filtros-historico-v41">
+          <label>
+            Filtrar por classe
+            <select value={classeHistoricoFiltroId} onChange={(event) => {
+              setClasseHistoricoFiltroId(event.target.value)
+              setAlunoHistoricoSelecionadoId('')
+            }}>
+              <option value="">Todas as classes</option>
+              {classes.map((classe) => (
+                <option key={classe.id} value={classe.id}>{classe.nome}</option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Aluno
+            <select value={alunoHistoricoSelecionadoId} onChange={(event) => setAlunoHistoricoSelecionadoId(event.target.value)}>
+              <option value="">Selecione um aluno</option>
+              {alunosFiltrados.map((aluno) => (
+                <option key={aluno.id} value={aluno.id}>{aluno.nome}</option>
+              ))}
+            </select>
+          </label>
+
+          <button className="botao-secundario" type="button" onClick={() => setAlunoHistoricoSelecionadoId('')}>
+            Limpar
+          </button>
+        </div>
+
+        {historico ? (
+          <div className="historico-v41">
+            <div className="historico-v41-resumo">
+              <div>
+                <span className="selo-publico">Aluno</span>
+                <h3>{historico.aluno.nome}</h3>
+                <p>{buscarNomeClasse(historico.aluno.classeId)} • {historico.aluno.telefone || 'sem telefone'}</p>
+              </div>
+              <div className="historico-v41-numeros">
+                <div><strong>{historico.frequencia}%</strong><span>frequência</span></div>
+                <div><strong>{historico.presentes}</strong><span>presenças</span></div>
+                <div><strong>{historico.faltas}</strong><span>faltas</span></div>
+              </div>
+            </div>
+
+            <div className="tabela-container">
+              <table className="tabela">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Classe</th>
+                    <th>Status</th>
+                    <th>Visitantes</th>
+                    <th>Bíblias</th>
+                    <th>Revistas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historico.registros.map((registro, indice) => (
+                    <tr key={`${registro.data}-${indice}`}>
+                      <td>{registro.data}</td>
+                      <td>{registro.classe}</td>
+                      <td>{registro.status}</td>
+                      <td>{registro.visitantes}</td>
+                      <td>{registro.biblias}</td>
+                      <td>{registro.revistas}</td>
+                    </tr>
+                  ))}
+                  {historico.registros.length === 0 && (
+                    <tr>
+                      <td colSpan="6">Nenhuma chamada encontrada para este aluno.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="aviso"><p>Selecione um aluno para visualizar o histórico.</p></div>
+        )}
+      </section>
+    )
+  }
+
+  function renderizarFinanceiroEbd() {
+    const resumo = montarResumoFinanceiroEbd()
+
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Controle financeiro da EBD</h2>
+            <p>Resumo das ofertas lançadas nas chamadas. Não cria nem altera lançamentos no banco.</p>
+          </div>
+        </div>
+
+        <div className="cards cards-estatisticas">
+          <CardResumo icone="relatorios" titulo="Total de ofertas" valor={formatarMoeda(resumo.totalOfertas)} descricao="soma das chamadas" destaque />
+          <CardResumo icone="chamada" titulo="Chamadas com oferta" valor={resumo.chamadasComOferta} descricao="registros com valor informado" />
+          <CardResumo icone="check" titulo="Média por chamada" valor={formatarMoeda(resumo.mediaPorChamada)} descricao="média dos registros com oferta" />
+        </div>
+
+        <div className="financeiro-v41-bloco">
+          <h3>Ofertas por classe</h3>
+          <div className="tabela-container">
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Classe</th>
+                  <th>Chamadas</th>
+                  <th>Total lançado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resumo.porClasse.map((item) => (
+                  <tr key={item.classe.id}>
+                    <td>{item.classe.nome}</td>
+                    <td>{item.chamadas}</td>
+                    <td>{formatarMoeda(item.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="aviso aviso-financeiro-v41">
+            <p>Para preservar segurança, esta fase usa somente o campo “ofertas” das chamadas existentes. Lançamentos financeiros avançados podem ser ativados depois em tabela própria.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  function renderizarBackupAuditoria() {
+    return (
+      <section className="conteudo">
+        <div className="topo-pagina">
+          <div>
+            <h2>Backup e auditoria</h2>
+            <p>Ferramentas seguras de leitura para conferência e cópia local da igreja.</p>
+          </div>
+        </div>
+
+        <div className="backup-v41-grid">
+          <div className="backup-v41-card">
+            <span className="selo-publico">Backup local</span>
+            <h3>Exportar dados da igreja</h3>
+            <p>Gera um arquivo JSON com os dados carregados na sessão atual. Não modifica cadastros no Supabase.</p>
+            <button className="botao-principal" type="button" onClick={baixarBackupLocalSeguro}>
+              Baixar backup JSON
+            </button>
+          </div>
+
+          <div className="backup-v41-card">
+            <span className="selo-publico">Auditoria</span>
+            <h3>Resumo da sessão</h3>
+            <p>Copie um resumo com igreja, usuário, perfil e totais para suporte técnico.</p>
+            <button className="botao-secundario" type="button" onClick={copiarResumoAuditoriaLocal}>
+              Copiar resumo
+            </button>
+          </div>
+        </div>
+
+        <div className="resumo resumo-alerta-claro">
+          <h3>Próxima camada recomendada</h3>
+          <p>Para backup automático real, use o SQL seguro enviado junto com esta versão para criar tabela de auditoria/backups sem alterar tabelas existentes.</p>
+        </div>
+      </section>
+    )
+  }
+
   function renderizarPainel() {
     const aniversariantesDaSemana = buscarAniversariantesDaSemana()
     const aniversariantesDoMesPainel = usuarioEhSecretaria() ? buscarAniversariantesDoMes() : []
@@ -7110,6 +7656,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               )}
               <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
                 Ver relatórios
+              </button>
+
+              <button className="botao-secundario" onClick={() => navegarParaPagina('dashboard')}>
+                Abrir dashboard
               </button>
 
               <button className="botao-secundario botao-manual-painel" onClick={() => navegarParaPagina('manual')}>
@@ -10182,11 +10732,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   </div>
                 )}
 
-                <button className="botao-acessar-igreja" onClick={() => acessarIgrejaComoSuporte(igreja)}>
+                <button type="button" className="botao-acessar-igreja" onClick={() => acessarIgrejaComoSuporte(igreja)}>
                   Acessar igreja
                 </button>
 
-                <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
+                <button type="button" className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
                   Vincular acesso
                 </button>
 
@@ -10200,11 +10750,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     : `Usuários vinculados (${contarAcessosDaIgreja(igreja.id)})`}
                 </button>
 
-                <button className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
+                <button type="button" className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
                   Editar dados
                 </button>
 
-                <button className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
+                <button type="button" className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
                   Excluir
                 </button>
               </div>
@@ -10464,12 +11014,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     if (paginaAtual === 'painel') return renderizarPainel()
+    if (paginaAtual === 'dashboard') return renderizarDashboardAvancado()
     if (paginaAtual === 'classes') return renderizarClasses()
     if (paginaAtual === 'alunos') return renderizarAlunos()
     if (paginaAtual === 'professores') return renderizarProfessores()
     if (paginaAtual === 'usuarios') return renderizarUsuarios()
     if (paginaAtual === 'chamada') return renderizarChamada()
     if (paginaAtual === 'relatorios') return renderizarRelatorios()
+    if (paginaAtual === 'historico') return renderizarHistoricoAluno()
+    if (paginaAtual === 'financeiro') return renderizarFinanceiroEbd()
+    if (paginaAtual === 'backup') return renderizarBackupAuditoria()
     if (paginaAtual === 'manual') return renderizarManualUsuario()
     if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
     if (paginaAtual === 'administracao') return renderizarAdministracao()
