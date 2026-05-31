@@ -538,6 +538,12 @@ function App() {
       icone: 'configuracoes',
       apenasAdminSistema: true,
     },
+    {
+      id: 'comercial',
+      nome: 'Comercial e implantação',
+      icone: 'igreja',
+      apenasAdminSistema: true,
+    },
   ]
 
   useEffect(() => {
@@ -1467,6 +1473,11 @@ function App() {
       setIgrejaAtualPiloto(igrejaSelecionada)
       setIgrejaId(igrejaIdSelecionada)
       setPaginaAtual('painel')
+      registrarAuditoriaSistema('admin_acessou_igreja_suporte', {
+        igreja_id: igrejaIdSelecionada,
+        igreja_nome: igrejaSelecionada.nome_igreja,
+        origem: 'administracao_plataforma',
+      })
 
       if (typeof window !== 'undefined') {
         window.setTimeout(() => {
@@ -1715,6 +1726,21 @@ function App() {
     setCadastrosIncompletosAdmin(data || [])
   }
 
+  async function registrarAuditoriaSistema(acao, detalhes = {}) {
+    if (!sessao?.user?.id) {
+      return
+    }
+
+    try {
+      await supabase.rpc('registrar_auditoria_sistema', {
+        p_acao: acao,
+        p_detalhes: detalhes,
+      })
+    } catch (erroAuditoria) {
+      console.warn('Auditoria do sistema não registrada:', erroAuditoria)
+    }
+  }
+
   async function salvarAcessoAdmin(event) {
     event.preventDefault()
 
@@ -1851,15 +1877,34 @@ function App() {
   async function buscarIgrejasAdminBanco() {
     const cacheIgrejas = buscarIgrejasAdminCache()
 
-    const { data: igrejasRpc, error: erroRpc } = await supabase.rpc('admin_listar_igrejas')
+    const tentarRpcAdmin = async (nomeRpc) => {
+      try {
+        const { data, error } = await supabase.rpc(nomeRpc)
 
-    if (!erroRpc && Array.isArray(igrejasRpc) && igrejasRpc.length > 0) {
-      salvarIgrejasAdminCache(igrejasRpc)
-      return igrejasRpc
+        if (error) {
+          console.warn(`RPC ${nomeRpc} indisponível ou bloqueada:`, error)
+          return null
+        }
+
+        return Array.isArray(data) ? data : []
+      } catch (erroRpc) {
+        console.warn(`Falha ao executar RPC ${nomeRpc}:`, erroRpc)
+        return null
+      }
     }
 
-    if (erroRpc) {
-      console.error('Erro ao carregar igrejas via RPC:', erroRpc)
+    const igrejasRpcSeguro = await tentarRpcAdmin('admin_listar_igrejas_seguro')
+
+    if (Array.isArray(igrejasRpcSeguro) && igrejasRpcSeguro.length > 0) {
+      salvarIgrejasAdminCache(igrejasRpcSeguro)
+      return igrejasRpcSeguro
+    }
+
+    const igrejasRpcLegado = await tentarRpcAdmin('admin_listar_igrejas')
+
+    if (Array.isArray(igrejasRpcLegado) && igrejasRpcLegado.length > 0) {
+      salvarIgrejasAdminCache(igrejasRpcLegado)
+      return igrejasRpcLegado
     }
 
     const { data: igrejasTabela, error: erroTabela } = await supabase
@@ -10944,6 +10989,164 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   
+
+  function renderizarComercialImplantacao() {
+    if (!usuarioEhAdminSistema()) {
+      return (
+        <section className="conteudo">
+          <h2>Acesso restrito</h2>
+          <p>Esta área é exclusiva para administradores do sistema.</p>
+        </section>
+      )
+    }
+
+    const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente')
+    const igrejasEmUso = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste' || igreja.status_piloto === 'ativa' || !igreja.status_piloto)
+    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada' || igreja.status_piloto === 'cancelada')
+
+    const etapasOnboarding = [
+      {
+        titulo: 'Cadastro recebido',
+        texto: 'Conferir igreja, responsável, e-mail e WhatsApp antes de liberar o acesso.',
+      },
+      {
+        titulo: 'Acesso vinculado',
+        texto: 'Criar o usuário no Supabase Auth e vincular em perfis_usuarios pelo painel administrativo.',
+      },
+      {
+        titulo: 'Configuração inicial',
+        texto: 'Orientar a igreja a conferir dados, classes, professores e alunos.',
+      },
+      {
+        titulo: 'Primeira chamada',
+        texto: 'Acompanhar o primeiro domingo de uso para validar chamada, relatório e faltosos.',
+      },
+      {
+        titulo: 'Acompanhamento comercial',
+        texto: 'Registrar retorno, pendências e liberar o plano definitivo quando a igreja estiver pronta.',
+      },
+    ]
+
+    const planosComerciais = [
+      {
+        nome: 'Essencial',
+        foco: 'Igrejas pequenas ou congregações iniciando a organização digital.',
+        recursos: ['Classes, alunos e professores', 'Chamada digital', 'Relatórios básicos', 'Suporte por WhatsApp'],
+      },
+      {
+        nome: 'Organização',
+        foco: 'Igrejas que precisam acompanhar frequência, aniversariantes e faltosos.',
+        recursos: ['Indicadores da EBD', 'Aniversariantes e cartões', 'Histórico do aluno', 'Mensagens para faltosos'],
+      },
+      {
+        nome: 'Plataforma',
+        foco: 'Campos, sedes e igrejas com múltiplas congregações.',
+        recursos: ['Administração comercial', 'Controle de usuários', 'Auditoria de acessos', 'Acompanhamento de implantação'],
+      },
+    ]
+
+    return (
+      <section className="conteudo pagina-comercial-implantacao">
+        <div className="topo-pagina topo-comercial-implantacao">
+          <div>
+            <span className="selo-admin">Crescimento da plataforma</span>
+            <h2>Comercial e implantação</h2>
+            <p>
+              Acompanhe novas igrejas, organize a liberação de acessos e padronize o início de uso da EBD Fiel.
+            </p>
+          </div>
+
+          <button type="button" className="botao-principal" onClick={() => navegarParaPagina('administracao')}>
+            Gerenciar igrejas
+          </button>
+        </div>
+
+        <div className="grade-comercial-indicadores">
+          <div className="card-comercial-indicador">
+            <span>Igrejas em uso</span>
+            <strong>{igrejasEmUso.length}</strong>
+            <p>Clientes ou igrejas liberadas para uso regular.</p>
+          </div>
+
+          <div className="card-comercial-indicador alerta">
+            <span>Pendentes</span>
+            <strong>{igrejasPendentes.length}</strong>
+            <p>Cadastros que precisam de análise ou liberação.</p>
+          </div>
+
+          <div className="card-comercial-indicador neutro">
+            <span>Pausadas ou canceladas</span>
+            <strong>{igrejasPausadas.length}</strong>
+            <p>Contas que exigem revisão comercial.</p>
+          </div>
+
+          <div className="card-comercial-indicador sucesso">
+            <span>Usuários vinculados</span>
+            <strong>{acessosAdmin.length}</strong>
+            <p>Acessos cadastrados na plataforma.</p>
+          </div>
+        </div>
+
+        <div className="grade-comercial-conteudo">
+          <article className="cartao-comercial-grande">
+            <div className="cabecalho-cartao-comercial">
+              <span className="selo-publico">Roteiro de implantação</span>
+              <h3>Passos recomendados para uma nova igreja</h3>
+              <p>Use este roteiro para reduzir erros de cadastro e manter o atendimento padronizado.</p>
+            </div>
+
+            <div className="linha-etapas-onboarding">
+              {etapasOnboarding.map((etapa, indice) => (
+                <div className="etapa-onboarding" key={etapa.titulo}>
+                  <strong>{String(indice + 1).padStart(2, '0')}</strong>
+                  <div>
+                    <h4>{etapa.titulo}</h4>
+                    <p>{etapa.texto}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="cartao-comercial-alerta">
+            <span className="selo-admin">Segurança</span>
+            <h3>Próximo passo no Supabase</h3>
+            <p>
+              Rode primeiro o arquivo SQL seguro desta versão. Ele cria RPCs novas e tabelas auxiliares sem remover políticas antigas nem alterar cadastros existentes.
+            </p>
+            <ul>
+              <li>Usa RPC segura para listar igrejas no administrador.</li>
+              <li>Cria auditoria de ações administrativas.</li>
+              <li>Mantém fallback para a função antiga, evitando quebra do painel.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div className="cartao-planos-comerciais">
+          <div className="cabecalho-cartao-comercial">
+            <span className="selo-publico">Planos</span>
+            <h3>Organização comercial sugerida</h3>
+            <p>Estrutura inicial para apresentar a plataforma de forma clara às igrejas.</p>
+          </div>
+
+          <div className="grade-planos-comerciais">
+            {planosComerciais.map((plano) => (
+              <article className="plano-comercial-card" key={plano.nome}>
+                <h4>{plano.nome}</h4>
+                <p>{plano.foco}</p>
+                <ul>
+                  {plano.recursos.map((recurso) => (
+                    <li key={recurso}>{recurso}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   function renderizarManualUsuario() {
     const passosManual = [
       {
@@ -11204,6 +11407,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     if (paginaAtual === 'manual') return renderizarManualUsuario()
     if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
     if (paginaAtual === 'administracao') return renderizarAdministracao()
+    if (paginaAtual === 'comercial') return renderizarComercialImplantacao()
 
     return renderizarPainel()
   }
