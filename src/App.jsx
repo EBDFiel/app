@@ -1432,20 +1432,22 @@ function App() {
     try {
       setCarregando(true)
       setErroSistema('')
-      setIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario((perfilAnterior) => ({
-        ...perfilAnterior,
-        id: perfilAnterior?.id || null,
-        user_id: sessao?.user?.id,
-        nome: perfilAnterior?.nome || 'Administrador do sistema',
-        email: String(sessao?.user?.email || '').toLowerCase(),
-        perfil: 'secretaria',
-        igreja_id: igrejaIdSelecionada,
-        classe_id: null,
-        modo_suporte_admin: true,
-      }))
+
+      let sessaoAtual = sessao
+
+      if (!sessaoAtual?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoAtual = data?.session || null
+      }
+
+      if (!sessaoAtual?.user?.id) {
+        throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+      }
 
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(
@@ -1454,11 +1456,33 @@ function App() {
         )
       }
 
+      setSessao(sessaoAtual)
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+
+      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
+
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
       setPaginaAtual('painel')
+
       if (typeof window !== 'undefined') {
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
+        window.setTimeout(() => {
+          const areaPrincipal =
+            document.querySelector('.area-principal') || document.querySelector('main')
+
+          if (areaPrincipal) {
+            const distanciaDoTopo =
+              areaPrincipal.getBoundingClientRect().top + window.pageYOffset - 8
+            window.scrollTo({ top: Math.max(distanciaDoTopo, 0), behavior: 'smooth' })
+            return
+          }
+
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 120)
       }
-      await buscarTodosOsDados(sessao, igrejaSelecionada)
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
       setErroSistema(
@@ -11148,7 +11172,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       return renderizarPainel()
     }
 
-    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id && paginaAtual !== 'administracao') {
+    const existeModoSuporteAdmin = Boolean(igrejaSuporteAdmin?.id)
+
+    if (
+      usuarioEhAdminSistema() &&
+      !existeModoSuporteAdmin &&
+      !perfilUsuario?.igreja_id &&
+      paginaAtual !== 'administracao'
+    ) {
       return renderizarAdministracao()
     }
 
