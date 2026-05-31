@@ -14376,3 +14376,193 @@ button.botao-principal {
 .aviso-copia-seguranca strong {
   color: #1d4ed8;
 }
+
+
+/* v48 - Comercial, implantação e segurança Supabase */
+.pagina-comercial-implantacao {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 251, 255, 0.96) 100%);
+}
+
+.topo-comercial-implantacao {
+  padding: 10px 0 22px;
+  border-bottom: 1px solid rgba(219, 226, 234, 0.75);
+}
+
+.grade-comercial-indicadores {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card-comercial-indicador {
+  min-height: 148px;
+  padding: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(191, 219, 254, 0.8);
+  background:
+    radial-gradient(circle at right bottom, rgba(37, 99, 235, 0.10), transparent 36%),
+    #ffffff;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+  display: grid;
+  gap: 8px;
+}
+
+.card-comercial-indicador span {
+  color: #475569;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.card-comercial-indicador strong {
+  color: #0f172a;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.card-comercial-indicador p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.card-comercial-indicador.alerta {
+  border-color: rgba(251, 191, 36, 0.65);
+  background: radial-gradient(circle at right bottom, rgba(251, 191, 36, 0.14), transparent 36%), #ffffff;
+}
+
+.card-comercial-indicador.sucesso {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: radial-gradient(circle at right bottom, rgba(34, 197, 94, 0.12), transparent 36%), #ffffff;
+}
+
+.card-comercial-indicador.neutro {
+  border-color: rgba(203, 213, 225, 0.95);
+}
+
+.grade-comercial-conteudo {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+  gap: 18px;
+}
+
+.cartao-comercial-grande,
+.cartao-comercial-alerta,
+.cartao-planos-comerciais {
+  border: 1px solid rgba(219, 226, 234, 0.9);
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+}
+
+.cartao-comercial-alerta {
+  background:
+    radial-gradient(circle at right top, rgba(37, 99, 235, 0.10), transparent 38%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.cartao-comercial-alerta ul,
+.plano-comercial-card ul {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: #334155;
+  display: grid;
+  gap: 8px;
+}
+
+.cabecalho-cartao-comercial h3,
+.cartao-comercial-alerta h3 {
+  margin: 8px 0 6px;
+  font-size: 24px;
+  color: #0f172a;
+}
+
+.cabecalho-cartao-comercial p,
+.cartao-comercial-alerta p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.65;
+}
+
+.linha-etapas-onboarding {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.etapa-onboarding {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.etapa-onboarding > strong {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 14px;
+}
+
+.etapa-onboarding h4,
+.plano-comercial-card h4 {
+  margin: 0 0 4px;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.etapa-onboarding p,
+.plano-comercial-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.cartao-planos-comerciais {
+  margin-top: 18px;
+}
+
+.grade-planos-comerciais {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.plano-comercial-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+@media (max-width: 1100px) {
+  .grade-comercial-indicadores,
+  .grade-planos-comerciais {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grade-comercial-conteudo {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .grade-comercial-indicadores,
+  .grade-planos-comerciais {
+    grid-template-columns: 1fr;
+  }
+
+  .etapa-onboarding {
+    grid-template-columns: 1fr;
+  }
+}
