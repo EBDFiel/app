@@ -10123,71 +10123,168 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const igrejasFiltradas = filtrarIgrejasAdmin()
     const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente').length
-    const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
+    const igrejasEmUso = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste' || !igreja.status_piloto).length
     const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
-    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
+    const feedbacksNaoLidos = feedbacksAdmin.filter((feedback) => !feedback.lido).length
+    const totalUsuariosVinculados = acessosAdmin.length
+    const pendenciasAdmin = igrejasPendentes + feedbacksNaoLidos + cadastrosIncompletosAdmin.length
+
+    const textoSeguroAdmin = (valor, fallback = 'Não informado') => {
+      const texto = String(valor || '').trim()
+      const textoNormalizado = texto.toLowerCase()
+
+      if (!texto || textoNormalizado === 'empty' || textoNormalizado === 'null' || textoNormalizado === 'undefined') {
+        return fallback
+      }
+
+      if (textoNormalizado === 'teste' || textoNormalizado === 'a completar') {
+        return fallback
+      }
+
+      return texto
+    }
+
+    const statusIgrejaAdmin = (status) => {
+      switch (status) {
+        case 'ativa':
+          return 'Ativa'
+        case 'pendente':
+          return 'Pendente'
+        case 'pausada':
+          return 'Pausada'
+        case 'cancelada':
+          return 'Cancelada'
+        case 'teste':
+        default:
+          return 'Em uso'
+      }
+    }
+
+    const enderecoIgrejaAdmin = (igreja) => {
+      const partes = [
+        textoSeguroAdmin(igreja.endereco, ''),
+        igreja.numero_endereco ? `nº ${igreja.numero_endereco}` : '',
+        textoSeguroAdmin(igreja.complemento_endereco, ''),
+        textoSeguroAdmin(igreja.bairro, ''),
+      ].filter(Boolean)
+
+      if (igreja.cep) {
+        partes.push(`CEP ${igreja.cep}`)
+      }
+
+      return partes.length > 0 ? partes.join(', ') : 'Não informado'
+    }
+
+    const localIgrejaAdmin = (igreja) => {
+      const cidade = textoSeguroAdmin(igreja.cidade, '')
+      const estado = textoSeguroAdmin(igreja.estado, '')
+
+      if (cidade && estado) {
+        return `${cidade}/${estado}`
+      }
+
+      return cidade || estado || 'Não informado'
+    }
+
+    const sedeIgrejaAdmin = (igreja) => {
+      if (igreja.tipo_igreja !== 'congregacao') {
+        return 'Igreja sede'
+      }
+
+      return textoSeguroAdmin(igreja.sede_filiada_nome)
+    }
 
     return (
-      <section className="conteudo conteudo-admin-comercial">
+      <section className="conteudo conteudo-admin-comercial admin-plataforma-v44">
         <div className="topo-pagina topo-admin-sistema">
-          <div>
+          <div className="topo-admin-identidade">
             <span className="selo-admin">Administração do sistema</span>
-            <h2>Administração comercial</h2>
+            <h2>Administração da Plataforma</h2>
             <p>
-              Gerencie igrejas, sedes, congregações, acessos, uso da plataforma, recuperação de senha e respostas em um único lugar.
+              Gerencie igrejas, usuários, acessos, respostas e configurações da EBD Fiel.
             </p>
           </div>
 
           {!mostrarFormularioIgrejaAdmin && (
-            <button className="botao-principal" onClick={abrirNovaIgrejaAdmin}>
-              Nova igreja
+            <button
+              type="button"
+              className="botao-principal botao-nova-igreja-admin"
+              onClick={abrirNovaIgrejaAdmin}
+            >
+              + Cadastrar nova igreja
             </button>
           )}
         </div>
 
-        <div className="cards cards-admin-sistema">
-          <div className="card card-admin">
-            <span>Total</span>
-            <strong>{igrejasAdmin.length}</strong>
-            <p>igrejas cadastradas</p>
+        <div className="cards-admin-resumo">
+          <div className="card-admin-resumo card-admin-resumo-azul">
+            <div className="card-admin-icone">
+              <Icone nome="igreja" className="icone-svg" />
+            </div>
+            <div>
+              <span>Igrejas cadastradas</span>
+              <strong>{igrejasAdmin.length}</strong>
+              <p>Total de igrejas na plataforma</p>
+            </div>
           </div>
 
-          <div className="card card-admin">
-            <span>Pendentes</span>
-            <strong>{igrejasPendentes}</strong>
-            <p>aguardando aprovação</p>
+          <div className="card-admin-resumo card-admin-resumo-verde">
+            <div className="card-admin-icone">
+              <Icone nome="check" className="icone-svg" />
+            </div>
+            <div>
+              <span>Igrejas ativas</span>
+              <strong>{igrejasAtivas + igrejasEmUso}</strong>
+              <p>Liberadas ou em uso</p>
+            </div>
           </div>
 
-          <div className="card card-admin">
-            <span>Em uso</span>
-            <strong>{igrejasTeste}</strong>
-            <p>usando a plataforma</p>
+          <div className="card-admin-resumo card-admin-resumo-roxo">
+            <div className="card-admin-icone">
+              <Icone nome="usuarios" className="icone-svg" />
+            </div>
+            <div>
+              <span>Usuários vinculados</span>
+              <strong>{totalUsuariosVinculados}</strong>
+              <p>Acessos conectados às igrejas</p>
+            </div>
           </div>
 
-          <div className="card card-admin">
-            <span>Ativas</span>
-            <strong>{igrejasAtivas}</strong>
-            <p>liberadas para uso</p>
+          <div className="card-admin-resumo card-admin-resumo-amarelo">
+            <div className="card-admin-icone">
+              <Icone nome="relatorios" className="icone-svg" />
+            </div>
+            <div>
+              <span>Respostas recebidas</span>
+              <strong>{feedbacksAdmin.length}</strong>
+              <p>{feedbacksNaoLidos} ainda não lidas</p>
+            </div>
           </div>
 
-          <div className="card card-admin">
-            <span>Pausadas</span>
-            <strong>{igrejasPausadas}</strong>
-            <p>aguardando retorno</p>
+          <div className="card-admin-resumo card-admin-resumo-laranja">
+            <div className="card-admin-icone">
+              <Icone nome="configuracoes" className="icone-svg" />
+            </div>
+            <div>
+              <span>Pendências</span>
+              <strong>{pendenciasAdmin}</strong>
+              <p>Itens que precisam de atenção</p>
+            </div>
           </div>
         </div>
 
-        {renderizarAlertasFeedbackAdmin()}
-
-        {renderizarCadastrosIncompletosAdmin()}
+        <div className="grade-admin-monitoramento">
+          {renderizarAlertasFeedbackAdmin()}
+          {renderizarCadastrosIncompletosAdmin()}
+        </div>
 
         {/* Usuários vinculados agora aparecem dentro de cada igreja. */}
 
         {mostrarFormularioIgrejaAdmin && (
-          <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
+          <form className="formulario formulario-admin-igreja formulario-admin-moderno" onSubmit={salvarIgrejaAdmin}>
             <div className="topo-formulario-inline">
               <div>
-                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja'}</h3>
+                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Cadastrar nova igreja'}</h3>
                 <p>
                   Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
                   Depois crie o usuário no Supabase, em Authentication → Users, e vincule o acesso.
@@ -10222,12 +10319,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                       congregacao: event.target.value,
                     })
                   }
-                  placeholder="Ex: Sede, Betel, Vila Nova..."
+                  placeholder="Nome da congregação"
                 />
               </label>
 
               <label>
-                Pastor/Dirigente
+                Dirigente
                 <input
                   type="text"
                   value={novaIgrejaAdmin.pastor_dirigente}
@@ -10610,180 +10707,204 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </form>
         )}
 
-        <div className="filtros filtros-admin">
-          <label>
-            Buscar igreja
+        <div className="barra-admin-igrejas">
+          <div>
+            <span className="selo-admin">Igrejas cadastradas</span>
+            <h3>Igrejas cadastradas ({igrejasFiltradas.length})</h3>
+            <p>Gerencie igrejas, acessos e usuários vinculados sem alterar os dados existentes.</p>
+          </div>
+
+          <div className="filtros-admin-moderno">
             <input
               type="text"
               value={buscaIgrejaAdmin}
               onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
               placeholder="Buscar por igreja, congregação, responsável ou e-mail"
             />
-          </label>
 
-          <button className="botao-secundario" onClick={carregarIgrejasAdmin}>
-            Atualizar lista
-          </button>
+            <button type="button" className="botao-secundario" onClick={carregarIgrejasAdmin}>
+              Atualizar lista
+            </button>
+          </div>
         </div>
 
-        <div className="lista lista-admin-igrejas">
-          {igrejasFiltradas.map((igreja) => (
-            <div className="item-lista item-com-acoes igreja-admin-card" key={igreja.id}>
-              <div>
-                <div className="linha-titulo-admin">
-                  <h3>{igreja.nome_igreja}</h3>
-                  <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
-                    {igreja.status_piloto === 'teste'
-                      ? 'Em uso'
-                      : igreja.status_piloto === 'ativa'
-                        ? 'Ativa'
-                        : igreja.status_piloto === 'pendente'
-                          ? 'Pendente'
-                          : igreja.status_piloto === 'pausada'
-                            ? 'Pausada'
-                            : igreja.status_piloto === 'cancelada'
-                              ? 'Cancelada'
-                              : 'Em uso'}
-                  </span>
+        <div className="lista lista-admin-igrejas lista-admin-igrejas-moderna">
+          {igrejasFiltradas.map((igreja) => {
+            const usuariosVinculados = contarAcessosDaIgreja(igreja.id)
+
+            return (
+              <article className="igreja-admin-card-moderno" key={igreja.id}>
+                <div className="igreja-admin-conteudo">
+                  <div className="igreja-admin-cabecalho">
+                    <div>
+                      <div className="linha-titulo-admin">
+                        <h3>{textoSeguroAdmin(igreja.nome_igreja, 'Igreja sem nome')}</h3>
+                        <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
+                          {statusIgrejaAdmin(igreja.status_piloto)}
+                        </span>
+                        {igreja.status_piloto === 'pendente' && (
+                          <span className="selo-aguardando-aprovacao">
+                            aguardando decisão
+                          </span>
+                        )}
+                      </div>
+                      <p className="igreja-admin-subtitulo">
+                        {textoSeguroAdmin(igreja.congregacao, 'Congregação não informada')}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grade-dados-igreja-admin">
+                    <div>
+                      <span>Congregação</span>
+                      <strong>{textoSeguroAdmin(igreja.congregacao)}</strong>
+                    </div>
+
+                    <div>
+                      <span>Dirigente</span>
+                      <strong>{textoSeguroAdmin(igreja.pastor_dirigente)}</strong>
+                    </div>
+
+                    <div>
+                      <span>Tipo</span>
+                      <strong>{igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}</strong>
+                    </div>
+
+                    <div>
+                      <span>Local</span>
+                      <strong>{localIgrejaAdmin(igreja)}</strong>
+                    </div>
+
+                    <div className="dado-admin-largo">
+                      <span>Endereço</span>
+                      <strong>{enderecoIgrejaAdmin(igreja)}</strong>
+                    </div>
+
+                    <div>
+                      <span>Responsável</span>
+                      <strong>{textoSeguroAdmin(igreja.responsavel_nome)}</strong>
+                    </div>
+
+                    <div>
+                      <span>E-mail</span>
+                      <strong>{textoSeguroAdmin(igreja.responsavel_email || igreja.email)}</strong>
+                    </div>
+
+                    <div>
+                      <span>WhatsApp</span>
+                      <strong>{textoSeguroAdmin(igreja.responsavel_whatsapp || igreja.telefone)}</strong>
+                    </div>
+
+                    <div>
+                      <span>Usuários vinculados</span>
+                      <strong>{usuariosVinculados}</strong>
+                    </div>
+
+                    <div>
+                      <span>Sede vinculada</span>
+                      <strong>{sedeIgrejaAdmin(igreja)}</strong>
+                    </div>
+                  </div>
+
+                  {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
+                    <p className="acompanhamento-admin">
+                      Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
+                      {igreja.data_fim_piloto || 'sem fim'}
+                    </p>
+                  )}
+
+                  {Number(igrejaUsuariosAbertaId) === Number(igreja.id) &&
+                    renderizarUsuariosVinculadosIgreja(igreja)}
+                </div>
+
+                <div className="acoes-admin-igreja-modernas">
                   {igreja.status_piloto === 'pendente' && (
-                    <span className="selo-aguardando-aprovacao">
-                      aguardando decisão
-                    </span>
-                  )}
-                </div>
+                    <div className="grupo-aprovacao-rapida">
+                      <button
+                        type="button"
+                        className="botao-aprovar-igreja"
+                        onClick={() => aprovarIgrejaPiloto(igreja)}
+                      >
+                        Aprovar
+                      </button>
 
-                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
-                {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
-                <div className="dados-igreja-admin">
-                  <p>
-                    Tipo:{' '}
-                    <strong>
-                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
-                    </strong>
-                  </p>
-
-                  {(igreja.cidade || igreja.estado) && (
-                    <p>
-                      Local: {igreja.cidade}
-                      {igreja.estado ? `/${igreja.estado}` : ''}
-                    </p>
+                      <button
+                        type="button"
+                        className="botao-nao-aprovar-igreja"
+                        onClick={() => naoAprovarIgrejaPiloto(igreja)}
+                      >
+                        Não aprovar
+                      </button>
+                    </div>
                   )}
 
-                  {(igreja.endereco || igreja.bairro || igreja.cep) && (
-                    <p>
-                      Endereço: {igreja.endereco}
-                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
-                      {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
-                      {igreja.bairro ? `, ${igreja.bairro}` : ''}
-                      {igreja.cep ? ` - CEP ${igreja.cep}` : ''}
-                    </p>
-                  )}
-
-                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_nome && (
-                    <p>
-                      Sede filiada: <strong>{igreja.sede_filiada_nome}</strong>
-                    </p>
-                  )}
-
-                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
-                    <p>
-                      Endereço da sede: {igreja.sede_filiada_endereco}
-                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
-                      {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
-                      {igreja.sede_filiada_cep ? ` - CEP ${igreja.sede_filiada_cep}` : ''}
-                    </p>
-                  )}
-                </div>
-
-                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
-                {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
-                {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
-                <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
-                {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
-                  <p>
-                    Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
-                    {igreja.data_fim_piloto || 'sem fim'}
-                  </p>
-                )}
-              </div>
-
-              <div className="acoes-item acoes-aprovacao-igreja">
-                {igreja.status_piloto === 'pendente' && (
-                  <div className="grupo-aprovacao-rapida">
+                  {igreja.status_piloto !== 'pendente' && igreja.status_piloto !== 'teste' && (
                     <button
+                      type="button"
                       className="botao-aprovar-igreja"
                       onClick={() => aprovarIgrejaPiloto(igreja)}
                     >
-                      Aprovar
+                      Liberar uso
                     </button>
+                  )}
 
-                    <button
-                      className="botao-nao-aprovar-igreja"
-                      onClick={() => naoAprovarIgrejaPiloto(igreja)}
-                    >
-                      Não aprovar
-                    </button>
-                  </div>
-                )}
-
-                {igreja.status_piloto !== 'pendente' && igreja.status_piloto !== 'teste' && (
                   <button
-                    className="botao-aprovar-igreja"
-                    onClick={() => aprovarIgrejaPiloto(igreja)}
+                    type="button"
+                    className="botao-acessar-igreja botao-acao-principal-admin"
+                    onClick={(event) => acessarIgrejaComoSuporte(igreja, event)}
                   >
-                    Liberar uso
+                    Acessar igreja
                   </button>
-                )}
 
-                {igreja.status_piloto === 'teste' && (
-                  <div className="grupo-aviso-aprovacao">
-                    <button
-                      className="botao-whatsapp-admin"
-                      onClick={() => abrirWhatsAppAprovacao(igreja)}
-                    >
-                      Avisar WhatsApp
-                    </button>
+                  <button
+                    type="button"
+                    className="botao-whatsapp-admin"
+                    onClick={() => abrirWhatsAppAprovacao(igreja)}
+                  >
+                    Enviar WhatsApp
+                  </button>
+
+                  <div className="mais-acoes-admin">
+                    <span>Mais ações</span>
 
                     <button
+                      type="button"
                       className="botao-copiar-admin"
                       onClick={() => copiarMensagemAprovacao(igreja)}
                     >
                       Copiar mensagem
                     </button>
+
+                    <button
+                      type="button"
+                      className="botao-secundario"
+                      onClick={() => abrirNovoAcessoAdmin(igreja)}
+                    >
+                      Vincular acesso
+                    </button>
+
+                    <button
+                      type="button"
+                      className="botao-secundario botao-usuarios-vinculados"
+                      onClick={() => alternarUsuariosDaIgreja(igreja.id)}
+                    >
+                      {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
+                        ? 'Ocultar usuários'
+                        : `Usuários vinculados (${usuariosVinculados})`}
+                    </button>
+
+                    <button type="button" className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
+                      Editar dados
+                    </button>
+
+                    <button type="button" className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
+                      Excluir
+                    </button>
                   </div>
-                )}
-
-                <button type="button" className="botao-acessar-igreja" onClick={(event) => acessarIgrejaComoSuporte(igreja, event)}>
-                  Acessar igreja
-                </button>
-
-                <button type="button" className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
-                  Vincular acesso
-                </button>
-
-                <button
-                  className="botao-secundario botao-usuarios-vinculados"
-                  type="button"
-                  onClick={() => alternarUsuariosDaIgreja(igreja.id)}
-                >
-                  {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
-                    ? 'Ocultar usuários'
-                    : `Usuários vinculados (${contarAcessosDaIgreja(igreja.id)})`}
-                </button>
-
-                <button type="button" className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
-                  Editar dados
-                </button>
-
-                <button type="button" className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
-                  Excluir
-                </button>
-              </div>
-
-              {Number(igrejaUsuariosAbertaId) === Number(igreja.id) &&
-                renderizarUsuariosVinculadosIgreja(igreja)}
-            </div>
-          ))}
+                </div>
+              </article>
+            )
+          })}
 
           {igrejasFiltradas.length === 0 && (
             <div className="aviso">
@@ -10795,6 +10916,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+  
   function renderizarManualUsuario() {
     const passosManual = [
       {
