@@ -402,6 +402,7 @@ function App() {
     }
   })
   const [acessosAdmin, setAcessosAdmin] = useState([])
+  const [resumosIgrejasAdmin, setResumosIgrejasAdmin] = useState({})
   const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
   const [carregandoCadastrosIncompletosAdmin, setCarregandoCadastrosIncompletosAdmin] = useState(false)
   const [erroCadastrosIncompletosAdmin, setErroCadastrosIncompletosAdmin] = useState('')
@@ -1631,6 +1632,19 @@ function App() {
     return acessosAdmin.filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId)).length
   }
 
+  function obterResumoIgrejaAdmin(igrejaBuscaId) {
+    const resumo = resumosIgrejasAdmin?.[String(igrejaBuscaId)] || {}
+
+    return {
+      alunos: Number(resumo.alunos || 0),
+      professores: Number(resumo.professores || 0),
+      secretarias: Number(resumo.secretarias || 0),
+      usuarios: Number(resumo.usuarios || contarAcessosDaIgreja(igrejaBuscaId)),
+      classes: Number(resumo.classes || 0),
+      outros: Number(resumo.outros || 0),
+    }
+  }
+
   function buscarAcessosDaIgrejaAdmin(igrejaBuscaId) {
     return acessosAdmin
       .filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId))
@@ -1660,7 +1674,7 @@ function App() {
 
   async function carregarAcessosAdmin() {
     if (!usuarioEhAdminSistema()) {
-      return
+      return []
     }
 
     const { data, error } = await supabase
@@ -1670,10 +1684,101 @@ function App() {
 
     if (error) {
       console.error(error)
-      return
+      return []
     }
 
     setAcessosAdmin(data || [])
+    return data || []
+  }
+
+  async function carregarResumosIgrejasAdmin(acessosDaConsulta = []) {
+    if (!usuarioEhAdminSistema()) {
+      return
+    }
+
+    const resumoPorIgreja = {}
+
+    function garantirResumo(igrejaBuscaId) {
+      const chave = String(igrejaBuscaId || '')
+
+      if (!chave) {
+        return null
+      }
+
+      if (!resumoPorIgreja[chave]) {
+        resumoPorIgreja[chave] = {
+          alunos: 0,
+          professores: 0,
+          secretarias: 0,
+          usuarios: 0,
+          classes: 0,
+          outros: 0,
+        }
+      }
+
+      return resumoPorIgreja[chave]
+    }
+
+    try {
+      const { data: classesBanco, error: erroClasses } = await supabase
+        .from('classes')
+        .select('id, igreja_id')
+
+      if (erroClasses) {
+        console.error('Erro ao carregar resumo de classes:', erroClasses)
+      } else {
+        ;(classesBanco || []).forEach((classe) => {
+          const resumo = garantirResumo(classe.igreja_id)
+          if (resumo) {
+            resumo.classes += 1
+          }
+        })
+      }
+
+      const { data: pessoasBanco, error: erroPessoas } = await supabase
+        .from('alunos')
+        .select('id, igreja_id, tipo_pessoa')
+
+      if (erroPessoas) {
+        console.error('Erro ao carregar resumo de alunos/professores:', erroPessoas)
+      } else {
+        ;(pessoasBanco || []).forEach((pessoa) => {
+          const resumo = garantirResumo(pessoa.igreja_id)
+          const tipoPessoa = String(pessoa.tipo_pessoa || 'aluno').toLowerCase()
+
+          if (!resumo) {
+            return
+          }
+
+          if (tipoPessoa === 'professor') {
+            resumo.professores += 1
+          } else {
+            resumo.alunos += 1
+          }
+        })
+      }
+
+      ;(acessosDaConsulta || []).forEach((acesso) => {
+        const resumo = garantirResumo(acesso.igreja_id)
+        const perfil = String(acesso.perfil || '').toLowerCase()
+
+        if (!resumo) {
+          return
+        }
+
+        resumo.usuarios += 1
+
+        if (perfil === 'secretaria' || perfil === 'admin') {
+          resumo.secretarias += 1
+        } else if (perfil !== 'professor') {
+          resumo.outros += 1
+        }
+      })
+
+      setResumosIgrejasAdmin(resumoPorIgreja)
+    } catch (erroResumo) {
+      console.error('Erro ao carregar resumo das igrejas:', erroResumo)
+    }
   }
 
   async function carregarCadastrosIncompletosAdmin() {
@@ -1894,7 +1999,8 @@ function App() {
       mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
-    await carregarAcessosAdmin()
+    const acessosAtualizados = await carregarAcessosAdmin()
+    await carregarResumosIgrejasAdmin(acessosAtualizados || [])
     await carregarFeedbacksAdmin()
     await carregarCadastrosIncompletosAdmin()
   }
@@ -10135,6 +10241,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
     const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
     const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
+    const totaisDaPlataforma = Object.values(resumosIgrejasAdmin || {}).reduce(
+      (totais, resumo) => ({
+        alunos: totais.alunos + Number(resumo.alunos || 0),
+        professores: totais.professores + Number(resumo.professores || 0),
+        secretarias: totais.secretarias + Number(resumo.secretarias || 0),
+        usuarios: totais.usuarios + Number(resumo.usuarios || 0),
+        classes: totais.classes + Number(resumo.classes || 0),
+      }),
+      { alunos: 0, professores: 0, secretarias: 0, usuarios: 0, classes: 0 }
+    )
 
     return (
       <section className="conteudo conteudo-admin-comercial">
@@ -10183,6 +10299,32 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <span>Pausadas</span>
             <strong>{igrejasPausadas}</strong>
             <p>aguardando retorno</p>
+          </div>
+        </div>
+
+        <div className="cards cards-admin-sistema cards-dados-igrejas-admin">
+          <div className="card card-admin card-admin-dado-basico">
+            <span>Alunos cadastrados</span>
+            <strong>{totaisDaPlataforma.alunos}</strong>
+            <p>somando todas as igrejas</p>
+          </div>
+
+          <div className="card card-admin card-admin-dado-basico">
+            <span>Professores</span>
+            <strong>{totaisDaPlataforma.professores}</strong>
+            <p>registrados na plataforma</p>
+          </div>
+
+          <div className="card card-admin card-admin-dado-basico">
+            <span>Secretarias/admins</span>
+            <strong>{totaisDaPlataforma.secretarias}</strong>
+            <p>usuários de gestão local</p>
+          </div>
+
+          <div className="card card-admin card-admin-dado-basico">
+            <span>Classes cadastradas</span>
+            <strong>{totaisDaPlataforma.classes}</strong>
+            <p>turmas vinculadas às igrejas</p>
           </div>
         </div>
 
@@ -10708,6 +10850,26 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
                 <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
+
+                <div className="resumo-dados-igreja-admin" aria-label={`Resumo da igreja ${igreja.nome_igreja || ''}`}>
+                  <div>
+                    <span>Alunos</span>
+                    <strong>{obterResumoIgrejaAdmin(igreja.id).alunos}</strong>
+                  </div>
+                  <div>
+                    <span>Professores</span>
+                    <strong>{obterResumoIgrejaAdmin(igreja.id).professores}</strong>
+                  </div>
+                  <div>
+                    <span>Secretarias</span>
+                    <strong>{obterResumoIgrejaAdmin(igreja.id).secretarias}</strong>
+                  </div>
+                  <div>
+                    <span>Classes</span>
+                    <strong>{obterResumoIgrejaAdmin(igreja.id).classes}</strong>
+                  </div>
+                </div>
+
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
                     Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
