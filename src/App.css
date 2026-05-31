@@ -13570,3 +13570,696 @@ button.botao-principal {
     width: 100%;
   }
 }
+
+
+/* =========================================================
+   EBD Fiel - Administração da Plataforma v44
+   Modernização visual sem alterar os dados ou o backend
+   ========================================================= */
+
+.admin-plataforma-v44 {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(18px, 2vw, 34px);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(37, 99, 235, 0.10), transparent 26%),
+    radial-gradient(circle at 10% 92%, rgba(22, 163, 74, 0.08), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.96));
+  border: 1px solid rgba(219, 226, 234, 0.95);
+  border-radius: 30px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+}
+
+.admin-plataforma-v44 .topo-admin-sistema {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(22px, 3vw, 34px);
+  margin-bottom: 22px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(37, 99, 235, 0.16), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f7fbff 54%, #eef6ff 100%);
+  border: 1px solid rgba(191, 219, 254, 0.85);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.admin-plataforma-v44 .topo-admin-identidade {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-plataforma-v44 .selo-admin {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-plataforma-v44 .topo-admin-sistema h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.admin-plataforma-v44 .topo-admin-sistema p {
+  margin: 0;
+  max-width: 760px;
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.botao-nova-igreja-admin {
+  min-height: 48px;
+  margin-top: 0 !important;
+  padding-inline: 22px;
+  border-radius: 16px;
+  white-space: nowrap;
+}
+
+.cards-admin-resumo {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(170px, 1fr));
+  gap: 16px;
+  margin: 22px 0;
+}
+
+.card-admin-resumo {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 142px;
+  padding: 20px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+.card-admin-resumo::after {
+  content: "";
+  position: absolute;
+  right: -34px;
+  bottom: -42px;
+  width: 116px;
+  height: 116px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.11;
+}
+
+.card-admin-resumo span {
+  display: block;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.card-admin-resumo strong {
+  display: block;
+  margin: 10px 0 4px;
+  color: #0f172a;
+  font-size: 38px;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.card-admin-resumo p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.card-admin-icone {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: currentColor;
+}
+
+.card-admin-resumo-azul { color: #2563eb; }
+.card-admin-resumo-verde { color: #16a34a; }
+.card-admin-resumo-roxo { color: #7c3aed; }
+.card-admin-resumo-amarelo { color: #d97706; }
+.card-admin-resumo-laranja { color: #ea580c; }
+
+.grade-admin-monitoramento {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 18px;
+  align-items: stretch;
+  margin: 20px 0;
+}
+
+.admin-plataforma-v44 .admin-feedback-alertas,
+.admin-plataforma-v44 .admin-acessos-bloco {
+  margin-top: 0;
+  min-width: 0;
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.admin-plataforma-v44 .admin-feedback-alertas {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(251, 191, 36, 0.13), transparent 28%),
+    #ffffff;
+}
+
+.admin-plataforma-v44 .admin-acessos-bloco {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.10), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.admin-plataforma-v44 .admin-feedback-topo,
+.admin-plataforma-v44 .admin-acessos-bloco-topo {
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.admin-plataforma-v44 .admin-feedback-topo h3,
+.admin-plataforma-v44 .admin-acessos-bloco-topo h3 {
+  margin: 10px 0 6px;
+  color: #0f172a;
+  font-size: clamp(22px, 2vw, 30px);
+  letter-spacing: -0.035em;
+}
+
+.admin-plataforma-v44 .admin-feedback-topo p,
+.admin-plataforma-v44 .admin-acessos-bloco-topo p {
+  max-width: 720px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.admin-plataforma-v44 .admin-feedback-topo > strong,
+.admin-plataforma-v44 .admin-acessos-bloco-topo > strong {
+  min-width: 56px;
+  min-height: 56px;
+  border-radius: 18px;
+  color: #ffffff;
+  font-size: 26px;
+  background: linear-gradient(135deg, #2563eb, #0f766e);
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.18);
+}
+
+.admin-plataforma-v44 .lista-feedbacks-admin,
+.admin-plataforma-v44 .lista-acessos-admin {
+  gap: 14px;
+}
+
+.admin-plataforma-v44 .feedback-admin-item,
+.admin-plataforma-v44 .acesso-admin-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 210px);
+  gap: 16px;
+  align-items: start;
+  padding: 18px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.045);
+}
+
+.admin-plataforma-v44 .feedback-admin-conteudo > p {
+  color: #334155;
+  line-height: 1.65;
+}
+
+.admin-plataforma-v44 .linha-feedback-admin strong,
+.admin-plataforma-v44 .linha-acesso-admin h4 {
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.admin-plataforma-v44 .linha-feedback-admin span,
+.admin-plataforma-v44 .linha-acesso-admin span,
+.admin-plataforma-v44 .status-piloto {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-plataforma-v44 .feedback-resposta-admin {
+  border-radius: 16px;
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.admin-plataforma-v44 .acoes-feedback-admin,
+.admin-plataforma-v44 .acoes-acesso-admin {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-plataforma-v44 .acoes-feedback-admin button,
+.admin-plataforma-v44 .acoes-acesso-admin button {
+  min-height: 38px;
+  margin: 0;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.barra-admin-igrejas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
+  gap: 18px;
+  align-items: end;
+  margin-top: 20px;
+  padding: 22px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.055);
+}
+
+.barra-admin-igrejas h3 {
+  margin: 10px 0 4px;
+  color: #0f172a;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+
+.barra-admin-igrejas p {
+  margin: 0;
+  color: #64748b;
+}
+
+.filtros-admin-moderno {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.filtros-admin-moderno input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 15px;
+  background: #f8fafc;
+  color: #0f172a;
+  outline: none;
+  font-weight: 700;
+}
+
+.filtros-admin-moderno input:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+}
+
+.filtros-admin-moderno .botao-secundario {
+  margin-top: 0;
+  min-height: 48px;
+  border-radius: 15px;
+  white-space: nowrap;
+}
+
+.lista-admin-igrejas-moderna {
+  margin-top: 16px;
+  gap: 16px;
+}
+
+.igreja-admin-card-moderno {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 22px;
+  padding: 22px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, 0.065);
+}
+
+.igreja-admin-card-moderno:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 22px 52px rgba(15, 23, 42, 0.09);
+}
+
+.igreja-admin-conteudo {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.igreja-admin-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.igreja-admin-card-moderno .linha-titulo-admin {
+  gap: 10px;
+}
+
+.igreja-admin-card-moderno .linha-titulo-admin h3 {
+  color: #0f172a;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.igreja-admin-subtitulo,
+.acompanhamento-admin {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.grade-dados-igreja-admin {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.grade-dados-igreja-admin > div {
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+}
+
+.grade-dados-igreja-admin > div span {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.grade-dados-igreja-admin > div strong {
+  display: block;
+  color: #0f172a;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.grade-dados-igreja-admin .dado-admin-largo {
+  grid-column: span 2;
+}
+
+.acoes-admin-igreja-modernas {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding-left: 20px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.acoes-admin-igreja-modernas button {
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  border-radius: 13px;
+  font-size: 13px;
+}
+
+.botao-acao-principal-admin,
+.admin-plataforma-v44 .botao-acessar-igreja {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: 0 14px 28px rgba(37, 99, 235, 0.22) !important;
+}
+
+.admin-plataforma-v44 .botao-whatsapp-admin,
+.admin-plataforma-v44 .botao-verde {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: #ffffff;
+  border: 0;
+  box-shadow: 0 12px 24px rgba(22, 163, 74, 0.16);
+}
+
+.admin-plataforma-v44 .botao-copiar-admin,
+.admin-plataforma-v44 .botao-secundario {
+  background: #f8fafc;
+  color: #0f172a;
+  border: 1px solid #dbe2ea;
+  box-shadow: none;
+}
+
+.admin-plataforma-v44 .botao-editar {
+  background: #ffffff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.admin-plataforma-v44 .botao-excluir {
+  background: #fff7f7;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.mais-acoes-admin {
+  display: grid;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px dashed #dbe2ea;
+}
+
+.mais-acoes-admin > span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.admin-plataforma-v44 .grupo-aprovacao-rapida {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-plataforma-v44 .botao-aprovar-igreja {
+  background: #ecfdf5;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.admin-plataforma-v44 .botao-nao-aprovar-igreja {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.admin-plataforma-v44 .status-teste {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-plataforma-v44 .status-ativa {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-plataforma-v44 .status-pendente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.admin-plataforma-v44 .status-pausada {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.admin-plataforma-v44 .status-cancelada {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.formulario-admin-moderno {
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.admin-plataforma-v44 .aviso-sucesso-cadastro {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.admin-plataforma-v44 .aviso-cadastro-piloto {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+/* Barra lateral mais moderna sem alterar a estrutura do menu */
+.menu-lateral {
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+    linear-gradient(180deg, #07111f 0%, #0a192f 52%, #081224 100%);
+  box-shadow: 14px 0 40px rgba(15, 23, 42, 0.10);
+}
+
+.menu-lateral button {
+  min-height: 44px;
+  border-radius: 13px;
+  color: #dbe4f2;
+  font-weight: 800;
+}
+
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, #0f5fd2, #1d4ed8);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
+}
+
+.cartao-usuario-sidebar {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.botao-sair-sidebar {
+  opacity: 0.88;
+}
+
+@media (max-width: 1280px) {
+  .cards-admin-resumo {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grade-admin-monitoramento {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-dados-igreja-admin {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .admin-plataforma-v44 .topo-admin-sistema,
+  .barra-admin-igrejas,
+  .igreja-admin-card-moderno {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-admin-igreja-modernas {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 16px;
+  }
+
+  .acoes-admin-igreja-modernas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mais-acoes-admin,
+  .admin-plataforma-v44 .grupo-aprovacao-rapida {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mais-acoes-admin > span {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-plataforma-v44 {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .cards-admin-resumo,
+  .grade-dados-igreja-admin,
+  .filtros-admin-moderno,
+  .admin-plataforma-v44 .feedback-admin-item,
+  .admin-plataforma-v44 .acesso-admin-card,
+  .acoes-admin-igreja-modernas,
+  .mais-acoes-admin,
+  .admin-plataforma-v44 .grupo-aprovacao-rapida {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-dados-igreja-admin .dado-admin-largo {
+    grid-column: span 1;
+  }
+
+  .admin-plataforma-v44 .topo-admin-sistema,
+  .barra-admin-igrejas,
+  .igreja-admin-card-moderno,
+  .admin-plataforma-v44 .admin-feedback-alertas,
+  .admin-plataforma-v44 .admin-acessos-bloco {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .botao-nova-igreja-admin,
+  .filtros-admin-moderno .botao-secundario {
+    width: 100%;
+  }
+
+  .admin-plataforma-v44 .admin-feedback-topo,
+  .admin-plataforma-v44 .admin-acessos-bloco-topo {
+    flex-direction: column;
+  }
+
+  .admin-plataforma-v44 .admin-feedback-topo > strong,
+  .admin-plataforma-v44 .admin-acessos-bloco-topo > strong {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 800px) {
+  .menu-lateral {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .menu-navegacao,
+  .menu-lateral nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .menu-navegacao,
+  .menu-lateral nav {
+    grid-template-columns: 1fr;
+  }
+}
