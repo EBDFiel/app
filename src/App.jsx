@@ -1387,11 +1387,6 @@ function App() {
       event.stopPropagation()
     }
 
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
-      return
-    }
-
     const igrejaIdSelecionada = Number(igreja?.id)
 
     if (!igrejaIdSelecionada) {
@@ -1399,32 +1394,44 @@ function App() {
       return
     }
 
-    const igrejaSelecionada = {
-      id: igrejaIdSelecionada,
-      nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
-      congregacao: igreja.congregacao || '',
-      status_piloto: igreja.status_piloto || '',
-      cidade: igreja.cidade || '',
-      estado: igreja.estado || '',
-    }
+    let sessaoAtual = sessao
 
     try {
+      if (!sessaoAtual?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoAtual = data?.session || null
+
+        if (sessaoAtual) {
+          setSessao(sessaoAtual)
+        }
+      }
+
+      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+      const adminAutorizado =
+        perfilUsuario?.perfil === 'admin_sistema' ||
+        emailsAdminSistema.includes(emailSessaoAtual)
+
+      if (!adminAutorizado) {
+        alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
+        return
+      }
+
+      const igrejaSelecionada = {
+        id: igrejaIdSelecionada,
+        nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
+        congregacao: igreja.congregacao || '',
+        status_piloto: igreja.status_piloto || '',
+        cidade: igreja.cidade || '',
+        estado: igreja.estado || '',
+      }
+
       setCarregando(true)
       setErroSistema('')
-      setIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario((perfilAnterior) => ({
-        ...perfilAnterior,
-        id: perfilAnterior?.id || null,
-        user_id: sessao?.user?.id,
-        nome: perfilAnterior?.nome || 'Administrador do sistema',
-        email: String(sessao?.user?.email || '').toLowerCase(),
-        perfil: 'secretaria',
-        igreja_id: igrejaIdSelecionada,
-        classe_id: null,
-        modo_suporte_admin: true,
-      }))
 
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(
@@ -1433,13 +1440,36 @@ function App() {
         )
       }
 
+      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
+
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+      setPerfilUsuario((perfilAnterior) => ({
+        ...perfilAnterior,
+        id: perfilAnterior?.id || null,
+        user_id: sessaoAtual?.user?.id,
+        nome: perfilAnterior?.nome || 'Administrador do sistema',
+        email: emailSessaoAtual,
+        perfil: 'secretaria',
+        igreja_id: igrejaIdSelecionada,
+        classe_id: null,
+        modo_suporte_admin: true,
+      }))
+
       setPaginaAtual('painel')
+
       if (typeof window !== 'undefined') {
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
       }
-      await buscarTodosOsDados(sessao, igrejaSelecionada)
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
+
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+      }
+
+      setIgrejaSuporteAdmin(null)
       setErroSistema(
         erroSuporte?.message ||
           'Não foi possível acessar esta igreja em modo suporte agora.'
