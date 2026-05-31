@@ -13601,3 +13601,75 @@ button.botao-principal {
   display: block !important;
   border-radius: 12px !important;
 }
+
+
+/* v53 - Dados básicos das igrejas na Administração */
+.cards-dados-igrejas-admin {
+  margin-top: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.card-admin-dado-basico {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border-color: rgba(191, 219, 254, 0.75);
+}
+
+.card-admin-dado-basico strong {
+  color: #0f172a;
+}
+
+.resumo-dados-igreja-admin {
+  margin: 14px 0 8px;
+  padding: 12px;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.resumo-dados-igreja-admin div {
+  min-height: 58px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e5eefc;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+}
+
+.resumo-dados-igreja-admin span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.resumo-dados-igreja-admin strong {
+  color: #0f172a;
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media (max-width: 1180px) {
+  .cards-dados-igrejas-admin {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .cards-dados-igrejas-admin,
+  .resumo-dados-igreja-admin {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-dados-igrejas-admin,
+  .resumo-dados-igreja-admin {
+    grid-template-columns: 1fr;
+  }
+}
