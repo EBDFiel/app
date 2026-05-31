@@ -7631,10 +7631,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         <div className="backup-v41-grid">
           <div className="backup-v41-card">
             <span className="selo-publico">Cópia de segurança local</span>
-            <h3>Exportar dados da igreja</h3>
-            <p>Gera um arquivo JSON com os dados carregados na sessão atual. Não modifica cadastros no Supabase.</p>
+            <h3>Baixar cópia de segurança</h3>
+            <p>Baixe uma cópia dos dados da sua igreja para guardar com segurança. Essa ação não modifica nenhum cadastro no sistema.</p>
+            <div className="aviso-copia-seguranca">
+              <strong>Orientação:</strong> caso precise de ajuda, baixe esta cópia e envie o arquivo para o suporte da EBD Fiel.
+            </div>
             <button className="botao-principal" type="button" onClick={baixarBackupLocalSeguro}>
-              Baixar backup JSON
+              Baixar cópia de segurança
             </button>
           </div>
 
