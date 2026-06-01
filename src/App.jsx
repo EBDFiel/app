@@ -312,6 +312,7 @@ function App() {
   const [carregando, setCarregando] = useState(true)
   const [erroSistema, setErroSistema] = useState('')
   const [alertaPainelFechado, setAlertaPainelFechado] = useState(false)
+  const [relatorioExtraVisualizacao, setRelatorioExtraVisualizacao] = useState(null)
 
   const [sessao, setSessao] = useState(null)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
@@ -3892,6 +3893,84 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     `
   }
 
+
+  function mostrarRelatorioExtraNaTela(titulo, subtitulo, conteudoHtml, orientacao = 'portrait', idIframe = 'iframe-relatorio-extra') {
+    setRelatorioExtraVisualizacao({
+      titulo,
+      subtitulo,
+      conteudoHtml,
+      orientacao,
+      idIframe,
+    })
+    setPaginaAtual('relatorios')
+
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        document.getElementById('visualizacao-relatorio-extra')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      }, 120)
+    }
+  }
+
+  function imprimirRelatorioExtraVisualizado() {
+    if (!relatorioExtraVisualizacao) {
+      return
+    }
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        relatorioExtraVisualizacao.titulo,
+        relatorioExtraVisualizacao.subtitulo,
+        relatorioExtraVisualizacao.conteudoHtml,
+        relatorioExtraVisualizacao.orientacao
+      ),
+      relatorioExtraVisualizacao.idIframe
+    )
+  }
+
+  function abrirRelatorioAniversariantesSemana() {
+    const aniversariantes = buscarAniversariantesDaSemana()
+
+    const conteudo = aniversariantes.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Nome</th>
+              <th>Perfil</th>
+              <th>Classe/área</th>
+              <th>Data</th>
+              <th>Quando</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${aniversariantes.map((pessoa, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
+                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
+                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
+                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
+                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
+
+    mostrarRelatorioExtraNaTela(
+      'Aniversariantes da semana',
+      'Pessoas com aniversário hoje ou nos próximos 7 dias.',
+      conteudo,
+      'portrait',
+      'iframe-aniversariantes-semana'
+    )
+  }
+
   function abrirRelatorioAniversariantesMes() {
     const aniversariantes = buscarAniversariantesDoMes()
 
@@ -3924,13 +4003,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Aniversariantes do mês',
-        `Referência: ${formatarMesAtualExtenso()}`,
-        conteudo,
-        'portrait'
-      ),
+    mostrarRelatorioExtraNaTela(
+      'Aniversariantes do mês',
+      `Referência: ${formatarMesAtualExtenso()}`,
+      conteudo,
+      'portrait',
       'iframe-aniversariantes-mes'
     )
   }
@@ -3969,13 +4046,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum alerta de faltas encontrado no momento.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Alertas de faltas',
-        'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
-        conteudo,
-        'landscape'
-      ),
+    mostrarRelatorioExtraNaTela(
+      'Alertas de faltas',
+      'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
+      conteudo,
+      'landscape',
       'iframe-alertas-faltas'
     )
   }
@@ -4012,13 +4087,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Destaques de frequência',
-        `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
-        conteudo,
-        'portrait'
-      ),
+    mostrarRelatorioExtraNaTela(
+      'Destaques de frequência',
+      `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
+      conteudo,
+      'portrait',
       'iframe-destaques-frequencia'
     )
   }
@@ -4074,13 +4147,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       </div>
     `
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Cartões de aniversariantes',
-        `Referência: ${formatarMesAtualExtenso()}`,
-        conteudo,
-        'portrait'
-      ),
+    mostrarRelatorioExtraNaTela(
+      'Cartões de aniversariantes',
+      `Referência: ${formatarMesAtualExtenso()}`,
+      conteudo,
+      'portrait',
       'iframe-cartoes-aniversariantes'
     )
   }
@@ -7755,17 +7826,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesMes}>
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesSemana}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
                 <div>
                   <strong>Aniversariantes</strong>
                   <p>
-                    {aniversariantesDoMesPainel.length > 0
-                      ? `${aniversariantesDoMesPainel.length} pessoa${aniversariantesDoMesPainel.length === 1 ? '' : 's'} com aniversário neste mês.`
-                      : 'Nenhum aniversariante encontrado neste mês.'}
+                    {aniversariantesDaSemana.length > 0
+                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversário nesta semana.`
+                      : 'Nenhum aniversariante encontrado nesta semana.'}
                   </p>
                 </div>
-                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Mês'}</em>
+                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Semana'}</em>
               </button>
 
               <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
@@ -7820,7 +7891,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             )}
             <div className="alerta-flutuante-acoes">
               {aniversariantesHojePainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAniversariantesMes}>
+                <button type="button" onClick={abrirRelatorioAniversariantesSemana}>
                   Ver aniversários
                 </button>
               )}
@@ -9349,6 +9420,28 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </button>
           </div>
         </div>
+
+        {relatorioExtraVisualizacao && (
+          <div className="visualizacao-relatorio-extra no-print" id="visualizacao-relatorio-extra">
+            <div className="visualizacao-relatorio-extra-topo">
+              <div>
+                <span className="selo-publico">Visualização</span>
+                <h3>{relatorioExtraVisualizacao.titulo}</h3>
+                <p>{relatorioExtraVisualizacao.subtitulo}</p>
+                <small>Confira as informações antes de gerar o PDF ou mandar para impressão. Esta visualização não altera nenhum cadastro da igreja.</small>
+              </div>
+              <div className="visualizacao-relatorio-extra-acoes">
+                <button className="botao-principal" type="button" onClick={imprimirRelatorioExtraVisualizado}>
+                  Baixar ou imprimir
+                </button>
+                <button className="botao-secundario" type="button" onClick={() => setRelatorioExtraVisualizacao(null)}>
+                  Fechar visualização
+                </button>
+              </div>
+            </div>
+            <div className="visualizacao-relatorio-extra-corpo" dangerouslySetInnerHTML={{ __html: relatorioExtraVisualizacao.conteudoHtml }} />
+          </div>
+        )}
       </section>
     )
   }
