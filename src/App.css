@@ -13838,3 +13838,17 @@ button.botao-principal {
     padding: 12px;
   }
 }
+
+
+/* Proteção visual do botão crítico Acessar igreja */
+.botao-acessar-igreja {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+  min-height: 40px;
+  touch-action: manipulation;
+}
+
+.botao-acessar-igreja:active {
+  transform: translateY(0) scale(0.99);
+}
