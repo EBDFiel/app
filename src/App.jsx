@@ -1728,6 +1728,53 @@ function App() {
     }
 
     try {
+      // Leitura administrativa segura.
+      // Esta RPC é somente consulta: não altera igrejas, alunos, classes ou acessos.
+      // Ela evita que as contagens apareçam zeradas quando as políticas RLS impedem
+      // o administrador de contar dados de todas as igrejas diretamente pelo front-end.
+      const { data: resumoRpc, error: erroResumoRpc } = await supabase.rpc(
+        'admin_resumo_igrejas_basico'
+      )
+
+      if (!erroResumoRpc && Array.isArray(resumoRpc)) {
+        resumoRpc.forEach((item) => {
+          const resumo = garantirResumo(item.igreja_id)
+
+          if (!resumo) {
+            return
+          }
+
+          resumo.alunos = Number(item.alunos || 0)
+          resumo.professores = Number(item.professores || 0)
+          resumo.secretarias = Number(item.secretarias || 0)
+          resumo.usuarios = Number(item.usuarios || 0)
+          resumo.classes = Number(item.classes || 0)
+          resumo.outros = Number(item.outros || 0)
+        })
+
+        ;(acessosDaConsulta || []).forEach((acesso) => {
+          const resumo = garantirResumo(acesso.igreja_id)
+
+          if (!resumo) {
+            return
+          }
+
+          // Mantém pelo menos a contagem de acessos carregada no front,
+          // caso a RPC ainda não tenha retornado usuários para alguma igreja.
+          resumo.usuarios = Math.max(resumo.usuarios, contarAcessosDaIgreja(acesso.igreja_id))
+        })
+
+        setResumosIgrejasAdmin(resumoPorIgreja)
+        return
+      }
+
+      if (erroResumoRpc) {
+        console.warn(
+          'RPC admin_resumo_igrejas_basico indisponível. Usando fallback de leitura direta.',
+          erroResumoRpc
+        )
+      }
+
       const { data: classesBanco, error: erroClasses } = await supabase
         .from('classes')
         .select('id, igreja_id')
