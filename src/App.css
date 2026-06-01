@@ -13852,3 +13852,19 @@ button.botao-principal {
 .botao-acessar-igreja:active {
   transform: translateY(0) scale(0.99);
 }
+
+
+/* v57 - Card flutuante de aniversariantes clicável */
+.alerta-flutuante-secretaria-clicavel {
+  cursor: pointer;
+}
+
+.alerta-flutuante-secretaria-clicavel:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 4px;
+}
+
+.alerta-flutuante-secretaria-clicavel .alerta-flutuante-fechar,
+.alerta-flutuante-secretaria-clicavel .alerta-flutuante-acoes button {
+  cursor: pointer;
+}
