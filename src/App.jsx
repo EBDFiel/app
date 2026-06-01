@@ -402,7 +402,6 @@ function App() {
     }
   })
   const [acessosAdmin, setAcessosAdmin] = useState([])
-  const [resumosIgrejasAdmin, setResumosIgrejasAdmin] = useState({})
   const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
   const [carregandoCadastrosIncompletosAdmin, setCarregandoCadastrosIncompletosAdmin] = useState(false)
   const [erroCadastrosIncompletosAdmin, setErroCadastrosIncompletosAdmin] = useState('')
@@ -500,7 +499,6 @@ function App() {
   const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
   const [alunoHistoricoSelecionadoId, setAlunoHistoricoSelecionadoId] = useState('')
   const [classeHistoricoFiltroId, setClasseHistoricoFiltroId] = useState('')
-  const [relatorioExtraVisualizacao, setRelatorioExtraVisualizacao] = useState(null)
 
   const [tipoChamada, setTipoChamada] = useState('alunos')
   const [classeChamadaId, setClasseChamadaId] = useState('')
@@ -1381,10 +1379,6 @@ function App() {
   }
 
   async function acessarIgrejaComoSuporte(igreja, event = null) {
-    // ATENÇÃO: função crítica do administrador.
-    // Em novas atualizações, não atrasar a troca para modo suporte até terminar consultas.
-    // Primeiro abre a igreja visualmente; depois carrega os dados. Isso evita o problema
-    // de o botão apenas rolar a página e parecer que não respondeu.
     if (event?.preventDefault) {
       event.preventDefault()
     }
@@ -1446,46 +1440,43 @@ function App() {
         )
       }
 
-      const perfilSuporteAdmin = {
-        ...perfilUsuario,
-        id: perfilUsuario?.id || null,
-        user_id: sessaoAtual?.user?.id,
-        nome: perfilUsuario?.nome || 'Administrador do sistema',
-        email: emailSessaoAtual,
-        perfil: 'secretaria',
-        igreja_id: igrejaIdSelecionada,
-        classe_id: null,
-        modo_suporte_admin: true,
-      }
-
-      // Resposta imediata ao clique: isso preserva o botão Acessar igreja.
-      setIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario(perfilSuporteAdmin)
-      setPaginaAtual('painel')
-
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
-      }
-
-      // Depois que a tela já respondeu, carregamos os dados da igreja.
       await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
 
       setIgrejaSuporteAdmin(igrejaSelecionada)
       setIgrejaAtualPiloto(igrejaSelecionada)
       setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario(perfilSuporteAdmin)
+      setPerfilUsuario((perfilAnterior) => ({
+        ...perfilAnterior,
+        id: perfilAnterior?.id || null,
+        user_id: sessaoAtual?.user?.id,
+        nome: perfilAnterior?.nome || 'Administrador do sistema',
+        email: emailSessaoAtual,
+        perfil: 'secretaria',
+        igreja_id: igrejaIdSelecionada,
+        classe_id: null,
+        modo_suporte_admin: true,
+      }))
+
       setPaginaAtual('painel')
+
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
+      }
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
+
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+      }
+
+      setIgrejaSuporteAdmin(null)
       setErroSistema(
         erroSuporte?.message ||
-          'Não foi possível carregar todos os dados da igreja agora. O modo suporte foi aberto, mas confira sua conexão e tente atualizar a página.'
+          'Não foi possível acessar esta igreja em modo suporte agora.'
       )
       alert(
         erroSuporte?.message ||
-          'Não foi possível carregar todos os dados da igreja agora. Confira sua conexão e tente novamente.'
+          'Não foi possível acessar esta igreja em modo suporte agora.'
       )
     } finally {
       setCarregando(false)
@@ -1640,19 +1631,6 @@ function App() {
     return acessosAdmin.filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId)).length
   }
 
-  function obterResumoIgrejaAdmin(igrejaBuscaId) {
-    const resumo = resumosIgrejasAdmin?.[String(igrejaBuscaId)] || {}
-
-    return {
-      alunos: Number(resumo.alunos || 0),
-      professores: Number(resumo.professores || 0),
-      secretarias: Number(resumo.secretarias || 0),
-      usuarios: Number(resumo.usuarios || contarAcessosDaIgreja(igrejaBuscaId)),
-      classes: Number(resumo.classes || 0),
-      outros: Number(resumo.outros || 0),
-    }
-  }
-
   function buscarAcessosDaIgrejaAdmin(igrejaBuscaId) {
     return acessosAdmin
       .filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId))
@@ -1682,7 +1660,7 @@ function App() {
 
   async function carregarAcessosAdmin() {
     if (!usuarioEhAdminSistema()) {
-      return []
+      return
     }
 
     const { data, error } = await supabase
@@ -1692,148 +1670,10 @@ function App() {
 
     if (error) {
       console.error(error)
-      return []
-    }
-
-    setAcessosAdmin(data || [])
-    return data || []
-  }
-
-  async function carregarResumosIgrejasAdmin(acessosDaConsulta = []) {
-    if (!usuarioEhAdminSistema()) {
       return
     }
 
-    const resumoPorIgreja = {}
-
-    function garantirResumo(igrejaBuscaId) {
-      const chave = String(igrejaBuscaId || '')
-
-      if (!chave) {
-        return null
-      }
-
-      if (!resumoPorIgreja[chave]) {
-        resumoPorIgreja[chave] = {
-          alunos: 0,
-          professores: 0,
-          secretarias: 0,
-          usuarios: 0,
-          classes: 0,
-          outros: 0,
-        }
-      }
-
-      return resumoPorIgreja[chave]
-    }
-
-    try {
-      // Leitura administrativa segura.
-      // Esta RPC é somente consulta: não altera igrejas, alunos, classes ou acessos.
-      // Ela evita que as contagens apareçam zeradas quando as políticas RLS impedem
-      // o administrador de contar dados de todas as igrejas diretamente pelo front-end.
-      const { data: resumoRpc, error: erroResumoRpc } = await supabase.rpc(
-        'admin_resumo_igrejas_basico'
-      )
-
-      if (!erroResumoRpc && Array.isArray(resumoRpc)) {
-        resumoRpc.forEach((item) => {
-          const resumo = garantirResumo(item.igreja_id)
-
-          if (!resumo) {
-            return
-          }
-
-          resumo.alunos = Number(item.alunos || 0)
-          resumo.professores = Number(item.professores || 0)
-          resumo.secretarias = Number(item.secretarias || 0)
-          resumo.usuarios = Number(item.usuarios || 0)
-          resumo.classes = Number(item.classes || 0)
-          resumo.outros = Number(item.outros || 0)
-        })
-
-        ;(acessosDaConsulta || []).forEach((acesso) => {
-          const resumo = garantirResumo(acesso.igreja_id)
-
-          if (!resumo) {
-            return
-          }
-
-          // Mantém pelo menos a contagem de acessos carregada no front,
-          // caso a RPC ainda não tenha retornado usuários para alguma igreja.
-          resumo.usuarios = Math.max(resumo.usuarios, contarAcessosDaIgreja(acesso.igreja_id))
-        })
-
-        setResumosIgrejasAdmin(resumoPorIgreja)
-        return
-      }
-
-      if (erroResumoRpc) {
-        console.warn(
-          'RPC admin_resumo_igrejas_basico indisponível. Usando fallback de leitura direta.',
-          erroResumoRpc
-        )
-      }
-
-      const { data: classesBanco, error: erroClasses } = await supabase
-        .from('classes')
-        .select('id, igreja_id')
-
-      if (erroClasses) {
-        console.error('Erro ao carregar resumo de classes:', erroClasses)
-      } else {
-        ;(classesBanco || []).forEach((classe) => {
-          const resumo = garantirResumo(classe.igreja_id)
-          if (resumo) {
-            resumo.classes += 1
-          }
-        })
-      }
-
-      const { data: pessoasBanco, error: erroPessoas } = await supabase
-        .from('alunos')
-        .select('id, igreja_id, tipo_pessoa')
-
-      if (erroPessoas) {
-        console.error('Erro ao carregar resumo de alunos/professores:', erroPessoas)
-      } else {
-        ;(pessoasBanco || []).forEach((pessoa) => {
-          const resumo = garantirResumo(pessoa.igreja_id)
-          const tipoPessoa = String(pessoa.tipo_pessoa || 'aluno').toLowerCase()
-
-          if (!resumo) {
-            return
-          }
-
-          if (tipoPessoa === 'professor') {
-            resumo.professores += 1
-          } else {
-            resumo.alunos += 1
-          }
-        })
-      }
-
-      ;(acessosDaConsulta || []).forEach((acesso) => {
-        const resumo = garantirResumo(acesso.igreja_id)
-        const perfil = String(acesso.perfil || '').toLowerCase()
-
-        if (!resumo) {
-          return
-        }
-
-        resumo.usuarios += 1
-
-        if (perfil === 'secretaria' || perfil === 'admin') {
-          resumo.secretarias += 1
-        } else if (perfil !== 'professor') {
-          resumo.outros += 1
-        }
-      })
-
-      setResumosIgrejasAdmin(resumoPorIgreja)
-    } catch (erroResumo) {
-      console.error('Erro ao carregar resumo das igrejas:', erroResumo)
-    }
+    setAcessosAdmin(data || [])
   }
 
   async function carregarCadastrosIncompletosAdmin() {
@@ -2054,8 +1894,7 @@ function App() {
       mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
-    const acessosAtualizados = await carregarAcessosAdmin()
-    await carregarResumosIgrejasAdmin(acessosAtualizados || [])
+    await carregarAcessosAdmin()
     await carregarFeedbacksAdmin()
     await carregarCadastrosIncompletosAdmin()
   }
@@ -2974,10 +2813,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
-      // Proteção permanente: não criar classes/alunos automaticamente ao carregar a igreja.
-      // Isso preserva os cadastros reais e evita que futuras mudanças recriem turmas de exemplo
-      // ou alterem vínculos existentes. Igrejas sem classe devem ser ajustadas manualmente pela tela Classes.
-      classesBanco = []
+      await inserirDadosIniciais(igrejaAtualId, sessaoAtual)
+
+      let novaConsultaClasses = supabase
+        .from('classes')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
+        } else {
+          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
+        }
+      }
+
+      const resultadoClasses = await novaConsultaClasses
+      classesBanco = resultadoClasses.data
+      erroClasses = resultadoClasses.error
+
+      if (erroClasses) {
+        throw erroClasses
+      }
     }
 
     let consultaAlunos = supabase
@@ -4034,42 +3892,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     `
   }
 
-  function visualizarRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao = 'portrait', tipo = 'relatorio') {
-    const documentoHtml = montarDocumentoRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao)
-
-    setRelatorioExtraVisualizacao({
-      titulo,
-      subtitulo,
-      conteudoHtml,
-      orientacao,
-      tipo,
-      documentoHtml,
-    })
-
-    window.setTimeout(() => {
-      const area = document.getElementById('visualizacao-relatorio-extra')
-      if (area) {
-        area.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }, 100)
-  }
-
-  function imprimirRelatorioExtraVisualizado() {
-    if (!relatorioExtraVisualizacao?.documentoHtml) {
-      alert('Abra primeiro um relatório para visualizar.')
-      return
-    }
-
-    imprimirHtmlEmIframe(
-      relatorioExtraVisualizacao.documentoHtml,
-      `iframe-${relatorioExtraVisualizacao.tipo || 'relatorio-extra'}`
-    )
-  }
-
-  function fecharRelatorioExtraVisualizado() {
-    setRelatorioExtraVisualizacao(null)
-  }
-
   function abrirRelatorioAniversariantesMes() {
     const aniversariantes = buscarAniversariantesDoMes()
 
@@ -4102,54 +3924,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
 
-    visualizarRelatorioExtra(
-      'Aniversariantes do mês',
-      `Referência: ${formatarMesAtualExtenso()}`,
-      conteudo,
-      'portrait',
-      'aniversariantes-mes'
-    )
-  }
-
-
-  function abrirRelatorioAniversariantesSemana() {
-    const aniversariantes = buscarAniversariantesDaSemana()
-
-    const conteudo = aniversariantes.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Nome</th>
-              <th>Tipo</th>
-              <th>Detalhe</th>
-              <th>Data</th>
-              <th>Quando</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${aniversariantes.map((pessoa, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
-                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
-                <td>${escaparHtmlRelatorio(pessoa.detalhe || '')}</td>
-                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
-                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum aniversário cadastrado para os próximos 7 dias.</div>'
-
-    visualizarRelatorioExtra(
-      'Aniversariantes da semana',
-      'Alunos, professores e secretarias com aniversário nos próximos 7 dias.',
-      conteudo,
-      'portrait',
-      'aniversariantes-semana'
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Aniversariantes do mês',
+        `Referência: ${formatarMesAtualExtenso()}`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-aniversariantes-mes'
     )
   }
 
@@ -4187,12 +3969,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum alerta de faltas encontrado no momento.</div>'
 
-    visualizarRelatorioExtra(
-      'Alertas de faltas',
-      'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
-      conteudo,
-      'landscape',
-      'alertas-faltas'
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Alertas de faltas',
+        'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
+        conteudo,
+        'landscape'
+      ),
+      'iframe-alertas-faltas'
     )
   }
 
@@ -4228,12 +4012,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
 
-    visualizarRelatorioExtra(
-      'Destaques de frequência',
-      `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
-      conteudo,
-      'portrait',
-      'destaques-frequencia'
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Destaques de frequência',
+        `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-destaques-frequencia'
     )
   }
 
@@ -4288,12 +4074,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       </div>
     `
 
-    visualizarRelatorioExtra(
-      'Cartões de aniversariantes',
-      `Referência: ${formatarMesAtualExtenso()}`,
-      conteudo,
-      'portrait',
-      'cartoes-aniversariantes'
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Cartões de aniversariantes',
+        `Referência: ${formatarMesAtualExtenso()}`,
+        conteudo,
+        'portrait'
+      ),
+      'iframe-cartoes-aniversariantes'
     )
   }
 
@@ -7967,17 +7755,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesSemana}>
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesMes}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
                 <div>
                   <strong>Aniversariantes</strong>
                   <p>
-                    {aniversariantesDaSemana.length > 0
-                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversário nos próximos 7 dias.`
-                      : 'Nenhum aniversário cadastrado para os próximos 7 dias.'}
+                    {aniversariantesDoMesPainel.length > 0
+                      ? `${aniversariantesDoMesPainel.length} pessoa${aniversariantesDoMesPainel.length === 1 ? '' : 's'} com aniversário neste mês.`
+                      : 'Nenhum aniversariante encontrado neste mês.'}
                   </p>
                 </div>
-                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Semana'}</em>
+                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Mês'}</em>
               </button>
 
               <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
@@ -8010,26 +7798,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         )}
 
         {mostrarAlertaFlutuanteSecretaria && (
-          <div
-            className="alerta-flutuante-secretaria alerta-flutuante-secretaria-clicavel"
-            role="button"
-            tabIndex={0}
-            aria-live="polite"
-            onClick={abrirRelatorioAniversariantesSemana}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault()
-                abrirRelatorioAniversariantesSemana()
-              }
-            }}
-          >
+          <div className="alerta-flutuante-secretaria" role="status" aria-live="polite">
             <button
               className="alerta-flutuante-fechar"
               type="button"
-              onClick={(event) => {
-                event.stopPropagation()
-                setAlertaPainelFechado(true)
-              }}
+              onClick={() => setAlertaPainelFechado(true)}
               aria-label="Fechar alerta"
             >
               ×
@@ -8047,10 +7820,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             )}
             <div className="alerta-flutuante-acoes">
               {aniversariantesHojePainel.length > 0 && (
-                <button type="button" onClick={(event) => {
-                    event.stopPropagation()
-                    abrirRelatorioAniversariantesSemana()
-                  }}>
+                <button type="button" onClick={abrirRelatorioAniversariantesMes}>
                   Ver aniversários
                 </button>
               )}
@@ -9392,51 +9162,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           )}
         </div>
 
-        {relatorioExtraVisualizacao && (
-          <div
-            id="visualizacao-relatorio-extra"
-            className={`relatorio-extra-visualizacao no-print relatorio-extra-${relatorioExtraVisualizacao.orientacao}`}
-          >
-            <div className="relatorio-extra-topo">
-              <div>
-                <span className="selo-publico">Visualização do relatório</span>
-                <h3>{relatorioExtraVisualizacao.titulo}</h3>
-                {relatorioExtraVisualizacao.subtitulo && (
-                  <p>{relatorioExtraVisualizacao.subtitulo}</p>
-                )}
-              </div>
-
-              <div className="relatorio-extra-acoes">
-                <button
-                  type="button"
-                  className="botao-principal"
-                  onClick={imprimirRelatorioExtraVisualizado}
-                >
-                  Baixar ou imprimir
-                </button>
-
-                <button
-                  type="button"
-                  className="botao-secundario"
-                  onClick={fecharRelatorioExtraVisualizado}
-                >
-                  Fechar visualização
-                </button>
-              </div>
-            </div>
-
-            <div className="relatorio-extra-aviso">
-              Confira as informações abaixo antes de gerar o PDF ou mandar para impressão.
-              Esta visualização não altera nenhum cadastro da igreja.
-            </div>
-
-            <div
-              className="relatorio-extra-conteudo"
-              dangerouslySetInnerHTML={{ __html: relatorioExtraVisualizacao.conteudoHtml }}
-            />
-          </div>
-        )}
-
         <div className="relatorio-folha">
           <div className="cabecalho-relatorio">
             <img
@@ -10410,16 +10135,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
     const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
     const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
-    const totaisDaPlataforma = Object.values(resumosIgrejasAdmin || {}).reduce(
-      (totais, resumo) => ({
-        alunos: totais.alunos + Number(resumo.alunos || 0),
-        professores: totais.professores + Number(resumo.professores || 0),
-        secretarias: totais.secretarias + Number(resumo.secretarias || 0),
-        usuarios: totais.usuarios + Number(resumo.usuarios || 0),
-        classes: totais.classes + Number(resumo.classes || 0),
-      }),
-      { alunos: 0, professores: 0, secretarias: 0, usuarios: 0, classes: 0 }
-    )
 
     return (
       <section className="conteudo conteudo-admin-comercial">
@@ -10468,32 +10183,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <span>Pausadas</span>
             <strong>{igrejasPausadas}</strong>
             <p>aguardando retorno</p>
-          </div>
-        </div>
-
-        <div className="cards cards-admin-sistema cards-dados-igrejas-admin">
-          <div className="card card-admin card-admin-dado-basico">
-            <span>Alunos cadastrados</span>
-            <strong>{totaisDaPlataforma.alunos}</strong>
-            <p>somando todas as igrejas</p>
-          </div>
-
-          <div className="card card-admin card-admin-dado-basico">
-            <span>Professores</span>
-            <strong>{totaisDaPlataforma.professores}</strong>
-            <p>registrados na plataforma</p>
-          </div>
-
-          <div className="card card-admin card-admin-dado-basico">
-            <span>Secretarias/admins</span>
-            <strong>{totaisDaPlataforma.secretarias}</strong>
-            <p>usuários de gestão local</p>
-          </div>
-
-          <div className="card card-admin card-admin-dado-basico">
-            <span>Classes cadastradas</span>
-            <strong>{totaisDaPlataforma.classes}</strong>
-            <p>turmas vinculadas às igrejas</p>
           </div>
         </div>
 
@@ -11019,26 +10708,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
                 <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
-
-                <div className="resumo-dados-igreja-admin" aria-label={`Resumo da igreja ${igreja.nome_igreja || ''}`}>
-                  <div>
-                    <span>Alunos</span>
-                    <strong>{obterResumoIgrejaAdmin(igreja.id).alunos}</strong>
-                  </div>
-                  <div>
-                    <span>Professores</span>
-                    <strong>{obterResumoIgrejaAdmin(igreja.id).professores}</strong>
-                  </div>
-                  <div>
-                    <span>Secretarias</span>
-                    <strong>{obterResumoIgrejaAdmin(igreja.id).secretarias}</strong>
-                  </div>
-                  <div>
-                    <span>Classes</span>
-                    <strong>{obterResumoIgrejaAdmin(igreja.id).classes}</strong>
-                  </div>
-                </div>
-
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
                     Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
