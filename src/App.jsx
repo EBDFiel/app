@@ -4111,6 +4111,48 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+
+  function abrirRelatorioAniversariantesSemana() {
+    const aniversariantes = buscarAniversariantesDaSemana()
+
+    const conteudo = aniversariantes.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th>Detalhe</th>
+              <th>Data</th>
+              <th>Quando</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${aniversariantes.map((pessoa, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
+                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
+                <td>${escaparHtmlRelatorio(pessoa.detalhe || '')}</td>
+                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
+                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum aniversário cadastrado para os próximos 7 dias.</div>'
+
+    visualizarRelatorioExtra(
+      'Aniversariantes da semana',
+      'Alunos, professores e secretarias com aniversário nos próximos 7 dias.',
+      conteudo,
+      'portrait',
+      'aniversariantes-semana'
+    )
+  }
+
   function abrirRelatorioAlertasFaltas() {
     const alertas = buscarAlertasDeFaltas()
 
@@ -7925,17 +7967,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesMes}>
+              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesSemana}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
                 <div>
                   <strong>Aniversariantes</strong>
                   <p>
-                    {aniversariantesDoMesPainel.length > 0
-                      ? `${aniversariantesDoMesPainel.length} pessoa${aniversariantesDoMesPainel.length === 1 ? '' : 's'} com aniversário neste mês.`
-                      : 'Nenhum aniversariante encontrado neste mês.'}
+                    {aniversariantesDaSemana.length > 0
+                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversário nos próximos 7 dias.`
+                      : 'Nenhum aniversário cadastrado para os próximos 7 dias.'}
                   </p>
                 </div>
-                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Mês'}</em>
+                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Semana'}</em>
               </button>
 
               <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
@@ -7968,11 +8010,26 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         )}
 
         {mostrarAlertaFlutuanteSecretaria && (
-          <div className="alerta-flutuante-secretaria" role="status" aria-live="polite">
+          <div
+            className="alerta-flutuante-secretaria alerta-flutuante-secretaria-clicavel"
+            role="button"
+            tabIndex={0}
+            aria-live="polite"
+            onClick={abrirRelatorioAniversariantesSemana}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                abrirRelatorioAniversariantesSemana()
+              }
+            }}
+          >
             <button
               className="alerta-flutuante-fechar"
               type="button"
-              onClick={() => setAlertaPainelFechado(true)}
+              onClick={(event) => {
+                event.stopPropagation()
+                setAlertaPainelFechado(true)
+              }}
               aria-label="Fechar alerta"
             >
               ×
@@ -7990,7 +8047,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             )}
             <div className="alerta-flutuante-acoes">
               {aniversariantesHojePainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAniversariantesMes}>
+                <button type="button" onClick={(event) => {
+                    event.stopPropagation()
+                    abrirRelatorioAniversariantesSemana()
+                  }}>
                   Ver aniversários
                 </button>
               )}
