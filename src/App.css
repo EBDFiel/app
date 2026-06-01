@@ -13601,3 +13601,129 @@ button.botao-principal {
   display: block !important;
   border-radius: 12px !important;
 }
+
+
+/* v59 - Visualização segura de relatórios antes de baixar/imprimir */
+.visualizacao-relatorio-extra {
+  margin-top: 24px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--sombra-suave);
+}
+
+.visualizacao-relatorio-extra-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.visualizacao-relatorio-extra-topo h3 {
+  margin: 10px 0 6px;
+  font-size: 24px;
+  color: var(--cor-texto);
+}
+
+.visualizacao-relatorio-extra-topo p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+}
+
+.visualizacao-relatorio-extra-topo small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.visualizacao-relatorio-extra-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.visualizacao-relatorio-extra-acoes .botao-principal,
+.visualizacao-relatorio-extra-acoes .botao-secundario {
+  margin-top: 0;
+}
+
+.visualizacao-relatorio-extra-corpo {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.visualizacao-relatorio-extra-corpo table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.visualizacao-relatorio-extra-corpo th,
+.visualizacao-relatorio-extra-corpo td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 14px;
+}
+
+.visualizacao-relatorio-extra-corpo th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 800;
+}
+
+.visualizacao-relatorio-extra-corpo .numero,
+.visualizacao-relatorio-extra-corpo .texto-centro {
+  text-align: center;
+}
+
+.visualizacao-relatorio-extra-corpo .vazio {
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: var(--cor-texto-suave);
+}
+
+.visualizacao-relatorio-extra-corpo .cartoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario {
+  border: 1px solid #fde68a;
+  border-radius: 18px;
+  padding: 20px;
+  background: linear-gradient(180deg, #fffdf5 0%, #fff7ed 100%);
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario h3 {
+  margin: 0 0 10px;
+  color: #92400e;
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario strong {
+  display: block;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+@media (max-width: 800px) {
+  .visualizacao-relatorio-extra-topo {
+    flex-direction: column;
+  }
+
+  .visualizacao-relatorio-extra-acoes,
+  .visualizacao-relatorio-extra-acoes .botao-principal,
+  .visualizacao-relatorio-extra-acoes .botao-secundario {
+    width: 100%;
+  }
+}
