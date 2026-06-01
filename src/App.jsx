@@ -500,6 +500,7 @@ function App() {
   const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
   const [alunoHistoricoSelecionadoId, setAlunoHistoricoSelecionadoId] = useState('')
   const [classeHistoricoFiltroId, setClasseHistoricoFiltroId] = useState('')
+  const [relatorioExtraVisualizacao, setRelatorioExtraVisualizacao] = useState(null)
 
   const [tipoChamada, setTipoChamada] = useState('alunos')
   const [classeChamadaId, setClasseChamadaId] = useState('')
@@ -3998,6 +3999,42 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     `
   }
 
+  function visualizarRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao = 'portrait', tipo = 'relatorio') {
+    const documentoHtml = montarDocumentoRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao)
+
+    setRelatorioExtraVisualizacao({
+      titulo,
+      subtitulo,
+      conteudoHtml,
+      orientacao,
+      tipo,
+      documentoHtml,
+    })
+
+    window.setTimeout(() => {
+      const area = document.getElementById('visualizacao-relatorio-extra')
+      if (area) {
+        area.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+
+  function imprimirRelatorioExtraVisualizado() {
+    if (!relatorioExtraVisualizacao?.documentoHtml) {
+      alert('Abra primeiro um relatório para visualizar.')
+      return
+    }
+
+    imprimirHtmlEmIframe(
+      relatorioExtraVisualizacao.documentoHtml,
+      `iframe-${relatorioExtraVisualizacao.tipo || 'relatorio-extra'}`
+    )
+  }
+
+  function fecharRelatorioExtraVisualizado() {
+    setRelatorioExtraVisualizacao(null)
+  }
+
   function abrirRelatorioAniversariantesMes() {
     const aniversariantes = buscarAniversariantesDoMes()
 
@@ -4030,14 +4067,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Aniversariantes do mês',
-        `Referência: ${formatarMesAtualExtenso()}`,
-        conteudo,
-        'portrait'
-      ),
-      'iframe-aniversariantes-mes'
+    visualizarRelatorioExtra(
+      'Aniversariantes do mês',
+      `Referência: ${formatarMesAtualExtenso()}`,
+      conteudo,
+      'portrait',
+      'aniversariantes-mes'
     )
   }
 
@@ -4075,14 +4110,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum alerta de faltas encontrado no momento.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Alertas de faltas',
-        'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
-        conteudo,
-        'landscape'
-      ),
-      'iframe-alertas-faltas'
+    visualizarRelatorioExtra(
+      'Alertas de faltas',
+      'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
+      conteudo,
+      'landscape',
+      'alertas-faltas'
     )
   }
 
@@ -4118,14 +4151,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       `
       : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Destaques de frequência',
-        `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
-        conteudo,
-        'portrait'
-      ),
-      'iframe-destaques-frequencia'
+    visualizarRelatorioExtra(
+      'Destaques de frequência',
+      `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
+      conteudo,
+      'portrait',
+      'destaques-frequencia'
     )
   }
 
@@ -4180,14 +4211,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       </div>
     `
 
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Cartões de aniversariantes',
-        `Referência: ${formatarMesAtualExtenso()}`,
-        conteudo,
-        'portrait'
-      ),
-      'iframe-cartoes-aniversariantes'
+    visualizarRelatorioExtra(
+      'Cartões de aniversariantes',
+      `Referência: ${formatarMesAtualExtenso()}`,
+      conteudo,
+      'portrait',
+      'cartoes-aniversariantes'
     )
   }
 
@@ -9267,6 +9296,51 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
           )}
         </div>
+
+        {relatorioExtraVisualizacao && (
+          <div
+            id="visualizacao-relatorio-extra"
+            className={`relatorio-extra-visualizacao no-print relatorio-extra-${relatorioExtraVisualizacao.orientacao}`}
+          >
+            <div className="relatorio-extra-topo">
+              <div>
+                <span className="selo-publico">Visualização do relatório</span>
+                <h3>{relatorioExtraVisualizacao.titulo}</h3>
+                {relatorioExtraVisualizacao.subtitulo && (
+                  <p>{relatorioExtraVisualizacao.subtitulo}</p>
+                )}
+              </div>
+
+              <div className="relatorio-extra-acoes">
+                <button
+                  type="button"
+                  className="botao-principal"
+                  onClick={imprimirRelatorioExtraVisualizado}
+                >
+                  Baixar ou imprimir
+                </button>
+
+                <button
+                  type="button"
+                  className="botao-secundario"
+                  onClick={fecharRelatorioExtraVisualizado}
+                >
+                  Fechar visualização
+                </button>
+              </div>
+            </div>
+
+            <div className="relatorio-extra-aviso">
+              Confira as informações abaixo antes de gerar o PDF ou mandar para impressão.
+              Esta visualização não altera nenhum cadastro da igreja.
+            </div>
+
+            <div
+              className="relatorio-extra-conteudo"
+              dangerouslySetInnerHTML={{ __html: relatorioExtraVisualizacao.conteudoHtml }}
+            />
+          </div>
+        )}
 
         <div className="relatorio-folha">
           <div className="cabecalho-relatorio">
