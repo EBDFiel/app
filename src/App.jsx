@@ -1381,6 +1381,10 @@ function App() {
   }
 
   async function acessarIgrejaComoSuporte(igreja, event = null) {
+    // ATENÇÃO: função crítica do administrador.
+    // Em novas atualizações, não atrasar a troca para modo suporte até terminar consultas.
+    // Primeiro abre a igreja visualmente; depois carrega os dados. Isso evita o problema
+    // de o botão apenas rolar a página e parecer que não respondeu.
     if (event?.preventDefault) {
       event.preventDefault()
     }
@@ -1442,43 +1446,46 @@ function App() {
         )
       }
 
-      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
-
-      setIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario((perfilAnterior) => ({
-        ...perfilAnterior,
-        id: perfilAnterior?.id || null,
+      const perfilSuporteAdmin = {
+        ...perfilUsuario,
+        id: perfilUsuario?.id || null,
         user_id: sessaoAtual?.user?.id,
-        nome: perfilAnterior?.nome || 'Administrador do sistema',
+        nome: perfilUsuario?.nome || 'Administrador do sistema',
         email: emailSessaoAtual,
         perfil: 'secretaria',
         igreja_id: igrejaIdSelecionada,
         classe_id: null,
         modo_suporte_admin: true,
-      }))
+      }
 
+      // Resposta imediata ao clique: isso preserva o botão Acessar igreja.
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+      setPerfilUsuario(perfilSuporteAdmin)
       setPaginaAtual('painel')
 
       if (typeof window !== 'undefined') {
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
+        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
       }
+
+      // Depois que a tela já respondeu, carregamos os dados da igreja.
+      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
+
+      setIgrejaSuporteAdmin(igrejaSelecionada)
+      setIgrejaAtualPiloto(igrejaSelecionada)
+      setIgrejaId(igrejaIdSelecionada)
+      setPerfilUsuario(perfilSuporteAdmin)
+      setPaginaAtual('painel')
     } catch (erroSuporte) {
       console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
-
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
-      }
-
-      setIgrejaSuporteAdmin(null)
       setErroSistema(
         erroSuporte?.message ||
-          'Não foi possível acessar esta igreja em modo suporte agora.'
+          'Não foi possível carregar todos os dados da igreja agora. O modo suporte foi aberto, mas confira sua conexão e tente atualizar a página.'
       )
       alert(
         erroSuporte?.message ||
-          'Não foi possível acessar esta igreja em modo suporte agora.'
+          'Não foi possível carregar todos os dados da igreja agora. Confira sua conexão e tente novamente.'
       )
     } finally {
       setCarregando(false)
@@ -2920,29 +2927,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
-      await inserirDadosIniciais(igrejaAtualId, sessaoAtual)
-
-      let novaConsultaClasses = supabase
-        .from('classes')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        if (idsClassesPermitidas.length > 0) {
-          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
-        } else {
-          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
-        }
-      }
-
-      const resultadoClasses = await novaConsultaClasses
-      classesBanco = resultadoClasses.data
-      erroClasses = resultadoClasses.error
-
-      if (erroClasses) {
-        throw erroClasses
-      }
+      // Proteção permanente: não criar classes/alunos automaticamente ao carregar a igreja.
+      // Isso preserva os cadastros reais e evita que futuras mudanças recriem turmas de exemplo
+      // ou alterem vínculos existentes. Igrejas sem classe devem ser ajustadas manualmente pela tela Classes.
+      classesBanco = []
     }
 
     let consultaAlunos = supabase
