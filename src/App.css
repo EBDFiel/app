@@ -18343,3 +18343,206 @@ body {
     min-width: 720px;
   }
 }
+
+/* =========================================================
+   v75 - Ajuste compacto dos cards de chamada no celular/tablet
+   Corrige botões Presente/Faltou grandes demais e reduz rolagem.
+   ========================================================= */
+.pagina-chamada .lista {
+  gap: 10px !important;
+}
+
+.pagina-chamada .item-chamada {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 310px) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+  overflow: visible !important;
+}
+
+.pagina-chamada .item-chamada > div:first-child {
+  min-width: 0 !important;
+}
+
+.pagina-chamada .item-chamada h3 {
+  margin: 0 0 4px !important;
+  font-size: clamp(17px, 2.4vw, 20px) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.pagina-chamada .item-chamada p {
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+.pagina-chamada .acoes-chamada {
+  width: 100% !important;
+  max-width: 310px !important;
+  margin-left: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.pagina-chamada .acoes-chamada-professores {
+  max-width: 430px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.pagina-chamada .acoes-chamada > *,
+.pagina-chamada .botao-presenca,
+.pagina-chamada .botao-falta,
+.pagina-chamada .botao-justificou {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  flex-basis: auto !important;
+}
+
+.pagina-chamada .botao-presenca,
+.pagina-chamada .botao-falta,
+.pagina-chamada .botao-justificou {
+  min-height: 46px !important;
+  height: 46px !important;
+  padding: 0 12px !important;
+  border-radius: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  box-shadow: none !important;
+}
+
+.pagina-chamada .botao-presenca:not(.ativo-presente) {
+  background: #f3fff7 !important;
+  border: 1px solid rgba(22, 163, 74, 0.28) !important;
+  color: #166534 !important;
+}
+
+.pagina-chamada .botao-falta:not(.ativo-falta) {
+  background: #fff7f7 !important;
+  border: 1px solid rgba(220, 38, 38, 0.22) !important;
+  color: #b91c1c !important;
+}
+
+.pagina-chamada .botao-justificou:not(.ativo-justificou) {
+  background: #fffaf0 !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  color: #92400e !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente,
+.pagina-chamada .botao-falta.ativo-falta,
+.pagina-chamada .botao-justificou.ativo-justificou {
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10) !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.pagina-chamada .botao-falta.ativo-falta {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.pagina-chamada .botao-justificou.ativo-justificou {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+.pagina-chamada .acoes-chamada-rapida {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin: 14px 0 14px !important;
+}
+
+.pagina-chamada .botao-marcar-todos {
+  min-height: 46px !important;
+  height: auto !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  line-height: 1.18 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.pagina-chamada .resumo-chamada {
+  padding: 14px 16px !important;
+  border-radius: 16px !important;
+  gap: 14px !important;
+}
+
+@media screen and (max-width: 1024px) {
+  .pagina-chamada .item-chamada {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding: 14px !important;
+  }
+
+  .pagina-chamada .acoes-chamada {
+    max-width: none !important;
+    margin-left: 0 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .pagina-chamada .acoes-chamada-professores {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .pagina-chamada .item-chamada {
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .pagina-chamada .item-chamada h3 {
+    font-size: 18px !important;
+  }
+
+  .pagina-chamada .item-chamada p {
+    font-size: 13px !important;
+  }
+
+  .pagina-chamada .botao-presenca,
+  .pagina-chamada .botao-falta,
+  .pagina-chamada .botao-justificou,
+  .pagina-chamada .botao-marcar-todos {
+    min-height: 44px !important;
+    height: 44px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .pagina-chamada .acoes-chamada {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .acoes-chamada-professores {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .acoes-chamada-rapida {
+    grid-template-columns: 1fr !important;
+  }
+}
