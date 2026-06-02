@@ -18648,3 +18648,98 @@ body {
     border: 0 !important;
   }
 }
+
+
+/* v77 - Atalho principal de chamada no topo do painel */
+.atalho-chamada-topo {
+  margin-top: 16px;
+  width: min(100%, 420px);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(219, 234, 254, 0.94));
+  color: #082f49;
+  border-radius: 18px;
+  padding: 12px 16px;
+  cursor: pointer;
+  box-shadow: 0 18px 34px rgba(2, 132, 199, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  text-align: left;
+}
+
+.atalho-chamada-topo:hover {
+  transform: translateY(-1px);
+  border-color: rgba(250, 204, 21, 0.78);
+  box-shadow: 0 22px 40px rgba(2, 132, 199, 0.23);
+}
+
+.atalho-chamada-topo:focus-visible {
+  outline: 3px solid rgba(250, 204, 21, 0.48);
+  outline-offset: 3px;
+}
+
+.atalho-chamada-topo-icone {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0ea5e9, #0f766e);
+  box-shadow: 0 12px 22px rgba(14, 165, 233, 0.24);
+}
+
+.atalho-chamada-topo-icone .icone-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.atalho-chamada-topo-texto {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.atalho-chamada-topo-texto strong {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.atalho-chamada-topo-texto small {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+@media (max-width: 768px) {
+  .atalho-chamada-topo {
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px 13px;
+    border-radius: 16px;
+  }
+
+  .atalho-chamada-topo-icone {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .atalho-chamada-topo-texto strong {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 430px) {
+  .atalho-chamada-topo {
+    gap: 10px;
+  }
+
+  .atalho-chamada-topo-texto small {
+    font-size: 11px;
+  }
+}
