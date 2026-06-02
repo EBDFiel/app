@@ -6652,10 +6652,26 @@ button.botao-principal {
   text-align: center !important;
 }
 
-.linha-professor-relatorio td {
+.tabela-ebd .linha-professores-titulo,
+.tabela-ebd .linha-professores-cabecalho,
+.tabela-ebd .linha-professor-tabela-relatorio {
+  display: table-row !important;
+}
+
+.tabela-ebd .linha-professores-titulo td,
+.tabela-ebd .linha-professores-cabecalho td,
+.tabela-ebd .linha-professor-tabela-relatorio td {
+  display: table-cell !important;
+}
+
+.linha-professor-tabela-relatorio td {
   background: #ffffff !important;
   color: #071827 !important;
   font-weight: 700;
+  display: table-cell !important;
+  padding: 8px 6px !important;
+  border: 1px solid #0f172a !important;
+  vertical-align: middle;
 }
 
 @media (max-width: 760px) {
@@ -6677,16 +6693,16 @@ button.botao-principal {
 
   .linha-professores-titulo td,
   .linha-professores-cabecalho td,
-  .linha-professor-relatorio td {
-    display: block !important;
-    width: 100% !important;
+  .linha-professor-tabela-relatorio td {
+    display: table-cell !important;
+    width: auto !important;
   }
 
   .linha-professores-cabecalho {
     display: none !important;
   }
 
-  .linha-professor-relatorio td::before {
+  .linha-professor-tabela-relatorio td::before {
     content: none !important;
   }
 }
@@ -6705,6 +6721,12 @@ button.botao-principal {
   .linha-professores-cabecalho td {
     background: #f3f4f6 !important;
     color: #000000 !important;
+  }
+
+  .linha-professor-tabela-relatorio td {
+    background: #ffffff !important;
+    color: #000000 !important;
+    display: table-cell !important;
   }
 }
 
