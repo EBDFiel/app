@@ -6914,8 +6914,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
   if (!sessao && telaPublica === 'login') {
     return (
-      <div className="tela-login">
-        <section className="painel-apresentacao">
+      <div className="tela-login tela-login-v70">
+        <section className="painel-apresentacao painel-login-v70">
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
@@ -6930,16 +6930,34 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
           </div>
 
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Área segura do cliente</span>
-            <h2>Acesse o painel da sua igreja.</h2>
+          <div className="apresentacao-texto apresentacao-login-v70">
+            <span className="selo-apresentacao">Área segura da igreja</span>
+            <h2>Acesse o sistema da sua Escola Bíblica Dominical.</h2>
             <p>
-              Entre com suas credenciais para gerenciar classes, alunos, chamadas,
-              configurações e relatórios da Escola Bíblica Dominical.
+              Entre para cuidar de classes, alunos, professores, chamadas, relatórios
+              e configurações em um ambiente simples e organizado.
             </p>
           </div>
 
-          <div className="beneficios-login">
+          <div className="preview-login-v70" aria-hidden="true">
+            <div className="preview-login-card preview-login-card-maior">
+              <span>Chamada digital</span>
+              <strong>Presenças registradas</strong>
+              <small>Dados separados por igreja</small>
+            </div>
+            <div className="preview-login-card">
+              <span>Relatórios</span>
+              <strong>PDF pronto</strong>
+              <small>Organização para a secretaria</small>
+            </div>
+            <div className="preview-login-card">
+              <span>Frequência</span>
+              <strong>100%</strong>
+              <small>Acompanhamento semanal</small>
+            </div>
+          </div>
+
+          <div className="beneficios-login beneficios-login-v70">
             <div className="beneficio-item">
               <Icone nome="classes" className="icone-beneficio" />
               <span>Classes organizadas</span>
@@ -6959,7 +6977,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </div>
         </section>
 
-        <section className="cartao-login">
+        <section className="cartao-login cartao-login-v70">
           <button
             className="botao-voltar-publico"
             type="button"
@@ -6973,13 +6991,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <Icone nome="usuarios" className="icone-status" />
             </div>
             <div>
-              <h2>Já foi aprovado?</h2>
-              <p>Entre com seu e-mail e senha para acessar o sistema.</p>
+              <h2>Acesse sua conta</h2>
+              <p>Entre com o e-mail e a senha cadastrados para gerenciar sua igreja.</p>
             </div>
           </div>
 
-          <div className="aviso-login-aprovado">
-            Use o login abaixo somente se sua igreja já foi aprovada.
+          <div className="aviso-login-aprovado aviso-login-v70">
+            Use este acesso somente se sua igreja já foi aprovada pelo administrador.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -7016,12 +7034,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </button>
           </form>
 
-          <div className="bloco-criar-piloto bloco-cadastro-destaque">
+          <div className="bloco-criar-piloto bloco-cadastro-destaque bloco-cadastro-v70">
             <span className="selo-primeiro-acesso">Primeiro acesso?</span>
-            <h3>Cadastrar minha igreja</h3>
+            <h3>Solicitar cadastro da igreja</h3>
             <p>
-              Se você recebeu o código do piloto, cadastre sua igreja para análise
-              e aprovação do administrador.
+              Ainda não tem acesso? Cadastre sua igreja para análise e liberação do
+              administrador.
             </p>
 
             <button
@@ -7029,7 +7047,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               type="button"
               onClick={() => setTelaPublica('cadastroPiloto')}
             >
-              Cadastrar minha igreja
+              Solicitar cadastro da igreja
             </button>
           </div>
         </section>
@@ -7075,7 +7093,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
               <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'FAQ'}</a>
+              <a href="#faq">{'Dúvidas'}</a>
               <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
                 {'Entrar no sistema'}
               </button>
@@ -7094,7 +7112,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {'Planos'}
           </a>
           <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            {'FAQ'}
+            {'Dúvidas'}
           </a>
           <button
             className="btn-nav-mobile"
@@ -7124,16 +7142,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                 <h1>
                   {'Organize sua '}
-                  <span>{'Escola B\u00edblica Dominical'}</span>
-                  {' sem planilhas e sem retrabalho'}
+                  <span>{'Escola Bíblica Dominical'}</span>
+                  {' em poucos minutos'}
                 </h1>
 
                 <p>
-                  {'Cadastre classes, alunos e professores, registre chamadas e gere relat\u00f3rios em PDF em uma plataforma simples para igrejas.'}
+                  {'Controle classes, alunos, professores, chamadas e relatórios em um só lugar, sem planilhas e sem retrabalho.'}
                 </p>
 
-                <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                  <span>{'→'}</span> {'Entrar no sistema'}
+                <button className="btn-primary btn-hero-login-v70" type="button" onClick={() => setTelaPublica('login')}>
+                  {'Entrar no sistema'}
                 </button>
 
                 <div className="hero-stats">
@@ -7142,8 +7160,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     <div className="stat-label">{'Igrejas no piloto'}</div>
                   </div>
                   <div className="stat">
-                    <div className="stat-number">{'\uD83D\uDCC4'}</div>
-                    <div className="stat-label">{'Relat\u00f3rios'}</div>
+                    <div className="stat-number">{'PDF'}</div>
+                    <div className="stat-label">{'Relatórios prontos'}</div>
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'24/7'}</div>
@@ -7160,15 +7178,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </div>
 
                 <div className="mockup-body">
-                  <div className="mockup-check">{'\u2713'}</div>
-                  <h3>{'Chamada digital'}</h3>
-                  <p>{'Presen\u00e7a registrada em tempo real'}</p>
+                  <div className="mockup-check">{'✓'}</div>
+                  <h3>{'Painel da EBD'}</h3>
+                  <p>{'Resumo simples para secretaria, professores e liderança.'}</p>
 
-                  <hr />
+                  <div className="mockup-metricas-v70">
+                    <div>
+                      <strong>{'24'}</strong>
+                      <span>{'presentes'}</span>
+                    </div>
+                    <div>
+                      <strong>{'92%'}</strong>
+                      <span>{'frequência'}</span>
+                    </div>
+                    <div>
+                      <strong>{'PDF'}</strong>
+                      <span>{'relatório'}</span>
+                    </div>
+                  </div>
 
-                  <div className="mockup-row">
-                    <span>{'24 presentes'}</span>
-                    <span>{'92% frequ\u00eancia'}</span>
+                  <div className="mockup-lista-v70">
+                    <span>{'Classes organizadas'}</span>
+                    <span>{'Chamada digital'}</span>
+                    <span>{'Aniversariantes da semana'}</span>
                   </div>
                 </div>
               </div>
@@ -7280,7 +7312,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
           <section className="section section-plans" id="planos">
             <div className="container">
-              <h2 className="section-title">{'Teste piloto'}</h2>
+              <h2 className="section-title">{'Planos e acesso'}</h2>
 
               <div className="plans-grid">
                 <article className="plan-card">
@@ -7294,7 +7326,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </article>
 
                 <article className="plan-card featured">
-                  <div className="plan-badge">{'Popular'}</div>
+                  <div className="plan-badge">{'Mais usado'}</div>
                   <h3>{'Plano Igreja'}</h3>
                   <div className="plan-price">{'Sob consulta'}</div>
                   <p>{'Para uso completo na rotina da EBD.'}</p>
@@ -7361,7 +7393,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
               <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'FAQ'}</a>
+              <a href="#faq">{'Dúvidas'}</a>
             </div>
 
             <div className="footer-col">
