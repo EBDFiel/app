@@ -3514,6 +3514,41 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1)
   }
 
+  function formatarDataCurtaRelatorio(dataTexto) {
+    if (!dataTexto) {
+      return buscarDataAtual()
+    }
+
+    const texto = String(dataTexto).trim()
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
+      return texto
+    }
+
+    const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/)
+
+    if (iso) {
+      return `${iso[3]}/${iso[2]}/${iso[1]}`
+    }
+
+    const partes = texto.split('/')
+
+    if (partes.length === 3) {
+      const dia = partes[0].padStart(2, '0')
+      const mes = partes[1].padStart(2, '0')
+      const ano = partes[2]
+      return `${dia}/${mes}/${ano}`
+    }
+
+    const data = new Date(texto)
+
+    if (!Number.isNaN(data.getTime())) {
+      return data.toLocaleDateString('pt-BR')
+    }
+
+    return texto
+  }
+
   function buscarNomeIgrejaParaExibicao() {
     return configuracaoIgreja.nome_igreja.trim() || 'EBD Fiel'
   }
@@ -4589,7 +4624,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .relatorio-folha {
-              width: Online;
+              width: 100%;
               max-width: 980px;
               margin: 0 auto;
               background: #fff;
@@ -4623,12 +4658,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             }
 
             .tabela-container {
-              width: Online;
+              width: 100%;
               overflow-x: visible;
             }
 
             table {
-              width: Online;
+              width: 100%;
               border-collapse: collapse;
               table-layout: fixed;
               font-size: 11px;
@@ -4661,6 +4696,202 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
             .linha-domingo-anterior td {
               font-weight: 700;
+            }
+
+            .relatorio-folha {
+              max-width: 1120px;
+              border: 1px solid #cbd5e1;
+              border-radius: 18px;
+              padding: 20px;
+              box-shadow: none;
+            }
+
+            .cabecalho-relatorio-oficial {
+              display: grid;
+              grid-template-columns: 1.2fr 1.4fr 170px;
+              gap: 14px;
+              align-items: center;
+              text-align: left;
+              margin-bottom: 16px;
+              padding-bottom: 14px;
+              border-bottom: 1px solid #d8e0eb;
+            }
+
+            .cabecalho-relatorio-marca {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+
+            .logo-relatorio {
+              width: 58px;
+              height: 58px;
+              margin: 0;
+            }
+
+            .relatorio-selo-institucional {
+              display: inline-block;
+              margin-bottom: 4px;
+              color: #b7791f;
+              font-size: 9px;
+              font-weight: 800;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+            }
+
+            .cabecalho-relatorio h3 {
+              margin: 0 0 4px;
+              color: #0f2a44;
+              font-size: 18px;
+              line-height: 1.15;
+              text-transform: uppercase;
+            }
+
+            .cabecalho-relatorio p,
+            .relatorio-info-igreja p {
+              margin: 0 0 3px;
+              color: #475569;
+              font-size: 10.5px;
+              line-height: 1.35;
+              font-weight: 500;
+            }
+
+            .relatorio-info-igreja strong {
+              color: #0f2a44;
+            }
+
+            .relatorio-data-selo {
+              border: 1px solid #d6c28b;
+              background: #fffaf0;
+              border-radius: 12px;
+              padding: 10px;
+              text-align: center;
+            }
+
+            .relatorio-data-selo span,
+            .relatorio-data-selo small {
+              display: block;
+              color: #64748b;
+              font-size: 9px;
+              font-weight: 700;
+            }
+
+            .relatorio-data-selo strong {
+              display: block;
+              color: #0f2a44;
+              font-size: 16px;
+              margin: 2px 0;
+            }
+
+            table {
+              border: 1px solid #cbd5e1;
+              border-radius: 12px;
+              overflow: hidden;
+              font-size: 10.5px;
+            }
+
+            th,
+            td {
+              border: 1px solid #d6dee9;
+              padding: 7px 6px;
+              color: #1f2937;
+            }
+
+            th {
+              background: #123c63;
+              color: #ffffff;
+              font-size: 10px;
+              letter-spacing: 0.01em;
+            }
+
+            .linha-total td {
+              background: #eef6ff;
+              color: #0f2a44;
+              border-top: 2px solid #8aa4bf;
+              font-weight: 800;
+            }
+
+            .linha-domingo-anterior td {
+              background: #fffaf0;
+              color: #5f4b16;
+              text-align: left;
+              font-weight: 700;
+            }
+
+            .linha-domingo-anterior span,
+            .linha-domingo-anterior small {
+              display: inline-block;
+              margin-right: 8px;
+            }
+
+            .linha-professores-titulo td {
+              background: #123c63 !important;
+              color: #ffffff !important;
+              padding: 9px 8px;
+              border-color: #123c63;
+            }
+
+            .relatorio-professores-titulo-conteudo {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 8px;
+              flex-wrap: wrap;
+              text-align: center;
+            }
+
+            .relatorio-professores-titulo-conteudo strong {
+              text-transform: uppercase;
+              letter-spacing: 0.03em;
+            }
+
+            .relatorio-professores-titulo-conteudo span {
+              background: rgba(255, 255, 255, 0.15);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 999px;
+              padding: 3px 7px;
+              font-size: 9.5px;
+            }
+
+            .linha-professores-cabecalho td {
+              background: #f7eec7 !important;
+              color: #0f2a44 !important;
+              font-weight: 800;
+            }
+
+            .linha-professor-tabela-relatorio td {
+              border-color: #d6dee9 !important;
+            }
+
+            .status-relatorio-professor {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 999px;
+              padding: 3px 8px;
+              font-size: 9.5px;
+              font-weight: 800;
+              background: #e2e8f0;
+              color: #334155;
+            }
+
+            .status-relatorio-professor.status-presente {
+              background: #dcfce7;
+              color: #166534;
+            }
+
+            .status-relatorio-professor.status-falta {
+              background: #fee2e2;
+              color: #991b1b;
+            }
+
+            .rodape-relatorio-oficial {
+              margin-top: 12px;
+              padding-top: 8px;
+              border-top: 1px solid #e2e8f0;
+              color: #64748b;
+              text-align: center;
+              font-size: 9.5px;
             }
 
             @media print {
@@ -5313,12 +5544,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       const tabelaContainer = relatorioClone.querySelector('.tabela-container')
       if (tabelaContainer) {
         tabelaContainer.style.overflow = 'visible'
-        tabelaContainer.style.width = 'Online'
+        tabelaContainer.style.width = '100%'
       }
 
       const tabela = relatorioClone.querySelector('table')
       if (tabela) {
-        tabela.style.width = 'Online'
+        tabela.style.width = '100%'
         tabela.style.tableLayout = 'fixed'
         tabela.style.borderCollapse = 'collapse'
       }
@@ -10154,6 +10385,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const totaisRelatorio = calcularTotaisRelatorio()
     const dataRelatorio = buscarDataUltimaChamada()
     const dataRelatorioFormatada = formatarDataRelatorio(dataRelatorio)
+    const dataRelatorioCurta = formatarDataCurtaRelatorio(dataRelatorio)
     const resumoProfessores = calcularResumoUltimaChamadaProfessores()
     const percentualProfessores = calcularPercentualPresencaProfessores()
 
@@ -10277,29 +10509,44 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         </div>
 
         <div className="relatorio-folha">
-          <div className="cabecalho-relatorio">
-            <img
-              src="/logo-oficial-ebd-fiel.png"
-              alt="Logo EBD Fiel"
-              className="logo-relatorio"
-            />
-            <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
-            {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
-            {configuracaoIgreja.pastor_dirigente && (
-              <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
-            )}
-            {configuracaoIgreja.superintendente_ebd && (
-              <p>Superintendente da EBD: {configuracaoIgreja.superintendente_ebd}</p>
-            )}
-            {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
-            {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
-              <p>
-                {[configuracaoIgreja.telefone, configuracaoIgreja.email]
-                  .filter(Boolean)
-                  .join(' | ')}
-              </p>
-            )}
-            <p>{dataRelatorioFormatada}</p>
+          <div className="cabecalho-relatorio cabecalho-relatorio-oficial">
+            <div className="cabecalho-relatorio-marca">
+              <img
+                src="/logo-oficial-ebd-fiel.png"
+                alt="Logo EBD Fiel"
+                className="logo-relatorio"
+              />
+
+              <div className="cabecalho-relatorio-titulos">
+                <span className="relatorio-selo-institucional">Relatório oficial da EBD</span>
+                <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
+                {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
+              </div>
+            </div>
+
+            <div className="relatorio-info-igreja">
+              {configuracaoIgreja.pastor_dirigente && (
+                <p><strong>Dirigente:</strong> {configuracaoIgreja.pastor_dirigente}</p>
+              )}
+              {configuracaoIgreja.superintendente_ebd && (
+                <p><strong>Superintendente:</strong> {configuracaoIgreja.superintendente_ebd}</p>
+              )}
+              {montarEnderecoIgreja() && <p><strong>Endereço:</strong> {montarEnderecoIgreja()}</p>}
+              {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
+                <p>
+                  <strong>Contato:</strong>{' '}
+                  {[configuracaoIgreja.telefone, configuracaoIgreja.email]
+                    .filter(Boolean)
+                    .join(' | ')}
+                </p>
+              )}
+            </div>
+
+            <div className="relatorio-data-selo">
+              <span>Data da EBD</span>
+              <strong>{dataRelatorioCurta}</strong>
+              <small>{dataRelatorioFormatada}</small>
+            </div>
           </div>
 
           <div className="tabela-container">
@@ -10316,7 +10563,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   <th>Bíblia</th>
                   <th>Revista</th>
                   <th>Ofertas</th>
-                  <th>%</th>
+                  <th>Frequência</th>
                 </tr>
               </thead>
 
@@ -10351,18 +10598,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </tr>
 
                 <tr className="linha-domingo-anterior">
-                  <td colSpan="11">DOMINGO anterior</td>
+                  <td colSpan="11">
+                    <span>Domingo anterior</span>
+                    <small>Dados comparativos da última Escola Bíblica Dominical.</small>
+                  </td>
                 </tr>
 
                 {usuarioEhSecretaria() && (
                   <>
                     <tr className="linha-professores-titulo">
                       <td colSpan="11">
-                        CHAMADA DOS PROFESSORES - Total: {resumoProfessores.totalProfessores} •
-                        Presentes: {resumoProfessores.presentes} - Faltaram:{' '}
-                        {resumoProfessores.faltaram} - Justificaram:{' '}
-                        {resumoProfessores.justificaram} - Frequência:{' '}
-                        {percentualProfessores}%
+                        <div className="relatorio-professores-titulo-conteudo">
+                          <strong>Chamada dos professores</strong>
+                          <span>Total: {resumoProfessores.totalProfessores}</span>
+                          <span>Presentes: {resumoProfessores.presentes}</span>
+                          <span>Faltaram: {resumoProfessores.faltaram}</span>
+                          <span>Justificaram: {resumoProfessores.justificaram}</span>
+                          <span>Frequência: {percentualProfessores}%</span>
+                        </div>
                       </td>
                     </tr>
 
@@ -10385,8 +10638,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                           <td colSpan="3">
                             {registro.classeReferencia || registro.classes || '-'}
                           </td>
-                          <td colSpan="2">{traduzirStatusProfessor(registro.status)}</td>
-                          <td colSpan="2">{formatarDataRelatorio(resumoProfessores.data)}</td>
+                          <td colSpan="2">
+                            <span className={`status-relatorio-professor status-${registro.status}`}>
+                              {traduzirStatusProfessor(registro.status)}
+                            </span>
+                          </td>
+                          <td colSpan="2">{formatarDataCurtaRelatorio(resumoProfessores.data)}</td>
                         </tr>
                       ))
                     ) : (
@@ -10398,6 +10655,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 )}
               </tbody>
             </table>
+          </div>
+
+          <div className="rodape-relatorio-oficial">
+            Relatório gerado pelo EBD Fiel — Gestão inteligente para Escola Bíblica Dominical • Gerado em {buscarDataAtual()}
           </div>
         </div>
 
