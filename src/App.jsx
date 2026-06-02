@@ -7813,6 +7813,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       .toLowerCase() || 'aniversariante'
   }
 
+  function baixarCanvasComoPng(canvas, nomeArquivo) {
+    const link = document.createElement('a')
+    link.href = canvas.toDataURL('image/png')
+    link.download = nomeArquivo
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
   async function capturarCartaoAniversario() {
     const area = cartaoAniversarioRef.current
 
@@ -7837,19 +7846,17 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         return
       }
 
-      const link = document.createElement('a')
-      link.href = canvas.toDataURL('image/png')
-      link.download = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
+      baixarCanvasComoPng(
+        canvas,
+        `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
+      )
     } catch (error) {
       console.error('Erro ao baixar cartão de aniversário:', error)
       alert('Não foi possível baixar o cartão. Tente novamente.')
     }
   }
 
-  async function compartilharCartaoAniversario() {
+  async function enviarCartaoPeloWhatsApp() {
     try {
       const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
       const canvas = await capturarCartaoAniversario()
@@ -7858,37 +7865,20 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         return
       }
 
-      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+      const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
+      baixarCanvasComoPng(canvas, nomeArquivo)
 
-      if (!blob) {
-        await baixarImagemCartaoAniversario()
-        return
-      }
-
-      const arquivo = new File(
-        [blob],
-        `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`,
-        { type: 'image/png' }
+      const mensagem = encodeURIComponent(
+        `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉\n\nA Escola Bíblica Dominical preparou este cartão com carinho. Que Deus abençoe sua vida com paz, alegria e muitas vitórias.\n\nAnexe a imagem do cartão que acabou de ser baixada e envie por aqui.`
       )
+      const janelaWhatsApp = window.open(`https://wa.me/?text=${mensagem}`, '_blank', 'noopener,noreferrer')
 
-      if (navigator.share && navigator.canShare?.({ files: [arquivo] })) {
-        await navigator.share({
-          title: `Cartão de aniversário - ${aniversariante?.nome || 'EBD'}`,
-          text: 'Cartão de aniversário da Escola Bíblica Dominical.',
-          files: [arquivo],
-        })
-        return
+      if (!janelaWhatsApp) {
+        alert('O cartão foi baixado. Abra o WhatsApp e anexe a imagem para enviar ao aniversariante.')
       }
-
-      await baixarImagemCartaoAniversario()
-      alert('Seu navegador não abriu o compartilhamento direto. A imagem foi baixada para você enviar pelo WhatsApp.')
     } catch (error) {
-      if (error?.name === 'AbortError') {
-        return
-      }
-
-      console.error('Erro ao compartilhar cartão de aniversário:', error)
-      await baixarImagemCartaoAniversario()
+      console.error('Erro ao abrir WhatsApp para envio do cartão:', error)
+      alert('Não foi possível abrir o WhatsApp. O cartão pode ser baixado pelo botão Baixar cartão.')
     }
   }
 
@@ -8134,8 +8124,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <button className="botao-principal" type="button" onClick={baixarImagemCartaoAniversario} disabled={!aniversarianteCartao}>
               Baixar cartão
             </button>
-            <button className="botao-secundario" type="button" onClick={compartilharCartaoAniversario} disabled={!aniversarianteCartao}>
-              Compartilhar
+            <button className="botao-secundario" type="button" onClick={enviarCartaoPeloWhatsApp} disabled={!aniversarianteCartao}>
+              Enviar pelo WhatsApp
             </button>
             <button className="botao-secundario" type="button" onClick={baixarPdfCartaoAniversario} disabled={!aniversarianteCartao}>
               Baixar PDF do cartão
