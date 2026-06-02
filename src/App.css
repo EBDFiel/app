@@ -14426,6 +14426,142 @@ button.botao-principal {
   line-height: 1.05;
 }
 
+
+/* Ajuste v64: cartão completo na visualização, sem corte */
+.cartao-aniversario-area {
+  align-items: start;
+}
+
+.cartao-aniversario-visualizacao {
+  align-items: start;
+  overflow: visible;
+}
+
+.cartao-aniversario-oficial {
+  width: min(100%, 420px);
+}
+
+.cartao-aniversario-texto {
+  padding: 56px 22px 16px;
+}
+
+.cartao-aniversario-livro {
+  top: 10px;
+  width: 62px;
+  height: 46px;
+  font-size: 26px;
+}
+
+.cartao-aniversario-livro::before {
+  top: -14px;
+  width: 82px;
+  height: 34px;
+}
+
+.cartao-aniversario-pomba {
+  top: 22px;
+  right: 24px;
+  font-size: 30px;
+}
+
+.cartao-aniversario-texto h4 span {
+  font-size: clamp(34px, 5.6vw, 44px);
+}
+
+.cartao-aniversario-texto h4 em {
+  font-size: clamp(32px, 5.4vw, 43px);
+}
+
+.cartao-aniversario-texto h4 strong {
+  font-size: clamp(40px, 6.7vw, 54px);
+}
+
+.cartao-aniversario-divisor {
+  margin: 7px 0 6px;
+  font-size: 14px;
+}
+
+.cartao-aniversario-divisor::before,
+.cartao-aniversario-divisor::after {
+  width: 48px;
+  margin-bottom: 4px;
+}
+
+.cartao-aniversario-mensagem {
+  max-width: 72%;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.26;
+}
+
+.cartao-aniversario-versiculo {
+  width: min(84%, 310px);
+  padding: 18px 16px 13px;
+  border-radius: 20px;
+}
+
+.cartao-aniversario-versiculo > span {
+  margin: -36px auto 8px;
+  padding: 7px 15px;
+  font-size: 13px;
+}
+
+.cartao-aniversario-versiculo p {
+  margin-bottom: 7px;
+  font-size: 15px;
+  line-height: 1.22;
+}
+
+.cartao-aniversario-versiculo strong {
+  font-size: 13px;
+}
+
+.cartao-aniversario-texto footer {
+  margin-top: 8px;
+}
+
+.cartao-aniversario-texto footer em {
+  font-size: 20px;
+}
+
+.cartao-aniversario-texto footer strong {
+  font-size: 18px;
+}
+
+.cartao-aniversario-bolo {
+  top: 245px;
+  right: 10px;
+  width: 82px;
+  height: 94px;
+  opacity: 0.45;
+}
+
+.bolo-camada-superior { top: 4px; width: 60px; height: 34px; }
+.bolo-camada-inferior { top: 38px; width: 82px; height: 42px; }
+.bolo-base { bottom: 4px; width: 88px; height: 9px; }
+
+.cartao-aniversario-presente {
+  right: 10px;
+  bottom: 38px;
+  width: 72px;
+  height: 70px;
+  opacity: 0.70;
+}
+
+.presente-caixa {
+  inset: 18px 4px 0;
+}
+
+.presente-laco {
+  width: 48px;
+  height: 32px;
+}
+
+.cartao-aniversario-flores span:nth-child(1) { width: 58px; height: 58px; left: -18px; top: 96px; }
+.cartao-aniversario-flores span:nth-child(2) { width: 88px; height: 88px; left: -30px; bottom: 96px; }
+.cartao-aniversario-flores span:nth-child(3) { width: 46px; height: 46px; left: 48px; bottom: 48px; }
+.cartao-aniversario-flores span:nth-child(4) { width: 36px; height: 36px; left: 34px; top: 190px; }
+
 .janela-aniversariantes-acoes-completas {
   flex-wrap: wrap;
 }
