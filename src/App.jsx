@@ -10228,6 +10228,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                       <div className="acoes-chamada">
                         <button
+                          type="button"
                           className={
                             presencas[String(aluno.id)] === 'presente'
                               ? 'botao-presenca ativo-presente'
@@ -10239,6 +10240,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                         </button>
 
                         <button
+                          type="button"
                           className={
                             presencas[String(aluno.id)] === 'faltou'
                               ? 'botao-falta ativo-falta'
@@ -10311,6 +10313,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                       <div className="acoes-chamada acoes-chamada-professores">
                         <button
+                          type="button"
                           className={
                             presencasProfessores[professor.id] === 'presente'
                               ? 'botao-presenca ativo-presente'
@@ -10324,6 +10327,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                         </button>
 
                         <button
+                          type="button"
                           className={
                             presencasProfessores[professor.id] === 'faltou'
                               ? 'botao-falta ativo-falta'
@@ -10337,6 +10341,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                         </button>
 
                         <button
+                          type="button"
                           className={
                             presencasProfessores[professor.id] === 'justificou'
                               ? 'botao-justificou ativo-justificou'
