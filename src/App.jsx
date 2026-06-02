@@ -309,6 +309,7 @@ iniciarCorrecaoGlobalDeAcentos()
 
 const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
 const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
+const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v78'
 
 const PAGINAS_SISTEMA = [
   'painel',
@@ -402,6 +403,102 @@ function removerIgrejaSuporteAdminSalva() {
   window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
 }
 
+function lerMapaCacheDadosIgreja() {
+  if (typeof window === 'undefined') {
+    return {}
+  }
+
+  try {
+    const cache = JSON.parse(window.localStorage.getItem(CHAVE_CACHE_DADOS_IGREJA) || '{}')
+    return cache && typeof cache === 'object' ? cache : {}
+  } catch (error) {
+    console.error('Erro ao recuperar cache de dados da igreja:', error)
+    return {}
+  }
+}
+
+function montarChaveCacheDadosIgreja(igrejaAtualId, userId = '') {
+  const igrejaIdNormalizada = Number(igrejaAtualId || 0)
+
+  if (!igrejaIdNormalizada) {
+    return ''
+  }
+
+  return `${igrejaIdNormalizada}:${userId || 'usuario'}`
+}
+
+function lerCacheDadosIgreja(igrejaAtualId, userId = '') {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const chaveCache = montarChaveCacheDadosIgreja(igrejaAtualId, userId)
+
+  if (!chaveCache) {
+    return null
+  }
+
+  const mapaCache = lerMapaCacheDadosIgreja()
+  const cache = mapaCache[chaveCache]
+
+  if (!cache || typeof cache !== 'object') {
+    return null
+  }
+
+  const criadoEm = Number(cache.criadoEm || 0)
+  const seteDias = 7 * 24 * 60 * 60 * 1000
+
+  if (criadoEm && Date.now() - criadoEm > seteDias) {
+    return null
+  }
+
+  return cache
+}
+
+function salvarCacheDadosIgreja(igrejaAtualId, userId = '', dados = {}) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const chaveCache = montarChaveCacheDadosIgreja(igrejaAtualId, userId)
+
+  if (!chaveCache) {
+    return
+  }
+
+  try {
+    const mapaCache = lerMapaCacheDadosIgreja()
+    mapaCache[chaveCache] = {
+      ...dados,
+      igrejaId: Number(igrejaAtualId),
+      userId: userId || '',
+      criadoEm: Date.now(),
+    }
+
+    window.localStorage.setItem(CHAVE_CACHE_DADOS_IGREJA, JSON.stringify(mapaCache))
+  } catch (error) {
+    console.error('Erro ao salvar cache de dados da igreja:', error)
+  }
+}
+
+function limparCacheDadosIgrejaUsuario(userId = '') {
+  if (typeof window === 'undefined' || !userId) {
+    return
+  }
+
+  try {
+    const mapaCache = lerMapaCacheDadosIgreja()
+    Object.keys(mapaCache).forEach((chave) => {
+      if (String(mapaCache[chave]?.userId || '') === String(userId)) {
+        delete mapaCache[chave]
+      }
+    })
+    window.localStorage.setItem(CHAVE_CACHE_DADOS_IGREJA, JSON.stringify(mapaCache))
+  } catch (error) {
+    console.error('Erro ao limpar cache de dados da igreja:', error)
+  }
+}
+
 function App() {
   const [paginaAtual, setPaginaAtual] = useState(() => lerPaginaAtualSalva())
   const [carregando, setCarregando] = useState(true)
@@ -467,6 +564,7 @@ function App() {
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
   const [chamadasProfessores, setChamadasProfessores] = useState([])
+  const [dadosIgrejaSincronizados, setDadosIgrejaSincronizados] = useState(false)
   const [igrejaAtualPiloto, setIgrejaAtualPiloto] = useState(null)
   const [feedbackPiloto, setFeedbackPiloto] = useState({
     tipo: 'sugestao',
@@ -495,6 +593,7 @@ function App() {
   const usuarioCarregadoRef = useRef(null)
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
+  const dadosIgrejaSincronizadosRef = useRef(false)
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -528,6 +627,62 @@ function App() {
     paginaAtualRef.current = paginaSegura
     setPaginaAtual(paginaSegura)
     salvarPaginaAtualSalva(paginaSegura)
+  }
+
+  function definirDadosIgrejaSincronizados(valor) {
+    dadosIgrejaSincronizadosRef.current = Boolean(valor)
+    setDadosIgrejaSincronizados(Boolean(valor))
+  }
+
+  function aplicarCacheDadosIgreja(cache) {
+    if (!cache || typeof cache !== 'object') {
+      return false
+    }
+
+    const temDadosOperacionais =
+      Array.isArray(cache.classes) ||
+      Array.isArray(cache.alunos) ||
+      Array.isArray(cache.chamadasSalvas) ||
+      Array.isArray(cache.chamadasProfessores)
+
+    if (!temDadosOperacionais) {
+      return false
+    }
+
+    if (Array.isArray(cache.classes)) {
+      setClasses(cache.classes)
+    }
+
+    if (Array.isArray(cache.alunos)) {
+      setAlunos(cache.alunos)
+    }
+
+    if (Array.isArray(cache.chamadasSalvas)) {
+      setChamadasSalvas(cache.chamadasSalvas)
+    }
+
+    if (Array.isArray(cache.chamadasProfessores)) {
+      setChamadasProfessores(cache.chamadasProfessores)
+    }
+
+    if (Array.isArray(cache.perfisIgreja)) {
+      setPerfisIgreja(cache.perfisIgreja)
+    }
+
+    if (Array.isArray(cache.vinculosProfessores)) {
+      setVinculosProfessores(cache.vinculosProfessores)
+    }
+
+    if (cache.igrejaAtualPiloto) {
+      setIgrejaAtualPiloto(cache.igrejaAtualPiloto)
+    }
+
+    if (cache.configuracaoIgreja) {
+      setConfiguracaoIgreja(cache.configuracaoIgreja)
+    }
+
+    definirDadosIgrejaSincronizados(false)
+    return true
   }
 
   function normalizarIgrejaSuporteAdmin(igreja) {
@@ -995,6 +1150,11 @@ function App() {
   }
 
   function limparDadosDoSistema() {
+    // v78: no logout, os dados visuais da igreja são limpos da tela,
+    // mas o cache local permanece salvo por usuário/igreja. Isso evita que,
+    // após novo login, atualização ou rede lenta no celular, o painel apareça
+    // zerado antes da sincronização real com o Supabase.
+    definirDadosIgrejaSincronizados(false)
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
@@ -1560,6 +1720,7 @@ function App() {
   function limparDadosOperacionaisSemTrocarTela(opcoes = {}) {
     const preservarContextoSuporte = Boolean(opcoes?.preservarContextoSuporte)
 
+    definirDadosIgrejaSincronizados(false)
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
@@ -3115,9 +3276,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     const igrejaAtualId = Number(perfilAtual.igreja_id)
+    const cacheDadosIgreja = lerCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id)
 
     definirPerfilUsuario(perfilAtual)
     setIgrejaId(igrejaAtualId)
+
+    if (cacheDadosIgreja && !dadosIgrejaSincronizadosRef.current) {
+      aplicarCacheDadosIgreja(cacheDadosIgreja)
+    }
 
     const { data: vinculosBanco, error: erroVinculos } = await supabase
       .from('classes_professores')
@@ -3355,57 +3521,81 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setFeedbacksIgreja([])
     }
 
-    setClasses(
-      (classesBanco || []).map((classe) => ({
-        id: Number(classe.id),
-        nome: classe.nome,
-        professor: classe.professor,
-      }))
-    )
+    const classesNormalizadas = (classesBanco || []).map((classe) => ({
+      id: Number(classe.id),
+      nome: classe.nome,
+      professor: classe.professor,
+    }))
 
-    setAlunos(
-      (alunosBanco || []).map((aluno) => ({
-        id: Number(aluno.id),
-        nome: aluno.nome,
-        classeId: Number(aluno.classe_id),
-        telefone: aluno.telefone || '',
-        dataNascimento: aluno.data_nascimento || '',
-        tipoPessoa: aluno.tipo_pessoa || 'aluno',
-      }))
-    )
+    const alunosNormalizados = (alunosBanco || []).map((aluno) => ({
+      id: Number(aluno.id),
+      nome: aluno.nome,
+      classeId: Number(aluno.classe_id),
+      telefone: aluno.telefone || '',
+      dataNascimento: aluno.data_nascimento || '',
+      tipoPessoa: aluno.tipo_pessoa || 'aluno',
+    }))
 
+    const chamadasProfessoresNormalizadas = (chamadasProfessoresBanco || []).map((chamada) => ({
+      id: Number(chamada.id),
+      data: chamada.data,
+      totalProfessores: Number(chamada.total_professores || 0),
+      totalPresentes: Number(chamada.total_presentes || 0),
+      totalFaltas: Number(chamada.total_faltas || 0),
+      totalJustificadas: Number(chamada.total_justificadas || 0),
+      observacoes: chamada.observacoes || '',
+      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+    }))
+
+    const chamadasNormalizadas = (chamadasBanco || []).map((chamada) => ({
+      id: Number(chamada.id),
+      data: chamada.data,
+      classeId: Number(chamada.classe_id),
+      matricula: Number(chamada.matricula || 0),
+      totalPresentes: Number(chamada.total_presentes || 0),
+      totalFaltas: Number(chamada.total_faltas || 0),
+      visitantes: Number(chamada.visitantes || 0),
+      biblias: Number(chamada.biblias || 0),
+      revistas: Number(chamada.revistas || 0),
+      ofertas: Number(chamada.ofertas || 0),
+      totalGeralClasse: Number(chamada.total_geral_classe || 0),
+      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+    }))
+
+    const respostaOnlineVazia =
+      classesNormalizadas.length === 0 &&
+      alunosNormalizados.length === 0 &&
+      chamadasNormalizadas.length === 0 &&
+      chamadasProfessoresNormalizadas.length === 0
+
+    const cacheTemDadosOperacionais =
+      (cacheDadosIgreja?.classes || []).length > 0 ||
+      (cacheDadosIgreja?.alunos || []).length > 0 ||
+      (cacheDadosIgreja?.chamadasSalvas || []).length > 0 ||
+      (cacheDadosIgreja?.chamadasProfessores || []).length > 0
+
+    if (respostaOnlineVazia && cacheTemDadosOperacionais) {
+      aplicarCacheDadosIgreja(cacheDadosIgreja)
+      definirDadosIgrejaSincronizados(false)
+
+      window.setTimeout(() => {
+        if (sessaoRef.current?.user?.id === sessaoAtual.user.id) {
+          carregarDadosOnline(sessaoRef.current).catch((erroRecarregamento) => {
+            console.error('Erro ao tentar recarregar dados da igreja:', erroRecarregamento)
+          })
+        }
+      }, 1200)
+
+      return
+    }
+
+    setClasses(classesNormalizadas)
+    setAlunos(alunosNormalizados)
     setPerfisIgreja(perfisBanco)
     setVinculosProfessores(vinculosBanco || [])
-
-    setChamadasProfessores(
-      (chamadasProfessoresBanco || []).map((chamada) => ({
-        id: Number(chamada.id),
-        data: chamada.data,
-        totalProfessores: Number(chamada.total_professores || 0),
-        totalPresentes: Number(chamada.total_presentes || 0),
-        totalFaltas: Number(chamada.total_faltas || 0),
-        totalJustificadas: Number(chamada.total_justificadas || 0),
-        observacoes: chamada.observacoes || '',
-        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-      }))
-    )
-
-    setChamadasSalvas(
-      (chamadasBanco || []).map((chamada) => ({
-        id: Number(chamada.id),
-        data: chamada.data,
-        classeId: Number(chamada.classe_id),
-        matricula: Number(chamada.matricula || 0),
-        totalPresentes: Number(chamada.total_presentes || 0),
-        totalFaltas: Number(chamada.total_faltas || 0),
-        visitantes: Number(chamada.visitantes || 0),
-        biblias: Number(chamada.biblias || 0),
-        revistas: Number(chamada.revistas || 0),
-        ofertas: Number(chamada.ofertas || 0),
-        totalGeralClasse: Number(chamada.total_geral_classe || 0),
-        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-      }))
-    )
+    setChamadasProfessores(chamadasProfessoresNormalizadas)
+    setChamadasSalvas(chamadasNormalizadas)
+    definirDadosIgrejaSincronizados(true)
 
     if (classePermitidaId) {
       setClasseChamadaId(String(classePermitidaId))
@@ -3413,7 +3603,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const configuracaoAtual = configuracoesBanco?.[0]
 
-    setConfiguracaoIgreja({
+    const configuracaoNormalizada = {
       id: configuracaoAtual?.id || null,
       nome_igreja:
         configuracaoAtual?.nome_igreja ||
@@ -3431,7 +3621,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
       telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
       email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
-    })
+    }
+
+    setConfiguracaoIgreja(configuracaoNormalizada)
+
+    const podeSalvarCacheOperacional =
+      classesNormalizadas.length > 0 ||
+      alunosNormalizados.length > 0 ||
+      chamadasNormalizadas.length > 0 ||
+      chamadasProfessoresNormalizadas.length > 0 ||
+      Boolean(configuracaoNormalizada.nome_igreja)
+
+    if (podeSalvarCacheOperacional) {
+      salvarCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id, {
+        classes: classesNormalizadas,
+        alunos: alunosNormalizados,
+        chamadasSalvas: chamadasNormalizadas,
+        chamadasProfessores: chamadasProfessoresNormalizadas,
+        perfisIgreja: perfisBanco || [],
+        vinculosProfessores: vinculosBanco || [],
+        igrejaAtualPiloto: igrejaPilotoBanco || null,
+        configuracaoIgreja: configuracaoNormalizada,
+      })
+    }
   }
 
   function converterNumero(valor) {
