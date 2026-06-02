@@ -9054,15 +9054,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     return (
-      <section className="conteudo">
-        <div className="topo-pagina">
+      <section className="conteudo pagina-interna pagina-classes">
+        <div className="topo-pagina topo-pagina-interna">
           <div>
+            <span className="subtitulo-pagina-interna">Gestão de turmas</span>
             <h2>Classes</h2>
             <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
           </div>
 
           {!mostrarFormularioClasse && (
-            <button className="botao-principal" onClick={abrirNovaClasse}>
+            <button className="botao-principal" type="button" onClick={abrirNovaClasse}>
               Nova classe
             </button>
           )}
@@ -9272,11 +9273,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       : usuarioEhProfessor()
         ? 'Veja os alunos vinculados às suas classes.'
         : 'Cadastre, edite, busque e organize os alunos por classe.'
+    const obterInicialCadastro = (nome) => String(nome || '?').trim().charAt(0).toUpperCase() || '?'
 
     return (
-      <section className="conteudo">
-        <div className="topo-pagina">
+      <section className={`conteudo pagina-interna pagina-cadastros pagina-${tipoPessoaPagina}s`}>
+        <div className="topo-pagina topo-pagina-interna">
           <div>
+            <span className="subtitulo-pagina-interna">{ehPaginaProfessor ? 'Equipe de ensino' : 'Cadastro e acompanhamento'}</span>
             <h2>{tituloPagina}</h2>
             <p>{descricaoPagina}</p>
           </div>
@@ -9284,6 +9287,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           {podeGerenciarCadastros() && !mostrarFormularioAluno && (
             <button
               className="botao-principal"
+              type="button"
               onClick={() => abrirNovoAluno(tipoPessoaPagina)}
             >
               {ehPaginaProfessor ? 'Novo professor' : 'Novo aluno'}
@@ -9410,7 +9414,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </label>
           )}
 
-          <button className="botao-secundario" onClick={limparFiltrosAlunos}>
+          <button className="botao-secundario" type="button" onClick={limparFiltrosAlunos}>
             Limpar filtros
           </button>
         </div>
@@ -9421,23 +9425,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           {ehPaginaProfessor ? 'professores' : 'alunos'}
         </p>
 
-        <div className="lista">
+        <div className="lista lista-cadastros-moderna">
           {cadastrosFiltrados.map((aluno) => (
-            <div className="item-lista item-com-acoes" key={aluno.id}>
-              <div>
-                <h3>{aluno.nome}</h3>
-                <p>
-                  Tipo: {(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}
-                </p>
-                <p>Classe de referência: {buscarNomeClasse(aluno.classeId)}</p>
-                {aluno.telefone && <p>Telefone: {aluno.telefone}</p>}
-                {aluno.dataNascimento && (
-                  <p>Nascimento: {formatarDataNascimento(aluno.dataNascimento)}</p>
-                )}
+            <div className="item-lista item-com-acoes cadastro-card-moderno" key={aluno.id}>
+              <div className="cadastro-card-identidade">
+                <span className="cadastro-avatar" aria-hidden="true">
+                  {obterInicialCadastro(aluno.nome)}
+                </span>
+
+                <div className="cadastro-card-textos">
+                  <h3>{aluno.nome}</h3>
+                  <div className="cadastro-metadados">
+                    <span>{(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}</span>
+                    <span>{buscarNomeClasse(aluno.classeId)}</span>
+                    {aluno.telefone && <span>{aluno.telefone}</span>}
+                    {aluno.dataNascimento && (
+                      <span>Nasc.: {formatarDataNascimento(aluno.dataNascimento)}</span>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {podeGerenciarCadastros() && (
-                <div className="acoes-item">
+                <div className="acoes-item acoes-cadastro">
                   <button
                     className="botao-editar"
                     onClick={() => editarAluno(aluno)}
@@ -9773,9 +9783,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const professoresDaIgreja = buscarProfessoresDaIgreja()
 
     return (
-      <section className="conteudo">
-        <div className="topo-pagina">
+      <section className="conteudo pagina-interna pagina-chamada">
+        <div className="topo-pagina topo-pagina-interna">
           <div>
+            <span className="subtitulo-pagina-interna">Registro de frequência</span>
             <h2>Chamada</h2>
             <p>
               {usuarioEhProfessor()
@@ -10147,9 +10158,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const percentualProfessores = calcularPercentualPresencaProfessores()
 
     return (
-      <section className="conteudo">
-        <div className="topo-pagina no-print">
+      <section className="conteudo pagina-interna pagina-relatorios">
+        <div className="topo-pagina topo-pagina-interna no-print">
           <div>
+            <span className="subtitulo-pagina-interna">Análises e documentos</span>
             <h2>Relatórios</h2>
             <p>
               {usuarioEhProfessor()
