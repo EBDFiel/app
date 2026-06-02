@@ -4745,11 +4745,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         return `
           <tr>
             <td>${indice + 1}</td>
-            <td>${escaparHtmlRelatorio(professor?.nome || '')}</td>
+            <td colspan="3">${escaparHtmlRelatorio(professor?.nome || '')}</td>
             <td colspan="3">${escaparHtmlRelatorio(buscarNomeClasse(professor?.classeId))}</td>
             <td colspan="2"></td>
-            <td colspan="2"></td>
-            <td colspan="2"></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
           </tr>
         `
       })
@@ -4807,11 +4807,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               </tr>
               <tr class="linha-professores-cabecalho">
                 <td>Nº</td>
-                <td>Professor</td>
+                <td colspan="3">Professor</td>
                 <td colspan="3">Classe de referência</td>
                 <td colspan="2">Presente</td>
-                <td colspan="2">Faltou</td>
-                <td colspan="2">Justificou</td>
+                <td colspan="1">Faltou</td>
+                <td colspan="1">Justificou</td>
               </tr>
               ${linhasProfessores}
             </tbody>
@@ -10307,29 +10307,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
                     <tr className="linha-professores-cabecalho">
                       <td>Nº</td>
-                      <td>Professor</td>
+                      <td colSpan="3">Professor</td>
                       <td colSpan="3">Classe de referência</td>
-                      <td colSpan="3">Status</td>
-                      <td colSpan="3">Data</td>
+                      <td colSpan="2">Situação</td>
+                      <td colSpan="2">Data</td>
                     </tr>
 
                     {resumoProfessores.registros.length > 0 ? (
                       resumoProfessores.registros.map((registro, indice) => (
                         <tr
-                          className="linha-professor-relatorio"
+                          className="linha-professor-tabela-relatorio"
                           key={`${registro.nome}-${indice}`}
                         >
                           <td>{indice + 1}</td>
-                          <td>{registro.nome}</td>
+                          <td colSpan="3">{registro.nome}</td>
                           <td colSpan="3">
                             {registro.classeReferencia || registro.classes || '-'}
                           </td>
-                          <td colSpan="3">{traduzirStatusProfessor(registro.status)}</td>
-                          <td colSpan="3">{formatarDataRelatorio(resumoProfessores.data)}</td>
+                          <td colSpan="2">{traduzirStatusProfessor(registro.status)}</td>
+                          <td colSpan="2">{formatarDataRelatorio(resumoProfessores.data)}</td>
                         </tr>
                       ))
                     ) : (
-                      <tr className="linha-professor-relatorio">
+                      <tr className="linha-professor-tabela-relatorio">
                         <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
                       </tr>
                     )}
