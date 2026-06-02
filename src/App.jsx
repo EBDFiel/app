@@ -471,6 +471,8 @@ function App() {
     tipo: 'sugestao',
     mensagem: '',
   })
+  const [janelaAniversariantesAberta, setJanelaAniversariantesAberta] = useState(false)
+  const [formularioSugestaoAberto, setFormularioSugestaoAberto] = useState(false)
   const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
   const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
   const [feedbackRespondendoId, setFeedbackRespondendoId] = useState(null)
@@ -486,6 +488,7 @@ function App() {
   const perfilUsuarioRef = useRef(perfilUsuario)
   const igrejaSuporteAdminRef = useRef(igrejaSuporteAdmin)
   const paginaAtualRef = useRef(paginaAtual)
+  const aniversariantesSemanaRef = useRef(null)
   const usuarioCarregadoRef = useRef(null)
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
@@ -2431,7 +2434,7 @@ Manual rápido para começar:
 6. Vá em Chamada para registrar a presença dos alunos.
 7. Use Chamada dos professores para registrar a presença dos professores.
 8. Em Relatórios, gere o relatório da EBD em PDF.
-9. Durante o uso da plataforma, use a área de Feedback para enviar sugestões, dúvidas ou dificuldades.
+9. Durante o uso da plataforma, use a área de mensagens para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -2661,12 +2664,12 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A área de feedback está disponível para igrejas liberadas na plataforma.')
+      alert('A área de sugestões está disponível para igrejas liberadas na plataforma.')
       return
     }
 
     if (!feedbackPiloto.mensagem.trim()) {
-      alert('Escreva seu feedback antes de enviar.')
+      alert('Escreva sua mensagem antes de enviar.')
       return
     }
 
@@ -2686,13 +2689,14 @@ Qualquer dificuldade, pode me chamar por aqui.`
     setCarregandoFeedback(false)
 
     if (error) {
-      mostrarErroSistema(error, 'Não foi possível enviar o feedback.')
+      mostrarErroSistema(error, 'Não foi possível enviar sua mensagem.')
       return
     }
 
     setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
+    setFormularioSugestaoAberto(false)
     await carregarFeedbacksDaIgreja()
-    alert('Feedback enviado com sucesso. Obrigado por ajudar a melhorar a plataforma!')
+    alert('Mensagem enviada com sucesso. Obrigado por ajudar a melhorar a plataforma!')
   }
 
   async function marcarFeedbackComoLido(feedbackId) {
@@ -2706,7 +2710,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       .eq('id', feedbackId)
 
     if (error) {
-      mostrarErroSistema(error, 'Não foi possível marcar o feedback como lido.')
+      mostrarErroSistema(error, 'Não foi possível marcar a mensagem como lida.')
       return
     }
 
@@ -2746,7 +2750,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     return `Paz do Senhor, ${nome}!
 
-Obrigado pelo feedback enviado sobre o EBD Fiel.
+Obrigado pela mensagem enviada sobre o EBD Fiel.
 
 Resposta da equipe:
 ${resposta}
@@ -2782,14 +2786,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     setEnviandoRespostaFeedback(false)
 
     if (error) {
-      mostrarErroSistema(error, 'Não foi possível salvar a resposta do feedback.')
+      mostrarErroSistema(error, 'Não foi possível salvar a resposta da mensagem.')
       return
     }
 
     setFeedbackRespondendoId(null)
     setRespostaFeedbackAdmin('')
     await carregarFeedbacksAdmin()
-    alert('Resposta salva. A igreja verá a resposta na área de feedback.')
+    alert('Resposta salva. A igreja verá a resposta na área de mensagens.')
   }
 
   async function registrarNotificacaoFeedback(feedbackId) {
@@ -2816,11 +2820,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const emailDestino = feedback.email_usuario
 
     if (!emailDestino) {
-      alert('Este feedback não possui e-mail vinculado.')
+      alert('Esta mensagem não possui e-mail vinculado.')
       return
     }
 
-    const assunto = encodeURIComponent('Resposta ao seu feedback no EBD Fiel')
+    const assunto = encodeURIComponent('Resposta à sua mensagem no EBD Fiel')
     const corpo = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
 
     await registrarNotificacaoFeedback(feedback.id)
@@ -2834,7 +2838,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const apenasNumeros = String(telefone || '').replace(/\D/g, '')
 
     if (!apenasNumeros) {
-      alert('Não encontrei WhatsApp/telefone vinculado a este feedback. Use o botão copiar mensagem ou enviar e-mail.')
+      alert('Não encontrei WhatsApp/telefone vinculado a esta mensagem. Use o botão copiar mensagem ou enviar e-mail.')
       return
     }
 
@@ -6419,7 +6423,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h2>Crie o acesso da sua igreja para avaliação.</h2>
             <p>
               O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
-              testar classes, alunos, professores, chamadas, relatórios e feedbacks.
+              testar classes, alunos, professores, chamadas, relatórios e mensagens.
             </p>
           </div>
 
@@ -7681,81 +7685,294 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     await buscarTodosOsDados()
   }
 
+  function abrirJanelaAniversariantesSemana() {
+    setJanelaAniversariantesAberta(true)
+  }
+
+  function fecharJanelaAniversariantesSemana() {
+    setJanelaAniversariantesAberta(false)
+  }
+
+  function montarHtmlTabelaAniversariantesSemana(aniversariantes = buscarAniversariantesDaSemana()) {
+    return aniversariantes.length > 0
+      ? `
+        <table>
+          <thead>
+            <tr>
+              <th class="numero">Nº</th>
+              <th>Nome</th>
+              <th>Função</th>
+              <th>Classe/área</th>
+              <th>Data</th>
+              <th>Quando</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${aniversariantes.map((pessoa, indice) => `
+              <tr>
+                <td class="numero">${indice + 1}</td>
+                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
+                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
+                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
+                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
+                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `
+      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
+  }
+
+  function imprimirAniversariantesSemana() {
+    const aniversariantes = buscarAniversariantesDaSemana()
+
+    imprimirHtmlEmIframe(
+      montarDocumentoRelatorioExtra(
+        'Aniversariantes da semana',
+        'Pessoas com aniversário hoje ou nos próximos 7 dias.',
+        montarHtmlTabelaAniversariantesSemana(aniversariantes),
+        'portrait'
+      ),
+      'iframe-aniversariantes-semana-painel'
+    )
+  }
+
+  async function baixarPdfAniversariantesSemana() {
+    const area = aniversariantesSemanaRef.current
+
+    if (!area) {
+      alert('Não foi possível encontrar a lista de aniversariantes para gerar o PDF.')
+      return
+    }
+
+    try {
+      const canvas = await html2canvas(area, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+      })
+
+      const imagem = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      const larguraPagina = pdf.internal.pageSize.getWidth()
+      const alturaPagina = pdf.internal.pageSize.getHeight()
+      const margem = 10
+      const larguraUtil = larguraPagina - margem * 2
+      const alturaImagem = (canvas.height * larguraUtil) / canvas.width
+
+      if (alturaImagem <= alturaPagina - margem * 2) {
+        pdf.addImage(imagem, 'PNG', margem, margem, larguraUtil, alturaImagem)
+      } else {
+        let alturaRestante = alturaImagem
+        let deslocamento = 0
+
+        while (alturaRestante > 0) {
+          pdf.addImage(imagem, 'PNG', margem, margem - deslocamento, larguraUtil, alturaImagem)
+          alturaRestante -= alturaPagina - margem * 2
+          deslocamento += alturaPagina - margem * 2
+
+          if (alturaRestante > 0) {
+            pdf.addPage()
+          }
+        }
+      }
+
+      pdf.save('aniversariantes-da-semana-ebd-fiel.pdf')
+    } catch (error) {
+      console.error('Erro ao gerar PDF de aniversariantes:', error)
+      alert('Não foi possível gerar o PDF. Tente novamente.')
+    }
+  }
+
+  function renderizarJanelaAniversariantesSemana() {
+    const aniversariantes = buscarAniversariantesDaSemana()
+    const aniversariantesHoje = aniversariantes.filter((pessoa) => Number(pessoa.dias) === 0)
+    const proximosAniversariantes = aniversariantes.filter((pessoa) => Number(pessoa.dias) > 0)
+
+    return (
+      <div
+        className="janela-aniversariantes-fundo"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Aniversariantes da semana"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            fecharJanelaAniversariantesSemana()
+          }
+        }}
+      >
+        <div className="janela-aniversariantes-conteudo">
+          <button
+            type="button"
+            className="janela-aniversariantes-fechar"
+            aria-label="Fechar aniversariantes da semana"
+            onClick={fecharJanelaAniversariantesSemana}
+          >
+            ×
+          </button>
+
+          <div className="janela-aniversariantes-papel" ref={aniversariantesSemanaRef}>
+            <div className="janela-aniversariantes-topo">
+              <div>
+                <span className="hero-tag">Agenda da semana</span>
+                <h3>Aniversariantes da semana</h3>
+                <p>
+                  Confira alunos, professores e secretarias que fazem aniversário hoje ou nos próximos 7 dias.
+                </p>
+              </div>
+              <div className="janela-aniversariantes-selo">🎂</div>
+            </div>
+
+            <div className="janela-aniversariantes-resumo">
+              <div>
+                <strong>{aniversariantes.length}</strong>
+                <span>Total na semana</span>
+              </div>
+              <div>
+                <strong>{aniversariantesHoje.length}</strong>
+                <span>Hoje</span>
+              </div>
+              <div>
+                <strong>{proximosAniversariantes.length}</strong>
+                <span>Próximos dias</span>
+              </div>
+            </div>
+
+            {aniversariantes.length > 0 ? (
+              <div className="janela-aniversariantes-lista">
+                {aniversariantes.map((pessoa) => (
+                  <article className="janela-aniversariante-item" key={pessoa.id}>
+                    <div className="janela-aniversariante-icone">🎉</div>
+                    <div>
+                      <strong>{pessoa.nome}</strong>
+                      <p>{pessoa.tipo} • {pessoa.detalhe || 'Sem informação'}</p>
+                    </div>
+                    <span>{formatarDataNascimento(pessoa.dataNascimento)}</span>
+                    <em>{descreverAniversario(pessoa.dias)}</em>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="janela-aniversariantes-vazio">
+                Nenhum aniversário cadastrado para os próximos 7 dias.
+              </div>
+            )}
+
+            <div className="janela-aniversariantes-rodape">
+              <strong>Mensagem sugerida:</strong>
+              <p>
+                Que esta data seja lembrada com carinho pela Escola Bíblica Dominical.
+                Deus abençoe cada vida com graça, sabedoria e crescimento na Palavra.
+              </p>
+            </div>
+          </div>
+
+          <div className="janela-aniversariantes-acoes">
+            <button className="botao-principal" type="button" onClick={baixarPdfAniversariantesSemana}>
+              Baixar PDF
+            </button>
+            <button className="botao-secundario" type="button" onClick={imprimirAniversariantesSemana}>
+              Imprimir
+            </button>
+            <button className="botao-secundario" type="button" onClick={fecharJanelaAniversariantesSemana}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   function renderizarFeedbackPiloto() {
     if (!igrejaEstaEmTestePiloto()) {
       return null
     }
 
     return (
-      <div className="feedback-piloto-card">
-        <div className="feedback-piloto-topo">
+      <div className={`feedback-piloto-card feedback-piloto-card-compacto${formularioSugestaoAberto ? ' feedback-piloto-card-aberto' : ''}`}>
+        <div className="feedback-piloto-topo feedback-piloto-topo-compacto">
           <div>
-            <span className="hero-tag">Teste piloto</span>
-            <h3>Enviar feedback para a equipe EBD Fiel</h3>
+            <span className="hero-tag">Ajude a melhorar</span>
+            <h3>Enviar sugestão para a equipe EBD Fiel</h3>
             <p>
-              Conte o que funcionou, o que ficou confuso ou o que precisa melhorar.
-              O administrador do sistema receberá um alerta na área Administração.
+              Registre dúvidas, sugestões, elogios ou pontos de melhoria. A equipe poderá acompanhar e responder pela plataforma.
             </p>
           </div>
+
+          <button
+            className="botao-secundario"
+            type="button"
+            onClick={() => setFormularioSugestaoAberto((aberto) => !aberto)}
+          >
+            {formularioSugestaoAberto ? 'Ocultar formulário' : 'Enviar sugestão'}
+          </button>
         </div>
 
-        <form className="feedback-piloto-form feedback-piloto-form-moderno" onSubmit={enviarFeedbackPiloto}>
-          <div className="feedback-form-grid">
-            <label className="feedback-campo feedback-campo-tipo">
-              <span>Tipo de feedback</span>
-              <select
-                value={feedbackPiloto.tipo}
+        {formularioSugestaoAberto && (
+          <form className="feedback-piloto-form feedback-piloto-form-moderno" onSubmit={enviarFeedbackPiloto}>
+            <div className="feedback-form-grid">
+              <label className="feedback-campo feedback-campo-tipo">
+                <span>Tipo de mensagem</span>
+                <select
+                  value={feedbackPiloto.tipo}
+                  onChange={(event) =>
+                    setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
+                  }
+                >
+                  <option value="sugestao">Sugestão</option>
+                  <option value="erro">Erro encontrado</option>
+                  <option value="duvida">Dúvida</option>
+                  <option value="elogio">Elogio</option>
+                </select>
+              </label>
+
+              <div className="feedback-dica">
+                <strong>Ajude a melhorar o piloto</strong>
+                <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
+              </div>
+            </div>
+
+            <label className="feedback-campo feedback-campo-mensagem">
+              <div className="feedback-label-linha">
+                <span>Mensagem</span>
+                <small>{feedbackPiloto.mensagem.length}/1000</small>
+              </div>
+
+              <textarea
+                value={feedbackPiloto.mensagem}
+                maxLength="1000"
                 onChange={(event) =>
-                  setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
+                  setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
                 }
-              >
-                <option value="sugestao">Sugestão</option>
-                <option value="erro">Erro encontrado</option>
-                <option value="duvida">Dúvida</option>
-                <option value="elogio">Elogio</option>
-              </select>
+                placeholder="Ex: Na chamada dos professores, senti falta de visualizar todos os professores cadastrados antes de salvar..."
+                rows="6"
+              />
             </label>
 
-            <div className="feedback-dica">
-              <strong>Ajude a melhorar o piloto</strong>
-              <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
+            <div className="feedback-acoes">
+              <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
+                <span>{carregandoFeedback ? 'Enviando...' : 'Enviar mensagem'}</span>
+                <strong>→</strong>
+              </button>
+
+              <p>
+                Sua mensagem fica registrada para os administradores acompanharem e responderem pela própria plataforma.
+              </p>
             </div>
-          </div>
-
-          <label className="feedback-campo feedback-campo-mensagem">
-            <div className="feedback-label-linha">
-              <span>Mensagem</span>
-              <small>{feedbackPiloto.mensagem.length}/1000</small>
-            </div>
-
-            <textarea
-              value={feedbackPiloto.mensagem}
-              maxLength="1000"
-              onChange={(event) =>
-                setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
-              }
-              placeholder="Ex: Na chamada dos professores, senti falta de visualizar todos os professores cadastrados antes de salvar..."
-              rows="7"
-            />
-          </label>
-
-          <div className="feedback-acoes">
-            <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
-              <span>{carregandoFeedback ? 'Enviando...' : 'Enviar feedback'}</span>
-              <strong>→</strong>
-            </button>
-
-            <p>
-              Seu feedback fica registrado para os administradores acompanharem e responderem pela própria plataforma.
-            </p>
-          </div>
-        </form>
+          </form>
+        )}
 
         {feedbacksIgreja.length > 0 && (
-          <div className="feedbacks-recentes-igreja">
-            <h4>Últimos feedbacks enviados</h4>
+          <div className="feedbacks-recentes-igreja feedbacks-recentes-igreja-compacto">
+            <h4>Últimas mensagens enviadas</h4>
 
-            {feedbacksIgreja.slice(0, 4).map((feedback) => (
+            {feedbacksIgreja.slice(0, formularioSugestaoAberto ? 4 : 2).map((feedback) => (
               <div
                 className={`feedback-recente-item ${feedback.resposta_admin ? 'feedback-com-resposta' : ''}`}
                 key={feedback.id}
@@ -8067,17 +8284,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const aniversariantesHojePainel = aniversariantesDaSemana.filter((pessoa) => Number(pessoa.dias) === 0)
     const alertasDeFaltasPainel = usuarioEhSecretaria() ? buscarAlertasDeFaltas() : []
     const destaquesDeFrequenciaPainel = usuarioEhSecretaria() ? buscarDestaquesFrequencia() : []
-    const mostrarAlertaFlutuanteSecretaria =
-      usuarioEhSecretaria() &&
-      !alertaPainelFechado &&
-      (aniversariantesHojePainel.length > 0 || alertasDeFaltasPainel.length > 0)
+    const aniversariantesPreviewPainel = aniversariantesDaSemana.slice(0, 3)
 
     return (
       <section className="conteudo">
         <div className="hero-painel">
           <div className="hero-painel-conteudo">
             <div className="linha-tags-painel">
-              <span className="hero-tag">Painel administrativo</span>
+              <span className="hero-tag">Painel da igreja</span>
               <span className="hero-tag hero-tag-clara">
                 {usuarioEhProfessor() ? 'Perfil: Professor' : 'Perfil: Secretaria'}
               </span>
@@ -8090,20 +8304,20 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
             <div className="hero-acoes">
               {usuarioEhSecretaria() && (
-                <button className="botao-principal" onClick={() => navegarParaPagina('configuracoes')}>
+                <button className="botao-principal" type="button" onClick={() => navegarParaPagina('configuracoes')}>
                   Ajustar dados da igreja
                 </button>
               )}
-              <button className="botao-secundario" onClick={() => navegarParaPagina('relatorios')}>
+              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
                 Ver relatórios
               </button>
 
-              <button className="botao-secundario" onClick={() => navegarParaPagina('dashboard')}>
-                Abrir dashboard
+              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('dashboard')}>
+                Ver resumo geral
               </button>
 
-              <button className="botao-secundario botao-manual-painel" onClick={() => navegarParaPagina('manual')}>
-                Abrir manual do usuário
+              <button className="botao-secundario botao-manual-painel" type="button" onClick={() => navegarParaPagina('manual')}>
+                Ver manual do usuário
               </button>
             </div>
           </div>
@@ -8160,6 +8374,49 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         </div>
 
         {usuarioEhSecretaria() && (
+          <div className="acoes-rapidas-painel">
+            <div>
+              <span className="hero-tag">Ações rápidas</span>
+              <h3>O que deseja fazer agora?</h3>
+            </div>
+
+            <div className="acoes-rapidas-grade">
+              <button type="button" onClick={() => navegarParaPagina('chamada')}>
+                <strong>Fazer chamada</strong>
+                <span>Registrar presença da classe</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  navegarParaPagina('alunos')
+                  abrirNovoAluno('aluno')
+                }}
+              >
+                <strong>Cadastrar aluno</strong>
+                <span>Adicionar novo participante</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  navegarParaPagina('professores')
+                  abrirNovoAluno('professor')
+                }}
+              >
+                <strong>Cadastrar professor</strong>
+                <span>Adicionar professor da EBD</span>
+              </button>
+
+              <button type="button" onClick={abrirJanelaAniversariantesSemana}>
+                <strong>Ver aniversariantes</strong>
+                <span>Semana, PDF e impressão</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {usuarioEhSecretaria() && (
           <div className="alertas-ebd-painel">
             <div className="alertas-ebd-cabecalho">
               <div>
@@ -8170,12 +8427,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </p>
               </div>
               <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-                Abrir relatórios
+                Ver relatórios
               </button>
             </div>
 
             <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAniversariantesSemana}>
+              <button className="alerta-ebd-card" type="button" onClick={abrirJanelaAniversariantesSemana}>
                 <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
                 <div>
                   <strong>Aniversariantes</strong>
@@ -8217,66 +8474,36 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </div>
         )}
 
-        {mostrarAlertaFlutuanteSecretaria && (
-          <div className="alerta-flutuante-secretaria" role="status" aria-live="polite">
-            <button
-              className="alerta-flutuante-fechar"
-              type="button"
-              onClick={() => setAlertaPainelFechado(true)}
-              aria-label="Fechar alerta"
-            >
-              ×
-            </button>
-            <strong>Alertas importantes</strong>
-            {aniversariantesHojePainel.length > 0 && (
-              <p>
-                🎂 {aniversariantesHojePainel.length} aniversariante{aniversariantesHojePainel.length === 1 ? '' : 's'} hoje.
-              </p>
-            )}
-            {alertasDeFaltasPainel.length > 0 && (
-              <p>
-                ⚠️ {alertasDeFaltasPainel.length} aluno{alertasDeFaltasPainel.length === 1 ? '' : 's'} com alerta de faltas.
-              </p>
-            )}
-            <div className="alerta-flutuante-acoes">
-              {aniversariantesHojePainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAniversariantesSemana}>
-                  Ver aniversários
-                </button>
-              )}
-              {alertasDeFaltasPainel.length > 0 && (
-                <button type="button" onClick={abrirRelatorioAlertasFaltas}>
-                  Ver faltas
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+
 
         {usuarioEhSecretaria() && (
-          <div className="alerta-aniversariantes">
-            <div className="topo-alerta-aniversariantes">
+          <div className="painel-aniversariantes-resumo">
+            <div className="painel-aniversariantes-topo">
               <div>
-                <span className="hero-tag">Aniversariantes da semana</span>
-                <h3>Alunos, professores e secretarias</h3>
+                <span className="hero-tag">Agenda da semana</span>
+                <h3>Aniversariantes da semana</h3>
+                <p>Veja rapidamente quem deve receber atenção especial nos próximos dias.</p>
               </div>
-              <strong>{aniversariantesDaSemana.length}</strong>
+              <button className="botao-secundario" type="button" onClick={abrirJanelaAniversariantesSemana}>
+                Ver lista completa
+              </button>
             </div>
 
-            {aniversariantesDaSemana.length > 0 ? (
-              <div className="lista-aniversariantes">
-                {aniversariantesDaSemana.map((pessoa) => (
-                  <div className="item-aniversariante" key={pessoa.id}>
+            {aniversariantesPreviewPainel.length > 0 ? (
+              <div className="painel-aniversariantes-lista">
+                {aniversariantesPreviewPainel.map((pessoa) => (
+                  <button
+                    className="painel-aniversariante-item"
+                    type="button"
+                    key={pessoa.id}
+                    onClick={abrirJanelaAniversariantesSemana}
+                  >
                     <div>
                       <strong>{pessoa.nome}</strong>
-                      <p>
-                        {pessoa.tipo} - {pessoa.detalhe}
-                      </p>
+                      <p>{pessoa.tipo} • {pessoa.detalhe}</p>
                     </div>
-                    <span>
-                      {formatarDataNascimento(pessoa.dataNascimento)} - {descreverAniversario(pessoa.dias)}
-                    </span>
-                  </div>
+                    <span>{descreverAniversario(pessoa.dias)}</span>
+                  </button>
                 ))}
               </div>
             ) : (
@@ -8286,6 +8513,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             )}
           </div>
         )}
+
+        {janelaAniversariantesAberta && renderizarJanelaAniversariantesSemana()}
+
 
         {renderizarFeedbackPiloto()}
 
@@ -10001,7 +10231,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         </div>
 
         {feedbacksAdmin.length === 0 ? (
-          <p className="texto-sem-feedback">Nenhum feedback recebido ainda.</p>
+          <p className="texto-sem-feedback">Nenhuma mensagem recebida ainda.</p>
         ) : (
           <div className="lista-feedbacks-admin">
             {feedbacksAdmin.slice(0, 12).map((feedback) => (
@@ -10041,11 +10271,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   {feedbackRespondendoId === feedback.id && (
                     <div className="feedback-responder-box">
                       <label>
-                        Resposta ao feedback
+                        Resposta à mensagem
                         <textarea
                           value={respostaFeedbackAdmin}
                           onChange={(event) => setRespostaFeedbackAdmin(event.target.value)}
-                          placeholder="Escreva a resposta que a igreja verá na área de feedback..."
+                          placeholder="Escreva a resposta que a igreja verá na área de mensagens..."
                           rows="5"
                         />
                       </label>
