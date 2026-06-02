@@ -8686,6 +8686,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               com uma estrutura pronta para uso e comercialização.
             </p>
 
+            <div className="hero-painel-metricas" aria-label="Resumo da igreja">
+              <span><strong>{classes.length}</strong> classes</span>
+              <span><strong>{alunosSomente().length}</strong> alunos</span>
+              <span><strong>{professoresSomente().length}</strong> professores</span>
+              <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
+            </div>
+
             <div className="hero-acoes">
               {usuarioEhSecretaria() && (
                 <button className="botao-principal" type="button" onClick={() => navegarParaPagina('configuracoes')}>
@@ -8765,7 +8772,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
 
             <div className="acoes-rapidas-grade">
-              <button type="button" onClick={() => navegarParaPagina('chamada')}>
+              <button className="acao-rapida-principal" type="button" onClick={() => navegarParaPagina('chamada')}>
                 <strong>Fazer chamada</strong>
                 <span>Registrar presença da classe</span>
               </button>
@@ -8882,11 +8889,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     key={pessoa.id}
                     onClick={abrirJanelaAniversariantesSemana}
                   >
-                    <div>
+                    <span className="avatar-aniversariante-painel">
+                      {String(pessoa.nome || '?').trim().charAt(0).toUpperCase() || '?'}
+                    </span>
+                    <div className="painel-aniversariante-dados">
                       <strong>{pessoa.nome}</strong>
                       <p>{pessoa.tipo} • {pessoa.detalhe}</p>
                     </div>
-                    <span>{descreverAniversario(pessoa.dias)}</span>
+                    <span className="tag-prazo-aniversario">{descreverAniversario(pessoa.dias)}</span>
                   </button>
                 ))}
               </div>
@@ -8903,15 +8913,22 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
         {renderizarFeedbackPiloto()}
 
-        <div className="grade-resumos-comerciais">
-          <div className="resumo resumo-comercial resumo-alerta-claro">
-            <h3>Personalização da igreja</h3>
-            <p>
-              {configuracaoIgreja.nome_igreja
-                ? 'Os dados da igreja já estão configurados e serão usados nos relatórios e PDFs.'
-                : 'Preencha os dados da igreja em Configurações para exibir nome, endereço e contatos nos relatórios.'}
-            </p>
-          </div>
+        <div className="grade-resumos-comerciais grade-configuracoes-rapidas">
+          <button
+            className="resumo resumo-comercial resumo-alerta-claro card-configuracao-rapida"
+            type="button"
+            onClick={() => navegarParaPagina('configuracoes')}
+          >
+            <span className="icone-configuracao-rapida"><Icone nome="configuracoes" className="icone-svg" /></span>
+            <div>
+              <h3>Personalização da igreja</h3>
+              <p>
+                {configuracaoIgreja.nome_igreja
+                  ? 'Dados configurados para relatórios e PDFs.'
+                  : 'Configure nome, endereço e contatos da igreja.'}
+              </p>
+            </div>
+          </button>
         </div>
       </section>
     )
