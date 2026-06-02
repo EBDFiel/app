@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import './App.css'
@@ -307,8 +307,103 @@ function iniciarCorrecaoGlobalDeAcentos() {
 
 iniciarCorrecaoGlobalDeAcentos()
 
+const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
+const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
+
+const PAGINAS_SISTEMA = [
+  'painel',
+  'dashboard',
+  'classes',
+  'alunos',
+  'professores',
+  'usuarios',
+  'chamada',
+  'relatorios',
+  'historico',
+  'financeiro',
+  'backup',
+  'manual',
+  'configuracoes',
+  'administracao',
+]
+
+function lerPaginaAtualSalva() {
+  if (typeof window === 'undefined') {
+    return 'painel'
+  }
+
+  const paginaSalva = window.localStorage.getItem(CHAVE_PAGINA_ATUAL)
+
+  return PAGINAS_SISTEMA.includes(paginaSalva) ? paginaSalva : 'painel'
+}
+
+function salvarPaginaAtualSalva(paginaId) {
+  if (typeof window === 'undefined' || !PAGINAS_SISTEMA.includes(paginaId)) {
+    return
+  }
+
+  try {
+    window.localStorage.setItem(CHAVE_PAGINA_ATUAL, paginaId)
+  } catch (error) {
+    console.error('Erro ao salvar página atual:', error)
+  }
+}
+
+function lerIgrejaSuporteAdminSalva() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  try {
+    const igrejaSalva = JSON.parse(window.localStorage.getItem(CHAVE_SUPORTE_ADMIN) || 'null')
+    const igrejaId = Number(igrejaSalva?.id)
+
+    if (!igrejaId) {
+      return null
+    }
+
+    return {
+      id: igrejaId,
+      nome_igreja: igrejaSalva.nome_igreja || igrejaSalva.nome || 'Igreja',
+      congregacao: igrejaSalva.congregacao || '',
+      status_piloto: igrejaSalva.status_piloto || '',
+      cidade: igrejaSalva.cidade || '',
+      estado: igrejaSalva.estado || '',
+    }
+  } catch (error) {
+    console.error('Erro ao recuperar igreja de suporte:', error)
+    window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
+    return null
+  }
+}
+
+function salvarIgrejaSuporteAdminSalva(igreja) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    if (!igreja?.id) {
+      window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
+      return
+    }
+
+    window.localStorage.setItem(CHAVE_SUPORTE_ADMIN, JSON.stringify(igreja))
+  } catch (error) {
+    console.error('Erro ao salvar igreja de suporte:', error)
+  }
+}
+
+function removerIgrejaSuporteAdminSalva() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
+}
+
 function App() {
-  const [paginaAtual, setPaginaAtual] = useState('painel')
+  const [paginaAtual, setPaginaAtual] = useState(() => lerPaginaAtualSalva())
   const [carregando, setCarregando] = useState(true)
   const [erroSistema, setErroSistema] = useState('')
   const [alertaPainelFechado, setAlertaPainelFechado] = useState(false)
@@ -386,7 +481,46 @@ function App() {
   const [perfisIgreja, setPerfisIgreja] = useState([])
   const [vinculosProfessores, setVinculosProfessores] = useState([])
   const [igrejaId, setIgrejaId] = useState(null)
-  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(null)
+  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(() => lerIgrejaSuporteAdminSalva())
+  const sessaoRef = useRef(sessao)
+  const perfilUsuarioRef = useRef(perfilUsuario)
+  const igrejaSuporteAdminRef = useRef(igrejaSuporteAdmin)
+  const paginaAtualRef = useRef(paginaAtual)
+
+  function definirSessao(sessaoNova) {
+    sessaoRef.current = sessaoNova
+    setSessao(sessaoNova)
+  }
+
+  function definirPerfilUsuario(valorOuAtualizador) {
+    const perfilAtualizado =
+      typeof valorOuAtualizador === 'function'
+        ? valorOuAtualizador(perfilUsuarioRef.current)
+        : valorOuAtualizador
+
+    perfilUsuarioRef.current = perfilAtualizado
+    setPerfilUsuario(perfilAtualizado)
+  }
+
+  function definirIgrejaSuporteAdmin(igreja) {
+    igrejaSuporteAdminRef.current = igreja || null
+    setIgrejaSuporteAdmin(igreja || null)
+
+    if (igreja?.id) {
+      salvarIgrejaSuporteAdminSalva(igreja)
+    } else {
+      removerIgrejaSuporteAdminSalva()
+    }
+  }
+
+  function definirPaginaAtual(paginaId) {
+    const paginaSegura = PAGINAS_SISTEMA.includes(paginaId) ? paginaId : 'painel'
+
+    paginaAtualRef.current = paginaSegura
+    setPaginaAtual(paginaSegura)
+    salvarPaginaAtualSalva(paginaSegura)
+  }
+
   const [igrejasAdmin, setIgrejasAdmin] = useState(() => {
     if (typeof window === 'undefined') {
       return []
@@ -542,6 +676,23 @@ function App() {
   ]
 
   useEffect(() => {
+    sessaoRef.current = sessao
+  }, [sessao])
+
+  useEffect(() => {
+    perfilUsuarioRef.current = perfilUsuario
+  }, [perfilUsuario])
+
+  useEffect(() => {
+    igrejaSuporteAdminRef.current = igrejaSuporteAdmin
+  }, [igrejaSuporteAdmin])
+
+  useEffect(() => {
+    paginaAtualRef.current = paginaAtual
+    salvarPaginaAtualSalva(paginaAtual)
+  }, [paginaAtual])
+
+  useEffect(() => {
     iniciarCorrecaoGlobalDeAcentos()
 
     iniciarAutenticacao()
@@ -567,7 +718,7 @@ function App() {
       }
 
       if (event === 'PASSWORD_RECOVERY') {
-        setSessao(session)
+        definirSessao(session)
         setTelaPublica('novaSenha')
         setCarregando(false)
         setVerificandoSessao(false)
@@ -575,7 +726,7 @@ function App() {
       }
 
       if (event === 'SIGNED_OUT') {
-        setSessao(null)
+        definirSessao(null)
         limparDadosDoSistema()
         setCarregando(false)
         setVerificandoSessao(false)
@@ -588,13 +739,18 @@ function App() {
         return
       }
 
-      setSessao(session)
+      definirSessao(session)
       setVerificandoSessao(false)
+
+      if (event === 'TOKEN_REFRESHED') {
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
 
       if (
         event === 'INITIAL_SESSION' ||
         event === 'SIGNED_IN' ||
-        event === 'TOKEN_REFRESHED' ||
         event === 'USER_UPDATED'
       ) {
         try {
@@ -638,8 +794,10 @@ function App() {
     setVerificandoSessao(true)
     setCarregando(true)
 
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
+    const igrejaSuporteSalva = lerIgrejaSuporteAdminSalva()
+
+    if (igrejaSuporteSalva?.id) {
+      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
     }
 
     try {
@@ -650,12 +808,12 @@ function App() {
       }
 
       const sessaoAtual = data.session || null
-      setSessao(sessaoAtual)
+      definirSessao(sessaoAtual)
 
       setVerificandoSessao(false)
 
       if (sessaoAtual) {
-        carregarDadosOnline(sessaoAtual).catch((erroCarregamentoInicial) => {
+        carregarDadosOnline(sessaoAtual, igrejaSuporteSalva).catch((erroCarregamentoInicial) => {
           console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
           setErroSistema(
             erroCarregamentoInicial?.message ||
@@ -680,11 +838,11 @@ function App() {
     setAlunos([])
     setChamadasSalvas([])
     setChamadasProfessores([])
-    setPerfilUsuario(null)
+    definirPerfilUsuario(null)
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
-    setIgrejaSuporteAdmin(null)
+    definirIgrejaSuporteAdmin(null)
 
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
@@ -973,7 +1131,7 @@ function App() {
       }
 
       await supabase.auth.signOut()
-      setSessao(null)
+      definirSessao(null)
 
       setSucessoCadastroPiloto(
         'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
@@ -1084,7 +1242,7 @@ function App() {
       setConfirmarNovaSenhaRecuperacao('')
       alert('Senha atualizada com sucesso. Entre novamente com sua nova senha.')
       await supabase.auth.signOut()
-      setSessao(null)
+      definirSessao(null)
       setTelaPublica('login')
     } catch (error) {
       console.error(error)
@@ -1117,7 +1275,7 @@ function App() {
         throw error
       }
 
-      setSessao(data.session)
+      definirSessao(data.session)
       setEmailLogin('')
       setSenhaLogin('')
 
@@ -1143,7 +1301,7 @@ function App() {
 
     setCarregando(false)
     setVerificandoSessao(false)
-    setSessao(null)
+    definirSessao(null)
     setTelaPublica('login')
 
     try {
@@ -1182,7 +1340,7 @@ function App() {
     }, 80)
   }
 
-  async function carregarDadosOnline(sessaoAtual = sessao) {
+  async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     setCarregando(true)
     setErroSistema('')
 
@@ -1199,11 +1357,11 @@ function App() {
         sessaoParaUsar = data?.session || null
 
         if (sessaoParaUsar) {
-          setSessao(sessaoParaUsar)
+          definirSessao(sessaoParaUsar)
         }
       }
 
-      await buscarTodosOsDados(sessaoParaUsar)
+      await buscarTodosOsDados(sessaoParaUsar, igrejaSuporteForcada)
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
 
@@ -1230,7 +1388,7 @@ function App() {
     setAlunos([])
     setChamadasSalvas([])
     setChamadasProfessores([])
-    setPerfilUsuario(null)
+    definirPerfilUsuario(null)
     setPerfisIgreja([])
     setVinculosProfessores([])
     setIgrejaId(null)
@@ -1322,19 +1480,24 @@ function App() {
   }
 
   function usuarioEhProfessor() {
-    return perfilUsuario?.perfil === 'professor'
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+
+    return perfilAtual?.perfil === 'professor'
   }
 
   function buscarIgrejaIdAtual() {
-    if (usuarioEhAdminSistema() && igrejaSuporteAdmin?.id) {
-      return Number(igrejaSuporteAdmin.id)
+    const suporteAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+
+    if (usuarioEhAdminSistema() && suporteAtual?.id) {
+      return Number(suporteAtual.id)
     }
 
-    return perfilUsuario?.igreja_id || igrejaId || null
+    return perfilAtual?.igreja_id || igrejaId || null
   }
 
   function navegarParaPagina(paginaId) {
-    setPaginaAtual(paginaId)
+    definirPaginaAtual(paginaId)
 
     if (paginaId === 'painel') {
       setAlertaPainelFechado(false)
@@ -1367,16 +1530,31 @@ function App() {
   const emailsAdminSistema = ['ebdfiel7@gmail.com']
 
   function usuarioEhAdminSistema() {
-    const emailSessao = String(sessao?.user?.email || '').toLowerCase()
+    const sessaoAtual = sessaoRef.current || sessao
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+    const emailSessao = String(sessaoAtual?.user?.email || '').toLowerCase()
 
     return (
-      perfilUsuario?.perfil === 'admin_sistema' ||
+      perfilAtual?.perfil === 'admin_sistema' ||
       emailsAdminSistema.includes(emailSessao)
     )
   }
 
   function buscarIgrejaSuporteAdminSalva() {
-    return igrejaSuporteAdmin?.id ? igrejaSuporteAdmin : null
+    const igrejaAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
+
+    if (igrejaAtual?.id) {
+      return igrejaAtual
+    }
+
+    const igrejaSalva = lerIgrejaSuporteAdminSalva()
+
+    if (igrejaSalva?.id) {
+      definirIgrejaSuporteAdmin(igrejaSalva)
+      return igrejaSalva
+    }
+
+    return null
   }
 
   async function acessarIgrejaComoSuporte(igreja, event = null) {
@@ -1395,7 +1573,7 @@ function App() {
       return
     }
 
-    let sessaoAtual = sessao
+    let sessaoAtual = sessaoRef.current || sessao
 
     try {
       if (!sessaoAtual?.user?.id) {
@@ -1408,13 +1586,13 @@ function App() {
         sessaoAtual = data?.session || null
 
         if (sessaoAtual) {
-          setSessao(sessaoAtual)
+          definirSessao(sessaoAtual)
         }
       }
 
       const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
       const adminAutorizado =
-        perfilUsuario?.perfil === 'admin_sistema' ||
+        perfilUsuarioRef.current?.perfil === 'admin_sistema' ||
         emailsAdminSistema.includes(emailSessaoAtual)
 
       if (!adminAutorizado) {
@@ -1434,19 +1612,14 @@ function App() {
       setCarregando(true)
       setErroSistema('')
 
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(
-          'ebdfiel_igreja_suporte_admin',
-          JSON.stringify(igrejaSelecionada)
-        )
-      }
+      definirIgrejaSuporteAdmin(igrejaSelecionada)
 
       await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
 
-      setIgrejaSuporteAdmin(igrejaSelecionada)
+      definirIgrejaSuporteAdmin(igrejaSelecionada)
       setIgrejaAtualPiloto(igrejaSelecionada)
       setIgrejaId(igrejaIdSelecionada)
-      setPerfilUsuario((perfilAnterior) => ({
+      definirPerfilUsuario((perfilAnterior) => ({
         ...perfilAnterior,
         id: perfilAnterior?.id || null,
         user_id: sessaoAtual?.user?.id,
@@ -1458,7 +1631,7 @@ function App() {
         modo_suporte_admin: true,
       }))
 
-      setPaginaAtual('painel')
+      definirPaginaAtual('painel')
 
       if (typeof window !== 'undefined') {
         window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
@@ -1470,7 +1643,7 @@ function App() {
         window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
       }
 
-      setIgrejaSuporteAdmin(null)
+      definirIgrejaSuporteAdmin(null)
       setErroSistema(
         erroSuporte?.message ||
           'Não foi possível acessar esta igreja em modo suporte agora.'
@@ -1489,7 +1662,7 @@ function App() {
       window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
     }
 
-    setIgrejaSuporteAdmin(null)
+    definirIgrejaSuporteAdmin(null)
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
@@ -1498,24 +1671,29 @@ function App() {
     setIgrejaId(null)
     setIgrejaAtualPiloto(null)
 
-    const emailSessaoAtual = String(sessao?.user?.email || '').toLowerCase()
+    const sessaoAtual = sessaoRef.current || sessao
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
 
-    setPerfilUsuario({
-      id: perfilUsuario?.id || null,
-      user_id: sessao?.user?.id,
-      nome: perfilUsuario?.nome || 'Administrador do sistema',
+    definirPerfilUsuario({
+      id: perfilAtual?.id || null,
+      user_id: sessaoAtual?.user?.id,
+      nome: perfilAtual?.nome || 'Administrador do sistema',
       email: emailSessaoAtual,
       perfil: 'admin_sistema',
       igreja_id: 19,
       classe_id: null,
     })
 
-    setPaginaAtual('administracao')
+    definirPaginaAtual('administracao')
     await carregarIgrejasAdmin()
   }
 
   function modoSuporteAdminAtivo() {
-    return usuarioEhAdminSistema() && Boolean(perfilUsuario?.modo_suporte_admin || igrejaSuporteAdmin?.id)
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+    const suporteAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
+
+    return usuarioEhAdminSistema() && Boolean(perfilAtual?.modo_suporte_admin || suporteAtual?.id)
   }
 
   function limparFormularioIgrejaAdmin() {
@@ -2514,11 +2692,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   function usuarioEhSecretaria() {
-    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id) {
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+
+    if (usuarioEhAdminSistema() && !perfilAtual?.igreja_id) {
       return false
     }
 
-    return perfilUsuario?.perfil !== 'professor'
+    return perfilAtual?.perfil !== 'professor'
   }
 
   function buscarClassesVinculadasAoProfessor(perfilId = perfilUsuario?.id) {
@@ -2575,7 +2755,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     return true
   }
 
-  async function buscarTodosOsDados(sessaoAtual = sessao, igrejaSuporteForcada = null) {
+  async function buscarTodosOsDados(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     if (!sessaoAtual?.user?.id) {
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
@@ -2612,7 +2792,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         modo_suporte_admin: true,
       }
 
-      setIgrejaSuporteAdmin({
+      definirIgrejaSuporteAdmin({
         id: Number(igrejaSuporteSelecionada.id),
         nome_igreja:
           igrejaSuporteSelecionada.nome_igreja ||
@@ -2635,9 +2815,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         classe_id: null,
       }
 
-      setPerfilUsuario(perfilAdminSistema)
+      definirPerfilUsuario(perfilAdminSistema)
       setIgrejaId(Number(perfilAdminSistema.igreja_id || 19))
-      setIgrejaSuporteAdmin(null)
+      definirIgrejaSuporteAdmin(null)
       setIgrejaAtualPiloto(null)
       setClasses([])
       setAlunos([])
@@ -2645,7 +2825,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setChamadasProfessores([])
       setVinculosProfessores([])
       setPerfisIgreja([])
-      setPaginaAtual('administracao')
+      definirPaginaAtual('administracao')
 
       const igrejasAdminBanco = await buscarIgrejasAdminBanco()
       setIgrejasAdmin(igrejasAdminBanco || [])
@@ -2692,26 +2872,26 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           modo_suporte_admin: true,
         }
 
-        setIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+        definirIgrejaSuporteAdmin(igrejaSuporteSelecionada)
       } else if (ehAdminSessaoAtual) {
         const perfilAdminSistema = {
           id: null,
           user_id: sessaoAtual.user.id,
           nome: 'Administrador do sistema',
           email: emailSessaoAtual,
-          perfil: 'admin',
+          perfil: 'admin_sistema',
           igreja_id: null,
           classe_id: null,
         }
 
-        setPerfilUsuario(perfilAdminSistema)
+        definirPerfilUsuario(perfilAdminSistema)
         setIgrejaId(null)
         setClasses([])
         setAlunos([])
         setChamadasSalvas([])
         setChamadasProfessores([])
         setVinculosProfessores([])
-        setPaginaAtual('administracao')
+        definirPaginaAtual('administracao')
 
         const igrejasAdminBanco = await buscarIgrejasAdminBanco()
         setIgrejasAdmin(igrejasAdminBanco || [])
@@ -2744,7 +2924,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         setCarregando(false)
         return
       } else {
-        setPerfilUsuario(null)
+        definirPerfilUsuario(null)
         setIgrejaId(null)
         setTelaPublica('login')
         throw new Error(
@@ -2755,7 +2935,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const igrejaAtualId = Number(perfilAtual.igreja_id)
 
-    setPerfilUsuario(perfilAtual)
+    definirPerfilUsuario(perfilAtual)
     setIgrejaId(igrejaAtualId)
 
     const { data: vinculosBanco, error: erroVinculos } = await supabase
@@ -2970,7 +3150,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       !perfilAtual?.modo_suporte_admin &&
       !igrejaLiberadaParaAcesso
     ) {
-      setPerfilUsuario(null)
+      definirPerfilUsuario(null)
       setIgrejaId(null)
       setIgrejaAtualPiloto(null)
       setClasses([])
@@ -3902,7 +4082,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       orientacao,
       idIframe,
     })
-    setPaginaAtual('relatorios')
+    definirPaginaAtual('relatorios')
 
     if (typeof window !== 'undefined') {
       window.setTimeout(() => {
@@ -11174,6 +11354,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         <nav className="menu-navegacao">
           {menu.filter(menuPermitidoParaUsuario).map((item) => (
             <button
+              type="button"
               key={item.id}
               className={paginaAtual === item.id ? 'ativo' : ''}
               onClick={() => navegarParaPagina(item.id)}
@@ -11214,7 +11395,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <p>Você continua logado como administrador do sistema.</p>
             </div>
 
-            <button className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
+            <button type="button" className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
               Sair do modo suporte
             </button>
           </div>
