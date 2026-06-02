@@ -738,6 +738,7 @@ function App() {
   const [classeChamadaId, setClasseChamadaId] = useState('')
   const [dataAulaChamada, setDataAulaChamada] = useState(() => new Date().toISOString().slice(0, 10))
   const [presencas, setPresencas] = useState({})
+  const [mensagemChamada, setMensagemChamada] = useState(null)
   const [presencasProfessores, setPresencasProfessores] = useState({})
   const [observacoesChamadaProfessores, setObservacoesChamadaProfessores] = useState('')
   const [dadosExtrasChamada, setDadosExtrasChamada] = useState({
@@ -5858,17 +5859,27 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   function marcarTodosAlunos(status) {
+    setMensagemChamada(null)
+
     if (!classeChamadaId) {
-      alert('Selecione uma classe para fazer a chamada.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Selecione uma classe antes de marcar a chamada.',
+      })
       return
     }
 
     const alunosDaClasse = alunos.filter(
-      (aluno) => Number(aluno.classeId) === Number(classeChamadaId)
+      (aluno) =>
+        Number(aluno.classeId) === Number(classeChamadaId) &&
+        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
     )
 
     if (alunosDaClasse.length === 0) {
-      alert('Essa classe ainda não possui alunos cadastrados.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Não encontrei alunos nessa classe. Verifique se os alunos estão vinculados à classe escolhida.',
+      })
       return
     }
 
@@ -5891,22 +5902,48 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   async function salvarChamada() {
+    setMensagemChamada(null)
+
     if (usuarioEhProfessor() && !professorPodeAcessarClasse(classeChamadaId)) {
-      alert('Professor pode fazer chamada apenas das classes vinculadas pela secretaria.')
+      setMensagemChamada({
+        tipo: 'erro',
+        texto: 'Professor pode fazer chamada apenas das classes vinculadas pela secretaria.',
+      })
       return
     }
 
     if (!classeChamadaId) {
-      alert('Selecione uma classe para fazer a chamada.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Selecione uma classe antes de salvar a chamada.',
+      })
+      return
+    }
+
+    const classeSelecionadaId = Number(classeChamadaId)
+    const classeSelecionada = classes.find(
+      (classe) => Number(classe.id) === classeSelecionadaId
+    )
+
+    if (!classeSelecionada) {
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'A classe selecionada não foi encontrada. Atualize a página e escolha a classe novamente.',
+      })
       return
     }
 
     const alunosDaClasse = alunos.filter(
-      (aluno) => Number(aluno.classeId) === Number(classeChamadaId)
+      (aluno) =>
+        Number(aluno.classeId) === classeSelecionadaId &&
+        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
     )
 
     if (alunosDaClasse.length === 0) {
-      alert('Essa classe ainda não possui alunos cadastrados.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: `Não encontrei alunos cadastrados na classe ${classeSelecionada.nome}. Verifique se os alunos estão vinculados a essa classe.`,
+      })
       return
     }
 
@@ -5917,11 +5954,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
 
     if (alunosSemMarcacao.length > 0) {
-      alert(
-        `Ainda falta marcar ${alunosSemMarcacao.length} aluno(s): ${alunosSemMarcacao
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: `Ainda falta marcar ${alunosSemMarcacao.length} aluno(s): ${alunosSemMarcacao
           .map((aluno) => aluno.nome)
-          .join(', ')}`
-      )
+          .join(', ')}`,
+      })
       return
     }
 
@@ -5942,7 +5980,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       id: Date.now(),
       data: dataAulaChamada || buscarDataAtual(),
       igreja_id: buscarIgrejaIdAtual(),
-      classe_id: Number(classeChamadaId),
+      classe_id: classeSelecionadaId,
       matricula: alunosDaClasse.length,
       total_presentes: totalPresentes,
       total_faltas: totalFaltas,
@@ -5962,14 +6000,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     if (error) {
       console.error(error)
-      alert('Erro ao salvar chamada.')
+      setMensagemChamada({
+        tipo: 'erro',
+        texto: 'Não foi possível salvar a chamada. Verifique sua conexão e tente novamente.',
+      })
       return
     }
 
     await buscarTodosOsDados()
 
     setPresencas({})
-    setClasseChamadaId('')
     setDataAulaChamada(new Date().toISOString().slice(0, 10))
     setDadosExtrasChamada({
       visitantes: '',
@@ -5977,8 +6017,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       revistas: '',
       ofertas: '',
     })
-
-    alert('Chamada salva com sucesso!')
+    setClasseChamadaId(String(classeSelecionadaId))
+    setMensagemChamada({
+      tipo: 'sucesso',
+      texto: `Chamada da classe ${classeSelecionada.nome} salva com sucesso.`,
+    })
   }
 
   function alterarConfiguracaoIgreja(campo, valor) {
@@ -9638,10 +9681,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   function renderizarChamada() {
+    const classeSelecionadaId = classeChamadaId ? Number(classeChamadaId) : null
+    const classeSelecionada = classes.find(
+      (classe) => Number(classe.id) === Number(classeSelecionadaId)
+    )
     const alunosDaClasse = alunos.filter(
       (aluno) =>
-        aluno.classeId === Number(classeChamadaId) &&
-        (aluno.tipoPessoa || 'aluno') === 'aluno'
+        Number(aluno.classeId) === Number(classeSelecionadaId) &&
+        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
     )
     const professoresDaIgreja = buscarProfessoresDaIgreja()
 
@@ -9663,7 +9710,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <button
               className={tipoChamada === 'alunos' ? 'ativo' : ''}
               type="button"
-              onClick={() => setTipoChamada('alunos')}
+              onClick={() => {
+                setTipoChamada('alunos')
+                setMensagemChamada(null)
+              }}
             >
               Chamada dos alunos
             </button>
@@ -9671,7 +9721,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <button
               className={tipoChamada === 'professores' ? 'ativo' : ''}
               type="button"
-              onClick={() => setTipoChamada('professores')}
+              onClick={() => {
+                setTipoChamada('professores')
+                setMensagemChamada(null)
+              }}
             >
               Chamada dos professores
             </button>
@@ -9686,6 +9739,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 <select
                   value={classeChamadaId}
                   onChange={(event) => {
+                    setMensagemChamada(null)
                     setClasseChamadaId(event.target.value)
                     setPresencas({})
                     setDadosExtrasChamada({
@@ -9778,9 +9832,25 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               )}
             </div>
 
-            {classeChamadaId && alunosDaClasse.length === 0 && (
+            {mensagemChamada && (
+              <div className={`mensagem-chamada ${mensagemChamada.tipo}`}>
+                <p>{mensagemChamada.texto}</p>
+                <button
+                  type="button"
+                  onClick={() => setMensagemChamada(null)}
+                  aria-label="Fechar mensagem da chamada"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+
+            {classeChamadaId && classeSelecionada && alunosDaClasse.length === 0 && !mensagemChamada && (
               <div className="aviso">
-                <p>Essa classe ainda não possui alunos cadastrados.</p>
+                <p>
+                  Não encontrei alunos vinculados à classe {classeSelecionada.nome}.
+                  Verifique o cadastro dos alunos antes de salvar a chamada.
+                </p>
               </div>
             )}
 
@@ -9855,7 +9925,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   ))}
                 </div>
 
-                <button className="botao-principal" onClick={salvarChamada}>
+                <button type="button" className="botao-principal" onClick={salvarChamada}>
                   Salvar chamada dos alunos
                 </button>
               </>
