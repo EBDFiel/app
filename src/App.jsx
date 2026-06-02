@@ -472,6 +472,7 @@ function App() {
     mensagem: '',
   })
   const [janelaAniversariantesAberta, setJanelaAniversariantesAberta] = useState(false)
+  const [aniversarianteCartaoId, setAniversarianteCartaoId] = useState(null)
   const [formularioSugestaoAberto, setFormularioSugestaoAberto] = useState(false)
   const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
   const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
@@ -489,6 +490,7 @@ function App() {
   const igrejaSuporteAdminRef = useRef(igrejaSuporteAdmin)
   const paginaAtualRef = useRef(paginaAtual)
   const aniversariantesSemanaRef = useRef(null)
+  const cartaoAniversarioRef = useRef(null)
   const usuarioCarregadoRef = useRef(null)
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
@@ -4490,11 +4492,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <p>A Escola Bíblica Dominical parabeniza:</p>
             <strong>${escaparHtmlRelatorio(aluno.nome)}</strong>
             <p>
-              Que Deus abençoe sua vida com graça, sabedoria e crescimento na Palavra.
-              Receba o carinho da sua igreja e da EBD.
+              Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
+              Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
             </p>
+            <p><strong>Versículo bíblico:</strong> “Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”</p>
+            <p><strong>Salmo 118:24</strong></p>
             <p><strong>Data:</strong> ${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</p>
-            <p class="assinatura-cartao">EBD Fiel</p>
+            <p class="assinatura-cartao">Com carinho, Escola Bíblica Dominical</p>
           </article>
         `).join('')}
       </div>
@@ -7691,6 +7695,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
   function fecharJanelaAniversariantesSemana() {
     setJanelaAniversariantesAberta(false)
+    setAniversarianteCartaoId(null)
   }
 
   function montarHtmlTabelaAniversariantesSemana(aniversariantes = buscarAniversariantesDaSemana()) {
@@ -7790,10 +7795,192 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
   }
 
+
+  function obterAniversarianteSelecionadoCartao(aniversariantes) {
+    if (!Array.isArray(aniversariantes) || aniversariantes.length === 0) {
+      return null
+    }
+
+    return aniversariantes.find((pessoa) => pessoa.id === aniversarianteCartaoId) || aniversariantes[0]
+  }
+
+  function limparNomeParaArquivo(valor) {
+    return String(valor || 'aniversariante')
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'aniversariante'
+  }
+
+  async function capturarCartaoAniversario() {
+    const area = cartaoAniversarioRef.current
+
+    if (!area) {
+      alert('Selecione um aniversariante para gerar o cartão.')
+      return null
+    }
+
+    return html2canvas(area, {
+      scale: 3,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+    })
+  }
+
+  async function baixarImagemCartaoAniversario() {
+    try {
+      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
+      const canvas = await capturarCartaoAniversario()
+
+      if (!canvas) {
+        return
+      }
+
+      const link = document.createElement('a')
+      link.href = canvas.toDataURL('image/png')
+      link.download = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (error) {
+      console.error('Erro ao baixar cartão de aniversário:', error)
+      alert('Não foi possível baixar o cartão. Tente novamente.')
+    }
+  }
+
+  async function compartilharCartaoAniversario() {
+    try {
+      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
+      const canvas = await capturarCartaoAniversario()
+
+      if (!canvas) {
+        return
+      }
+
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+
+      if (!blob) {
+        await baixarImagemCartaoAniversario()
+        return
+      }
+
+      const arquivo = new File(
+        [blob],
+        `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`,
+        { type: 'image/png' }
+      )
+
+      if (navigator.share && navigator.canShare?.({ files: [arquivo] })) {
+        await navigator.share({
+          title: `Cartão de aniversário - ${aniversariante?.nome || 'EBD'}`,
+          text: 'Cartão de aniversário da Escola Bíblica Dominical.',
+          files: [arquivo],
+        })
+        return
+      }
+
+      await baixarImagemCartaoAniversario()
+      alert('Seu navegador não abriu o compartilhamento direto. A imagem foi baixada para você enviar pelo WhatsApp.')
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        return
+      }
+
+      console.error('Erro ao compartilhar cartão de aniversário:', error)
+      await baixarImagemCartaoAniversario()
+    }
+  }
+
+  async function baixarPdfCartaoAniversario() {
+    try {
+      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
+      const canvas = await capturarCartaoAniversario()
+
+      if (!canvas) {
+        return
+      }
+
+      const imagem = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      const larguraPagina = pdf.internal.pageSize.getWidth()
+      const alturaPagina = pdf.internal.pageSize.getHeight()
+      const larguraCartao = Math.min(170, larguraPagina - 20)
+      const alturaCartao = (canvas.height * larguraCartao) / canvas.width
+      const x = (larguraPagina - larguraCartao) / 2
+      const y = Math.max(8, (alturaPagina - alturaCartao) / 2)
+
+      pdf.addImage(imagem, 'PNG', x, y, larguraCartao, alturaCartao)
+      pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
+    } catch (error) {
+      console.error('Erro ao gerar PDF do cartão de aniversário:', error)
+      alert('Não foi possível gerar o PDF do cartão. Tente novamente.')
+    }
+  }
+
+  async function imprimirCartaoAniversario() {
+    try {
+      const canvas = await capturarCartaoAniversario()
+
+      if (!canvas) {
+        return
+      }
+
+      const imagem = canvas.toDataURL('image/png')
+
+      imprimirHtmlEmIframe(
+        `
+          <!doctype html>
+          <html lang="pt-BR">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Cartão de aniversário</title>
+              <style>
+                * { box-sizing: border-box; }
+                body {
+                  margin: 0;
+                  min-height: 100vh;
+                  display: grid;
+                  place-items: center;
+                  padding: 10mm;
+                  background: #ffffff;
+                }
+                img {
+                  width: min(170mm, 100%);
+                  height: auto;
+                  display: block;
+                  border-radius: 10mm;
+                }
+                @media print {
+                  @page { size: A4 portrait; margin: 8mm; }
+                  body { padding: 0; }
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${imagem}" alt="Cartão de aniversário" />
+            </body>
+          </html>
+        `,
+        'iframe-cartao-aniversario-individual'
+      )
+    } catch (error) {
+      console.error('Erro ao imprimir cartão de aniversário:', error)
+      alert('Não foi possível imprimir o cartão. Tente novamente.')
+    }
+  }
+
   function renderizarJanelaAniversariantesSemana() {
     const aniversariantes = buscarAniversariantesDaSemana()
     const aniversariantesHoje = aniversariantes.filter((pessoa) => Number(pessoa.dias) === 0)
     const proximosAniversariantes = aniversariantes.filter((pessoa) => Number(pessoa.dias) > 0)
+    const aniversarianteCartao = obterAniversarianteSelecionadoCartao(aniversariantes)
 
     return (
       <div
@@ -7826,7 +8013,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   Confira alunos, professores e secretarias que fazem aniversário hoje ou nos próximos 7 dias.
                 </p>
               </div>
-              <div className="janela-aniversariantes-selo">🎂</div>
+              <div className="janela-aniversariantes-selo">🎁</div>
             </div>
 
             <div className="janela-aniversariantes-resumo">
@@ -7847,7 +8034,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {aniversariantes.length > 0 ? (
               <div className="janela-aniversariantes-lista">
                 {aniversariantes.map((pessoa) => (
-                  <article className="janela-aniversariante-item" key={pessoa.id}>
+                  <article
+                    className={`janela-aniversariante-item${aniversarianteCartao?.id === pessoa.id ? ' ativo' : ''}`}
+                    key={pessoa.id}
+                  >
                     <div className="janela-aniversariante-icone">🎉</div>
                     <div>
                       <strong>{pessoa.nome}</strong>
@@ -7855,12 +8045,79 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                     </div>
                     <span>{formatarDataNascimento(pessoa.dataNascimento)}</span>
                     <em>{descreverAniversario(pessoa.dias)}</em>
+                    <button
+                      type="button"
+                      className="botao-mini-cartao"
+                      onClick={() => setAniversarianteCartaoId(pessoa.id)}
+                    >
+                      Ver cartão
+                    </button>
                   </article>
                 ))}
               </div>
             ) : (
               <div className="janela-aniversariantes-vazio">
                 Nenhum aniversário cadastrado para os próximos 7 dias.
+              </div>
+            )}
+
+            {aniversarianteCartao && (
+              <div className="cartao-aniversario-area">
+                <div className="cartao-aniversario-info">
+                  <span className="hero-tag">Cartão individual</span>
+                  <h4>Cartão pronto para {aniversarianteCartao.nome}</h4>
+                  <p>
+                    Baixe a imagem para enviar pelo WhatsApp ou imprima em papel A4.
+                    O cartão não usa cruz nem vela; mantém apenas Bíblia/livros e elementos delicados.
+                  </p>
+                </div>
+
+                <div className="cartao-aniversario-visualizacao">
+                  <article className="cartao-aniversario-oficial" ref={cartaoAniversarioRef}>
+                    <div className="cartao-aniversario-moldura">
+                      <div className="cartao-aniversario-livro" aria-hidden="true">📖</div>
+                      <div className="cartao-aniversario-pomba" aria-hidden="true">🕊️</div>
+                      <div className="cartao-aniversario-flores cartao-aniversario-flores-esquerda" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span>
+                      </div>
+                      <div className="cartao-aniversario-presente" aria-hidden="true">
+                        <div className="presente-laco"></div>
+                        <div className="presente-caixa"></div>
+                      </div>
+                      <div className="cartao-aniversario-bolo" aria-hidden="true">
+                        <div className="bolo-camada bolo-camada-superior"></div>
+                        <div className="bolo-camada bolo-camada-inferior"></div>
+                        <div className="bolo-base"></div>
+                      </div>
+
+                      <div className="cartao-aniversario-texto">
+                        <h4>
+                          <span>Feliz</span>
+                          <em>aniversário,</em>
+                          <strong>{aniversarianteCartao.nome}!</strong>
+                        </h4>
+
+                        <div className="cartao-aniversario-divisor" aria-hidden="true">❤</div>
+
+                        <p className="cartao-aniversario-mensagem">
+                          Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
+                          Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
+                        </p>
+
+                        <section className="cartao-aniversario-versiculo">
+                          <span>📖 Versículo bíblico</span>
+                          <p>“Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”</p>
+                          <strong>Salmo 118:24</strong>
+                        </section>
+
+                        <footer>
+                          <em>Com carinho,</em>
+                          <strong>Escola Bíblica Dominical</strong>
+                        </footer>
+                      </div>
+                    </div>
+                  </article>
+                </div>
               </div>
             )}
 
@@ -7873,12 +8130,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
           </div>
 
-          <div className="janela-aniversariantes-acoes">
-            <button className="botao-principal" type="button" onClick={baixarPdfAniversariantesSemana}>
-              Baixar PDF
+          <div className="janela-aniversariantes-acoes janela-aniversariantes-acoes-completas">
+            <button className="botao-principal" type="button" onClick={baixarImagemCartaoAniversario} disabled={!aniversarianteCartao}>
+              Baixar cartão
+            </button>
+            <button className="botao-secundario" type="button" onClick={compartilharCartaoAniversario} disabled={!aniversarianteCartao}>
+              Compartilhar
+            </button>
+            <button className="botao-secundario" type="button" onClick={baixarPdfCartaoAniversario} disabled={!aniversarianteCartao}>
+              Baixar PDF do cartão
+            </button>
+            <button className="botao-secundario" type="button" onClick={imprimirCartaoAniversario} disabled={!aniversarianteCartao}>
+              Imprimir cartão
+            </button>
+            <button className="botao-secundario" type="button" onClick={baixarPdfAniversariantesSemana}>
+              PDF da lista
             </button>
             <button className="botao-secundario" type="button" onClick={imprimirAniversariantesSemana}>
-              Imprimir
+              Imprimir lista
             </button>
             <button className="botao-secundario" type="button" onClick={fecharJanelaAniversariantesSemana}>
               Fechar
