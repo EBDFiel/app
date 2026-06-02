@@ -1462,43 +1462,33 @@ function App() {
 
     setCarregando(false)
     setVerificandoSessao(false)
-    definirSessao(null)
-    setTelaPublica('login')
 
     try {
-      window.localStorage.clear()
-      window.sessionStorage.clear()
+      await supabase.auth.signOut({ scope: 'local' })
     } catch (error) {
-      console.error('Erro ao limpar dados locais:', error)
+      console.error('Erro ao sair do Supabase:', error)
     }
 
     try {
-      if (window.indexedDB?.databases) {
-        const bancos = await window.indexedDB.databases()
-
-        bancos.forEach((banco) => {
-          if (banco?.name) {
-            window.indexedDB.deleteDatabase(banco.name)
-          }
-        })
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
+        window.localStorage.removeItem(CHAVE_PAGINA_ATUAL)
+        window.localStorage.removeItem('ebdfiel_igrejas_admin_cache')
       }
     } catch (error) {
-      console.error('Erro ao limpar IndexedDB:', error)
+      console.error('Erro ao limpar dados locais do EBD Fiel:', error)
     }
 
-    try {
-      supabase.auth.signOut({ scope: 'local' }).catch((error) => {
-        console.error('Erro ao sair do Supabase:', error)
-      })
-    } catch (error) {
-      console.error('Erro ao acionar logout do Supabase:', error)
-    }
-
+    usuarioCarregadoRef.current = null
+    definirSessao(null)
     limparDadosDoSistema()
+    setTelaPublica('login')
 
-    window.setTimeout(() => {
-      window.location.replace(`/?v=logout-${Date.now()}`)
-    }, 80)
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        window.__ebdFielSaindoDoSistema = false
+      }, 600)
+    }
   }
 
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
@@ -2960,9 +2950,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
     )
 
-    limparDadosOperacionaisSemTrocarTela({
-      preservarContextoSuporte: suporteAdminDeveSerPreservado,
-    })
+    // v76: não limpar classes/alunos/chamadas antes do retorno do Supabase.
+    // Em celulares e redes mais lentas, a limpeza antecipada fazia a tela aparecer
+    // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
+    // permanecem visíveis até os dados atualizados chegarem com sucesso.
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
@@ -12484,6 +12475,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
         <button
           type="button"
+          className="botao-inicio-interno"
+          onClick={() => navegarParaPagina('painel')}
+          aria-label="Voltar à página inicial"
+        >
+          <Icone nome="painel" className="icone-svg" />
+          <span>Página inicial</span>
+        </button>
+
+        <button
+          type="button"
           className={`botao-menu-interno ${menuInternoAberto ? 'ativo' : ''}`}
           aria-label={menuInternoAberto ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={menuInternoAberto}
@@ -12551,7 +12552,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
           </span>
 
-          <button className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
+          <button type="button" className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
             <Icone nome="sair" className="icone-svg" />
             <span>Sair</span>
           </button>
