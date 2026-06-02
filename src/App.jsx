@@ -486,6 +486,9 @@ function App() {
   const perfilUsuarioRef = useRef(perfilUsuario)
   const igrejaSuporteAdminRef = useRef(igrejaSuporteAdmin)
   const paginaAtualRef = useRef(paginaAtual)
+  const usuarioCarregadoRef = useRef(null)
+  const carregamentoDadosEmAndamentoRef = useRef(false)
+  const suporteAdminEmTransicaoRef = useRef(false)
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -519,6 +522,97 @@ function App() {
     paginaAtualRef.current = paginaSegura
     setPaginaAtual(paginaSegura)
     salvarPaginaAtualSalva(paginaSegura)
+  }
+
+  function normalizarIgrejaSuporteAdmin(igreja) {
+    const igrejaIdSuporte = Number(igreja?.id)
+
+    if (!igrejaIdSuporte) {
+      return null
+    }
+
+    return {
+      id: igrejaIdSuporte,
+      nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
+      congregacao: igreja.congregacao || '',
+      status_piloto: igreja.status_piloto || '',
+      cidade: igreja.cidade || '',
+      estado: igreja.estado || '',
+    }
+  }
+
+  function montarPerfilSuporteAdmin(igreja, sessaoAtual) {
+    const igrejaNormalizada = normalizarIgrejaSuporteAdmin(igreja)
+    const perfilAnterior = perfilUsuarioRef.current || perfilUsuario || {}
+    const emailSessaoAtual = String(
+      sessaoAtual?.user?.email || perfilAnterior?.email || ''
+    ).toLowerCase()
+
+    return {
+      ...perfilAnterior,
+      id: perfilAnterior?.id || null,
+      user_id: sessaoAtual?.user?.id || perfilAnterior?.user_id || null,
+      nome: perfilAnterior?.nome || 'Administrador do sistema',
+      email: emailSessaoAtual,
+      perfil: 'secretaria',
+      igreja_id: Number(igrejaNormalizada?.id || 0) || null,
+      classe_id: null,
+      modo_suporte_admin: true,
+    }
+  }
+
+  function manterContextoSuporteAdmin(igreja, sessaoAtual, opcoes = {}) {
+    const igrejaNormalizada = normalizarIgrejaSuporteAdmin(igreja)
+
+    if (!igrejaNormalizada?.id) {
+      return null
+    }
+
+    definirIgrejaSuporteAdmin(igrejaNormalizada)
+    setIgrejaId(Number(igrejaNormalizada.id))
+    definirPerfilUsuario(montarPerfilSuporteAdmin(igrejaNormalizada, sessaoAtual))
+
+    setIgrejaAtualPiloto((igrejaAtual) => {
+      if (Number(igrejaAtual?.id) === Number(igrejaNormalizada.id)) {
+        return igrejaAtual
+      }
+
+      return {
+        ...igrejaAtual,
+        ...igrejaNormalizada,
+      }
+    })
+
+    if (opcoes?.forcarPainel || paginaAtualRef.current === 'administracao') {
+      definirPaginaAtual('painel')
+    }
+
+    return igrejaNormalizada
+  }
+
+  function recuperarContextoSuporteAdminAtual() {
+    const igrejaAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
+
+    if (igrejaAtual?.id) {
+      return normalizarIgrejaSuporteAdmin(igrejaAtual)
+    }
+
+    return lerIgrejaSuporteAdminSalva()
+  }
+
+  function eventoAuthMesmaSessaoJaCarregada(event, session) {
+    if (!['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED'].includes(event)) {
+      return false
+    }
+
+    const userIdEvento = session?.user?.id || null
+
+    return Boolean(
+      userIdEvento &&
+        perfilUsuarioRef.current &&
+        (suporteAdminEmTransicaoRef.current ||
+          (usuarioCarregadoRef.current && userIdEvento === usuarioCarregadoRef.current))
+    )
   }
 
   const [igrejasAdmin, setIgrejasAdmin] = useState(() => {
@@ -702,6 +796,20 @@ function App() {
       setCarregando(false)
     }, 6000)
 
+    function restaurarSuporteAoVoltarParaAba() {
+      const sessaoAtual = sessaoRef.current
+      const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
+      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+
+      if (!igrejaSuporteSalva?.id || !emailsAdminSistema.includes(emailSessaoAtual)) {
+        return
+      }
+
+      manterContextoSuporteAdmin(igrejaSuporteSalva, sessaoAtual, {
+        forcarPainel: paginaAtualRef.current === 'administracao',
+      })
+    }
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -726,6 +834,7 @@ function App() {
       }
 
       if (event === 'SIGNED_OUT') {
+        usuarioCarregadoRef.current = null
         definirSessao(null)
         limparDadosDoSistema()
         setCarregando(false)
@@ -739,10 +848,31 @@ function App() {
         return
       }
 
+      const deveManterEstadoAtual = eventoAuthMesmaSessaoJaCarregada(event, session)
+      const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
+
       definirSessao(session)
       setVerificandoSessao(false)
 
+      if (deveManterEstadoAtual) {
+        if (igrejaSuporteSalva?.id) {
+          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
+            forcarPainel: paginaAtualRef.current === 'administracao',
+          })
+        }
+
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
+
       if (event === 'TOKEN_REFRESHED') {
+        if (igrejaSuporteSalva?.id) {
+          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
+            forcarPainel: paginaAtualRef.current === 'administracao',
+          })
+        }
+
         setCarregando(false)
         setVerificandoSessao(false)
         return
@@ -754,7 +884,7 @@ function App() {
         event === 'USER_UPDATED'
       ) {
         try {
-          await carregarDadosOnline(session)
+          await carregarDadosOnline(session, igrejaSuporteSalva)
         } catch (erroCarregamentoSessao) {
           console.error('Erro ao validar sessão:', erroCarregamentoSessao)
           setErroSistema(
@@ -768,8 +898,20 @@ function App() {
       setVerificandoSessao(false)
     })
 
+    const restaurarAoFocar = () => restaurarSuporteAoVoltarParaAba()
+    const restaurarAoFicarVisivel = () => {
+      if (document.visibilityState === 'visible') {
+        restaurarSuporteAoVoltarParaAba()
+      }
+    }
+
+    window.addEventListener('focus', restaurarAoFocar)
+    document.addEventListener('visibilitychange', restaurarAoFicarVisivel)
+
     return () => {
       window.clearTimeout(destravarVerificacaoInicial)
+      window.removeEventListener('focus', restaurarAoFocar)
+      document.removeEventListener('visibilitychange', restaurarAoFicarVisivel)
       subscription.unsubscribe()
     }
   }, [])
@@ -1341,6 +1483,17 @@ function App() {
   }
 
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
+    const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
+
+    if (
+      carregamentoDadosEmAndamentoRef.current &&
+      !igrejaSuporteForcada &&
+      usuarioCarregadoRef.current === sessaoAtual?.user?.id
+    ) {
+      return
+    }
+
+    carregamentoDadosEmAndamentoRef.current = true
     setCarregando(true)
     setErroSistema('')
 
@@ -1361,38 +1514,56 @@ function App() {
         }
       }
 
-      await buscarTodosOsDados(sessaoParaUsar, igrejaSuporteForcada)
+      await buscarTodosOsDados(sessaoParaUsar, suporteParaPreservar)
+
+      if (sessaoParaUsar?.user?.id) {
+        usuarioCarregadoRef.current = sessaoParaUsar.user.id
+      }
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
 
       const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
       setErroSistema(mensagemErro)
 
+      if (suporteParaPreservar?.id && sessaoAtual?.user?.id) {
+        manterContextoSuporteAdmin(suporteParaPreservar, sessaoAtual, {
+          forcarPainel: true,
+        })
+      }
+
       if (
-        mensagemErro.toLowerCase().includes('cadastro incompleto') ||
-        mensagemErro.toLowerCase().includes('ainda não liberado') ||
-        mensagemErro.toLowerCase().includes('aguardando aprovação') ||
-        mensagemErro.toLowerCase().includes('sem igreja vinculada')
+        !suporteParaPreservar?.id &&
+        (mensagemErro.toLowerCase().includes('cadastro incompleto') ||
+          mensagemErro.toLowerCase().includes('ainda não liberado') ||
+          mensagemErro.toLowerCase().includes('aguardando aprovação') ||
+          mensagemErro.toLowerCase().includes('sem igreja vinculada'))
       ) {
         limparDadosOperacionaisSemTrocarTela()
         setTelaPublica('login')
       }
     } finally {
+      carregamentoDadosEmAndamentoRef.current = false
       setCarregando(false)
     }
   }
 
 
-  function limparDadosOperacionaisSemTrocarTela() {
+  function limparDadosOperacionaisSemTrocarTela(opcoes = {}) {
+    const preservarContextoSuporte = Boolean(opcoes?.preservarContextoSuporte)
+
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
     setChamadasProfessores([])
-    definirPerfilUsuario(null)
+
+    if (!preservarContextoSuporte) {
+      definirPerfilUsuario(null)
+      setIgrejaId(null)
+      setIgrejaAtualPiloto(null)
+    }
+
     setPerfisIgreja([])
     setVinculosProfessores([])
-    setIgrejaId(null)
-    setIgrejaAtualPiloto(null)
     setFeedbacksIgreja([])
   }
 
@@ -1600,38 +1771,22 @@ function App() {
         return
       }
 
-      const igrejaSelecionada = {
-        id: igrejaIdSelecionada,
-        nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
-        congregacao: igreja.congregacao || '',
-        status_piloto: igreja.status_piloto || '',
-        cidade: igreja.cidade || '',
-        estado: igreja.estado || '',
-      }
+      const igrejaSelecionada = normalizarIgrejaSuporteAdmin(igreja)
 
+      suporteAdminEmTransicaoRef.current = true
       setCarregando(true)
       setErroSistema('')
 
-      definirIgrejaSuporteAdmin(igrejaSelecionada)
+      manterContextoSuporteAdmin(igrejaSelecionada, sessaoAtual, {
+        forcarPainel: true,
+      })
 
       await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
 
-      definirIgrejaSuporteAdmin(igrejaSelecionada)
-      setIgrejaAtualPiloto(igrejaSelecionada)
-      setIgrejaId(igrejaIdSelecionada)
-      definirPerfilUsuario((perfilAnterior) => ({
-        ...perfilAnterior,
-        id: perfilAnterior?.id || null,
-        user_id: sessaoAtual?.user?.id,
-        nome: perfilAnterior?.nome || 'Administrador do sistema',
-        email: emailSessaoAtual,
-        perfil: 'secretaria',
-        igreja_id: igrejaIdSelecionada,
-        classe_id: null,
-        modo_suporte_admin: true,
-      }))
-
-      definirPaginaAtual('painel')
+      manterContextoSuporteAdmin(igrejaSelecionada, sessaoAtual, {
+        forcarPainel: true,
+      })
+      usuarioCarregadoRef.current = sessaoAtual?.user?.id || usuarioCarregadoRef.current
 
       if (typeof window !== 'undefined') {
         window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
@@ -1654,10 +1809,20 @@ function App() {
       )
     } finally {
       setCarregando(false)
+
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => {
+          suporteAdminEmTransicaoRef.current = false
+        }, 700)
+      } else {
+        suporteAdminEmTransicaoRef.current = false
+      }
     }
   }
 
   async function sairDoModoSuporteAdmin() {
+    suporteAdminEmTransicaoRef.current = true
+
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
     }
@@ -1687,6 +1852,14 @@ function App() {
 
     definirPaginaAtual('administracao')
     await carregarIgrejasAdmin()
+
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        suporteAdminEmTransicaoRef.current = false
+      }, 500)
+    } else {
+      suporteAdminEmTransicaoRef.current = false
+    }
   }
 
   function modoSuporteAdminAtivo() {
@@ -2760,7 +2933,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
 
-    limparDadosOperacionaisSemTrocarTela()
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+    const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
+    const suporteAdminDeveSerPreservado = Boolean(
+      igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
+    )
+
+    limparDadosOperacionaisSemTrocarTela({
+      preservarContextoSuporte: suporteAdminDeveSerPreservado,
+    })
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
@@ -2773,34 +2954,20 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     let perfilAtual = perfilBanco
-    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
     const ehAdminSessaoAtual =
       emailsAdminSistema.includes(emailSessaoAtual) ||
       perfilBanco?.perfil === 'admin_sistema'
-    const igrejaSuporteSelecionada = igrejaSuporteForcada || buscarIgrejaSuporteAdminSalva()
 
     if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-      perfilAtual = {
-        ...perfilBanco,
-        id: perfilBanco?.id || null,
-        user_id: sessaoAtual.user.id,
-        nome: perfilBanco?.nome || 'Administrador do sistema',
-        email: emailSessaoAtual,
-        perfil: 'secretaria',
-        igreja_id: Number(igrejaSuporteSelecionada.id),
-        classe_id: null,
-        modo_suporte_admin: true,
-      }
+      const igrejaSuporteNormalizada = manterContextoSuporteAdmin(
+        igrejaSuporteSelecionada,
+        sessaoAtual,
+        {
+          forcarPainel: paginaAtualRef.current === 'administracao',
+        }
+      )
 
-      definirIgrejaSuporteAdmin({
-        id: Number(igrejaSuporteSelecionada.id),
-        nome_igreja:
-          igrejaSuporteSelecionada.nome_igreja ||
-          igrejaSuporteSelecionada.nome ||
-          'Igreja',
-        congregacao: igrejaSuporteSelecionada.congregacao || '',
-        status_piloto: igrejaSuporteSelecionada.status_piloto || '',
-      })
+      perfilAtual = montarPerfilSuporteAdmin(igrejaSuporteNormalizada, sessaoAtual)
     }
 
     if (ehAdminSessaoAtual && !igrejaSuporteSelecionada?.id) {
@@ -2872,7 +3039,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           modo_suporte_admin: true,
         }
 
-        definirIgrejaSuporteAdmin(igrejaSuporteSelecionada)
+        manterContextoSuporteAdmin(igrejaSuporteSelecionada, sessaoAtual, {
+          forcarPainel: paginaAtualRef.current === 'administracao',
+        })
       } else if (ehAdminSessaoAtual) {
         const perfilAdminSistema = {
           id: null,
