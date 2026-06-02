@@ -8917,6 +8917,23 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
             </div>
 
+            {(usuarioEhSecretaria() || usuarioEhProfessor()) && (
+              <button
+                className="atalho-chamada-topo"
+                type="button"
+                onClick={() => navegarParaPagina('chamada')}
+                aria-label="Ir para chamada"
+              >
+                <span className="atalho-chamada-topo-icone">
+                  <Icone nome="chamada" className="icone-svg" />
+                </span>
+                <span className="atalho-chamada-topo-texto">
+                  <strong>Fazer chamada</strong>
+                  <small>Atalho principal para registrar presença</small>
+                </span>
+              </button>
+            )}
+
             <div className="hero-acoes">
               {usuarioEhSecretaria() && (
                 <button className="botao-principal" type="button" onClick={() => navegarParaPagina('configuracoes')}>
