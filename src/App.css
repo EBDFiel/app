@@ -18743,3 +18743,73 @@ body {
     font-size: 11px;
   }
 }
+
+
+/* v79 - Correção do botão Sair no menu lateral */
+.menu-lateral .cartao-usuario-sidebar .botao-sair-sidebar,
+.cartao-usuario-sidebar .botao-sair-sidebar {
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  border: 1px solid rgba(56, 189, 248, 0.28) !important;
+  background: rgba(8, 47, 73, 0.72) !important;
+  color: #e0f2fe !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 22px rgba(2, 6, 23, 0.14) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+.menu-lateral .cartao-usuario-sidebar .botao-sair-sidebar:hover,
+.cartao-usuario-sidebar .botao-sair-sidebar:hover {
+  background: rgba(14, 116, 144, 0.82) !important;
+  border-color: rgba(103, 232, 249, 0.44) !important;
+  color: #ffffff !important;
+}
+
+.menu-lateral .cartao-usuario-sidebar .botao-sair-sidebar .icone-svg,
+.cartao-usuario-sidebar .botao-sair-sidebar .icone-svg {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  display: block !important;
+  color: #67e8f9 !important;
+  stroke: currentColor !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.menu-lateral .cartao-usuario-sidebar .botao-sair-sidebar span,
+.cartao-usuario-sidebar .botao-sair-sidebar span {
+  display: inline !important;
+  color: #ffffff !important;
+  font-weight: 850 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+@media screen and (max-width: 900px) {
+  .menu-lateral.menu-lateral-aberto .cartao-usuario-sidebar .botao-sair-sidebar {
+    min-height: 48px !important;
+    border-radius: 14px !important;
+    touch-action: manipulation !important;
+  }
+}
+
+
+/* v80 - aviso discreto de sincronização dos dados operacionais */
+.aviso-sincronizacao-dados {
+  margin: 8px 0 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(219, 234, 254, 0.78);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  color: #1e3a8a;
+  font-weight: 800;
+  font-size: 13px;
+}
