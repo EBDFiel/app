@@ -16200,3 +16200,786 @@ button.botao-principal {
     display: none !important;
   }
 }
+
+/* =========================================================
+   v72 - Padronização visual das páginas internas
+   Painel, Classes, Alunos, Professores, Chamada e Relatórios
+   ========================================================= */
+:root {
+  --ui-marinho: #0b1831;
+  --ui-marinho-2: #102a56;
+  --ui-azul: #1d4ed8;
+  --ui-ciano: #06b6d4;
+  --ui-dourado: #d6a82f;
+  --ui-verde: #16a34a;
+  --ui-vermelho: #dc2626;
+  --ui-fundo: #f3f7fb;
+  --ui-card: #ffffff;
+  --ui-borda: rgba(15, 23, 42, 0.08);
+  --ui-borda-forte: rgba(15, 23, 42, 0.14);
+  --ui-texto: #0f172a;
+  --ui-suave: #64748b;
+  --ui-sombra: 0 18px 40px rgba(15, 23, 42, 0.07);
+  --ui-sombra-suave: 0 10px 24px rgba(15, 23, 42, 0.05);
+  --ui-raio: 24px;
+  --ui-raio-menor: 16px;
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(6, 182, 212, 0.09), transparent 26%),
+    radial-gradient(circle at 90% 0%, rgba(214, 168, 47, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3f8 100%) !important;
+}
+
+.app {
+  background: transparent !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(6, 182, 212, 0.18), transparent 24%),
+    linear-gradient(180deg, #07142b 0%, #0b1831 48%, #081326 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 22px 0 55px rgba(15, 23, 42, 0.12) !important;
+}
+
+.marca-sidebar {
+  padding: 2px 4px 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.logo-simbolo-sidebar {
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.22) !important;
+}
+
+.marca-sidebar h1 {
+  letter-spacing: -0.03em !important;
+}
+
+.menu-lateral button {
+  min-height: 46px !important;
+  padding: 11px 13px !important;
+  border-radius: 15px !important;
+  color: rgba(226, 232, 240, 0.82) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.menu-lateral button .icone-menu {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(226, 232, 240, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.menu-lateral button:hover {
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: #ffffff !important;
+}
+
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.98), rgba(6, 182, 212, 0.72)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 30px rgba(6, 182, 212, 0.18) !important;
+}
+
+.menu-lateral button.ativo .icone-menu {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+
+.cartao-usuario-sidebar {
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.cartao-usuario-sidebar strong {
+  font-size: 13px !important;
+}
+
+.area-principal {
+  padding: 30px !important;
+}
+
+.conteudo,
+.conteudo.pagina-interna {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 24px !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(255, 255, 255, 0.86) !important;
+  box-shadow: var(--ui-sombra) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.topo-pagina,
+.topo-pagina-interna {
+  min-height: 112px !important;
+  padding: 24px 28px !important;
+  margin-bottom: 18px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 96% 6%, rgba(214, 168, 47, 0.10), transparent 26%),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(15, 23, 42, 0.065) !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.045) !important;
+}
+
+.subtitulo-pagina-interna {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin-bottom: 7px !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: #eef6ff !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.topo-pagina h2,
+.topo-pagina-interna h2 {
+  margin: 0 0 7px !important;
+  color: var(--ui-texto) !important;
+  font-size: clamp(31px, 4vw, 46px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.055em !important;
+}
+
+.topo-pagina p,
+.topo-pagina-interna p {
+  margin: 0 !important;
+  max-width: 760px !important;
+  color: var(--ui-suave) !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.botao-principal,
+.botao-secundario,
+.botao-editar,
+.botao-excluir,
+.botao-presenca,
+.botao-falta {
+  min-height: 40px !important;
+  border-radius: 13px !important;
+  padding: 10px 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em !important;
+  box-shadow: none !important;
+}
+
+.botao-principal {
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  background: linear-gradient(135deg, #0b72b9 0%, #00a693 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px rgba(6, 182, 212, 0.16) !important;
+}
+
+.botao-principal:hover {
+  filter: brightness(0.98) !important;
+  box-shadow: 0 16px 30px rgba(6, 182, 212, 0.20) !important;
+}
+
+.botao-secundario {
+  border: 1px solid rgba(37, 99, 235, 0.16) !important;
+  background: #ffffff !important;
+  color: #0f2c60 !important;
+}
+
+.botao-editar {
+  border: 1px solid rgba(214, 168, 47, 0.28) !important;
+  background: #fffaf0 !important;
+  color: #9a6b00 !important;
+}
+
+.botao-excluir {
+  border: 1px solid rgba(220, 38, 38, 0.18) !important;
+  background: #fff5f5 !important;
+  color: #dc2626 !important;
+}
+
+.formulario,
+.filtros {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea,
+.filtros input,
+.filtros select {
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  background: #ffffff !important;
+  color: var(--ui-texto) !important;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.015) !important;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus,
+.filtros input:focus,
+.filtros select:focus {
+  border-color: rgba(37, 99, 235, 0.52) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10) !important;
+}
+
+.filtros {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr) auto !important;
+  align-items: end !important;
+  gap: 14px !important;
+  padding: 16px !important;
+}
+
+.contador-resultados {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  margin: 16px 0 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 999px !important;
+  background: #eef6ff !important;
+  color: #1e3a8a !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.lista {
+  gap: 12px !important;
+}
+
+.item-lista {
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.045) !important;
+}
+
+.item-lista:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.07) !important;
+}
+
+/* Classes */
+.pagina-classes .aviso-classes-moderno {
+  margin-top: 6px !important;
+  margin-bottom: 16px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #eff9ff 0%, #fff8df 100%) !important;
+  border: 1px solid rgba(214, 168, 47, 0.16) !important;
+  color: #0f2c60 !important;
+}
+
+.lista-classes-modernas {
+  gap: 16px !important;
+}
+
+.classe-card-moderno {
+  overflow: hidden !important;
+  padding: 0 !important;
+  border-radius: 24px !important;
+}
+
+.classe-card-moderno::before {
+  display: none !important;
+}
+
+.classe-card-faixa {
+  min-height: 78px !important;
+  padding: 18px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #123a6f 58%, rgba(6, 182, 212, 0.72) 100%) !important;
+  color: #ffffff !important;
+}
+
+.classe-cor-3 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #16406d 60%, #d6a82f 150%) !important;
+}
+
+.classe-cor-4 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #14532d 150%) !important;
+}
+
+.classe-card-selo {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e0f2fe !important;
+}
+
+.classe-card-titulo-bloco h3,
+.classe-card-faixa h3 {
+  margin: 6px 0 0 !important;
+  color: #ffffff !important;
+  font-size: clamp(22px, 3vw, 31px) !important;
+  letter-spacing: -0.04em !important;
+}
+
+.classe-card-matricula {
+  width: 68px !important;
+  height: 58px !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+  background: #f7b51f !important;
+  color: #0f172a !important;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.14) !important;
+}
+
+.classe-card-matricula strong {
+  line-height: 1 !important;
+  font-size: 24px !important;
+}
+
+.classe-card-matricula span {
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.classe-card-corpo {
+  padding: 18px 20px 20px !important;
+}
+
+.classe-card-resumo-item,
+.professor-classe-linha,
+.aluno-classe-linha {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  background: #fbfdff !important;
+}
+
+.professor-classe-linha,
+.aluno-classe-linha {
+  padding: 12px 14px !important;
+}
+
+.professor-classe-nome {
+  color: var(--ui-texto) !important;
+  font-weight: 900 !important;
+}
+
+.classe-card-acoes,
+.aluno-classe-acoes,
+.professor-classe-acoes {
+  gap: 8px !important;
+}
+
+.classe-card-acoes button {
+  min-height: 35px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+/* Alunos e Professores */
+.lista-cadastros-moderna {
+  margin-top: 14px !important;
+}
+
+.cadastro-card-moderno {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  padding: 16px !important;
+}
+
+.cadastro-card-identidade {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+}
+
+.cadastro-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  flex-shrink: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #e0f2fe, #fff3c4) !important;
+  color: #0f2c60 !important;
+  font-weight: 950 !important;
+  font-size: 18px !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05) !important;
+}
+
+.cadastro-card-textos h3 {
+  margin: 0 0 8px !important;
+  color: var(--ui-texto) !important;
+  font-size: 17px !important;
+  letter-spacing: -0.025em !important;
+}
+
+.cadastro-metadados {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+}
+
+.cadastro-metadados span {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 6px 9px !important;
+  border-radius: 999px !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.pagina-professors .cadastro-avatar,
+.pagina-professores .cadastro-avatar {
+  background: linear-gradient(135deg, #ecfeff, #fff7dd) !important;
+}
+
+.acoes-cadastro,
+.acoes-item {
+  align-items: center !important;
+}
+
+.acoes-cadastro button,
+.acoes-item button {
+  min-height: 34px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+/* Chamada */
+.pagina-chamada .abas-chamada {
+  display: inline-flex !important;
+  width: fit-content !important;
+  padding: 5px !important;
+  margin: 2px 0 16px !important;
+  border-radius: 999px !important;
+  background: #eef4fb !important;
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.pagina-chamada .abas-chamada button {
+  min-height: 38px !important;
+  padding: 9px 16px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-weight: 900 !important;
+}
+
+.pagina-chamada .abas-chamada button.ativo {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #0b72b9, #00a693) !important;
+  box-shadow: 0 10px 20px rgba(6, 182, 212, 0.18) !important;
+}
+
+.pagina-chamada > .formulario,
+.pagina-chamada .formulario {
+  padding: 18px !important;
+  margin-top: 0 !important;
+}
+
+.pagina-chamada .item-chamada {
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+.pagina-chamada .acoes-chamada {
+  gap: 8px !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente,
+.ativo-presente {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.pagina-chamada .botao-falta.ativo-falta,
+.ativo-falta {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.mensagem-chamada {
+  border-radius: 18px !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Relatórios */
+.pagina-relatorios .relatorios-dashboard {
+  display: grid !important;
+  gap: 16px !important;
+}
+
+.relatorios-hero {
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 96% 18%, rgba(255, 255, 255, 0.16), transparent 25%),
+    linear-gradient(135deg, #123a6f 0%, #1d4ed8 62%, #00a693 130%) !important;
+  box-shadow: 0 18px 36px rgba(29, 78, 216, 0.15) !important;
+}
+
+.relatorios-percentual {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.17) !important;
+}
+
+.relatorios-cards .card,
+.relatorios-professores-card,
+.relatorio-acoes {
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045) !important;
+}
+
+.professores-resumo-grid {
+  gap: 12px !important;
+}
+
+.professor-resumo-item,
+.professor-status-linha {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  background: #fbfdff !important;
+}
+
+.professor-status-linha {
+  padding: 12px 14px !important;
+}
+
+.professor-status-linha .status-presente,
+.status-presente {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 101, 52, 0.10) !important;
+}
+
+.relatorio-folha {
+  border-radius: 18px !important;
+  border-color: rgba(15, 23, 42, 0.35) !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06) !important;
+  overflow: hidden !important;
+}
+
+.relatorio-acoes {
+  padding: 18px !important;
+  align-items: center !important;
+}
+
+.relatorio-acoes-botoes,
+.relatorio-acoes .grupo-botoes {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  justify-content: flex-end !important;
+}
+
+.relatorio-acoes .botao-principal,
+.relatorio-acoes .botao-secundario {
+  margin-top: 0 !important;
+}
+
+.tabela-container {
+  border-radius: 16px !important;
+}
+
+.tabela:not(.tabela-ebd) {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+}
+
+.tabela:not(.tabela-ebd) th {
+  background: #f8fafc !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+}
+
+.tabela:not(.tabela-ebd) td {
+  color: #334155 !important;
+  font-size: 13px !important;
+}
+
+@media (max-width: 1180px) {
+  .conteudo,
+  .conteudo.pagina-interna {
+    max-width: 100% !important;
+  }
+
+  .filtros {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .filtros .botao-secundario {
+    grid-column: 1 / -1 !important;
+    width: fit-content !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .app {
+    flex-direction: column !important;
+  }
+
+  .menu-lateral {
+    width: 100% !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .menu-navegacao,
+  .menu-lateral nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .cartao-usuario-sidebar {
+    margin-top: 4px !important;
+  }
+
+  .topo-pagina,
+  .topo-pagina-interna {
+    align-items: stretch !important;
+    min-height: auto !important;
+    padding: 20px !important;
+  }
+
+  .topo-pagina .botao-principal,
+  .topo-pagina-interna .botao-principal {
+    width: 100% !important;
+  }
+
+  .filtros {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filtros .botao-secundario {
+    width: 100% !important;
+  }
+
+  .cadastro-card-moderno,
+  .item-com-acoes {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .acoes-cadastro,
+  .acoes-item {
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  .acoes-cadastro button,
+  .acoes-item button {
+    flex: 1 !important;
+  }
+
+  .classe-card-faixa {
+    align-items: flex-start !important;
+  }
+
+  .classe-card-acoes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .classe-card-acoes button {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .area-principal {
+    padding: 14px !important;
+  }
+
+  .conteudo,
+  .conteudo.pagina-interna {
+    padding: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .menu-navegacao,
+  .menu-lateral nav {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topo-pagina h2,
+  .topo-pagina-interna h2 {
+    font-size: 34px !important;
+  }
+
+  .classe-card-faixa,
+  .classe-card-corpo {
+    padding: 16px !important;
+  }
+
+  .classe-card-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .abas-chamada {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    border-radius: 18px !important;
+  }
+
+  .pagina-chamada .abas-chamada button {
+    width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .cadastro-card-identidade {
+    align-items: flex-start !important;
+  }
+
+  .relatorio-acoes-botoes,
+  .relatorio-acoes .grupo-botoes {
+    justify-content: stretch !important;
+  }
+
+  .relatorio-acoes .botao-principal,
+  .relatorio-acoes .botao-secundario {
+    width: 100% !important;
+  }
+}
+
+@media print {
+  .conteudo,
+  .conteudo.pagina-interna {
+    box-shadow: none !important;
+    border: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .relatorio-folha {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}
