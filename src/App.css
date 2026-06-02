@@ -14681,3 +14681,56 @@ button.botao-principal {
     display: none !important;
   }
 }
+
+/* Mensagens internas da chamada */
+.mensagem-chamada {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-suave);
+}
+
+.mensagem-chamada p {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.mensagem-chamada button {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--cor-texto);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mensagem-chamada.sucesso {
+  background: linear-gradient(135deg, #ecfdf5 0%, #dcfce7 100%);
+  border-color: #86efac;
+  color: #166534;
+}
+
+.mensagem-chamada.aviso {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.mensagem-chamada.erro {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #fecaca;
+  color: #991b1b;
+}
