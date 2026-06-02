@@ -17341,3 +17341,1005 @@ body {
     padding-top: 6px !important;
   }
 }
+
+/* =========================================================
+   v74 - Responsividade completa
+   Ajustes de layout para celular, tablet e desktop sem alterar regras de negócio
+   ========================================================= */
+
+@media screen {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  img,
+  svg,
+  canvas,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  .topo-mobile-interno {
+    display: none;
+  }
+
+  .fechar-menu-interno {
+    display: none;
+  }
+
+  .overlay-menu-interno {
+    display: none;
+  }
+
+  .tabela-container,
+  .relatorio-preview-wrapper,
+  .relatorio-folha-container,
+  .pre-visualizacao-relatorio,
+  .area-preview-relatorio,
+  .cartao-preview-relatorio {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabela,
+  .tabela-ebd {
+    max-width: 100%;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea,
+  .filtros input,
+  .filtros select,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 1180px) {
+  .conteudo,
+  .painel-admin-moderno,
+  .pagina-relatorios,
+  .pagina-interna,
+  .secao-painel,
+  .cartao-pagina,
+  .relatorios-container {
+    max-width: 100%;
+  }
+
+  .cards,
+  .cards-estatisticas,
+  .grade-campos,
+  .grade-campos-configuracoes,
+  .grade-resumos-comerciais,
+  .acoes-rapidas-grid,
+  .acoes-rapidas-painel-grid,
+  .painel-alertas-grid,
+  .resumo-rapido-grid,
+  .relatorios-cards,
+  .cards-relatorios,
+  .grade-indicadores,
+  .indicadores-relatorio {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .modelo-exato-ebd .nav-container {
+    padding-inline: 18px !important;
+  }
+
+  .modelo-exato-ebd .nav-links {
+    display: none !important;
+  }
+
+  .modelo-exato-ebd .menu-toggle {
+    display: inline-flex !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    min-height: auto !important;
+    padding: 7.5rem 1.25rem 4rem !important;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 2.25rem !important;
+    align-items: start !important;
+  }
+
+  .modelo-exato-ebd .hero-copy {
+    max-width: 760px !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    position: relative !important;
+    z-index: 1 !important;
+    width: min(100%, 560px) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  .tela-login,
+  .tela-login-v70,
+  .tela-mensagem {
+    grid-template-columns: 1fr !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70 {
+    min-height: auto !important;
+  }
+
+  .preview-login-v70,
+  .beneficios-login,
+  .beneficios-login-v70 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .area-principal {
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .app {
+    display: block !important;
+    min-height: 100vh;
+  }
+
+  .topo-mobile-interno {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 1500;
+    min-height: 68px;
+    padding: 10px 14px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(248, 251, 255, 0.94);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.10);
+    backdrop-filter: blur(16px);
+  }
+
+  .marca-mobile-interna {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 46px !important;
+    height: 46px !important;
+    flex: 0 0 46px;
+  }
+
+  .marca-mobile-interna strong,
+  .marca-mobile-interna span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .marca-mobile-interna strong {
+    color: #08213d;
+    font-size: 17px;
+    line-height: 1.1;
+    font-weight: 950;
+  }
+
+  .marca-mobile-interna span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .botao-menu-interno {
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    border-radius: 16px;
+    background: #ffffff;
+    color: #0f2d4d;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .botao-menu-interno span {
+    width: 21px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+
+  .botao-menu-interno.ativo span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .botao-menu-interno.ativo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .botao-menu-interno.ativo span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .overlay-menu-interno {
+    position: fixed;
+    inset: 0;
+    z-index: 1390;
+    display: block !important;
+    border: 0;
+    background: rgba(2, 6, 23, 0.48);
+    backdrop-filter: blur(3px);
+  }
+
+  .menu-lateral {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1400;
+    width: min(86vw, 320px) !important;
+    max-width: 320px;
+    height: 100dvh;
+    padding: 22px 16px !important;
+    overflow-y: auto;
+    transform: translateX(-106%);
+    transition: transform 0.24s ease, box-shadow 0.24s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none;
+  }
+
+  .menu-lateral.menu-lateral-aberto {
+    transform: translateX(0);
+    box-shadow: 30px 0 70px rgba(2, 6, 23, 0.28);
+  }
+
+  .menu-lateral .marca-sidebar {
+    padding-right: 42px;
+    position: relative;
+  }
+
+  .fechar-menu-interno {
+    display: inline-flex !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .menu-lateral nav,
+  .menu-navegacao {
+    gap: 8px !important;
+  }
+
+  .menu-lateral button {
+    min-height: 46px;
+  }
+
+  .area-principal {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 86px 14px 22px !important;
+  }
+
+  .conteudo,
+  .pagina-relatorios .conteudo,
+  .pagina-admin,
+  .pagina-interna,
+  .cartao-pagina,
+  .secao-painel,
+  .painel-admin-moderno {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .topo-pagina,
+  .cabecalho-pagina,
+  .cabecalho-interno,
+  .page-header,
+  .cabecalho-relatorios,
+  .topo-painel-admin {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .topo-pagina h2,
+  .conteudo h2,
+  .cabecalho-pagina h2,
+  .page-header h1,
+  .pagina-relatorios h2 {
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  .hero-painel,
+  .painel-topo-grid,
+  .painel-resumo-topo,
+  .relatorios-hero,
+  .relatorio-topo-grid,
+  .dashboard-grid,
+  .grid-duas-colunas,
+  .grade-campos,
+  .grade-campos-configuracoes,
+  .filtros,
+  .filtros-modernizados,
+  .filtros-listagem,
+  .busca-filtros,
+  .formulario-grid,
+  .cards,
+  .cards-estatisticas,
+  .cards-resumo,
+  .grade-resumos-comerciais,
+  .acoes-rapidas-grid,
+  .acoes-rapidas-painel-grid,
+  .painel-alertas-grid,
+  .resumo-rapido-grid,
+  .relatorios-cards,
+  .cards-relatorios,
+  .grade-indicadores,
+  .indicadores-relatorio,
+  .lista-professores-resumo,
+  .estatisticas-professores,
+  .admin-grid,
+  .financeiro-grid,
+  .configuracoes-grid,
+  .manual-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topo-pagina .botao-principal,
+  .topo-pagina .botao-secundario,
+  .cabecalho-pagina .botao-principal,
+  .cabecalho-pagina .botao-secundario,
+  .page-header .botao-principal,
+  .page-header .botao-secundario {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .item-com-acoes,
+  .item-chamada,
+  .linha-listagem,
+  .card-listagem,
+  .aluno-card,
+  .professor-card,
+  .classe-card-conteudo,
+  .classe-card-rodape,
+  .aniversariante-linha,
+  .acao-relatorio-linha {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .acoes-item,
+  .acoes-chamada,
+  .acoes-card,
+  .botoes-card-classe,
+  .botoes-classe,
+  .acoes-relatorio,
+  .acoes-relatorios,
+  .grupo-botoes,
+  .hero-acoes,
+  .janela-aniversariantes-acoes,
+  .painel-aniversariantes-topo,
+  .feedback-piloto-topo-compacto,
+  .relatorio-acoes-botoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .acoes-item > *,
+  .acoes-chamada > *,
+  .acoes-card > *,
+  .botoes-card-classe > *,
+  .botoes-classe > *,
+  .grupo-botoes > *,
+  .relatorio-acoes-botoes > * {
+    flex: 1 1 150px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .modelo-exato-ebd .navbar {
+    position: sticky !important;
+    top: 0 !important;
+    padding: 0.55rem 0 !important;
+  }
+
+  .modelo-exato-ebd .nav-container {
+    min-height: 58px !important;
+    padding-inline: 14px !important;
+  }
+
+  .modelo-exato-ebd .logo,
+  .modelo-exato-ebd .logo-com-imagem-oficial {
+    min-width: 0 !important;
+    gap: 10px !important;
+  }
+
+  .modelo-exato-ebd .logo-oficial-navbar {
+    width: 48px !important;
+    height: 48px !important;
+    flex: 0 0 48px !important;
+  }
+
+  .modelo-exato-ebd .logo-text {
+    font-size: clamp(1.35rem, 7vw, 1.9rem) !important;
+    line-height: 1 !important;
+  }
+
+  .modelo-exato-ebd .logo-sub {
+    font-size: clamp(0.56rem, 2.6vw, 0.72rem) !important;
+    letter-spacing: 0.14em !important;
+    white-space: normal !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    padding: 2.8rem 1rem 3rem !important;
+    overflow: hidden !important;
+  }
+
+  .modelo-exato-ebd .hero::after {
+    width: 260px !important;
+    height: 260px !important;
+    right: -120px !important;
+    bottom: auto !important;
+    top: 54% !important;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.6rem !important;
+  }
+
+  .modelo-exato-ebd .hero-copy,
+  .modelo-exato-ebd .hero h1,
+  .modelo-exato-ebd .hero p {
+    max-width: 100% !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(2rem, 10.8vw, 3.1rem) !important;
+    line-height: 1.05 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .modelo-exato-ebd .btn-hero-login-v70,
+  .modelo-exato-ebd .hero .btn-primary,
+  .modelo-exato-ebd .btn-nav-mobile {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+  }
+
+  .modelo-exato-ebd .hero-stats,
+  .modelo-exato-ebd .features-grid,
+  .modelo-exato-ebd .comparison-grid,
+  .modelo-exato-ebd .personas-grid,
+  .modelo-exato-ebd .plans-grid,
+  .modelo-exato-ebd .footer-content,
+  .modelo-exato-ebd .mockup-metricas-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    width: 100% !important;
+    max-width: 430px !important;
+    border-radius: 24px !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-body {
+    padding: 1.25rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-body h3 {
+    font-size: 1.35rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-lista-v70 span,
+  .modelo-exato-ebd .mockup-metricas-v70 div {
+    min-height: auto !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 3.2rem 1rem !important;
+  }
+
+  .modelo-exato-ebd .section-title {
+    font-size: clamp(1.65rem, 8vw, 2.15rem) !important;
+  }
+
+  .modelo-exato-ebd .mobile-menu.active {
+    max-height: calc(100dvh - 68px) !important;
+    overflow-y: auto !important;
+  }
+
+  .tela-login,
+  .tela-login-v70 {
+    min-height: 100dvh !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70 {
+    padding: 28px 20px !important;
+  }
+
+  .tela-login .marca-login,
+  .tela-login-v70 .marca-login {
+    align-items: flex-start !important;
+  }
+
+  .tela-login .marca-login .logo-simbolo,
+  .tela-login-v70 .marca-login .logo-simbolo {
+    width: 58px !important;
+    height: 58px !important;
+    flex: 0 0 58px !important;
+  }
+
+  .tela-login .marca-login h1,
+  .tela-login-v70 .marca-login h1 {
+    font-size: 1.55rem !important;
+  }
+
+  .tela-login .marca-login p,
+  .tela-login-v70 .marca-login p {
+    font-size: 0.92rem !important;
+  }
+
+  .tela-login .apresentacao-texto h2,
+  .tela-login-v70 .apresentacao-login-v70 h2 {
+    font-size: clamp(1.9rem, 9vw, 2.65rem) !important;
+    line-height: 1.08 !important;
+  }
+
+  .preview-login-v70,
+  .beneficios-login,
+  .beneficios-login-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cartao-login,
+  .cartao-login-v70,
+  .cartao-mensagem {
+    padding: 24px 16px !important;
+  }
+
+  .topo-cartao-login {
+    align-items: flex-start !important;
+  }
+
+  .topo-cartao-login h2,
+  .cartao-login-v70 .topo-cartao-login h2 {
+    font-size: clamp(1.65rem, 8vw, 2rem) !important;
+  }
+
+  .formulario,
+  .formulario-login,
+  .cartao-login-v70 .formulario-login,
+  .filtros,
+  .filtros-modernizados,
+  .busca-filtros {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea,
+  .filtros input,
+  .filtros select,
+  .cartao-login-v70 .formulario input,
+  input,
+  select,
+  textarea {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+
+  .botao-principal,
+  .botao-secundario,
+  .botao-editar,
+  .botao-excluir,
+  .botao-presenca,
+  .botao-falta,
+  .botao-cadastrar-igreja {
+    min-height: 46px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-painel-conteudo,
+  .hero-painel-destaque,
+  .painel-hero-principal,
+  .painel-resumo-rapido,
+  .relatorios-hero,
+  .card,
+  .item-lista,
+  .classe-card,
+  .card-classe,
+  .cartao-classe,
+  .aluno-card,
+  .professor-card,
+  .card-listagem,
+  .cartao-listagem,
+  .relatorio-card,
+  .feedback-piloto-compacto,
+  .personalizacao-card,
+  .configuracao-rapida-card {
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+
+  .hero-painel-conteudo h2,
+  .painel-hero-principal h2 {
+    font-size: clamp(1.7rem, 8vw, 2.2rem) !important;
+  }
+
+  .card-estatistica,
+  .card-resumo,
+  .indicador-card,
+  .relatorio-indicador {
+    align-items: center !important;
+  }
+
+  .card-valor,
+  .indicador-valor,
+  .relatorio-indicador strong {
+    font-size: clamp(1.65rem, 8vw, 2.1rem) !important;
+  }
+
+  .card-estatistica .card-icone,
+  .card-icone,
+  .icone-resumo,
+  .avatar-listagem,
+  .avatar-aniversariante {
+    flex: 0 0 auto !important;
+  }
+
+  .card-classe-cabecalho,
+  .classe-cabecalho,
+  .classe-topo,
+  .cabecalho-classe {
+    min-height: auto !important;
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+
+  .card-classe-cabecalho h3,
+  .classe-cabecalho h3,
+  .classe-topo h3,
+  .cabecalho-classe h3 {
+    font-size: clamp(1.25rem, 7vw, 1.7rem) !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .badge,
+  .selo,
+  .selo-status,
+  .selo-card,
+  .selo-perfil-sidebar,
+  .tag,
+  .tag-prazo {
+    max-width: 100%;
+    white-space: normal !important;
+  }
+
+  .lista,
+  .lista-alunos,
+  .lista-professores,
+  .lista-classes,
+  .lista-chamada,
+  .lista-relatorios {
+    gap: 12px !important;
+  }
+
+  .item-lista,
+  .card-listagem,
+  .aluno-card,
+  .professor-card {
+    min-width: 0 !important;
+  }
+
+  .item-lista h3,
+  .card-listagem h3,
+  .aluno-card h3,
+  .professor-card h3 {
+    overflow-wrap: anywhere !important;
+  }
+
+  .abas-chamada,
+  .tabs-chamada,
+  .chamada-abas,
+  .abas-relatorios {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .abas-chamada button,
+  .tabs-chamada button,
+  .chamada-abas button,
+  .abas-relatorios button {
+    width: 100% !important;
+  }
+
+  .resumo-chamada {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .tabela-container {
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .tabela,
+  .tabela-ebd {
+    min-width: 720px;
+  }
+
+  .relatorio-folha {
+    min-width: 760px;
+    transform-origin: top left;
+  }
+
+  .pagina-relatorios .relatorio-folha,
+  .relatorio-folha {
+    padding: 14px !important;
+  }
+
+  .acoes-relatorio,
+  .acoes-relatorios,
+  .relatorio-acoes-botoes {
+    justify-content: stretch !important;
+  }
+
+  .acoes-relatorio button,
+  .acoes-relatorios button,
+  .relatorio-acoes-botoes button,
+  .janela-aniversariantes-acoes button {
+    flex: 1 1 100% !important;
+  }
+
+  .janela-aniversariantes,
+  .modal,
+  .modal-conteudo,
+  .cartao-modal,
+  .modal-card {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow-y: auto !important;
+    border-radius: 22px !important;
+  }
+
+  .cartao-aniversario-preview,
+  .cartao-aniversario,
+  .cartao-aniversario-area {
+    max-width: 100% !important;
+  }
+
+  .mensagem-chamada,
+  .alerta-flutuante-secretaria {
+    right: 12px !important;
+    left: 12px !important;
+    bottom: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .topo-mobile-interno {
+    min-height: 64px;
+    padding: 9px 12px;
+  }
+
+  .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 42px !important;
+    height: 42px !important;
+    flex-basis: 42px !important;
+  }
+
+  .marca-mobile-interna strong {
+    font-size: 16px;
+  }
+
+  .marca-mobile-interna span {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .botao-menu-interno {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .area-principal {
+    padding: 78px 10px 18px !important;
+  }
+
+  .conteudo,
+  .pagina-relatorios .conteudo,
+  .pagina-admin,
+  .pagina-interna,
+  .cartao-pagina,
+  .secao-painel,
+  .painel-admin-moderno {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    padding: 2.25rem 0.85rem 2.5rem !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(1.86rem, 11vw, 2.65rem) !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 0.96rem !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    border-radius: 20px !important;
+  }
+
+  .modelo-exato-ebd .mockup-body {
+    padding: 1rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-check {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+  }
+
+  .modelo-exato-ebd .mockup-body h3 {
+    font-size: 1.18rem !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 2.8rem 0.85rem !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70,
+  .cartao-login,
+  .cartao-login-v70,
+  .cartao-mensagem {
+    padding-inline: 14px !important;
+  }
+
+  .topo-cartao-login {
+    gap: 12px !important;
+  }
+
+  .topo-cartao-icone,
+  .mensagem-status-icone {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+  }
+
+  .formulario,
+  .formulario-login,
+  .filtros,
+  .filtros-modernizados,
+  .busca-filtros {
+    padding: 14px !important;
+  }
+
+  .botao-principal,
+  .botao-secundario,
+  .botao-editar,
+  .botao-excluir,
+  .botao-presenca,
+  .botao-falta,
+  .botao-cadastrar-igreja,
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
+  .acoes-item > *,
+  .acoes-chamada > *,
+  .acoes-card > *,
+  .botoes-card-classe > *,
+  .botoes-classe > *,
+  .grupo-botoes > * {
+    flex-basis: 100% !important;
+  }
+
+  .item-lista,
+  .card-listagem,
+  .aluno-card,
+  .professor-card,
+  .classe-card,
+  .card-classe,
+  .cartao-classe,
+  .card {
+    padding: 14px !important;
+  }
+
+  .card-estatistica,
+  .card-resumo,
+  .indicador-card {
+    gap: 12px !important;
+  }
+
+  .tabela,
+  .tabela-ebd {
+    min-width: 680px;
+    font-size: 12px !important;
+  }
+
+  .tabela th,
+  .tabela td,
+  .tabela-ebd th,
+  .tabela-ebd td {
+    padding: 9px 8px !important;
+  }
+
+  .relatorio-folha {
+    min-width: 720px;
+  }
+}
