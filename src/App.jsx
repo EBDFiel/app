@@ -499,6 +499,30 @@ function limparCacheDadosIgrejaUsuario(userId = '') {
   }
 }
 
+
+function esperar(ms = 500) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
+}
+
+function pacoteTemDadosOperacionais(pacote = {}) {
+  return (
+    (Array.isArray(pacote.classes) && pacote.classes.length > 0) ||
+    (Array.isArray(pacote.alunos) && pacote.alunos.length > 0) ||
+    (Array.isArray(pacote.chamadasSalvas) && pacote.chamadasSalvas.length > 0) ||
+    (Array.isArray(pacote.chamadasProfessores) && pacote.chamadasProfessores.length > 0)
+  )
+}
+
+function numeroOuReticencias(valor, sincronizado = true) {
+  if (!sincronizado && Number(valor || 0) === 0) {
+    return '…'
+  }
+
+  return valor
+}
+
 function App() {
   const [paginaAtual, setPaginaAtual] = useState(() => lerPaginaAtualSalva())
   const [carregando, setCarregando] = useState(true)
@@ -594,6 +618,7 @@ function App() {
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
   const dadosIgrejaSincronizadosRef = useRef(false)
+  const saindoSistemaEmAndamentoRef = useRef(false)
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -1609,24 +1634,72 @@ function App() {
     }
   }
 
-  async function sairDoSistema() {
-    const confirmar = window.confirm('Deseja sair do sistema?')
-
-    if (!confirmar) {
+  function limparSessaoLocalDoSupabase() {
+    if (typeof window === 'undefined') {
       return
     }
+
+    try {
+      const chavesParaRemover = ['ebdfiel-auth-token', 'supabase.auth.token']
+
+      chavesParaRemover.forEach((chave) => {
+        window.localStorage.removeItem(chave)
+        window.sessionStorage.removeItem(chave)
+      })
+
+      for (let indice = window.localStorage.length - 1; indice >= 0; indice -= 1) {
+        const chave = window.localStorage.key(indice)
+
+        if (chave && chave.startsWith('sb-') && chave.includes('-auth-token')) {
+          window.localStorage.removeItem(chave)
+        }
+      }
+
+      for (let indice = window.sessionStorage.length - 1; indice >= 0; indice -= 1) {
+        const chave = window.sessionStorage.key(indice)
+
+        if (chave && chave.startsWith('sb-') && chave.includes('-auth-token')) {
+          window.sessionStorage.removeItem(chave)
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao limpar sessão local do Supabase:', error)
+    }
+  }
+
+  async function sairDoSistema(event) {
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
+
+    if (saindoSistemaEmAndamentoRef.current) {
+      return
+    }
+
+    saindoSistemaEmAndamentoRef.current = true
 
     if (typeof window !== 'undefined') {
       window.__ebdFielSaindoDoSistema = true
     }
 
+    setMenuInternoAberto(false)
+    setMenuPublicoAberto(false)
+    setErroLogin('')
     setCarregando(false)
     setVerificandoSessao(false)
 
     try {
-      await supabase.auth.signOut({ scope: 'local' })
+      const promessaSaida = supabase.auth.signOut().catch((error) => {
+        console.error('Erro ao sair do Supabase:', error)
+      })
+
+      await Promise.race([
+        promessaSaida,
+        new Promise((resolve) => {
+          window.setTimeout(resolve, 1200)
+        }),
+      ])
     } catch (error) {
-      console.error('Erro ao sair do Supabase:', error)
+      console.error('Erro inesperado ao sair:', error)
     }
 
     try {
@@ -1634,20 +1707,31 @@ function App() {
         window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
         window.localStorage.removeItem(CHAVE_PAGINA_ATUAL)
         window.localStorage.removeItem('ebdfiel_igrejas_admin_cache')
+        limparSessaoLocalDoSupabase()
       }
     } catch (error) {
       console.error('Erro ao limpar dados locais do EBD Fiel:', error)
     }
 
     usuarioCarregadoRef.current = null
+    suporteAdminEmTransicaoRef.current = false
     definirSessao(null)
     limparDadosDoSistema()
     setTelaPublica('login')
 
     if (typeof window !== 'undefined') {
+      try {
+        window.history.replaceState({}, '', `/?v=logout-${Date.now()}`)
+      } catch (error) {
+        console.error('Erro ao atualizar endereço após sair:', error)
+      }
+
       window.setTimeout(() => {
         window.__ebdFielSaindoDoSistema = false
-      }, 600)
+        saindoSistemaEmAndamentoRef.current = false
+      }, 900)
+    } else {
+      saindoSistemaEmAndamentoRef.current = false
     }
   }
 
@@ -3116,14 +3200,48 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
     // permanecem visíveis até os dados atualizados chegarem com sucesso.
 
-    const { data: perfilBanco, error: erroPerfil } = await supabase
+    let { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
       .select('*')
       .eq('user_id', sessaoAtual.user.id)
       .maybeSingle()
 
     if (erroPerfil) {
-      throw erroPerfil
+      const mensagemPerfil = String(erroPerfil?.message || '').toLowerCase()
+
+      if (mensagemPerfil.includes('multiple') || mensagemPerfil.includes('rows')) {
+        const { data: perfisEncontrados, error: erroPerfisEncontrados } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .eq('user_id', sessaoAtual.user.id)
+          .order('id', { ascending: true })
+          .limit(1)
+
+        if (erroPerfisEncontrados) {
+          throw erroPerfisEncontrados
+        }
+
+        perfilBanco = Array.isArray(perfisEncontrados) ? perfisEncontrados[0] : null
+      } else {
+        throw erroPerfil
+      }
+    }
+
+    if (!perfilBanco && emailSessaoAtual) {
+      try {
+        const { data: perfisPorEmail, error: erroPerfilEmail } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .eq('email', emailSessaoAtual)
+          .order('id', { ascending: true })
+          .limit(1)
+
+        if (!erroPerfilEmail && Array.isArray(perfisPorEmail) && perfisPorEmail[0]) {
+          perfilBanco = perfisPorEmail[0]
+        }
+      } catch (erroPerfilEmailInesperado) {
+        console.warn('Não foi possível tentar localizar o perfil por e-mail:', erroPerfilEmailInesperado)
+      }
     }
 
     let perfilAtual = perfilBanco
@@ -3420,7 +3538,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
     }
 
-    const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
+    let { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
 
     if (erroChamadas) {
       throw erroChamadas
@@ -3441,6 +3559,156 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
 
       chamadasProfessoresBanco = chamadasProfessoresEncontradas || []
+    }
+
+    async function recarregarDadosOperacionaisDaIgreja(tentativa = 1) {
+      let novaConsultaClasses = supabase
+        .from('classes')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
+        } else {
+          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
+        }
+      }
+
+      const { data: classesRecarregadas, error: erroClassesRecarregadas } =
+        await novaConsultaClasses
+
+      if (erroClassesRecarregadas) {
+        throw erroClassesRecarregadas
+      }
+
+      let novaConsultaAlunos = supabase
+        .from('alunos')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaAlunos = novaConsultaAlunos.in('classe_id', idsClassesPermitidas)
+        } else {
+          novaConsultaAlunos = novaConsultaAlunos.eq('classe_id', -1)
+        }
+      }
+
+      const { data: alunosRecarregados, error: erroAlunosRecarregados } =
+        await novaConsultaAlunos
+
+      if (erroAlunosRecarregados) {
+        throw erroAlunosRecarregados
+      }
+
+      let novaConsultaChamadas = supabase
+        .from('chamadas')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        if (idsClassesPermitidas.length > 0) {
+          novaConsultaChamadas = novaConsultaChamadas.in('classe_id', idsClassesPermitidas)
+        } else {
+          novaConsultaChamadas = novaConsultaChamadas.eq('classe_id', -1)
+        }
+      }
+
+      const { data: chamadasRecarregadas, error: erroChamadasRecarregadas } =
+        await novaConsultaChamadas
+
+      if (erroChamadasRecarregadas) {
+        throw erroChamadasRecarregadas
+      }
+
+      let chamadasProfessoresRecarregadas = []
+
+      if (perfilAtual.perfil === 'secretaria') {
+        const { data: chamadasProfessoresEncontradas, error: erroChamadasProfessoresRecarregadas } =
+          await supabase
+            .from('chamadas_professores')
+            .select('*')
+            .eq('igreja_id', igrejaAtualId)
+            .order('id', { ascending: true })
+
+        if (erroChamadasProfessoresRecarregadas) {
+          throw erroChamadasProfessoresRecarregadas
+        }
+
+        chamadasProfessoresRecarregadas = chamadasProfessoresEncontradas || []
+      }
+
+      console.info('Recarregamento operacional da igreja concluído', {
+        tentativa,
+        igrejaAtualId,
+        classes: classesRecarregadas?.length || 0,
+        alunos: alunosRecarregados?.length || 0,
+        chamadas: chamadasRecarregadas?.length || 0,
+        chamadasProfessores: chamadasProfessoresRecarregadas?.length || 0,
+      })
+
+      return {
+        classesBanco: classesRecarregadas || [],
+        alunosBanco: alunosRecarregados || [],
+        chamadasBanco: chamadasRecarregadas || [],
+        chamadasProfessoresBanco: chamadasProfessoresRecarregadas || [],
+      }
+    }
+
+    const dadosOperacionaisVieramVazios = () =>
+      (classesBanco || []).length === 0 &&
+      (alunosBanco || []).length === 0 &&
+      (chamadasBanco || []).length === 0 &&
+      (chamadasProfessoresBanco || []).length === 0
+
+    if (dadosOperacionaisVieramVazios()) {
+      definirDadosIgrejaSincronizados(false)
+
+      const cacheTemDadosAntesDoRetry = pacoteTemDadosOperacionais({
+        classes: cacheDadosIgreja?.classes || [],
+        alunos: cacheDadosIgreja?.alunos || [],
+        chamadasSalvas: cacheDadosIgreja?.chamadasSalvas || [],
+        chamadasProfessores: cacheDadosIgreja?.chamadasProfessores || [],
+      })
+
+      if (cacheTemDadosAntesDoRetry) {
+        aplicarCacheDadosIgreja(cacheDadosIgreja)
+      }
+
+      const atrasos = [450, 900, 1600]
+
+      for (let indiceTentativa = 0; indiceTentativa < atrasos.length; indiceTentativa += 1) {
+        await esperar(atrasos[indiceTentativa])
+
+        const { data: sessaoAtualizada } = await supabase.auth.getSession()
+
+        if (sessaoAtualizada?.session?.user?.id !== sessaoAtual.user.id) {
+          break
+        }
+
+        if (sessaoAtualizada?.session) {
+          definirSessao(sessaoAtualizada.session)
+        }
+
+        try {
+          const dadosRecarregados = await recarregarDadosOperacionaisDaIgreja(indiceTentativa + 1)
+
+          classesBanco = dadosRecarregados.classesBanco
+          alunosBanco = dadosRecarregados.alunosBanco
+          chamadasBanco = dadosRecarregados.chamadasBanco
+          chamadasProfessoresBanco = dadosRecarregados.chamadasProfessoresBanco
+
+          if (!dadosOperacionaisVieramVazios()) {
+            break
+          }
+        } catch (erroRecarregamentoOperacional) {
+          console.error('Erro ao recarregar dados operacionais da igreja:', erroRecarregamentoOperacional)
+        }
+      }
     }
 
     let perfisBanco = []
@@ -7922,7 +8190,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
             a validação.
           </p>
-          <button className="botao-secundario" onClick={sairDoSistema}>
+          <button className="botao-secundario" onClick={(event) => sairDoSistema(event)}>
             Sair
           </button>
         </section>
@@ -9123,10 +9391,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </p>
 
             <div className="hero-painel-metricas" aria-label="Resumo da igreja">
-              <span><strong>{classes.length}</strong> classes</span>
-              <span><strong>{alunosSomente().length}</strong> alunos</span>
-              <span><strong>{professoresSomente().length}</strong> professores</span>
-              <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
+              <span><strong>{numeroOuReticencias(classes.length, dadosIgrejaSincronizados)}</strong> classes</span>
+              <span><strong>{numeroOuReticencias(alunosSomente().length, dadosIgrejaSincronizados)}</strong> alunos</span>
+              <span><strong>{numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)}</strong> professores</span>
+              <span><strong>{dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'}</strong> frequência</span>
             </div>
 
             {(usuarioEhSecretaria() || usuarioEhProfessor()) && (
@@ -9172,12 +9440,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
             <h3>Resumo rápido</h3>
             <p>Dados sincronizados automaticamente no Supabase.</p>
+            {!dadosIgrejaSincronizados && (
+              <p className="aviso-sincronizacao-dados">Sincronizando dados da igreja...</p>
+            )}
             <ul>
-              <li>{classes.length} classes ativas</li>
-              <li>{alunosSomente().length} alunos cadastrados</li>
-              <li>{professoresSomente().length} professores cadastrados</li>
-              <li>{chamadasSalvas.length} chamadas registradas</li>
-              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
+              <li>{numeroOuReticencias(classes.length, dadosIgrejaSincronizados)} classes ativas</li>
+              <li>{numeroOuReticencias(alunosSomente().length, dadosIgrejaSincronizados)} alunos cadastrados</li>
+              <li>{numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)} professores cadastrados</li>
+              <li>{numeroOuReticencias(chamadasSalvas.length, dadosIgrejaSincronizados)} chamadas registradas</li>
+              <li>{dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'} de frequência geral</li>
             </ul>
           </div>
         </div>
@@ -9186,32 +9457,32 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           <CardResumo
             icone="classes"
             titulo="Classes"
-            valor={classes.length}
+            valor={numeroOuReticencias(classes.length, dadosIgrejaSincronizados)}
             descricao="Turmas organizadas para a EBD."
           />
           <CardResumo
             icone="alunos"
             titulo="Alunos"
-            valor={alunos.length}
+            valor={numeroOuReticencias(alunos.length, dadosIgrejaSincronizados)}
             descricao="Participantes cadastrados no sistema."
           />
           <CardResumo
             icone="usuarios"
             titulo="Professores"
-            valor={professoresSomente().length}
+            valor={numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)}
             descricao="Participantes da chamada dos professores."
           />
 
           <CardResumo
             icone="chamada"
             titulo="Chamadas"
-            valor={chamadasSalvas.length}
+            valor={numeroOuReticencias(chamadasSalvas.length, dadosIgrejaSincronizados)}
             descricao="Registros salvos de presença."
           />
           <CardResumo
             icone="check"
             titulo="Frequência geral"
-            valor={`${calcularFrequenciaGeral()}%`}
+            valor={dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'}
             descricao="Média de presença nas chamadas lançadas."
             destaque
           />
@@ -12781,7 +13052,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
           </span>
 
-          <button type="button" className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
+          <button type="button" className="botao-secundario botao-sair-sidebar" aria-label="Sair do sistema" onClick={(event) => sairDoSistema(event)}>
             <Icone nome="sair" className="icone-svg" />
             <span>Sair</span>
           </button>
