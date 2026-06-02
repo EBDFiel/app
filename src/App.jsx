@@ -461,6 +461,7 @@ function App() {
   const [erroLogin, setErroLogin] = useState('')
   const [telaPublica, setTelaPublica] = useState('landing')
   const [menuPublicoAberto, setMenuPublicoAberto] = useState(false)
+  const [menuInternoAberto, setMenuInternoAberto] = useState(false)
 
   const [classes, setClasses] = useState([])
   const [alunos, setAlunos] = useState([])
@@ -1686,6 +1687,7 @@ function App() {
   }
 
   function navegarParaPagina(paginaId) {
+    setMenuInternoAberto(false)
     definirPaginaAtual(paginaId)
 
     if (paginaId === 'painel') {
@@ -12459,8 +12461,45 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   return (
-    <div className="app">
-      <aside className="menu-lateral">
+    <div className={`app ${menuInternoAberto ? 'menu-interno-ativo' : ''}`}>
+      <header className="topo-mobile-interno">
+        <div className="marca-mobile-interna">
+          <div className="logo-simbolo logo-simbolo-sidebar">
+            <img
+              src="/logo-oficial-ebd-fiel.png"
+              alt="Logo EBD Fiel"
+              className="logo-imagem"
+            />
+          </div>
+          <div>
+            <strong>EBD Fiel</strong>
+            <span>Escola Bíblica Dominical</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className={`botao-menu-interno ${menuInternoAberto ? 'ativo' : ''}`}
+          aria-label={menuInternoAberto ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={menuInternoAberto}
+          onClick={() => setMenuInternoAberto((menuAberto) => !menuAberto)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      {menuInternoAberto && (
+        <button
+          type="button"
+          className="overlay-menu-interno"
+          aria-label="Fechar menu lateral"
+          onClick={() => setMenuInternoAberto(false)}
+        />
+      )}
+
+      <aside className={`menu-lateral ${menuInternoAberto ? 'menu-lateral-aberto' : ''}`}>
         <div className="marca-sidebar">
           <div className="logo-simbolo logo-simbolo-sidebar">
             <img
@@ -12473,6 +12512,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h1>EBD Fiel</h1>
             <p>Gestão da Escola Bíblica</p>
           </div>
+
+          <button
+            type="button"
+            className="fechar-menu-interno"
+            aria-label="Fechar menu"
+            onClick={() => setMenuInternoAberto(false)}
+          >
+            ×
+          </button>
         </div>
 
         <nav className="menu-navegacao">
