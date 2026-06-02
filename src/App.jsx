@@ -7822,6 +7822,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     link.remove()
   }
 
+  function transformarCanvasEmArquivoPng(canvas, nomeArquivo) {
+    return new Promise((resolve, reject) => {
+      if (!canvas) {
+        reject(new Error('Cartão não encontrado.'))
+        return
+      }
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error('Não foi possível preparar a imagem do cartão.'))
+          return
+        }
+
+        resolve(new File([blob], nomeArquivo, { type: 'image/png' }))
+      }, 'image/png')
+    })
+  }
+
   async function capturarCartaoAniversario() {
     const area = cartaoAniversarioRef.current
 
@@ -7866,15 +7884,35 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
 
       const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
+      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉\n\nA Escola Bíblica Dominical preparou este cartão com carinho. Que Deus abençoe sua vida com paz, alegria e muitas vitórias.`
+
+      try {
+        const arquivo = await transformarCanvasEmArquivoPng(canvas, nomeArquivo)
+        const dadosCompartilhamento = {
+          title: `Cartão de aniversário - ${aniversariante?.nome || 'Aniversariante'}`,
+          text: mensagemWhatsApp,
+          files: [arquivo],
+        }
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+          await navigator.share(dadosCompartilhamento)
+          return
+        }
+      } catch (erroCompartilhamento) {
+        console.warn('Compartilhamento direto com imagem indisponível neste navegador:', erroCompartilhamento)
+      }
+
       baixarCanvasComoPng(canvas, nomeArquivo)
 
       const mensagem = encodeURIComponent(
-        `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉\n\nA Escola Bíblica Dominical preparou este cartão com carinho. Que Deus abençoe sua vida com paz, alegria e muitas vitórias.\n\nAnexe a imagem do cartão que acabou de ser baixada e envie por aqui.`
+        `${mensagemWhatsApp}\n\nO cartão foi baixado em imagem. Anexe a imagem no WhatsApp para enviar ao aniversariante.`
       )
       const janelaWhatsApp = window.open(`https://wa.me/?text=${mensagem}`, '_blank', 'noopener,noreferrer')
 
       if (!janelaWhatsApp) {
         alert('O cartão foi baixado. Abra o WhatsApp e anexe a imagem para enviar ao aniversariante.')
+      } else {
+        alert('Neste navegador não foi possível enviar imagem e mensagem juntos automaticamente. O cartão foi baixado e o WhatsApp foi aberto com a mensagem pronta.')
       }
     } catch (error) {
       console.error('Erro ao abrir WhatsApp para envio do cartão:', error)
@@ -8125,7 +8163,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               Baixar cartão
             </button>
             <button className="botao-secundario" type="button" onClick={enviarCartaoPeloWhatsApp} disabled={!aniversarianteCartao}>
-              Enviar pelo WhatsApp
+              Enviar imagem no WhatsApp
             </button>
             <button className="botao-secundario" type="button" onClick={baixarPdfCartaoAniversario} disabled={!aniversarianteCartao}>
               Baixar PDF do cartão
