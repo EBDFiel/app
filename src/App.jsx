@@ -748,6 +748,18 @@ function App() {
     ofertas: '',
   })
 
+  useEffect(() => {
+    if (!mensagemChamada || mensagemChamada.tipo !== 'sucesso') {
+      return undefined
+    }
+
+    const temporizadorMensagemChamada = window.setTimeout(() => {
+      setMensagemChamada(null)
+    }, 5200)
+
+    return () => window.clearTimeout(temporizadorMensagemChamada)
+  }, [mensagemChamada])
+
   const menu = [
     { id: 'painel', nome: 'Painel', icone: 'painel' },
     { id: 'dashboard', nome: 'Resumo geral', icone: 'painel' },
@@ -6020,7 +6032,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     setClasseChamadaId(String(classeSelecionadaId))
     setMensagemChamada({
       tipo: 'sucesso',
-      texto: `Chamada da classe ${classeSelecionada.nome} salva com sucesso.`,
+      texto: `Chamada dos alunos da classe ${classeSelecionada.nome} salva com sucesso.`,
     })
   }
 
@@ -9612,15 +9624,23 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
   }
 
   async function salvarChamadaProfessores() {
+    setMensagemChamada(null)
+
     if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode salvar a chamada dos professores.')
+      setMensagemChamada({
+        tipo: 'erro',
+        texto: 'Apenas a secretaria pode salvar a chamada dos professores.',
+      })
       return
     }
 
     const professores = buscarProfessoresDaIgreja()
 
     if (professores.length === 0) {
-      alert('Ainda não há professores cadastrados em Usuários.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Ainda não há professores cadastrados em Usuários.',
+      })
       return
     }
 
@@ -9629,7 +9649,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
 
     if (professoresSemMarcacao.length > 0) {
-      alert('Marque Presente, Faltou ou Justificou para todos os professores.')
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: `Ainda falta marcar ${professoresSemMarcacao.length} professor(es): ${professoresSemMarcacao
+          .map((professor) => professor.nome)
+          .join(', ')}`,
+      })
       return
     }
 
@@ -9668,7 +9693,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       .insert(chamadaBanco)
 
     if (error) {
-      mostrarErroSistema(error, 'Erro ao salvar chamada dos professores.')
+      console.error(error)
+      setMensagemChamada({
+        tipo: 'erro',
+        texto: 'Não foi possível salvar a chamada dos professores. Verifique sua conexão e tente novamente.',
+      })
       return
     }
 
@@ -9676,8 +9705,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     setPresencasProfessores({})
     setObservacoesChamadaProfessores('')
-
-    alert('Chamada dos professores salva com sucesso!')
+    setMensagemChamada({
+      tipo: 'sucesso',
+      texto: 'Chamada dos professores salva com sucesso.',
+    })
   }
 
   function renderizarChamada() {
@@ -9727,6 +9758,23 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               }}
             >
               Chamada dos professores
+            </button>
+          </div>
+        )}
+
+        {mensagemChamada && (
+          <div
+            className={`mensagem-chamada ${mensagemChamada.tipo}`}
+            role="status"
+            aria-live="polite"
+          >
+            <p>{mensagemChamada.texto}</p>
+            <button
+              type="button"
+              onClick={() => setMensagemChamada(null)}
+              aria-label="Fechar mensagem da chamada"
+            >
+              ×
             </button>
           </div>
         )}
@@ -9831,19 +9879,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </div>
               )}
             </div>
-
-            {mensagemChamada && (
-              <div className={`mensagem-chamada ${mensagemChamada.tipo}`}>
-                <p>{mensagemChamada.texto}</p>
-                <button
-                  type="button"
-                  onClick={() => setMensagemChamada(null)}
-                  aria-label="Fechar mensagem da chamada"
-                >
-                  ×
-                </button>
-              </div>
-            )}
 
             {classeChamadaId && classeSelecionada && alunosDaClasse.length === 0 && !mensagemChamada && (
               <div className="aviso">
@@ -10040,6 +10075,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 </div>
 
                 <button
+                  type="button"
                   className="botao-principal"
                   onClick={salvarChamadaProfessores}
                 >
