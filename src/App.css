@@ -18813,3 +18813,41 @@ body {
   font-weight: 800;
   font-size: 13px;
 }
+
+
+/* v81 - aviso de sincronização com ação manual */
+.aviso-sincronizacao-dados {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #eaf3ff;
+  color: #1e3a8a;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.aviso-sincronizacao-dados button {
+  border: 1px solid rgba(37, 99, 235, 0.28);
+  background: #ffffff;
+  color: #1d4ed8;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .aviso-sincronizacao-dados {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aviso-sincronizacao-dados button {
+    width: 100%;
+  }
+}
