@@ -1,13213 +1,19088 @@
-import { useEffect, useRef, useState } from 'react'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
-import './App.css'
-import { supabase } from './lib/supabase'
-
-const classesIniciais = [
-  { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
-  { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
-  { id: 3, nome: 'Crianças', professor: 'Irmã Ana' },
-]
-
-const ESTADOS_BRASIL = [
-  { sigla: 'AC', nome: 'Acre' },
-  { sigla: 'AL', nome: 'Alagoas' },
-  { sigla: 'AP', nome: 'Amapá' },
-  { sigla: 'AM', nome: 'Amazonas' },
-  { sigla: 'BA', nome: 'Bahia' },
-  { sigla: 'CE', nome: 'Ceará' },
-  { sigla: 'DF', nome: 'Distrito Federal' },
-  { sigla: 'ES', nome: 'Espírito Santo' },
-  { sigla: 'GO', nome: 'Goiás' },
-  { sigla: 'MA', nome: 'Maranhão' },
-  { sigla: 'MT', nome: 'Mato Grosso' },
-  { sigla: 'MS', nome: 'Mato Grosso do Sul' },
-  { sigla: 'MG', nome: 'Minas Gerais' },
-  { sigla: 'PA', nome: 'Pará' },
-  { sigla: 'PB', nome: 'Paraíba' },
-  { sigla: 'PR', nome: 'Paraná' },
-  { sigla: 'PE', nome: 'Pernambuco' },
-  { sigla: 'PI', nome: 'Piauí' },
-  { sigla: 'RJ', nome: 'Rio de Janeiro' },
-  { sigla: 'RN', nome: 'Rio Grande do Norte' },
-  { sigla: 'RS', nome: 'Rio Grande do Sul' },
-  { sigla: 'RO', nome: 'Rondônia' },
-  { sigla: 'RR', nome: 'Roraima' },
-  { sigla: 'SC', nome: 'Santa Catarina' },
-  { sigla: 'SP', nome: 'São Paulo' },
-  { sigla: 'SE', nome: 'Sergipe' },
-  { sigla: 'TO', nome: 'Tocantins' },
-]
-
-
-const alunosIniciais = [
-  { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
-  { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
-  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
-]
-
-
-function Icone({ nome, className = '' }) {
-  const comum = {
-    viewBox: '0 0 24 24',
-    fill: 'none',
-    stroke: 'currentColor',
-    strokeWidth: '1.8',
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-    'aria-hidden': 'true',
-    className,
-  }
-
-  switch (nome) {
-    case 'igreja':
-      return (
-        <svg {...comum}>
-          <path d="M12 3l2.2 3.2L18 8v11H6V8l3.8-1.8L12 3Z" />
-          <path d="M12 7v12" />
-          <path d="M9.5 10.5h5" />
-          <path d="M10 19v-3a2 2 0 0 1 4 0v3" />
-        </svg>
-      )
-    case 'painel':
-      return (
-        <svg {...comum}>
-          <rect x="3" y="3" width="8" height="8" rx="2" />
-          <rect x="13" y="3" width="8" height="5" rx="2" />
-          <rect x="13" y="10" width="8" height="11" rx="2" />
-          <rect x="3" y="13" width="8" height="8" rx="2" />
-        </svg>
-      )
-    case 'classes':
-      return (
-        <svg {...comum}>
-          <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H6.5A2.5 2.5 0 0 0 4 20.5v-14Z" />
-          <path d="M6.5 4A2.5 2.5 0 0 0 4 6.5V20" />
-          <path d="M8 8h8" />
-          <path d="M8 12h8" />
-        </svg>
-      )
-    case 'alunos':
-      return (
-        <svg {...comum}>
-          <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
-          <circle cx="9.5" cy="7" r="3.5" />
-          <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M14.5 3.2a3.5 3.5 0 0 1 0 6.6" />
-        </svg>
-      )
-    case 'chamada':
-      return (
-        <svg {...comum}>
-          <rect x="4" y="3" width="16" height="18" rx="2" />
-          <path d="M8 7h8" />
-          <path d="M8 11h8" />
-          <path d="M8 15h3" />
-          <path d="m14 15 1.5 1.5L18 13" />
-        </svg>
-      )
-    case 'relatorios':
-      return (
-        <svg {...comum}>
-          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
-          <path d="M14 3v5h5" />
-          <path d="M9 13h6" />
-          <path d="M9 17h6" />
-        </svg>
-      )
-    case 'configuracoes':
-      return (
-        <svg {...comum}>
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a2 2 0 1 1-4 0v-.2a1 1 0 0 0-.7-1 1 1 0 0 0-1 .2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a2 2 0 1 1 0-4h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1l-.1-.1a2 2 0 0 1 2.8-2.8l.1.1a1 1 0 0 0 1.1.2H9a1 1 0 0 0 .6-.9V4a2 2 0 1 1 4 0v.2a1 1 0 0 0 .7 1 1 1 0 0 0 1-.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1 1 0 0 0-.2 1.1V9c0 .4.2.8.6.9h.2a2 2 0 1 1 0 4h-.2a1 1 0 0 0-.9.7Z" />
-        </svg>
-      )
-    case 'sair':
-      return (
-        <svg {...comum}>
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <path d="M16 17l5-5-5-5" />
-          <path d="M21 12H9" />
-        </svg>
-      )
-    case 'usuarios':
-      return (
-        <svg {...comum}>
-          <circle cx="9" cy="8" r="3" />
-          <path d="M3 19a6 6 0 0 1 12 0" />
-          <path d="M16 8h5" />
-          <path d="M18.5 5.5v5" />
-        </svg>
-      )
-    case 'biblia':
-      return (
-        <svg {...comum}>
-          <path d="M6 4.5A2.5 2.5 0 0 1 8.5 2H20v17H8.5A2.5 2.5 0 0 0 6 21.5v-17Z" />
-          <path d="M8.5 2A2.5 2.5 0 0 0 6 4.5V22" />
-          <path d="M13 6v6" />
-          <path d="M10 9h6" />
-        </svg>
-      )
-    case 'check':
-      return (
-        <svg {...comum}>
-          <circle cx="12" cy="12" r="9" />
-          <path d="m8.5 12.5 2.5 2.5 4.5-5" />
-        </svg>
-      )
-    default:
-      return (
-        <svg {...comum}>
-          <circle cx="12" cy="12" r="9" />
-        </svg>
-      )
-  }
+* {
+  box-sizing: border-box;
 }
 
-function CardResumo({ icone, titulo, valor, descricao, destaque = false }) {
-  return (
-    <div className={`card card-estatistica${destaque ? ' destaque' : ''}`}>
-      <div className="card-icone">
-        <Icone nome={icone} className="icone-svg" />
-      </div>
-      <div className="card-conteudo">
-        <span className="card-titulo">{titulo}</span>
-        <strong className="card-valor">{valor}</strong>
-        <p>{descricao}</p>
-      </div>
-    </div>
-  )
+:root {
+  color-scheme: light;
+  --cor-fundo: #f4f7fb;
+  --cor-fundo-secundario: #eef3fb;
+  --cor-superficie: #ffffff;
+  --cor-superficie-escura: #0f172a;
+  --cor-superficie-escura-2: #111c36;
+  --cor-primaria: #2563eb;
+  --cor-primaria-escura: #1d4ed8;
+  --cor-primaria-clara: #dbeafe;
+  --cor-sucesso: #16a34a;
+  --cor-sucesso-clara: #dcfce7;
+  --cor-borda: #dbe2ea;
+  --cor-borda-forte: #bfdbfe;
+  --cor-texto: #0f172a;
+  --cor-texto-suave: #475569;
+  --cor-texto-claro: #e2e8f0;
+  --cor-perigo: #dc2626;
+  --cor-perigo-clara: #fee2e2;
+  --sombra-padrao: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --sombra-suave: 0 10px 24px rgba(15, 23, 42, 0.06);
+  --raio-grande: 24px;
+  --raio-medio: 18px;
+  --raio-pequeno: 12px;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
+  color: var(--cor-texto);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  background: transparent;
+}
+
+.tela-login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 1.2fr) minmax(320px, 460px);
+  background: linear-gradient(135deg, #f7faff 0%, #eef4ff 50%, #f8fbff 100%);
+}
+
+.tela-mensagem {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 420px);
+}
+
+.painel-apresentacao {
+  padding: 56px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.22), transparent 32%),
+    linear-gradient(135deg, #0f172a 0%, #172554 55%, #1d4ed8 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.marca-login,
+.marca-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.marca-login h1,
+.marca-sidebar h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.marca-login p,
+.marca-sidebar p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.logo-simbolo {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+  overflow: hidden;
+}
+
+.logo-simbolo-sidebar {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.icone-logo {
+  width: 28px;
+  height: 28px;
+}
+
+.logo-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.logo-relatorio {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 8px;
 }
 
 
-function iniciarCorrecaoGlobalDeAcentos() {
-  if (typeof window === 'undefined' || window.__ebdFielCorretorAcentosAtivo) {
-    return
-  }
-
-  window.__ebdFielCorretorAcentosAtivo = true
-
-  const c = (...codigos) => String.fromCharCode(...codigos)
-
-  const pares = [
-    [c(0x00C3, 0x0081), c(0x00C1)],
-    [c(0x00C3, 0x0080), c(0x00C0)],
-    [c(0x00C3, 0x0082), c(0x00C2)],
-    [c(0x00C3, 0x0083), c(0x00C3)],
-    [c(0x00C3, 0x0089), c(0x00C9)],
-    [c(0x00C3, 0x008A), c(0x00CA)],
-    [c(0x00C3, 0x008D), c(0x00CD)],
-    [c(0x00C3, 0x0093), c(0x00D3)],
-    [c(0x00C3, 0x0094), c(0x00D4)],
-    [c(0x00C3, 0x0095), c(0x00D5)],
-    [c(0x00C3, 0x009A), c(0x00DA)],
-    [c(0x00C3, 0x0087), c(0x00C7)],
-    [c(0x00C3, 0x00A1), c(0x00E1)],
-    [c(0x00C3, 0x00A0), c(0x00E0)],
-    [c(0x00C3, 0x00A2), c(0x00E2)],
-    [c(0x00C3, 0x00A3), c(0x00E3)],
-    [c(0x00C3, 0x00A9), c(0x00E9)],
-    [c(0x00C3, 0x00AA), c(0x00EA)],
-    [c(0x00C3, 0x00AD), c(0x00ED)],
-    [c(0x00C3, 0x00B3), c(0x00F3)],
-    [c(0x00C3, 0x00B4), c(0x00F4)],
-    [c(0x00C3, 0x00B5), c(0x00F5)],
-    [c(0x00C3, 0x00BA), c(0x00FA)],
-    [c(0x00C3, 0x00A7), c(0x00E7)],
-    [c(0x00C2, 0x00BA), c(0x00BA)],
-    [c(0x00C2, 0x00AA), c(0x00AA)],
-    [c(0x00C2, 0x00B7), c(0x00B7)],
-    [c(0x00C2), ''],
-    [c(0x00E2, 0x0086, 0x0092), c(0x2192)],
-    [c(0x00E2, 0x009C, 0x0093), c(0x2713)],
-    [c(0x00E2, 0x0080, 0x00A2), c(0x2022)],
-  ]
-
-  const palavras = [
-    ['B' + c(0x00C3, 0x00AD) + 'blica', 'B' + c(0x00ED) + 'blica'],
-    ['Gest' + c(0x00C3, 0x00A3) + 'o', 'Gest' + c(0x00E3) + 'o'],
-    ['Administra' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'Administra' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['Configura' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'Configura' + c(0x00E7) + c(0x00F5) + 'es'],
-    ['Relat' + c(0x00C3, 0x00B3) + 'rios', 'Relat' + c(0x00F3) + 'rios'],
-    ['usu' + c(0x00C3, 0x00A1) + 'rios', 'usu' + c(0x00E1) + 'rios'],
-    ['usu' + c(0x00C3, 0x00A1) + 'rio', 'usu' + c(0x00E1) + 'rio'],
-    ['aprova' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'aprova' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['recupera' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'recupera' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00B5) + 'es', 'congrega' + c(0x00E7) + c(0x00F5) + 'es'],
-    ['congrega' + c(0x00C3, 0x00A7) + c(0x00C3, 0x00A3) + 'o', 'congrega' + c(0x00E7) + c(0x00E3) + 'o'],
-    ['respons' + c(0x00C3, 0x00A1) + 'vel', 'respons' + c(0x00E1) + 'vel'],
-    ['Voc' + c(0x00C3, 0x00AA), 'Voc' + c(0x00EA)],
-    ['voc' + c(0x00C3, 0x00AA), 'voc' + c(0x00EA)],
-    ['c' + c(0x00C3, 0x00B3) + 'digo', 'c' + c(0x00F3) + 'digo'],
-    ['j' + c(0x00C3, 0x00A1), 'j' + c(0x00E1)],
-    ['J' + c(0x00C3, 0x00A1), 'J' + c(0x00E1)],
-  ]
-
-  function corrigir(texto) {
-    if (!texto || typeof texto !== 'string') {
-      return texto
-    }
-
-    let novo = texto
-
-    pares.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
-    })
-
-    palavras.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
-    })
-
-    return novo
-  }
-
-  function varrer() {
-    if (!document.body) {
-      return
-    }
-
-    const walker = document.createTreeWalker(document.body, 4)
-    const nodes = []
-
-    while (walker.nextNode()) {
-      nodes.push(walker.currentNode)
-    }
-
-    nodes.forEach((node) => {
-      const novo = corrigir(node.nodeValue)
-      if (novo !== node.nodeValue) {
-        node.nodeValue = novo
-      }
-    })
-
-    document.querySelectorAll('input, textarea').forEach((campo) => {
-      if (campo.placeholder) {
-        campo.placeholder = corrigir(campo.placeholder)
-      }
-    })
-
-    document.querySelectorAll('[title], [aria-label], [alt]').forEach((elemento) => {
-      ;['title', 'aria-label', 'alt'].forEach((atributo) => {
-        const valor = elemento.getAttribute(atributo)
-        if (valor) {
-          const novo = corrigir(valor)
-          if (novo !== valor) {
-            elemento.setAttribute(atributo, novo)
-          }
-        }
-      })
-    })
-  }
-
-  window.setInterval(varrer, 250)
-  window.addEventListener('load', varrer)
-  window.requestAnimationFrame(varrer)
+.apresentacao-texto {
+  display: grid;
+  gap: 18px;
+  max-width: 640px;
 }
 
-iniciarCorrecaoGlobalDeAcentos()
-
-const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
-const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
-
-const PAGINAS_SISTEMA = [
-  'painel',
-  'dashboard',
-  'classes',
-  'alunos',
-  'professores',
-  'usuarios',
-  'chamada',
-  'relatorios',
-  'historico',
-  'financeiro',
-  'backup',
-  'manual',
-  'configuracoes',
-  'administracao',
-]
-
-function lerPaginaAtualSalva() {
-  if (typeof window === 'undefined') {
-    return 'painel'
-  }
-
-  const paginaSalva = window.localStorage.getItem(CHAVE_PAGINA_ATUAL)
-
-  return PAGINAS_SISTEMA.includes(paginaSalva) ? paginaSalva : 'painel'
+.selo-apresentacao,
+.hero-tag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-function salvarPaginaAtualSalva(paginaId) {
-  if (typeof window === 'undefined' || !PAGINAS_SISTEMA.includes(paginaId)) {
-    return
+.selo-apresentacao {
+  background: rgba(255, 255, 255, 0.14);
+  color: #dbeafe;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.apresentacao-texto h2 {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.1;
+}
+
+.apresentacao-texto p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.beneficios-login {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.beneficio-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.icone-beneficio,
+.icone-status,
+.icone-svg,
+.icone-hero {
+  width: 22px;
+  height: 22px;
+}
+
+.cartao-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.4);
+}
+
+.topo-cartao-login {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.topo-cartao-login h2,
+.cartao-mensagem h2 {
+  margin: 0 0 6px;
+  font-size: 30px;
+}
+
+.topo-cartao-login p,
+.cartao-mensagem p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.6;
+}
+
+.topo-cartao-icone,
+.mensagem-status-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+}
+
+.mensagem-erro-icone {
+  background: #ffe4e6;
+  color: var(--cor-perigo);
+}
+
+.cartao-mensagem {
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.formulario {
+  margin-top: 24px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-medio);
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.formulario-login {
+  margin-top: 0;
+  background: var(--cor-superficie);
+  box-shadow: var(--sombra-suave);
+}
+
+.formulario label,
+.filtros label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.formulario input,
+.formulario select,
+.filtros input,
+.filtros select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  font-size: 15px;
+  background: #ffffff;
+  color: var(--cor-texto);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.filtros input:focus,
+.filtros select:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.botao-principal,
+.botao-secundario,
+.botao-editar,
+.botao-excluir,
+.botao-presenca,
+.botao-falta {
+  border-radius: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease,
+    color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.botao-principal:hover,
+.botao-secundario:hover,
+.botao-editar:hover,
+.botao-excluir:hover,
+.botao-presenca:hover,
+.botao-falta:hover {
+  transform: translateY(-1px);
+}
+
+.botao-principal {
+  margin-top: 20px;
+  border: none;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-escura) 100%);
+  color: white;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+
+.botao-principal:hover {
+  background: linear-gradient(135deg, var(--cor-primaria-escura) 0%, #1e40af 100%);
+}
+
+.botao-largura-total {
+  width: 100%;
+}
+
+.botao-secundario {
+  margin-top: 20px;
+  border: 1px solid var(--cor-borda);
+  background: white;
+  color: var(--cor-texto);
+}
+
+.botao-secundario:hover {
+  background: #f8fafc;
+}
+
+.menu-lateral {
+  width: 280px;
+  background: linear-gradient(180deg, #081224 0%, #0f1b34 100%);
+  color: white;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.menu-navegacao,
+.menu-lateral nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-lateral button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #dbe4f2;
+  padding: 13px 14px;
+  text-align: left;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-lateral button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(59, 130, 246, 0.95));
+  color: white;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+}
+
+.icone-menu {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cartao-usuario-sidebar {
+  margin-top: auto;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 10px;
+}
+
+.titulo-usuario-sidebar {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #93a4c2;
+}
+
+.cartao-usuario-sidebar strong {
+  color: white;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.botao-sair-sidebar {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.area-principal {
+  flex: 1;
+  padding: 28px;
+}
+
+.conteudo {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--raio-grande);
+  padding: 28px;
+  box-shadow: var(--sombra-padrao);
+}
+
+.conteudo h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 30px;
+}
+
+.conteudo > p {
+  color: var(--cor-texto-suave);
+}
+
+.topo-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.topo-pagina > div > p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+}
+
+.topo-pagina .botao-principal,
+.topo-pagina .botao-secundario {
+  margin-top: 0;
+}
+
+.hero-painel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 380px);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.hero-painel-conteudo,
+.hero-painel-destaque {
+  border-radius: 22px;
+  padding: 28px;
+}
+
+.hero-painel-conteudo {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.24), transparent 30%),
+    linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+  color: white;
+}
+
+.hero-painel-conteudo h2 {
+  color: white;
+  font-size: 34px;
+  margin: 14px 0 10px;
+}
+
+.hero-painel-conteudo p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.7;
+}
+
+.hero-tag {
+  background: rgba(255, 255, 255, 0.18);
+  color: #eff6ff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.hero-acoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.hero-acoes .botao-principal,
+.hero-acoes .botao-secundario {
+  margin-top: 0;
+}
+
+.hero-painel-destaque {
+  background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+  border: 1px solid #dbeafe;
+}
+
+.hero-painel-destaque h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.hero-painel-destaque p {
+  margin: 0 0 18px;
+  color: var(--cor-texto-suave);
+}
+
+.hero-painel-destaque ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+  color: var(--cor-texto);
+  font-weight: 700;
+}
+
+.hero-icone-area {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+  margin-bottom: 16px;
+}
+
+.icone-hero {
+  width: 26px;
+  height: 26px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.cards-estatisticas {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.card {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--sombra-suave);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.card p {
+  margin-bottom: 0;
+  color: var(--cor-texto-suave);
+}
+
+.card-estatistica {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-estatistica .card-icone {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #eef4ff;
+  color: var(--cor-primaria);
+}
+
+.card-estatistica .card-conteudo {
+  display: grid;
+  gap: 4px;
+}
+
+.card-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+
+.card-valor {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.card.destaque,
+.card-estatistica.destaque {
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+  border-color: var(--cor-borda-forte);
+}
+
+.card-estatistica.destaque .card-icone {
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.grade-resumos-comerciais {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.resumo {
+  margin-top: 28px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.resumo h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.resumo p {
+  margin: 0;
+  color: var(--cor-texto);
+  line-height: 1.7;
+}
+
+.resumo-comercial {
+  margin-top: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border-color: var(--cor-borda);
+}
+
+.resumo-alerta-claro {
+  background: linear-gradient(180deg, #f9fafb 0%, #eff6ff 100%);
+}
+
+.grade-campos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grade-campos-configuracoes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grupo-botoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filtros {
+  margin-top: 24px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 18px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.filtros .botao-secundario {
+  margin-top: 0;
+}
+
+.contador-resultados {
+  margin-top: 18px;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.lista {
+  margin-top: 24px;
+  display: grid;
+  gap: 14px;
+}
+
+.item-lista {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: var(--sombra-suave);
+}
+
+.item-lista h3 {
+  margin: 0 0 6px;
+}
+
+.item-lista p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+}
+
+.item-com-acoes,
+.item-chamada {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.acoes-item,
+.acoes-chamada {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.botao-editar {
+  border: 1px solid var(--cor-primaria);
+  background: white;
+  color: var(--cor-primaria);
+}
+
+.botao-editar:hover {
+  background: #eff6ff;
+}
+
+.botao-excluir {
+  border: 1px solid var(--cor-perigo);
+  background: white;
+  color: var(--cor-perigo);
+}
+
+.botao-excluir:hover {
+  background: var(--cor-perigo-clara);
+}
+
+.botao-presenca,
+.botao-falta {
+  border: 1px solid var(--cor-borda);
+  background: white;
+  color: var(--cor-texto);
+}
+
+.botao-presenca:hover {
+  background: #dcfce7;
+  border-color: #22c55e;
+}
+
+.botao-falta:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.ativo-presente {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: white;
+}
+
+.ativo-falta {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.resumo-chamada {
+  margin-top: 24px;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.resumo-chamada p {
+  margin: 0;
+}
+
+.aviso {
+  margin-top: 24px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+.aviso p {
+  margin: 0;
+}
+
+.tabela-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tabela th,
+.tabela td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabela th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+.tabela tr:last-child td {
+  border-bottom: none;
+}
+
+.relatorio-folha {
+  margin-top: 28px;
+  background: white;
+  border: 1px solid #111827;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.cabecalho-relatorio {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.cabecalho-relatorio h3 {
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.cabecalho-relatorio p {
+  margin: 0;
+  color: #4b5563;
+}
+
+.tabela-ebd {
+  border: 1px solid #111827;
+  border-radius: 0;
+  font-size: 13px;
+}
+
+.tabela-ebd th,
+.tabela-ebd td {
+  border: 1px solid #111827;
+  padding: 8px;
+  text-align: center;
+}
+
+.tabela-ebd th {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.tabela-ebd td:nth-child(2),
+.tabela-ebd th:nth-child(2) {
+  text-align: left;
+  min-width: 160px;
+}
+
+.linha-total td {
+  font-weight: 700;
+  background: #f3f4f6;
+}
+
+.linha-domingo-anterior td {
+  font-weight: 700;
+  text-align: left;
+  background: #fafafa;
+}
+
+.no-print {
+  display: flex;
+}
+
+@media (max-width: 1180px) {
+  .hero-painel,
+  .cards-estatisticas,
+  .grade-resumos-comerciais,
+  .grade-campos-configuracoes {
+    grid-template-columns: 1fr 1fr;
   }
 
-  try {
-    window.localStorage.setItem(CHAVE_PAGINA_ATUAL, paginaId)
-  } catch (error) {
-    console.error('Erro ao salvar página atual:', error)
+  .hero-painel {
+    grid-template-columns: 1fr;
   }
 }
 
-function lerIgrejaSuporteAdminSalva() {
-  if (typeof window === 'undefined') {
-    return null
+@media (max-width: 1000px) {
+  .grade-campos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  try {
-    const igrejaSalva = JSON.parse(window.localStorage.getItem(CHAVE_SUPORTE_ADMIN) || 'null')
-    const igrejaId = Number(igrejaSalva?.id)
-
-    if (!igrejaId) {
-      return null
-    }
-
-    return {
-      id: igrejaId,
-      nome_igreja: igrejaSalva.nome_igreja || igrejaSalva.nome || 'Igreja',
-      congregacao: igrejaSalva.congregacao || '',
-      status_piloto: igrejaSalva.status_piloto || '',
-      cidade: igrejaSalva.cidade || '',
-      estado: igrejaSalva.estado || '',
-    }
-  } catch (error) {
-    console.error('Erro ao recuperar igreja de suporte:', error)
-    window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
-    return null
+  .tela-login {
+    grid-template-columns: 1fr;
   }
 }
 
-function salvarIgrejaSuporteAdminSalva(igreja) {
-  if (typeof window === 'undefined') {
-    return
+@media (max-width: 900px) {
+  .filtros,
+  .grade-campos-configuracoes,
+  .cards-estatisticas,
+  .grade-resumos-comerciais {
+    grid-template-columns: 1fr;
   }
 
-  try {
-    if (!igreja?.id) {
-      window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
-      return
-    }
+  .filtros .botao-secundario {
+    width: 100%;
+  }
 
-    window.localStorage.setItem(CHAVE_SUPORTE_ADMIN, JSON.stringify(igreja))
-  } catch (error) {
-    console.error('Erro ao salvar igreja de suporte:', error)
+  .painel-apresentacao,
+  .cartao-login {
+    padding: 32px 24px;
+  }
+
+  .apresentacao-texto h2 {
+    font-size: 34px;
   }
 }
 
-function removerIgrejaSuporteAdminSalva() {
-  if (typeof window === 'undefined') {
-    return
+@media (max-width: 800px) {
+  .app {
+    flex-direction: column;
   }
 
-  window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
+  .menu-lateral {
+    width: 100%;
+  }
+
+  .cards,
+  .beneficios-login {
+    grid-template-columns: 1fr;
+  }
+
+  .topo-pagina {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item-com-acoes,
+  .item-chamada {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .acoes-item,
+  .acoes-chamada,
+  .hero-acoes {
+    flex-direction: column;
+  }
+
+  .botao-editar,
+  .botao-excluir,
+  .botao-presenca,
+  .botao-falta,
+  .hero-acoes .botao-principal,
+  .hero-acoes .botao-secundario {
+    width: 100%;
+  }
+
+  .grade-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo-chamada {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .area-principal {
+    padding: 18px;
+  }
+
+  .conteudo {
+    padding: 20px;
+  }
 }
 
-function App() {
-  const [paginaAtual, setPaginaAtual] = useState(() => lerPaginaAtualSalva())
-  const [carregando, setCarregando] = useState(true)
-  const [erroSistema, setErroSistema] = useState('')
-  const [alertaPainelFechado, setAlertaPainelFechado] = useState(false)
-  const [relatorioExtraVisualizacao, setRelatorioExtraVisualizacao] = useState(null)
 
-  const [sessao, setSessao] = useState(null)
-  const [verificandoSessao, setVerificandoSessao] = useState(true)
-  const [diagnosticoCarregamento, setDiagnosticoCarregamento] = useState(null)
-  const [carregandoDiagnostico, setCarregandoDiagnostico] = useState(false)
-  const [mensagemDiagnosticoAdmin, setMensagemDiagnosticoAdmin] = useState(null)
-  const [mensagemHistoricoChamadas, setMensagemHistoricoChamadas] = useState(null)
-  const [excluindoChamadaId, setExcluindoChamadaId] = useState(null)
-  const [emailLogin, setEmailLogin] = useState('')
-  const [senhaLogin, setSenhaLogin] = useState('')
-  const [emailRecuperacao, setEmailRecuperacao] = useState('')
-  const [carregandoRecuperacao, setCarregandoRecuperacao] = useState(false)
-  const [mensagemRecuperacao, setMensagemRecuperacao] = useState('')
-  const [erroRecuperacao, setErroRecuperacao] = useState('')
-  const [novaSenhaRecuperacao, setNovaSenhaRecuperacao] = useState('')
-  const [confirmarNovaSenhaRecuperacao, setConfirmarNovaSenhaRecuperacao] = useState('')
-  const [carregandoNovaSenha, setCarregandoNovaSenha] = useState(false)
-  const [erroNovaSenha, setErroNovaSenha] = useState('')
-  const codigoPilotoOficial = 'EBDFIEL2026'
-  const [carregandoCadastroPiloto, setCarregandoCadastroPiloto] = useState(false)
-  const [erroCadastroPiloto, setErroCadastroPiloto] = useState('')
-  const [sucessoCadastroPiloto, setSucessoCadastroPiloto] = useState('')
-  const [ultimoCadastroPilotoEnviado, setUltimoCadastroPilotoEnviado] = useState({
-    nomeIgreja: '',
-    responsavel: '',
-    email: '',
-  })
-  const [cadastroPiloto, setCadastroPiloto] = useState({
-    nomeResponsavel: '',
-    cargoResponsavel: 'secretario',
-    email: '',
-    senha: '',
-    confirmarSenha: '',
-    codigoPiloto: '',
-    nomeIgreja: '',
-    tipoIgreja: 'congregacao',
-    congregacao: '',
-    sedeFiliadaNome: '',
-    sedeFiliadaEndereco: '',
-    sedeFiliadaNumero: '',
-    sedeFiliadaComplemento: '',
-    sedeFiliadaCep: '',
-    pastorDirigente: '',
-    telefoneDdd: '',
-    telefoneNumero: '',
-    telefone: '',
-    cidade: '',
-    estado: '',
-    bairro: '',
-    endereco: '',
-    numeroEndereco: '',
-    complementoEndereco: '',
-    cep: '',
-  })
-  const [carregandoLogin, setCarregandoLogin] = useState(false)
-  const [erroLogin, setErroLogin] = useState('')
-  const [telaPublica, setTelaPublica] = useState('landing')
-  const [menuPublicoAberto, setMenuPublicoAberto] = useState(false)
-  const [menuInternoAberto, setMenuInternoAberto] = useState(false)
 
-  const [classes, setClasses] = useState([])
-  const [alunos, setAlunos] = useState([])
-  const [chamadasSalvas, setChamadasSalvas] = useState([])
-  const [chamadasProfessores, setChamadasProfessores] = useState([])
-  const [igrejaAtualPiloto, setIgrejaAtualPiloto] = useState(null)
-  const [feedbackPiloto, setFeedbackPiloto] = useState({
-    tipo: 'sugestao',
-    mensagem: '',
-  })
-  const [janelaAniversariantesAberta, setJanelaAniversariantesAberta] = useState(false)
-  const [aniversarianteCartaoId, setAniversarianteCartaoId] = useState(null)
-  const [formularioSugestaoAberto, setFormularioSugestaoAberto] = useState(false)
-  const [feedbacksIgreja, setFeedbacksIgreja] = useState([])
-  const [feedbacksAdmin, setFeedbacksAdmin] = useState([])
-  const [feedbackRespondendoId, setFeedbackRespondendoId] = useState(null)
-  const [respostaFeedbackAdmin, setRespostaFeedbackAdmin] = useState('')
-  const [enviandoRespostaFeedback, setEnviandoRespostaFeedback] = useState(false)
-  const [carregandoFeedback, setCarregandoFeedback] = useState(false)
-  const [perfilUsuario, setPerfilUsuario] = useState(null)
-  const [perfisIgreja, setPerfisIgreja] = useState([])
-  const [vinculosProfessores, setVinculosProfessores] = useState([])
-  const [igrejaId, setIgrejaId] = useState(null)
-  const [igrejaSuporteAdmin, setIgrejaSuporteAdmin] = useState(() => lerIgrejaSuporteAdminSalva())
-  const sessaoRef = useRef(sessao)
-  const perfilUsuarioRef = useRef(perfilUsuario)
-  const igrejaSuporteAdminRef = useRef(igrejaSuporteAdmin)
-  const paginaAtualRef = useRef(paginaAtual)
-  const aniversariantesSemanaRef = useRef(null)
-  const cartaoAniversarioRef = useRef(null)
-  const usuarioCarregadoRef = useRef(null)
-  const carregamentoDadosEmAndamentoRef = useRef(false)
-  const suporteAdminEmTransicaoRef = useRef(false)
-
-  function definirSessao(sessaoNova) {
-    sessaoRef.current = sessaoNova
-    setSessao(sessaoNova)
-  }
-
-  function definirPerfilUsuario(valorOuAtualizador) {
-    const perfilAtualizado =
-      typeof valorOuAtualizador === 'function'
-        ? valorOuAtualizador(perfilUsuarioRef.current)
-        : valorOuAtualizador
-
-    perfilUsuarioRef.current = perfilAtualizado
-    setPerfilUsuario(perfilAtualizado)
-  }
-
-  function definirIgrejaSuporteAdmin(igreja) {
-    igrejaSuporteAdminRef.current = igreja || null
-    setIgrejaSuporteAdmin(igreja || null)
-
-    if (igreja?.id) {
-      salvarIgrejaSuporteAdminSalva(igreja)
-    } else {
-      removerIgrejaSuporteAdminSalva()
-    }
-  }
-
-  function definirPaginaAtual(paginaId) {
-    const paginaSegura = PAGINAS_SISTEMA.includes(paginaId) ? paginaId : 'painel'
-
-    paginaAtualRef.current = paginaSegura
-    setPaginaAtual(paginaSegura)
-    salvarPaginaAtualSalva(paginaSegura)
-  }
-
-  function normalizarIgrejaSuporteAdmin(igreja) {
-    const igrejaIdSuporte = Number(igreja?.id)
-
-    if (!igrejaIdSuporte) {
-      return null
-    }
-
-    return {
-      id: igrejaIdSuporte,
-      nome_igreja: igreja.nome_igreja || igreja.nome || 'Igreja',
-      congregacao: igreja.congregacao || '',
-      status_piloto: igreja.status_piloto || '',
-      cidade: igreja.cidade || '',
-      estado: igreja.estado || '',
-    }
-  }
-
-  function montarPerfilSuporteAdmin(igreja, sessaoAtual) {
-    const igrejaNormalizada = normalizarIgrejaSuporteAdmin(igreja)
-    const perfilAnterior = perfilUsuarioRef.current || perfilUsuario || {}
-    const emailSessaoAtual = String(
-      sessaoAtual?.user?.email || perfilAnterior?.email || ''
-    ).toLowerCase()
-
-    return {
-      ...perfilAnterior,
-      id: perfilAnterior?.id || null,
-      user_id: sessaoAtual?.user?.id || perfilAnterior?.user_id || null,
-      nome: perfilAnterior?.nome || 'Administrador do sistema',
-      email: emailSessaoAtual,
-      perfil: 'secretaria',
-      igreja_id: Number(igrejaNormalizada?.id || 0) || null,
-      classe_id: null,
-      modo_suporte_admin: true,
-    }
-  }
-
-  function manterContextoSuporteAdmin(igreja, sessaoAtual, opcoes = {}) {
-    const igrejaNormalizada = normalizarIgrejaSuporteAdmin(igreja)
-
-    if (!igrejaNormalizada?.id) {
-      return null
-    }
-
-    definirIgrejaSuporteAdmin(igrejaNormalizada)
-    setIgrejaId(Number(igrejaNormalizada.id))
-    definirPerfilUsuario(montarPerfilSuporteAdmin(igrejaNormalizada, sessaoAtual))
-
-    setIgrejaAtualPiloto((igrejaAtual) => {
-      if (Number(igrejaAtual?.id) === Number(igrejaNormalizada.id)) {
-        return igrejaAtual
-      }
-
-      return {
-        ...igrejaAtual,
-        ...igrejaNormalizada,
-      }
-    })
-
-    if (opcoes?.forcarPainel || paginaAtualRef.current === 'administracao') {
-      definirPaginaAtual('painel')
-    }
-
-    return igrejaNormalizada
-  }
-
-  function recuperarContextoSuporteAdminAtual() {
-    const igrejaAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
-
-    if (igrejaAtual?.id) {
-      return normalizarIgrejaSuporteAdmin(igrejaAtual)
-    }
-
-    return lerIgrejaSuporteAdminSalva()
-  }
-
-  function eventoAuthMesmaSessaoJaCarregada(event, session) {
-    if (!['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED'].includes(event)) {
-      return false
-    }
-
-    const userIdEvento = session?.user?.id || null
-
-    return Boolean(
-      userIdEvento &&
-        perfilUsuarioRef.current &&
-        (suporteAdminEmTransicaoRef.current ||
-          (usuarioCarregadoRef.current && userIdEvento === usuarioCarregadoRef.current))
-    )
-  }
-
-  const [igrejasAdmin, setIgrejasAdmin] = useState(() => {
-    if (typeof window === 'undefined') {
-      return []
-    }
-
-    try {
-      const igrejasSalvas = JSON.parse(
-        window.localStorage.getItem('ebdfiel_igrejas_admin_cache') || '[]'
-      )
-
-      return Array.isArray(igrejasSalvas) ? igrejasSalvas : []
-    } catch {
-      return []
-    }
-  })
-  const [acessosAdmin, setAcessosAdmin] = useState([])
-  const [cadastrosIncompletosAdmin, setCadastrosIncompletosAdmin] = useState([])
-  const [carregandoCadastrosIncompletosAdmin, setCarregandoCadastrosIncompletosAdmin] = useState(false)
-  const [erroCadastrosIncompletosAdmin, setErroCadastrosIncompletosAdmin] = useState('')
-  const [buscaAcessoAdmin, setBuscaAcessoAdmin] = useState('')
-  const [mostrarFormularioAcessoAdmin, setMostrarFormularioAcessoAdmin] = useState(false)
-  const [acessoAdminEditandoUserId, setAcessoAdminEditandoUserId] = useState(null)
-  const [novoAcessoAdmin, setNovoAcessoAdmin] = useState({
-    userId: '',
-    nome: '',
-    email: '',
-    perfil: 'secretaria',
-    igrejaId: '',
-    classeId: '',
-    dataNascimento: '',
-  })
-  const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
-  const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
-  const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
-  const [igrejaUsuariosAbertaId, setIgrejaUsuariosAbertaId] = useState(null)
-  const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
-    nome_igreja: '',
-    congregacao: '',
-    pastor_dirigente: '',
-    superintendente_ebd: '',
-    cidade: '',
-    estado: '',
-    bairro: '',
-    endereco: '',
-    numero_endereco: '',
-    complemento_endereco: '',
-    cep: '',
-    tipo_igreja: 'congregacao',
-    sede_filiada_nome: '',
-    sede_filiada_endereco: '',
-    sede_filiada_numero: '',
-    sede_filiada_complemento: '',
-    sede_filiada_cep: '',
-    telefone: '',
-    email: '',
-    status_piloto: 'teste',
-    responsavel_nome: '',
-    responsavel_email: '',
-    responsavel_whatsapp: '',
-    observacoes_piloto: '',
-    data_inicio_piloto: '',
-    data_fim_piloto: '',
-    limite_usuarios: 10,
-  })
-  const [configuracaoIgreja, setConfiguracaoIgreja] = useState({
-    id: null,
-    nome_igreja: '',
-    congregacao: '',
-    pastor_dirigente: '',
-    cidade: '',
-    estado: '',
-    bairro: '',
-    endereco: '',
-    telefone: '',
-    email: '',
-  })
-  const [salvandoConfiguracaoIgreja, setSalvandoConfiguracaoIgreja] = useState(false)
-  const [mostrarFormularioPerfil, setMostrarFormularioPerfil] = useState(false)
-  const [perfilEditandoId, setPerfilEditandoId] = useState(null)
-  const [novoPerfil, setNovoPerfil] = useState({
-    userId: '',
-    nome: '',
-    email: '',
-    perfil: 'professor',
-    classeIds: [],
-    dataNascimento: '',
-  })
-
-
-
-  const [mostrarFormularioClasse, setMostrarFormularioClasse] = useState(false)
-  const [classeEditandoId, setClasseEditandoId] = useState(null)
-  const [novaClasse, setNovaClasse] = useState({
-    nome: '',
-    professor: '',
-  })
-  const [classeAlunosAbertaId, setClasseAlunosAbertaId] = useState(null)
-
-  const [mostrarFormularioAluno, setMostrarFormularioAluno] = useState(false)
-  const [alunoEditandoId, setAlunoEditandoId] = useState(null)
-  const [salvandoAluno, setSalvandoAluno] = useState(false)
-  const [novoAluno, setNovoAluno] = useState({
-    nome: '',
-    classeId: '',
-    telefone: '',
-    dataNascimento: '',
-    tipoPessoa: 'aluno',
-  })
-
-  const [buscaAluno, setBuscaAluno] = useState('')
-  const [filtroClasseAluno, setFiltroClasseAluno] = useState('')
-  const [alunoHistoricoSelecionadoId, setAlunoHistoricoSelecionadoId] = useState('')
-  const [classeHistoricoFiltroId, setClasseHistoricoFiltroId] = useState('')
-
-  const [tipoChamada, setTipoChamada] = useState('alunos')
-  const [classeChamadaId, setClasseChamadaId] = useState('')
-  const [dataAulaChamada, setDataAulaChamada] = useState(() => new Date().toISOString().slice(0, 10))
-  const [presencas, setPresencas] = useState({})
-  const [mensagemChamada, setMensagemChamada] = useState(null)
-  const [presencasProfessores, setPresencasProfessores] = useState({})
-  const [observacoesChamadaProfessores, setObservacoesChamadaProfessores] = useState('')
-  const [dadosExtrasChamada, setDadosExtrasChamada] = useState({
-    visitantes: '',
-    biblias: '',
-    revistas: '',
-    ofertas: '',
-  })
-
-  useEffect(() => {
-    if (!mensagemChamada || mensagemChamada.tipo !== 'sucesso') {
-      return undefined
-    }
-
-    const temporizadorMensagemChamada = window.setTimeout(() => {
-      setMensagemChamada(null)
-    }, 5200)
-
-    return () => window.clearTimeout(temporizadorMensagemChamada)
-  }, [mensagemChamada])
-
-  useEffect(() => {
-    if (!mensagemDiagnosticoAdmin || mensagemDiagnosticoAdmin.tipo !== 'sucesso') {
-      return undefined
-    }
-
-    const temporizadorMensagemDiagnostico = window.setTimeout(() => {
-      setMensagemDiagnosticoAdmin(null)
-    }, 4800)
-
-    return () => window.clearTimeout(temporizadorMensagemDiagnostico)
-  }, [mensagemDiagnosticoAdmin])
-
-  useEffect(() => {
-    if (!mensagemHistoricoChamadas || mensagemHistoricoChamadas.tipo !== 'sucesso') {
-      return undefined
-    }
-
-    const temporizadorMensagemHistorico = window.setTimeout(() => {
-      setMensagemHistoricoChamadas(null)
-    }, 5200)
-
-    return () => window.clearTimeout(temporizadorMensagemHistorico)
-  }, [mensagemHistoricoChamadas])
-
-  const menu = [
-    { id: 'painel', nome: 'Painel', icone: 'painel' },
-    { id: 'dashboard', nome: 'Resumo geral', icone: 'painel' },
-    { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
-    { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
-    { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
-    { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
-    { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
-    { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
-    { id: 'historico', nome: 'Histórico do aluno', icone: 'alunos' },
-    { id: 'financeiro', nome: 'Financeiro', icone: 'relatorios', apenasSecretaria: true },
-    { id: 'backup', nome: 'Segurança e auditoria', icone: 'configuracoes', apenasSecretaria: true },
-    { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
-    {
-      id: 'configuracoes',
-      nome: 'Configurações',
-      icone: 'configuracoes',
-      apenasSecretaria: true,
-    },
-    {
-      id: 'administracao',
-      nome: 'Administração',
-      icone: 'configuracoes',
-      apenasAdminSistema: true,
-    },
-  ]
-
-  useEffect(() => {
-    sessaoRef.current = sessao
-  }, [sessao])
-
-  useEffect(() => {
-    perfilUsuarioRef.current = perfilUsuario
-  }, [perfilUsuario])
-
-  useEffect(() => {
-    igrejaSuporteAdminRef.current = igrejaSuporteAdmin
-  }, [igrejaSuporteAdmin])
-
-  useEffect(() => {
-    paginaAtualRef.current = paginaAtual
-    salvarPaginaAtualSalva(paginaAtual)
-  }, [paginaAtual])
-
-  useEffect(() => {
-    iniciarCorrecaoGlobalDeAcentos()
-
-    iniciarAutenticacao()
-
-    const destravarVerificacaoInicial = window.setTimeout(() => {
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }, 6000)
-
-    function restaurarSuporteAoVoltarParaAba() {
-      const sessaoAtual = sessaoRef.current
-      const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
-      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-
-      if (!igrejaSuporteSalva?.id || !emailsAdminSistema.includes(emailSessaoAtual)) {
-        return
-      }
-
-      manterContextoSuporteAdmin(igrejaSuporteSalva, sessaoAtual, {
-        forcarPainel: paginaAtualRef.current === 'administracao',
-      })
-    }
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      // Importante: o callback do Supabase Auth não deve aguardar consultas ao Supabase.
-      // Depois do F5, chamadas assíncronas com await dentro deste callback podem prender
-      // a restauração da sessão e deixar o app com dados zerados. Por isso, quando
-      // precisamos carregar dados, agendamos para depois do callback terminar.
-      if (typeof window !== 'undefined' && window.__ebdFielSaindoDoSistema) {
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (typeof window !== 'undefined' && window.__ebdFielCadastroEmAndamento) {
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (event === 'PASSWORD_RECOVERY') {
-        definirSessao(session)
-        setTelaPublica('novaSenha')
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (event === 'SIGNED_OUT') {
-        usuarioCarregadoRef.current = null
-        definirSessao(null)
-        limparDadosDoSistema()
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (!session) {
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      const deveManterEstadoAtual = eventoAuthMesmaSessaoJaCarregada(event, session)
-      const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
-
-      definirSessao(session)
-      setVerificandoSessao(false)
-
-      if (deveManterEstadoAtual) {
-        if (igrejaSuporteSalva?.id) {
-          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
-            forcarPainel: paginaAtualRef.current === 'administracao',
-          })
-        }
-
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (event === 'TOKEN_REFRESHED') {
-        if (igrejaSuporteSalva?.id) {
-          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
-            forcarPainel: paginaAtualRef.current === 'administracao',
-          })
-        }
-
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      // A sessão inicial após F5 é carregada por iniciarAutenticacao().
-      // Não carregamos dados aqui para evitar corrida/lock com getSession().
-      if (event === 'INITIAL_SESSION') {
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
-
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        setCarregando(true)
-
-        window.setTimeout(() => {
-          carregarDadosOnline(session, igrejaSuporteSalva)
-            .catch((erroCarregamentoSessao) => {
-              console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-              setErroSistema(
-                erroCarregamentoSessao?.message ||
-                  'Não foi possível validar sua sessão.'
-              )
-            })
-            .finally(() => {
-              setCarregando(false)
-              setVerificandoSessao(false)
-            })
-        }, 0)
-
-        return
-      }
-
-      setCarregando(false)
-      setVerificandoSessao(false)
-    })
-
-    const restaurarAoFocar = () => restaurarSuporteAoVoltarParaAba()
-    const restaurarAoFicarVisivel = () => {
-      if (document.visibilityState === 'visible') {
-        restaurarSuporteAoVoltarParaAba()
-      }
-    }
-
-    window.addEventListener('focus', restaurarAoFocar)
-    document.addEventListener('visibilitychange', restaurarAoFicarVisivel)
-
-    return () => {
-      window.clearTimeout(destravarVerificacaoInicial)
-      window.removeEventListener('focus', restaurarAoFocar)
-      document.removeEventListener('visibilitychange', restaurarAoFicarVisivel)
-      subscription.unsubscribe()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (usuarioEhAdminSistema() && igrejasAdmin.length > 0) {
-      salvarIgrejasAdminCache(igrejasAdmin)
-    }
-  }, [igrejasAdmin.length, perfilUsuario?.perfil, sessao?.user?.email])
-
-  useEffect(() => {
-    if (
-      paginaAtual === 'administracao' &&
-      usuarioEhAdminSistema() &&
-      igrejasAdmin.length === 0
-    ) {
-      carregarIgrejasAdmin()
-    }
-  }, [paginaAtual, perfilUsuario?.perfil, sessao?.user?.email])
-
-  async function iniciarAutenticacao() {
-    setVerificandoSessao(true)
-    setCarregando(true)
-
-    const igrejaSuporteSalva = lerIgrejaSuporteAdminSalva()
-
-    if (igrejaSuporteSalva?.id) {
-      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
-    }
-
-    try {
-      const { data, error } = await supabase.auth.getSession()
-
-      if (error) {
-        throw error
-      }
-
-      const sessaoAtual = data.session || null
-      definirSessao(sessaoAtual)
-
-      setVerificandoSessao(false)
-
-      if (sessaoAtual) {
-        carregarDadosOnline(sessaoAtual, igrejaSuporteSalva).catch((erroCarregamentoInicial) => {
-          console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
-          setErroSistema(
-            erroCarregamentoInicial?.message ||
-              'Não foi possível carregar os dados iniciais.'
-          )
-          setCarregando(false)
-        })
-      } else {
-        limparDadosDoSistema()
-        setCarregando(false)
-      }
-    } catch (error) {
-      console.error('Erro ao verificar sessão:', error)
-      setErroSistema('Erro ao verificar login.')
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }
-  }
-
-  function limparDadosDoSistema() {
-    setClasses([])
-    setAlunos([])
-    setChamadasSalvas([])
-    setChamadasProfessores([])
-    definirPerfilUsuario(null)
-    setPerfisIgreja([])
-    setVinculosProfessores([])
-    setIgrejaId(null)
-    definirIgrejaSuporteAdmin(null)
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
-    }
-
-    setConfiguracaoIgreja({
-      id: null,
-      nome_igreja: '',
-      congregacao: '',
-      pastor_dirigente: '',
-      superintendente_ebd: '',
-      cidade: '',
-      estado: '',
-      bairro: '',
-      endereco: '',
-      telefone: '',
-      email: '',
-    })
-    navegarParaPagina('painel')
-    setTelaPublica('landing')
-    setErroCadastroPiloto('')
-    setSucessoCadastroPiloto('')
-    setUltimoCadastroPilotoEnviado({
-      nomeIgreja: '',
-      responsavel: '',
-      email: '',
-    })
-    setCadastroPiloto({
-      nomeResponsavel: '',
-      cargoResponsavel: 'secretario',
-      email: '',
-      senha: '',
-      confirmarSenha: '',
-      codigoPiloto: '',
-      nomeIgreja: '',
-      tipoIgreja: 'congregacao',
-      congregacao: '',
-      sedeFiliadaNome: '',
-      sedeFiliadaEndereco: '',
-      sedeFiliadaCep: '',
-      pastorDirigente: '',
-      telefone: '',
-      cidade: '',
-      estado: '',
-      bairro: '',
-      endereco: '',
-      cep: '',
-    })
-    setMostrarFormularioClasse(false)
-    setMostrarFormularioAluno(false)
-    setClasseEditandoId(null)
-    setAlunoEditandoId(null)
-    setNovaClasse({ nome: '', professor: '' })
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
-    setMostrarFormularioPerfil(false)
-    setPerfilEditandoId(null)
-    setNovoPerfil({
-      userId: '',
-      nome: '',
-      email: '',
-      perfil: 'professor',
-      classeIds: [],
-      dataNascimento: '',
-    })
-    setBuscaAluno('')
-    setFiltroClasseAluno('')
-    setTipoChamada('alunos')
-    setClasseChamadaId('')
-    setPresencas({})
-    setPresencasProfessores({})
-    setObservacoesChamadaProfessores('')
-    setDataAulaChamada(new Date().toISOString().slice(0, 10))
-    setDadosExtrasChamada({
-      visitantes: '',
-      biblias: '',
-      revistas: '',
-      ofertas: '',
-    })
-  }
-
-  function criarSlugPiloto(texto) {
-    return String(texto || 'igreja')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-      .slice(0, 60)
-  }
-
-  async function cadastrarAcessoPiloto(event) {
-    event.preventDefault()
-
-    setErroCadastroPiloto('')
-    setSucessoCadastroPiloto('')
-
-    const codigoInformado = cadastroPiloto.codigoPiloto.trim().toUpperCase()
-    const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
-
-    if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
-      return
-    }
-
-    if (!cadastroPiloto.nomeResponsavel.trim()) {
-      setErroCadastroPiloto('Informe seu nome.')
-      return
-    }
-
-    const telefoneDdd = limparNumeroWhatsApp(cadastroPiloto.telefoneDdd).slice(0, 2)
-    const telefoneNumero = limparNumeroWhatsApp(cadastroPiloto.telefoneNumero)
-    const telefoneCompleto = `${telefoneDdd}${telefoneNumero}`
-
-    if (telefoneDdd.length !== 2) {
-      setErroCadastroPiloto('Informe o DDD com 2 números.')
-      return
-    }
-
-    if (telefoneNumero.length < 8) {
-      setErroCadastroPiloto('Informe o número de telefone/WhatsApp.')
-      return
-    }
-
-    if (!emailCadastro) {
-      setErroCadastroPiloto('Informe seu e-mail.')
-      return
-    }
-
-    if (cadastroPiloto.senha.length < 6) {
-      setErroCadastroPiloto('A senha precisa ter pelo menos 6 caracteres.')
-      return
-    }
-
-    if (cadastroPiloto.senha !== cadastroPiloto.confirmarSenha) {
-      setErroCadastroPiloto('A confirmação de senha não confere.')
-      return
-    }
-
-    if (!cadastroPiloto.nomeIgreja.trim()) {
-      setErroCadastroPiloto('Informe o nome da igreja.')
-      return
-    }
-
-    if (!cadastroPiloto.cidade.trim() || !cadastroPiloto.estado.trim()) {
-      setErroCadastroPiloto('Informe cidade e estado.')
-      return
-    }
-
-    if (cadastroPiloto.tipoIgreja === 'congregacao' && !cadastroPiloto.sedeFiliadaNome.trim()) {
-      setErroCadastroPiloto('Informe a sede à qual a congregação é filiada.')
-      return
-    }
-
-    setCarregandoCadastroPiloto(true)
-
-    if (typeof window !== 'undefined') {
-      window.__ebdFielCadastroEmAndamento = true
-    }
-
-    try {
-      const { data: vagasDisponiveis, error: erroVagasDisponiveis } = await supabase.rpc(
-        'vagas_piloto_disponiveis'
-      )
-
-      if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
-        setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
-        )
-        setCarregandoCadastroPiloto(false)
-        return
-      }
-
-      const { data: cadastroAuth, error: erroCadastroAuth } = await supabase.auth.signUp({
-        email: emailCadastro,
-        password: cadastroPiloto.senha,
-      })
-
-      if (erroCadastroAuth) {
-        throw erroCadastroAuth
-      }
-
-      let sessaoCadastro = cadastroAuth.session
-      let usuarioCadastro = cadastroAuth.user
-
-      if (!sessaoCadastro) {
-        const { data: loginCadastro, error: erroLoginCadastro } =
-          await supabase.auth.signInWithPassword({
-            email: emailCadastro,
-            password: cadastroPiloto.senha,
-          })
-
-        if (erroLoginCadastro) {
-          setSucessoCadastroPiloto(
-            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
-          )
-          return
-        }
-
-        sessaoCadastro = loginCadastro.session
-        usuarioCadastro = loginCadastro.user
-      }
-
-      if (!usuarioCadastro?.id || !sessaoCadastro) {
-        setSucessoCadastroPiloto(
-          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
-        )
-        return
-      }
-
-      const slugBase = criarSlugPiloto(cadastroPiloto.nomeIgreja)
-
-      const { data: igrejaCriadaId, error: erroCadastroPilotoRpc } = await supabase.rpc(
-        'criar_cadastro_piloto',
-        {
-          p_nome: cadastroPiloto.nomeIgreja.trim(),
-          p_slug: `${slugBase}-${Date.now()}`,
-          p_nome_igreja: cadastroPiloto.nomeIgreja.trim(),
-          p_congregacao: cadastroPiloto.congregacao.trim(),
-          p_pastor_dirigente: cadastroPiloto.pastorDirigente.trim(),
-          p_cidade: cadastroPiloto.cidade.trim(),
-          p_estado: cadastroPiloto.estado.trim().toUpperCase(),
-          p_bairro: cadastroPiloto.bairro.trim(),
-          p_endereco: cadastroPiloto.endereco.trim(),
-          p_numero_endereco: cadastroPiloto.numeroEndereco.trim(),
-          p_complemento_endereco: cadastroPiloto.complementoEndereco.trim(),
-          p_cep: cadastroPiloto.cep.trim(),
-          p_telefone: telefoneCompleto,
-          p_tipo_igreja: cadastroPiloto.tipoIgreja,
-          p_sede_filiada_nome:
-            cadastroPiloto.tipoIgreja === 'congregacao'
-              ? cadastroPiloto.sedeFiliadaNome.trim()
-              : '',
-          p_sede_filiada_endereco:
-            cadastroPiloto.tipoIgreja === 'congregacao'
-              ? cadastroPiloto.sedeFiliadaEndereco.trim()
-              : '',
-          p_sede_filiada_numero:
-            cadastroPiloto.tipoIgreja === 'congregacao'
-              ? cadastroPiloto.sedeFiliadaNumero.trim()
-              : '',
-          p_sede_filiada_complemento:
-            cadastroPiloto.tipoIgreja === 'congregacao'
-              ? cadastroPiloto.sedeFiliadaComplemento.trim()
-              : '',
-          p_sede_filiada_cep:
-            cadastroPiloto.tipoIgreja === 'congregacao'
-              ? cadastroPiloto.sedeFiliadaCep.trim()
-              : '',
-          p_responsavel_nome: cadastroPiloto.nomeResponsavel.trim(),
-          p_responsavel_whatsapp: telefoneCompleto,
-          p_cargo_responsavel: cadastroPiloto.cargoResponsavel,
-        }
-      )
-
-      if (erroCadastroPilotoRpc) {
-        throw erroCadastroPilotoRpc
-      }
-
-      const igrejaCriadaIdNormalizada = Array.isArray(igrejaCriadaId)
-        ? Number(igrejaCriadaId[0]?.id || igrejaCriadaId[0])
-        : Number(igrejaCriadaId)
-
-      if (!igrejaCriadaIdNormalizada) {
-        throw new Error(
-          'O cadastro da igreja foi iniciado, mas não foi possível confirmar o vínculo. Entre em contato com o administrador.'
-        )
-      }
-
-      const { error: erroCriarPerfilCadastro } = await supabase
-        .from('perfis_usuarios')
-        .upsert(
-          {
-            user_id: usuarioCadastro.id,
-            nome: cadastroPiloto.nomeResponsavel.trim(),
-            email: emailCadastro,
-            perfil: 'secretaria',
-            igreja_id: igrejaCriadaIdNormalizada,
-            classe_id: null,
-            data_nascimento: null,
-          },
-          { onConflict: 'user_id' }
-        )
-
-      if (erroCriarPerfilCadastro) {
-        throw erroCriarPerfilCadastro
-      }
-
-      await supabase.auth.signOut()
-      definirSessao(null)
-
-      setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
-      )
-      setUltimoCadastroPilotoEnviado({
-        nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
-        responsavel: cadastroPiloto.nomeResponsavel.trim(),
-        email: emailCadastro,
-      })
-      setEmailLogin(emailCadastro)
-      setSenhaLogin('')
-      setTelaPublica('cadastroEnviado')
-    } catch (error) {
-      console.error(error)
-
-      if (
-        String(error?.message || '').includes('limite_piloto_atingido') ||
-        String(error?.details || '').includes('limite_piloto_atingido')
-      ) {
-        setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
-        )
-      } else if (
-        String(error?.message || '').includes('usuario_ja_possui_perfil') ||
-        String(error?.details || '').includes('usuario_ja_possui_perfil')
-      ) {
-        setErroCadastroPiloto(
-          'Este e-mail já iniciou um cadastro anteriormente. Use “Esqueci minha senha” para recuperar o acesso ou fale com o administrador para concluir o vínculo.'
-        )
-      } else {
-        setErroCadastroPiloto(
-          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
-        )
-      }
-    } finally {
-      if (typeof window !== 'undefined') {
-        window.__ebdFielCadastroEmAndamento = false
-      }
-
-      setCarregandoCadastroPiloto(false)
-    }
-  }
-
-  async function enviarLinkRecuperacaoSenha(event) {
-    event.preventDefault()
-
-    const email = emailRecuperacao.trim().toLowerCase()
-
-    setErroRecuperacao('')
-    setMensagemRecuperacao('')
-
-    if (!email) {
-      setErroRecuperacao('Informe seu e-mail para receber o link de recuperação.')
-      return
-    }
-
-    setCarregandoRecuperacao(true)
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
-      })
-
-      if (error) {
-        throw error
-      }
-
-      setMensagemRecuperacao(
-        'Link de recuperação enviado. Confira sua caixa de entrada e também a pasta de spam.'
-      )
-    } catch (error) {
-      console.error(error)
-      setErroRecuperacao(
-        traduzirErroSistema(error, 'Não foi possível enviar o link de recuperação.')
-      )
-    } finally {
-      setCarregandoRecuperacao(false)
-    }
-  }
-
-  async function salvarNovaSenhaRecuperacao(event) {
-    event.preventDefault()
-
-    setErroNovaSenha('')
-
-    if (novaSenhaRecuperacao.length < 6) {
-      setErroNovaSenha('A nova senha precisa ter pelo menos 6 caracteres.')
-      return
-    }
-
-    if (novaSenhaRecuperacao !== confirmarNovaSenhaRecuperacao) {
-      setErroNovaSenha('A confirmação da nova senha não confere.')
-      return
-    }
-
-    setCarregandoNovaSenha(true)
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: novaSenhaRecuperacao,
-      })
-
-      if (error) {
-        throw error
-      }
-
-      setNovaSenhaRecuperacao('')
-      setConfirmarNovaSenhaRecuperacao('')
-      alert('Senha atualizada com sucesso. Entre novamente com sua nova senha.')
-      await supabase.auth.signOut()
-      definirSessao(null)
-      setTelaPublica('login')
-    } catch (error) {
-      console.error(error)
-      setErroNovaSenha(
-        traduzirErroSistema(error, 'Não foi possível atualizar a senha.')
-      )
-    } finally {
-      setCarregandoNovaSenha(false)
-    }
-  }
-
-  async function entrarComEmailSenha(event) {
-    event.preventDefault()
-
-    if (!emailLogin.trim() || !senhaLogin.trim()) {
-      setErroLogin('Informe o e-mail e a senha.')
-      return
-    }
-
-    setCarregandoLogin(true)
-    setErroLogin('')
-
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailLogin.trim(),
-        password: senhaLogin,
-      })
-
-      if (error) {
-        throw error
-      }
-
-      definirSessao(data.session)
-      setEmailLogin('')
-      setSenhaLogin('')
-
-      await carregarDadosOnline(data.session)
-    } catch (error) {
-      console.error('Erro ao entrar:', error)
-      setErroLogin('E-mail ou senha inválidos.')
-    } finally {
-      setCarregandoLogin(false)
-    }
-  }
-
-  async function sairDoSistema() {
-    const confirmar = window.confirm('Deseja sair do sistema?')
-
-    if (!confirmar) {
-      return
-    }
-
-    if (typeof window !== 'undefined') {
-      window.__ebdFielSaindoDoSistema = true
-    }
-
-    setCarregando(false)
-    setVerificandoSessao(false)
-
-    try {
-      await supabase.auth.signOut({ scope: 'local' })
-    } catch (error) {
-      console.error('Erro ao sair do Supabase:', error)
-    }
-
-    try {
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
-        window.localStorage.removeItem(CHAVE_PAGINA_ATUAL)
-        window.localStorage.removeItem('ebdfiel_igrejas_admin_cache')
-      }
-    } catch (error) {
-      console.error('Erro ao limpar dados locais do EBD Fiel:', error)
-    }
-
-    usuarioCarregadoRef.current = null
-    definirSessao(null)
-    limparDadosDoSistema()
-    setTelaPublica('login')
-
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        window.__ebdFielSaindoDoSistema = false
-      }, 600)
-    }
-  }
-
-  async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
-    const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
-
-    if (
-      carregamentoDadosEmAndamentoRef.current &&
-      !igrejaSuporteForcada &&
-      usuarioCarregadoRef.current === sessaoAtual?.user?.id
-    ) {
-      return
-    }
-
-    carregamentoDadosEmAndamentoRef.current = true
-    setCarregando(true)
-    setErroSistema('')
-
-    try {
-      let sessaoParaUsar = sessaoAtual
-
-      if (!sessaoParaUsar?.user?.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoParaUsar = data?.session || null
-
-        if (sessaoParaUsar) {
-          definirSessao(sessaoParaUsar)
-        }
-      }
-
-      await buscarTodosOsDados(sessaoParaUsar, suporteParaPreservar)
-
-      if (sessaoParaUsar?.user?.id) {
-        usuarioCarregadoRef.current = sessaoParaUsar.user.id
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error)
-
-      const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
-      setErroSistema(mensagemErro)
-
-      if (suporteParaPreservar?.id && sessaoAtual?.user?.id) {
-        manterContextoSuporteAdmin(suporteParaPreservar, sessaoAtual, {
-          forcarPainel: true,
-        })
-      }
-
-      if (
-        !suporteParaPreservar?.id &&
-        (mensagemErro.toLowerCase().includes('cadastro incompleto') ||
-          mensagemErro.toLowerCase().includes('ainda não liberado') ||
-          mensagemErro.toLowerCase().includes('aguardando aprovação') ||
-          mensagemErro.toLowerCase().includes('sem igreja vinculada'))
-      ) {
-        limparDadosOperacionaisSemTrocarTela()
-        setTelaPublica('login')
-      }
-    } finally {
-      carregamentoDadosEmAndamentoRef.current = false
-      setCarregando(false)
-    }
-  }
-
-
-  function limparDadosOperacionaisSemTrocarTela(opcoes = {}) {
-    const preservarContextoSuporte = Boolean(opcoes?.preservarContextoSuporte)
-
-    setClasses([])
-    setAlunos([])
-    setChamadasSalvas([])
-    setChamadasProfessores([])
-
-    if (!preservarContextoSuporte) {
-      definirPerfilUsuario(null)
-      setIgrejaId(null)
-      setIgrejaAtualPiloto(null)
-    }
-
-    setPerfisIgreja([])
-    setVinculosProfessores([])
-    setFeedbacksIgreja([])
-  }
-
-  async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
-    // PROTEÇÃO v51:
-    // Esta função deixou de criar dados automáticos com IDs fixos.
-    // Antes, classes/alunos iniciais usavam id 1, 2 e 3 com upsert, o que podia
-    // interferir em registros existentes de outras igrejas quando havia conflito de ID.
-    // Para proteger as igrejas ativas, nenhuma classe ou aluno será criado automaticamente
-    // ao carregar uma igreja. Se uma igreja nova precisar de classes, cadastre manualmente
-    // pela tela Classes.
-    if (!igrejaAtualId) {
-      throw new Error('Igreja não identificada para criar os dados iniciais.')
-    }
-
-    console.warn(
-      'Criação automática de dados iniciais bloqueada para proteger cadastros existentes.',
-      { igrejaAtualId, userId: sessaoAtual?.user?.id }
-    )
-
-    return false
-  }
-
-
-  async function migrarProfessoresDasClasses(
-    igrejaAtualId,
-    classesBanco,
-    alunosBanco,
-    sessaoAtual = sessao
-  ) {
-    const professoresExistentes = (alunosBanco || [])
-      .filter((pessoa) => pessoa.tipo_pessoa === 'professor')
-      .map(
-        (pessoa) =>
-          `${String(pessoa.nome || '').trim().toLowerCase()}-${Number(
-            pessoa.classe_id || 0
-          )}`
-      )
-
-    const professoresParaCriar = []
-
-    ;(classesBanco || []).forEach((classe) => {
-      const textoProfessores = String(classe.professor || '').trim()
-
-      if (!textoProfessores) {
-        return
-      }
-
-      const nomes = textoProfessores
-        .split(/,|;|\/| e /i)
-        .map((nome) => nome.trim())
-        .filter(Boolean)
-
-      nomes.forEach((nome) => {
-        const chave = `${nome.toLowerCase()}-${Number(classe.id)}`
-
-        if (!professoresExistentes.includes(chave)) {
-          professoresExistentes.push(chave)
-
-          professoresParaCriar.push({
-            id: Date.now() + professoresParaCriar.length,
-            igreja_id: igrejaAtualId,
-            user_id: sessaoAtual?.user?.id,
-            nome,
-            classe_id: Number(classe.id),
-            telefone: '',
-            data_nascimento: null,
-            tipo_pessoa: 'professor',
-          })
-        }
-      })
-    })
-
-    if (professoresParaCriar.length === 0) {
-      return false
-    }
-
-    const { error } = await supabase.from('alunos').insert(professoresParaCriar)
-
-    if (error) {
-      throw error
-    }
-
-    return true
-  }
-
-  function usuarioEhProfessor() {
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-
-    return perfilAtual?.perfil === 'professor'
-  }
-
-  function buscarIgrejaIdAtual() {
-    const suporteAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-
-    if (usuarioEhAdminSistema() && suporteAtual?.id) {
-      return Number(suporteAtual.id)
-    }
-
-    return perfilAtual?.igreja_id || igrejaId || null
-  }
-
-  function navegarParaPagina(paginaId) {
-    setMenuInternoAberto(false)
-    definirPaginaAtual(paginaId)
-
-    if (paginaId === 'painel') {
-      setAlertaPainelFechado(false)
-    }
-
-    if (paginaId === 'administracao') {
-      carregarIgrejasAdmin()
-    }
-
-    window.setTimeout(() => {
-      const areaPrincipal =
-        document.querySelector('.area-principal') ||
-        document.querySelector('main')
-
-      if (!areaPrincipal) {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        return
-      }
-
-      const distanciaDoTopo =
-        areaPrincipal.getBoundingClientRect().top + window.pageYOffset - 8
-
-      window.scrollTo({
-        top: Math.max(distanciaDoTopo, 0),
-        behavior: 'smooth',
-      })
-    }, 180)
-  }
-
-  const emailsAdminSistema = ['ebdfiel7@gmail.com']
-
-  function usuarioEhAdminSistema() {
-    const sessaoAtual = sessaoRef.current || sessao
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-    const emailSessao = String(sessaoAtual?.user?.email || '').toLowerCase()
-
-    return (
-      perfilAtual?.perfil === 'admin_sistema' ||
-      emailsAdminSistema.includes(emailSessao)
-    )
-  }
-
-  function buscarIgrejaSuporteAdminSalva() {
-    const igrejaAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
-
-    if (igrejaAtual?.id) {
-      return igrejaAtual
-    }
-
-    const igrejaSalva = lerIgrejaSuporteAdminSalva()
-
-    if (igrejaSalva?.id) {
-      definirIgrejaSuporteAdmin(igrejaSalva)
-      return igrejaSalva
-    }
-
-    return null
-  }
-
-  async function acessarIgrejaComoSuporte(igreja, event = null) {
-    if (event?.preventDefault) {
-      event.preventDefault()
-    }
-
-    if (event?.stopPropagation) {
-      event.stopPropagation()
-    }
-
-    const igrejaIdSelecionada = Number(igreja?.id)
-
-    if (!igrejaIdSelecionada) {
-      alert('Não foi possível identificar a igreja selecionada.')
-      return
-    }
-
-    let sessaoAtual = sessaoRef.current || sessao
-
-    try {
-      if (!sessaoAtual?.user?.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoAtual = data?.session || null
-
-        if (sessaoAtual) {
-          definirSessao(sessaoAtual)
-        }
-      }
-
-      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-      const adminAutorizado =
-        perfilUsuarioRef.current?.perfil === 'admin_sistema' ||
-        emailsAdminSistema.includes(emailSessaoAtual)
-
-      if (!adminAutorizado) {
-        alert('Apenas administradores do sistema podem acessar igrejas em modo suporte.')
-        return
-      }
-
-      const igrejaSelecionada = normalizarIgrejaSuporteAdmin(igreja)
-
-      suporteAdminEmTransicaoRef.current = true
-      setCarregando(true)
-      setErroSistema('')
-
-      manterContextoSuporteAdmin(igrejaSelecionada, sessaoAtual, {
-        forcarPainel: true,
-      })
-
-      await buscarTodosOsDados(sessaoAtual, igrejaSelecionada)
-
-      manterContextoSuporteAdmin(igrejaSelecionada, sessaoAtual, {
-        forcarPainel: true,
-      })
-      usuarioCarregadoRef.current = sessaoAtual?.user?.id || usuarioCarregadoRef.current
-
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80)
-      }
-    } catch (erroSuporte) {
-      console.error('Erro ao acessar igreja em modo suporte:', erroSuporte)
-
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
-      }
-
-      definirIgrejaSuporteAdmin(null)
-      setErroSistema(
-        erroSuporte?.message ||
-          'Não foi possível acessar esta igreja em modo suporte agora.'
-      )
-      alert(
-        erroSuporte?.message ||
-          'Não foi possível acessar esta igreja em modo suporte agora.'
-      )
-    } finally {
-      setCarregando(false)
-
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => {
-          suporteAdminEmTransicaoRef.current = false
-        }, 700)
-      } else {
-        suporteAdminEmTransicaoRef.current = false
-      }
-    }
-  }
-
-  async function sairDoModoSuporteAdmin() {
-    suporteAdminEmTransicaoRef.current = true
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('ebdfiel_igreja_suporte_admin')
-    }
-
-    definirIgrejaSuporteAdmin(null)
-    setClasses([])
-    setAlunos([])
-    setChamadasSalvas([])
-    setChamadasProfessores([])
-    setVinculosProfessores([])
-    setIgrejaId(null)
-    setIgrejaAtualPiloto(null)
-
-    const sessaoAtual = sessaoRef.current || sessao
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-
-    definirPerfilUsuario({
-      id: perfilAtual?.id || null,
-      user_id: sessaoAtual?.user?.id,
-      nome: perfilAtual?.nome || 'Administrador do sistema',
-      email: emailSessaoAtual,
-      perfil: 'admin_sistema',
-      igreja_id: 19,
-      classe_id: null,
-    })
-
-    definirPaginaAtual('administracao')
-    await carregarIgrejasAdmin()
-
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        suporteAdminEmTransicaoRef.current = false
-      }, 500)
-    } else {
-      suporteAdminEmTransicaoRef.current = false
-    }
-  }
-
-  function modoSuporteAdminAtivo() {
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-    const suporteAtual = igrejaSuporteAdminRef.current || igrejaSuporteAdmin
-
-    return usuarioEhAdminSistema() && Boolean(perfilAtual?.modo_suporte_admin || suporteAtual?.id)
-  }
-
-  function limparFormularioIgrejaAdmin() {
-    setNovaIgrejaAdmin({
-      nome_igreja: '',
-      congregacao: '',
-      pastor_dirigente: '',
-      cidade: '',
-      estado: '',
-      bairro: '',
-      endereco: '',
-      telefone: '',
-      email: '',
-      status_piloto: 'teste',
-      responsavel_nome: '',
-      responsavel_email: '',
-      responsavel_whatsapp: '',
-      observacoes_piloto: '',
-      data_inicio_piloto: '',
-      data_fim_piloto: '',
-      limite_usuarios: 10,
-    })
-    setIgrejaAdminEditandoId(null)
-    setMostrarFormularioIgrejaAdmin(false)
-  }
-
-  function abrirNovaIgrejaAdmin() {
-    limparFormularioIgrejaAdmin()
-    setMostrarFormularioIgrejaAdmin(true)
-  }
-
-  function editarIgrejaAdmin(igreja) {
-    setNovaIgrejaAdmin({
-      nome_igreja: igreja.nome_igreja || '',
-      congregacao: igreja.congregacao || '',
-      pastor_dirigente: igreja.pastor_dirigente || '',
-      cidade: igreja.cidade || '',
-      estado: igreja.estado || '',
-      bairro: igreja.bairro || '',
-      endereco: igreja.endereco || '',
-      numero_endereco: igreja.numero_endereco || '',
-      complemento_endereco: igreja.complemento_endereco || '',
-      cep: igreja.cep || '',
-      tipo_igreja: igreja.tipo_igreja || 'congregacao',
-      sede_filiada_nome: igreja.sede_filiada_nome || '',
-      sede_filiada_endereco: igreja.sede_filiada_endereco || '',
-      sede_filiada_numero: igreja.sede_filiada_numero || '',
-      sede_filiada_complemento: igreja.sede_filiada_complemento || '',
-      sede_filiada_cep: igreja.sede_filiada_cep || '',
-      telefone: igreja.telefone || '',
-      email: igreja.email || '',
-      status_piloto: igreja.status_piloto || 'teste',
-      responsavel_nome: igreja.responsavel_nome || '',
-      responsavel_email: igreja.responsavel_email || '',
-      responsavel_whatsapp: igreja.responsavel_whatsapp || '',
-      observacoes_piloto: igreja.observacoes_piloto || '',
-      data_inicio_piloto: igreja.data_inicio_piloto || '',
-      data_fim_piloto: igreja.data_fim_piloto || '',
-      limite_usuarios: igreja.limite_usuarios || 10,
-    })
-    setIgrejaAdminEditandoId(igreja.id)
-    setMostrarFormularioIgrejaAdmin(true)
-  }
-
-  function limparFormularioAcessoAdmin() {
-    setNovoAcessoAdmin({
-      userId: '',
-      nome: '',
-      email: '',
-      perfil: 'secretaria',
-      igrejaId: '',
-      classeId: '',
-      dataNascimento: '',
-    })
-    setAcessoAdminEditandoUserId(null)
-    setMostrarFormularioAcessoAdmin(false)
-  }
-
-  function abrirNovoAcessoAdmin(igreja = null) {
-    setNovoAcessoAdmin({
-      userId: '',
-      nome: igreja?.responsavel_nome || '',
-      email: igreja?.responsavel_email || '',
-      perfil: 'secretaria',
-      igrejaId: igreja?.id ? String(igreja.id) : '',
-      classeId: '',
-      dataNascimento: '',
-    })
-    setAcessoAdminEditandoUserId(null)
-    setMostrarFormularioAcessoAdmin(true)
-  }
-
-  function editarAcessoAdmin(acesso) {
-    setNovoAcessoAdmin({
-      userId: acesso.user_id || '',
-      nome: acesso.nome || '',
-      email: acesso.email || '',
-      perfil: acesso.perfil || 'secretaria',
-      igrejaId: acesso.igreja_id ? String(acesso.igreja_id) : '',
-      classeId: acesso.classe_id ? String(acesso.classe_id) : '',
-      dataNascimento: acesso.data_nascimento || '',
-    })
-    setAcessoAdminEditandoUserId(acesso.user_id)
-    setMostrarFormularioAcessoAdmin(true)
-  }
-
-  function buscarNomeIgrejaAdmin(igrejaBuscaId) {
-    const igreja = igrejasAdmin.find((item) => Number(item.id) === Number(igrejaBuscaId))
-
-    return igreja?.nome_igreja || igreja?.nome || `Igreja ID ${igrejaBuscaId || '-'}`
-  }
-
-  function contarAcessosDaIgreja(igrejaBuscaId) {
-    return acessosAdmin.filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId)).length
-  }
-
-  function buscarAcessosDaIgrejaAdmin(igrejaBuscaId) {
-    return acessosAdmin
-      .filter((acesso) => Number(acesso.igreja_id) === Number(igrejaBuscaId))
-      .sort((a, b) => String(a.nome || a.email || '').localeCompare(String(b.nome || b.email || '')))
-  }
-
-  function alternarUsuariosDaIgreja(igrejaBuscaId) {
-    setIgrejaUsuariosAbertaId((idAtual) =>
-      Number(idAtual) === Number(igrejaBuscaId) ? null : igrejaBuscaId
-    )
-  }
-
-  function filtrarAcessosAdmin() {
-    const termo = buscaAcessoAdmin.toLowerCase()
-
-    return acessosAdmin.filter((acesso) => {
-      const igrejaNome = buscarNomeIgrejaAdmin(acesso.igreja_id).toLowerCase()
-
-      return (
-        String(acesso.nome || '').toLowerCase().includes(termo) ||
-        String(acesso.email || '').toLowerCase().includes(termo) ||
-        String(acesso.perfil || '').toLowerCase().includes(termo) ||
-        igrejaNome.includes(termo)
-      )
-    })
-  }
-
-  async function carregarAcessosAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    const { data, error } = await supabase
-      .from('perfis_usuarios')
-      .select('*')
-      .order('nome', { ascending: true })
-
-    if (error) {
-      console.error(error)
-      return
-    }
-
-    setAcessosAdmin(data || [])
-  }
-
-  async function carregarCadastrosIncompletosAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    setCarregandoCadastrosIncompletosAdmin(true)
-    setErroCadastrosIncompletosAdmin('')
-
-    const { data, error } = await supabase.rpc('listar_cadastros_incompletos_admin')
-
-    setCarregandoCadastrosIncompletosAdmin(false)
-
-    if (error) {
-      console.error(error)
-      setErroCadastrosIncompletosAdmin(
-        traduzirErroSistema(error, 'Não foi possível carregar os cadastros incompletos.')
-      )
-      setCadastrosIncompletosAdmin([])
-      return
-    }
-
-    setCadastrosIncompletosAdmin(data || [])
-  }
-
-  async function salvarAcessoAdmin(event) {
-    event.preventDefault()
-
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem gerenciar acessos.')
-      return
-    }
-
-    if (!novoAcessoAdmin.userId.trim()) {
-      alert('Informe o User UID do Supabase Authentication.')
-      return
-    }
-
-    if (!novoAcessoAdmin.nome.trim()) {
-      alert('Informe o nome do usuário.')
-      return
-    }
-
-    if (!novoAcessoAdmin.email.trim()) {
-      alert('Informe o e-mail do usuário.')
-      return
-    }
-
-    if (!novoAcessoAdmin.igrejaId) {
-      alert('Selecione a igreja vinculada.')
-      return
-    }
-
-    const dadosAcesso = {
-      user_id: novoAcessoAdmin.userId.trim(),
-      nome: novoAcessoAdmin.nome.trim(),
-      email: novoAcessoAdmin.email.trim().toLowerCase(),
-      perfil: novoAcessoAdmin.perfil,
-      igreja_id: Number(novoAcessoAdmin.igrejaId),
-      classe_id: novoAcessoAdmin.classeId ? Number(novoAcessoAdmin.classeId) : null,
-      data_nascimento: novoAcessoAdmin.dataNascimento || null,
-    }
-
-    const { error } = await supabase
-      .from('perfis_usuarios')
-      .upsert(dadosAcesso, { onConflict: 'user_id' })
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível salvar o acesso.')
-      return
-    }
-
-    await carregarAcessosAdmin()
-    limparFormularioAcessoAdmin()
-    alert('Acesso salvo com sucesso!')
-  }
-
-  async function removerAcessoAdmin(acesso) {
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem remover acessos.')
-      return
-    }
-
-    const confirmar = window.confirm(
-      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuário continuará existindo no Authentication, mas ficará sem vínculo no sistema.`
-    )
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase
-      .from('perfis_usuarios')
-      .delete()
-      .eq('user_id', acesso.user_id)
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível remover o acesso.')
-      return
-    }
-
-    await carregarAcessosAdmin()
-  }
-
-  async function enviarRecuperacaoSenhaAdmin(email) {
-    if (!email) {
-      alert('Este usuário não possui e-mail cadastrado.')
-      return
-    }
-
-    const confirmar = window.confirm(
-      `Enviar link de recuperação de senha para ${email}?`
-    )
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin,
-    })
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível enviar o link de recuperação de senha.')
-      return
-    }
-
-    alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
-  }
-
-  function buscarIgrejasAdminCache() {
-    if (typeof window === 'undefined') {
-      return []
-    }
-
-    try {
-      const igrejasSalvas = JSON.parse(
-        window.localStorage.getItem('ebdfiel_igrejas_admin_cache') || '[]'
-      )
-
-      return Array.isArray(igrejasSalvas) ? igrejasSalvas : []
-    } catch {
-      return []
-    }
-  }
-
-  function salvarIgrejasAdminCache(igrejas) {
-    if (typeof window === 'undefined' || !Array.isArray(igrejas) || igrejas.length === 0) {
-      return
-    }
-
-    try {
-      window.localStorage.setItem('ebdfiel_igrejas_admin_cache', JSON.stringify(igrejas))
-    } catch (error) {
-      console.error('Erro ao salvar cache de igrejas admin:', error)
-    }
-  }
-
-  async function buscarIgrejasAdminBanco() {
-    const cacheIgrejas = buscarIgrejasAdminCache()
-
-    const { data: igrejasRpc, error: erroRpc } = await supabase.rpc('admin_listar_igrejas')
-
-    if (!erroRpc && Array.isArray(igrejasRpc) && igrejasRpc.length > 0) {
-      salvarIgrejasAdminCache(igrejasRpc)
-      return igrejasRpc
-    }
-
-    if (erroRpc) {
-      console.error('Erro ao carregar igrejas via RPC:', erroRpc)
-    }
-
-    const { data: igrejasTabela, error: erroTabela } = await supabase
-      .from('igrejas')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (!erroTabela && Array.isArray(igrejasTabela) && igrejasTabela.length > 0) {
-      salvarIgrejasAdminCache(igrejasTabela)
-      return igrejasTabela
-    }
-
-    if (erroTabela) {
-      console.error('Erro ao carregar igrejas pela tabela:', erroTabela)
-    }
-
-    if (cacheIgrejas.length > 0) {
-      return cacheIgrejas
-    }
-
-    return []
-  }
-
-  async function carregarIgrejasAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    try {
-      const igrejas = await buscarIgrejasAdminBanco()
-
-      if (igrejas.length > 0 || igrejasAdmin.length === 0) {
-        setIgrejasAdmin(igrejas || [])
-      }
-
-      if (igrejas.length > 0) {
-        salvarIgrejasAdminCache(igrejas)
-      }
-    } catch (error) {
-      const cacheIgrejas = buscarIgrejasAdminCache()
-
-      if (cacheIgrejas.length > 0) {
-        setIgrejasAdmin(cacheIgrejas)
-        return
-      }
-
-      mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
-      return
-    }
-    await carregarAcessosAdmin()
-    await carregarFeedbacksAdmin()
-    await carregarCadastrosIncompletosAdmin()
-  }
-
-  async function salvarIgrejaAdmin(event) {
-    event.preventDefault()
-
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem cadastrar igrejas.')
-      return
-    }
-
-    if (!novaIgrejaAdmin.nome_igreja.trim()) {
-      alert('Informe o nome da igreja.')
-      return
-    }
-
-    const dadosIgreja = {
-      nome_igreja: novaIgrejaAdmin.nome_igreja.trim(),
-      congregacao: novaIgrejaAdmin.congregacao.trim(),
-      pastor_dirigente: novaIgrejaAdmin.pastor_dirigente.trim(),
-      cidade: novaIgrejaAdmin.cidade.trim(),
-      estado: novaIgrejaAdmin.estado.trim(),
-      bairro: novaIgrejaAdmin.bairro.trim(),
-      endereco: novaIgrejaAdmin.endereco.trim(),
-      numero_endereco: novaIgrejaAdmin.numero_endereco.trim(),
-      complemento_endereco: novaIgrejaAdmin.complemento_endereco.trim(),
-      cep: novaIgrejaAdmin.cep.trim(),
-      tipo_igreja: novaIgrejaAdmin.tipo_igreja,
-      sede_filiada_nome:
-        novaIgrejaAdmin.tipo_igreja === 'congregacao'
-          ? novaIgrejaAdmin.sede_filiada_nome.trim()
-          : '',
-      sede_filiada_endereco:
-        novaIgrejaAdmin.tipo_igreja === 'congregacao'
-          ? novaIgrejaAdmin.sede_filiada_endereco.trim()
-          : '',
-      sede_filiada_numero:
-        novaIgrejaAdmin.tipo_igreja === 'congregacao'
-          ? novaIgrejaAdmin.sede_filiada_numero.trim()
-          : '',
-      sede_filiada_complemento:
-        novaIgrejaAdmin.tipo_igreja === 'congregacao'
-          ? novaIgrejaAdmin.sede_filiada_complemento.trim()
-          : '',
-      sede_filiada_cep:
-        novaIgrejaAdmin.tipo_igreja === 'congregacao'
-          ? novaIgrejaAdmin.sede_filiada_cep.trim()
-          : '',
-      telefone: novaIgrejaAdmin.telefone.trim(),
-      email: novaIgrejaAdmin.email.trim(),
-      status_piloto: novaIgrejaAdmin.status_piloto,
-      responsavel_nome: novaIgrejaAdmin.responsavel_nome.trim(),
-      responsavel_email: novaIgrejaAdmin.responsavel_email.trim(),
-      responsavel_whatsapp: novaIgrejaAdmin.responsavel_whatsapp.trim(),
-      observacoes_piloto: novaIgrejaAdmin.observacoes_piloto.trim(),
-      data_inicio_piloto: novaIgrejaAdmin.data_inicio_piloto || null,
-      data_fim_piloto: novaIgrejaAdmin.data_fim_piloto || null,
-      limite_usuarios: Number(novaIgrejaAdmin.limite_usuarios || 10),
-    }
-
-    let resposta
-
-    if (igrejaAdminEditandoId) {
-      resposta = await supabase
-        .from('igrejas')
-        .update(dadosIgreja)
-        .eq('id', igrejaAdminEditandoId)
-    } else {
-      resposta = await supabase.from('igrejas').insert(dadosIgreja)
-    }
-
-    if (resposta.error) {
-      mostrarErroSistema(resposta.error, 'Erro ao salvar igreja.')
-      return
-    }
-
-    await carregarIgrejasAdmin()
-    limparFormularioIgrejaAdmin()
-    alert('Igreja salva com sucesso!')
-  }
-
-  async function excluirIgrejaAdmin(igreja) {
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem excluir igrejas.')
-      return
-    }
-
-    const confirmar = window.confirm(
-      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta ação pode apagar os dados vinculados.`
-    )
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase.from('igrejas').delete().eq('id', igreja.id)
-
-    if (error) {
-      mostrarErroSistema(error, 'Erro ao excluir igreja.')
-      return
-    }
-
-    await carregarIgrejasAdmin()
-  }
-
-  async function alterarStatusIgrejaAdmin(igreja, novoStatus) {
-    if (!usuarioEhAdminSistema()) {
-      alert('Apenas administradores do sistema podem alterar o status da igreja.')
-      return
-    }
-
-    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'esta igreja'
-    const textoAcao =
-      novoStatus === 'teste'
-        ? 'liberar esta igreja para uso da plataforma'
-        : novoStatus === 'cancelada'
-          ? 'não aprovar esta igreja'
-          : `alterar o status para ${novoStatus}`
-
-    const confirmar = window.confirm(`Deseja ${textoAcao}: ${nomeIgreja}?`)
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase
-      .from('igrejas')
-      .update({ status_piloto: novoStatus })
-      .eq('id', igreja.id)
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível alterar o status da igreja.')
-      return
-    }
-
-    await carregarIgrejasAdmin()
-
-    if (novoStatus === 'teste') {
-      const avisarAgora = window.confirm(
-        'Igreja liberada para uso da plataforma. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
-      )
-
-      if (avisarAgora) {
-        abrirWhatsAppAprovacao({ ...igreja, status_piloto: 'teste' })
-      }
-    }
-
-    if (novoStatus === 'cancelada') {
-      alert('Igreja marcada como não aprovada.')
-    }
-  }
-
-  async function aprovarIgrejaPiloto(igreja) {
-    await alterarStatusIgrejaAdmin(igreja, 'teste')
-  }
-
-  async function naoAprovarIgrejaPiloto(igreja) {
-    await alterarStatusIgrejaAdmin(igreja, 'cancelada')
-  }
-
-  function gerarMensagemAprovacaoIgreja(igreja) {
-    const nomeIgreja = igreja.nome_igreja || igreja.nome || 'sua igreja'
-
-    return `Paz do Senhor!
-
-O cadastro da ${nomeIgreja} no EBD Fiel foi liberado para uso.
-
-Acesse o sistema pelo link:
-
-https://app.ebdfiel.com.br
-
-Entre com o e-mail e a senha cadastrados no momento da inscrição.
-
-Manual rápido para começar:
-
-1. Confira os dados da igreja no painel.
-2. Vá em Classes e cadastre as turmas da EBD.
-3. Vá em Alunos ou entre em uma classe para cadastrar os alunos.
-4. Vá em Professores para cadastrar os professores da EBD.
-5. Vincule os professores às classes correspondentes.
-6. Vá em Chamada para registrar a presença dos alunos.
-7. Use Chamada dos professores para registrar a presença dos professores.
-8. Em Relatórios, gere o relatório da EBD em PDF.
-9. Durante o uso da plataforma, use a área de mensagens para enviar sugestões, dúvidas ou dificuldades.
-
-Qualquer dificuldade, pode me chamar por aqui.`
-  }
-
-  function limparNumeroWhatsApp(numero) {
-    return String(numero || '').replace(/\D/g, '')
-  }
-
-  function abrirWhatsAppAprovacao(igreja) {
-    const numeroLimpo = limparNumeroWhatsApp(igreja.responsavel_whatsapp)
-    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
-    const texto = encodeURIComponent(mensagem)
-
-    if (!numeroLimpo) {
-      alert('Esta igreja não possui WhatsApp cadastrado. Use o botão “Copiar mensagem”.')
-      return
-    }
-
-    const numeroComPais = numeroLimpo.startsWith('55') ? numeroLimpo : `55${numeroLimpo}`
-    window.open(`https://wa.me/${numeroComPais}?text=${texto}`, '_blank', 'noopener,noreferrer')
-  }
-
-  async function copiarMensagemAprovacao(igreja) {
-    const mensagem = gerarMensagemAprovacaoIgreja(igreja)
-
-    try {
-      await navigator.clipboard.writeText(mensagem)
-      alert('Mensagem de aprovação copiada.')
-    } catch {
-      window.prompt('Copie a mensagem abaixo:', mensagem)
-    }
-  }
-
-  function buscarIgrejaAdminPorId(igrejaId) {
-    return igrejasAdmin.find((item) => Number(item.id) === Number(igrejaId)) || null
-  }
-
-  function buscarContatoIgrejaAdmin(igrejaId) {
-    const igreja = buscarIgrejaAdminPorId(igrejaId)
-
-    if (!igreja) {
-      return {
-        responsavel: '',
-        email: '',
-        whatsapp: '',
-        telefone: '',
-      }
-    }
-
-    return {
-      responsavel: igreja.responsavel_nome || '',
-      email: igreja.responsavel_email || igreja.email || '',
-      whatsapp: igreja.responsavel_whatsapp || '',
-      telefone: igreja.telefone || '',
-    }
-  }
-
-  function copiarContatoAcessoAdmin(acesso) {
-    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
-    const texto = [
-      `Nome: ${acesso.nome || contato.responsavel || 'Não informado'}`,
-      `E-mail de acesso: ${acesso.email || 'Não informado'}`,
-      `Igreja: ${buscarNomeIgrejaAdmin(acesso.igreja_id)}`,
-      `Responsável: ${contato.responsavel || 'Não informado'}`,
-      `WhatsApp: ${contato.whatsapp || 'Não informado'}`,
-      `Telefone: ${contato.telefone || 'Não informado'}`,
-      `E-mail da igreja/responsável: ${contato.email || 'Não informado'}`,
-    ].join('\n')
-
-    navigator.clipboard
-      ?.writeText(texto)
-      .then(() => alert('Contato copiado.'))
-      .catch(() => window.prompt('Copie os dados abaixo:', texto))
-  }
-
-  function abrirWhatsAppAcessoAdmin(acesso) {
-    const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
-    const numero = limparNumeroWhatsApp(contato.whatsapp || contato.telefone)
-
-    if (!numero) {
-      alert('Não há WhatsApp/telefone cadastrado para este acesso.')
-      return
-    }
-
-    const numeroComPais = numero.startsWith('55') ? numero : `55${numero}`
-    const mensagem = encodeURIComponent(
-      `Paz do Senhor! Aqui é o suporte do EBD Fiel. Estou entrando em contato sobre o acesso da igreja ${buscarNomeIgrejaAdmin(acesso.igreja_id)}.`
-    )
-
-    window.open(`https://wa.me/${numeroComPais}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
-  }
-
-
-  function filtrarIgrejasAdmin() {
-    const termo = buscaIgrejaAdmin.toLowerCase()
-
-    return igrejasAdmin.filter((igreja) => {
-      return (
-        String(igreja.nome_igreja || '').toLowerCase().includes(termo) ||
-        String(igreja.congregacao || '').toLowerCase().includes(termo) ||
-        String(igreja.responsavel_nome || '').toLowerCase().includes(termo) ||
-        String(igreja.responsavel_email || '').toLowerCase().includes(termo)
-      )
-    })
-  }
-
-  function traduzirErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
-    const mensagemOriginal =
-      typeof erro === 'string'
-        ? erro
-        : erro?.message || erro?.error_description || mensagemPadrao
-
-    const mensagem = String(mensagemOriginal || '').toLowerCase()
-
-    if (mensagem.includes('could not find') && mensagem.includes('column')) {
-      const colunaEncontrada = String(mensagemOriginal).match(/'([^']+)' column/)
-      const tabelaEncontrada = String(mensagemOriginal).match(/of '([^']+)'/)
-
-      const coluna = colunaEncontrada?.[1] || 'necessária'
-      const tabela = tabelaEncontrada?.[1] || 'do banco de dados'
-
-      return `O campo "${coluna}" ainda não existe na tabela "${tabela}" do Supabase. Rode o SQL de atualização do banco, aguarde alguns segundos e tente novamente.`
-    }
-
-    if (mensagem.includes('schema cache')) {
-      return 'O Supabase ainda está atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
-    }
-
-    if (mensagem.includes('duplicate key') || mensagem.includes('already exists')) {
-      return 'Esse cadastro já existe. Verifique os dados informados e tente novamente.'
-    }
-
-    if (mensagem.includes('violates foreign key constraint')) {
-      return 'Não foi possível salvar porque há uma ligação obrigatória faltando no banco de dados. Verifique se a igreja, classe ou usuário vinculado existe.'
-    }
-
-    if (mensagem.includes('violates row-level security') || mensagem.includes('row-level security')) {
-      return 'Você não tem permissão para realizar esta ação. Verifique se está logado com o perfil correto.'
-    }
-
-    if (mensagem.includes('invalid input syntax')) {
-      return 'Algum campo foi preenchido com um formato inválido. Confira números, datas e campos obrigatórios.'
-    }
-
-    if (mensagem.includes('failed to fetch') || mensagem.includes('networkerror')) {
-      return 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
-    }
-
-    if (mensagem.includes('jwt') || mensagem.includes('token')) {
-      return 'Sua sessão expirou. Saia do sistema e entre novamente.'
-    }
-
-    if (mensagem.includes('auth')) {
-      return 'Não foi possível confirmar seu login. Saia do sistema e entre novamente.'
-    }
-
-    return mensagemPadrao
-  }
-
-  function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
-    console.error(erro)
-    alert(traduzirErroSistema(erro, mensagemPadrao))
-  }
-
-  function igrejaEstaEmTestePiloto() {
-    return igrejaAtualPiloto?.status_piloto === 'teste'
-  }
-
-  function formatarDataHoraFeedback(valor) {
-    if (!valor) {
-      return ''
-    }
-
-    try {
-      return new Intl.DateTimeFormat('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date(valor))
-    } catch {
-      return valor
-    }
-  }
-
-  async function carregarFeedbacksDaIgreja(igrejaAtualId = buscarIgrejaIdAtual()) {
-    if (!igrejaAtualId) {
-      return
-    }
-
-    const { data, error } = await supabase
-      .from('feedbacks_piloto')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .order('created_at', { ascending: false })
-      .limit(10)
-
-    if (error) {
-      console.error(error)
-      return
-    }
-
-    setFeedbacksIgreja(data || [])
-  }
-
-  async function carregarFeedbacksAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    const { data, error } = await supabase
-      .from('feedbacks_piloto')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(80)
-
-    if (error) {
-      console.error(error)
-      return
-    }
-
-    setFeedbacksAdmin(data || [])
-  }
-
-  async function enviarFeedbackPiloto(event) {
-    event.preventDefault()
-
-    if (!igrejaEstaEmTestePiloto()) {
-      alert('A área de sugestões está disponível para igrejas liberadas na plataforma.')
-      return
-    }
-
-    if (!feedbackPiloto.mensagem.trim()) {
-      alert('Escreva sua mensagem antes de enviar.')
-      return
-    }
-
-    setCarregandoFeedback(true)
-
-    const { error } = await supabase.from('feedbacks_piloto').insert({
-      igreja_id: buscarIgrejaIdAtual(),
-      user_id: sessao?.user?.id || null,
-      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'Usuário',
-      email_usuario: perfilUsuario?.email || sessao?.user?.email || '',
-      perfil_usuario: perfilUsuario?.perfil || '',
-      tipo: feedbackPiloto.tipo,
-      mensagem: feedbackPiloto.mensagem.trim(),
-      lido: false,
-    })
-
-    setCarregandoFeedback(false)
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível enviar sua mensagem.')
-      return
-    }
-
-    setFeedbackPiloto({ tipo: 'sugestao', mensagem: '' })
-    setFormularioSugestaoAberto(false)
-    await carregarFeedbacksDaIgreja()
-    alert('Mensagem enviada com sucesso. Obrigado por ajudar a melhorar a plataforma!')
-  }
-
-  async function marcarFeedbackComoLido(feedbackId) {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    const { error } = await supabase
-      .from('feedbacks_piloto')
-      .update({ lido: true, lido_em: new Date().toISOString() })
-      .eq('id', feedbackId)
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível marcar a mensagem como lida.')
-      return
-    }
-
-    await carregarFeedbacksAdmin()
-  }
-
-  function abrirRespostaFeedback(feedback) {
-    setFeedbackRespondendoId(feedback.id)
-    setRespostaFeedbackAdmin(feedback.resposta_admin || '')
-  }
-
-  function cancelarRespostaFeedback() {
-    setFeedbackRespondendoId(null)
-    setRespostaFeedbackAdmin('')
-  }
-
-  function buscarIgrejaDoFeedback(feedback) {
-    return igrejasAdmin.find(
-      (item) => Number(item.id) === Number(feedback.igreja_id)
-    )
-  }
-
-  function buscarWhatsAppFeedback(feedback) {
-    const igreja = buscarIgrejaDoFeedback(feedback)
-
-    return (
-      igreja?.responsavel_whatsapp ||
-      igreja?.telefone ||
-      feedback.whatsapp_usuario ||
-      ''
-    )
-  }
-
-  function montarMensagemRespostaFeedback(feedback) {
-    const nome = feedback.nome_usuario || 'irmão(ã)'
-    const resposta = feedback.resposta_admin || respostaFeedbackAdmin
-
-    return `Paz do Senhor, ${nome}!
-
-Obrigado pela mensagem enviada sobre o EBD Fiel.
-
-Resposta da equipe:
-${resposta}
-
-Seguimos à disposição para ajudar no uso da plataforma.
-
-EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
-  }
-
-  async function salvarRespostaFeedback(feedback) {
-    if (!usuarioEhAdminSistema()) {
-      return
-    }
-
-    if (!respostaFeedbackAdmin.trim()) {
-      alert('Escreva a resposta antes de salvar.')
-      return
-    }
-
-    setEnviandoRespostaFeedback(true)
-
-    const { error } = await supabase
-      .from('feedbacks_piloto')
-      .update({
-        resposta_admin: respostaFeedbackAdmin.trim(),
-        respondido_em: new Date().toISOString(),
-        respondido_por: sessao?.user?.email || 'Administrador',
-        lido: true,
-        lido_em: feedback.lido_em || new Date().toISOString(),
-      })
-      .eq('id', feedback.id)
-
-    setEnviandoRespostaFeedback(false)
-
-    if (error) {
-      mostrarErroSistema(error, 'Não foi possível salvar a resposta da mensagem.')
-      return
-    }
-
-    setFeedbackRespondendoId(null)
-    setRespostaFeedbackAdmin('')
-    await carregarFeedbacksAdmin()
-    alert('Resposta salva. A igreja verá a resposta na área de mensagens.')
-  }
-
-  async function registrarNotificacaoFeedback(feedbackId) {
-    await supabase
-      .from('feedbacks_piloto')
-      .update({ notificado_em: new Date().toISOString() })
-      .eq('id', feedbackId)
-  }
-
-  async function copiarRespostaFeedback(feedback) {
-    const mensagem = montarMensagemRespostaFeedback(feedback)
-
-    try {
-      await navigator.clipboard.writeText(mensagem)
-      await registrarNotificacaoFeedback(feedback.id)
-      await carregarFeedbacksAdmin()
-      alert('Mensagem copiada. Agora cole no WhatsApp ou e-mail da pessoa.')
-    } catch {
-      alert(mensagem)
-    }
-  }
-
-  async function enviarRespostaEmailFeedback(feedback) {
-    const emailDestino = feedback.email_usuario
-
-    if (!emailDestino) {
-      alert('Esta mensagem não possui e-mail vinculado.')
-      return
-    }
-
-    const assunto = encodeURIComponent('Resposta à sua mensagem no EBD Fiel')
-    const corpo = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
-
-    await registrarNotificacaoFeedback(feedback.id)
-    await carregarFeedbacksAdmin()
-
-    window.location.href = `mailto:${emailDestino}?subject=${assunto}&body=${corpo}`
-  }
-
-  async function enviarRespostaWhatsAppFeedback(feedback) {
-    const telefone = buscarWhatsAppFeedback(feedback)
-    const apenasNumeros = String(telefone || '').replace(/\D/g, '')
-
-    if (!apenasNumeros) {
-      alert('Não encontrei WhatsApp/telefone vinculado a esta mensagem. Use o botão copiar mensagem ou enviar e-mail.')
-      return
-    }
-
-    const telefoneComPais = apenasNumeros.length <= 11 ? `55${apenasNumeros}` : apenasNumeros
-    const mensagem = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
-
-    await registrarNotificacaoFeedback(feedback.id)
-    await carregarFeedbacksAdmin()
-
-    window.open(`https://wa.me/${telefoneComPais}?text=${mensagem}`, '_blank')
-  }
-
-  function buscarNomeIgrejaFeedback(feedback) {
-    const igreja = igrejasAdmin.find(
-      (item) => Number(item.id) === Number(feedback.igreja_id)
-    )
-
-    return (
-      igreja?.nome_igreja ||
-      igreja?.nome ||
-      feedback.nome_igreja ||
-      `Igreja ID ${feedback.igreja_id}`
-    )
-  }
-
-  function contarFeedbacksNaoLidos() {
-    return feedbacksAdmin.filter((feedback) => !feedback.lido).length
-  }
-
-  function usuarioEhSecretaria() {
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
-
-    if (usuarioEhAdminSistema() && !perfilAtual?.igreja_id) {
-      return false
-    }
-
-    return perfilAtual?.perfil !== 'professor'
-  }
-
-  function buscarClassesVinculadasAoProfessor(perfilId = perfilUsuario?.id) {
-    const ids = vinculosProfessores
-      .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilId) && vinculo.ativo !== false)
-      .map((vinculo) => Number(vinculo.classe_id))
-      .filter(Boolean)
-
-    if (ids.length === 0 && perfilUsuario?.classe_id && Number(perfilId) === Number(perfilUsuario?.id)) {
-      return [Number(perfilUsuario.classe_id)]
-    }
-
-    return [...new Set(ids)]
-  }
-
-  function buscarNomesClassesDoProfessor(perfilId, classeIdFallback = null) {
-    let ids = buscarClassesVinculadasAoProfessor(perfilId)
-
-    if (ids.length === 0 && classeIdFallback) {
-      ids = [Number(classeIdFallback)]
-    }
-
-    return ids
-      .map((classeId) => buscarNomeClasse(classeId))
-      .filter(Boolean)
-      .join(', ')
-  }
-
-  function professorPodeAcessarClasse(classeId) {
-    if (!usuarioEhProfessor()) {
-      return true
-    }
-
-    return buscarClassesVinculadasAoProfessor().includes(Number(classeId))
-  }
-
-  function buscarClasseDoProfessorId() {
-    return buscarClassesVinculadasAoProfessor()[0] || Number(perfilUsuario?.classe_id || 0)
-  }
-
-  function podeGerenciarCadastros() {
-    return usuarioEhSecretaria()
-  }
-
-  function menuPermitidoParaUsuario(item) {
-    if (item.apenasAdminSistema && !usuarioEhAdminSistema()) {
-      return false
-    }
-
-    if (item.apenasSecretaria && !usuarioEhSecretaria()) {
-      return false
-    }
-
-    return true
-  }
-
-  async function buscarTodosOsDados(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
-    if (!sessaoAtual?.user?.id) {
-      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
-    }
-
-    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-    const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
-    const suporteAdminDeveSerPreservado = Boolean(
-      igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
-    )
-
-    // v76: não limpar classes/alunos/chamadas antes do retorno do Supabase.
-    // Em celulares e redes mais lentas, a limpeza antecipada fazia a tela aparecer
-    // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
-    // permanecem visíveis até os dados atualizados chegarem com sucesso.
-
-    const { data: perfilBanco, error: erroPerfil } = await supabase
-      .from('perfis_usuarios')
-      .select('*')
-      .eq('user_id', sessaoAtual.user.id)
-      .maybeSingle()
-
-    if (erroPerfil) {
-      throw erroPerfil
-    }
-
-    let perfilAtual = perfilBanco
-    const ehAdminSessaoAtual =
-      emailsAdminSistema.includes(emailSessaoAtual) ||
-      perfilBanco?.perfil === 'admin_sistema'
-
-    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-      const igrejaSuporteNormalizada = manterContextoSuporteAdmin(
-        igrejaSuporteSelecionada,
-        sessaoAtual,
-        {
-          forcarPainel: paginaAtualRef.current === 'administracao',
-        }
-      )
-
-      perfilAtual = montarPerfilSuporteAdmin(igrejaSuporteNormalizada, sessaoAtual)
-    }
-
-    if (ehAdminSessaoAtual && !igrejaSuporteSelecionada?.id) {
-      const perfilAdminSistema = {
-        ...perfilBanco,
-        id: perfilBanco?.id || null,
-        user_id: sessaoAtual.user.id,
-        nome: perfilBanco?.nome || 'Administrador do sistema',
-        email: emailSessaoAtual,
-        perfil: 'admin_sistema',
-        igreja_id: Number(perfilBanco?.igreja_id || 19),
-        classe_id: null,
-      }
-
-      definirPerfilUsuario(perfilAdminSistema)
-      setIgrejaId(Number(perfilAdminSistema.igreja_id || 19))
-      definirIgrejaSuporteAdmin(null)
-      setIgrejaAtualPiloto(null)
-      setClasses([])
-      setAlunos([])
-      setChamadasSalvas([])
-      setChamadasProfessores([])
-      setVinculosProfessores([])
-      setPerfisIgreja([])
-      definirPaginaAtual('administracao')
-
-      const igrejasAdminBanco = await buscarIgrejasAdminBanco()
-      setIgrejasAdmin(igrejasAdminBanco || [])
-
-      const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
-        .from('perfis_usuarios')
-        .select('*')
-        .order('nome', { ascending: true })
-
-      if (erroAcessosAdmin) {
-        console.error(erroAcessosAdmin)
-      } else {
-        setAcessosAdmin(acessosAdminBanco || [])
-      }
-
-      const { data: feedbacksAdminBanco, error: erroFeedbacksAdmin } = await supabase
-        .from('feedbacks_piloto')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(80)
-
-      if (erroFeedbacksAdmin) {
-        console.error(erroFeedbacksAdmin)
-      } else {
-        setFeedbacksAdmin(feedbacksAdminBanco || [])
-      }
-
-      await carregarCadastrosIncompletosAdmin()
-
-      setCarregando(false)
-      return
-    }
-
-    if (!perfilAtual?.igreja_id) {
-      if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-        perfilAtual = {
-          id: null,
-          user_id: sessaoAtual.user.id,
-          nome: 'Administrador do sistema',
-          email: emailSessaoAtual,
-          perfil: 'secretaria',
-          igreja_id: Number(igrejaSuporteSelecionada.id),
-          classe_id: null,
-          modo_suporte_admin: true,
-        }
-
-        manterContextoSuporteAdmin(igrejaSuporteSelecionada, sessaoAtual, {
-          forcarPainel: paginaAtualRef.current === 'administracao',
-        })
-      } else if (ehAdminSessaoAtual) {
-        const perfilAdminSistema = {
-          id: null,
-          user_id: sessaoAtual.user.id,
-          nome: 'Administrador do sistema',
-          email: emailSessaoAtual,
-          perfil: 'admin_sistema',
-          igreja_id: null,
-          classe_id: null,
-        }
-
-        definirPerfilUsuario(perfilAdminSistema)
-        setIgrejaId(null)
-        setClasses([])
-        setAlunos([])
-        setChamadasSalvas([])
-        setChamadasProfessores([])
-        setVinculosProfessores([])
-        definirPaginaAtual('administracao')
-
-        const igrejasAdminBanco = await buscarIgrejasAdminBanco()
-        setIgrejasAdmin(igrejasAdminBanco || [])
-
-        const { data: acessosAdminBanco, error: erroAcessosAdmin } = await supabase
-          .from('perfis_usuarios')
-          .select('*')
-          .order('nome', { ascending: true })
-
-        if (erroAcessosAdmin) {
-          console.error(erroAcessosAdmin)
-        } else {
-          setAcessosAdmin(acessosAdminBanco || [])
-        }
-
-        const { data: feedbacksAdminBanco, error: erroFeedbacksAdmin } = await supabase
-          .from('feedbacks_piloto')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(80)
-
-        if (erroFeedbacksAdmin) {
-          console.error(erroFeedbacksAdmin)
-        } else {
-          setFeedbacksAdmin(feedbacksAdminBanco || [])
-        }
-
-        await carregarCadastrosIncompletosAdmin()
-
-        setCarregando(false)
-        return
-      } else {
-        definirPerfilUsuario(null)
-        setIgrejaId(null)
-        setTelaPublica('login')
-        throw new Error(
-          'Cadastro incompleto ou ainda não liberado. Entre em contato com a administração.'
-        )
-      }
-    }
-
-    const igrejaAtualId = Number(perfilAtual.igreja_id)
-
-    definirPerfilUsuario(perfilAtual)
-    setIgrejaId(igrejaAtualId)
-
-    const { data: vinculosBanco, error: erroVinculos } = await supabase
-      .from('classes_professores')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .eq('ativo', true)
-
-    if (erroVinculos) {
-      throw erroVinculos
-    }
-
-    const idsClassesPermitidas =
-      perfilAtual?.perfil === 'professor'
-        ? [
-            ...new Set(
-              (vinculosBanco || [])
-                .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilAtual.id))
-                .map((vinculo) => Number(vinculo.classe_id))
-                .filter(Boolean)
-            ),
-          ]
-        : []
-
-    if (
-      perfilAtual?.perfil === 'professor' &&
-      idsClassesPermitidas.length === 0 &&
-      perfilAtual?.classe_id
-    ) {
-      idsClassesPermitidas.push(Number(perfilAtual.classe_id))
-    }
-
-    const classePermitidaId =
-      perfilAtual?.perfil === 'professor'
-        ? idsClassesPermitidas[0] || null
-        : null
-
-    let consultaClasses = supabase
-      .from('classes')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .order('id', { ascending: true })
-
-    if (perfilAtual.perfil === 'professor') {
-      if (idsClassesPermitidas.length > 0) {
-        consultaClasses = consultaClasses.in('id', idsClassesPermitidas)
-      } else {
-        consultaClasses = consultaClasses.eq('id', -1)
-      }
-    }
-
-    let { data: classesBanco, error: erroClasses } = await consultaClasses
-
-    if (erroClasses) {
-      throw erroClasses
-    }
-
-    if ((!classesBanco || classesBanco.length === 0) && perfilAtual.perfil === 'secretaria') {
-      await inserirDadosIniciais(igrejaAtualId, sessaoAtual)
-
-      let novaConsultaClasses = supabase
-        .from('classes')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        if (idsClassesPermitidas.length > 0) {
-          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
-        } else {
-          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
-        }
-      }
-
-      const resultadoClasses = await novaConsultaClasses
-      classesBanco = resultadoClasses.data
-      erroClasses = resultadoClasses.error
-
-      if (erroClasses) {
-        throw erroClasses
-      }
-    }
-
-    let consultaAlunos = supabase
-      .from('alunos')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .order('id', { ascending: true })
-
-    if (perfilAtual.perfil === 'professor') {
-      if (idsClassesPermitidas.length > 0) {
-        consultaAlunos = consultaAlunos.in('classe_id', idsClassesPermitidas)
-      } else {
-        consultaAlunos = consultaAlunos.eq('classe_id', -1)
-      }
-    }
-
-    let { data: alunosBanco, error: erroAlunos } = await consultaAlunos
-
-    if (erroAlunos) {
-      throw erroAlunos
-    }
-
-    if (perfilAtual.perfil === 'secretaria') {
-      const criouProfessoresDasClasses = await migrarProfessoresDasClasses(
-        igrejaAtualId,
-        classesBanco || [],
-        alunosBanco || [],
-        sessaoAtual
-      )
-
-      if (criouProfessoresDasClasses) {
-        const { data: alunosAtualizados, error: erroAlunosAtualizados } =
-          await consultaAlunos
-
-        if (erroAlunosAtualizados) {
-          throw erroAlunosAtualizados
-        }
-
-        alunosBanco = alunosAtualizados || []
-      }
-    }
-
-    let consultaChamadas = supabase
-      .from('chamadas')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .order('id', { ascending: true })
-
-    if (perfilAtual.perfil === 'professor') {
-      if (idsClassesPermitidas.length > 0) {
-        consultaChamadas = consultaChamadas.in('classe_id', idsClassesPermitidas)
-      } else {
-        consultaChamadas = consultaChamadas.eq('classe_id', -1)
-      }
-    }
-
-    const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
-
-    if (erroChamadas) {
-      throw erroChamadas
-    }
-
-    let chamadasProfessoresBanco = []
-
-    if (perfilAtual.perfil === 'secretaria') {
-      const { data: chamadasProfessoresEncontradas, error: erroChamadasProfessores } =
-        await supabase
-          .from('chamadas_professores')
-          .select('*')
-          .eq('igreja_id', igrejaAtualId)
-          .order('id', { ascending: true })
-
-      if (erroChamadasProfessores) {
-        throw erroChamadasProfessores
-      }
-
-      chamadasProfessoresBanco = chamadasProfessoresEncontradas || []
-    }
-
-    let perfisBanco = []
-
-    if (perfilAtual.perfil === 'secretaria') {
-      const { data: perfisEncontrados, error: erroPerfis } = await supabase
-        .from('perfis_usuarios')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('nome', { ascending: true })
-
-      if (erroPerfis) {
-        throw erroPerfis
-      }
-
-      perfisBanco = perfisEncontrados || []
-    } else {
-      perfisBanco = [perfilAtual]
-    }
-
-    const { data: configuracoesBanco, error: erroConfiguracoes } = await supabase
-      .from('configuracoes_igreja')
-      .select('*')
-      .eq('igreja_id', igrejaAtualId)
-      .order('created_at', { ascending: true })
-
-    if (erroConfiguracoes) {
-      throw erroConfiguracoes
-    }
-
-    const { data: igrejaPilotoBanco, error: erroIgrejaPiloto } = await supabase
-      .from('igrejas')
-      .select('*')
-      .eq('id', igrejaAtualId)
-      .maybeSingle()
-
-    if (erroIgrejaPiloto) {
-      console.error(erroIgrejaPiloto)
-    }
-
-    const statusPilotoAtual = String(igrejaPilotoBanco?.status_piloto || '').toLowerCase()
-    const igrejaLiberadaParaAcesso = [
-      'teste',
-      'ativa',
-      'ativo',
-      'aprovada',
-      'aprovado',
-      'liberada',
-      'liberado',
-    ].includes(statusPilotoAtual)
-
-    if (
-      !ehAdminSessaoAtual &&
-      !perfilAtual?.modo_suporte_admin &&
-      !igrejaLiberadaParaAcesso
-    ) {
-      definirPerfilUsuario(null)
-      setIgrejaId(null)
-      setIgrejaAtualPiloto(null)
-      setClasses([])
-      setAlunos([])
-      setChamadasSalvas([])
-      setChamadasProfessores([])
-      setVinculosProfessores([])
-      setTelaPublica('login')
-      throw new Error(
-        statusPilotoAtual === 'pendente'
-          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
-          : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
-      )
-    }
-
-    setIgrejaAtualPiloto(igrejaPilotoBanco || null)
-
-    if (igrejaPilotoBanco?.status_piloto === 'teste') {
-      await carregarFeedbacksDaIgreja(igrejaAtualId)
-    } else {
-      setFeedbacksIgreja([])
-    }
-
-    setClasses(
-      (classesBanco || []).map((classe) => ({
-        id: Number(classe.id),
-        nome: classe.nome,
-        professor: classe.professor,
-      }))
-    )
-
-    setAlunos(
-      (alunosBanco || []).map((aluno) => ({
-        id: Number(aluno.id),
-        nome: aluno.nome,
-        classeId: Number(aluno.classe_id),
-        telefone: aluno.telefone || '',
-        dataNascimento: aluno.data_nascimento || '',
-        tipoPessoa: aluno.tipo_pessoa || 'aluno',
-      }))
-    )
-
-    setPerfisIgreja(perfisBanco)
-    setVinculosProfessores(vinculosBanco || [])
-
-    setChamadasProfessores(
-      (chamadasProfessoresBanco || []).map((chamada) => ({
-        id: Number(chamada.id),
-        data: chamada.data,
-        totalProfessores: Number(chamada.total_professores || 0),
-        totalPresentes: Number(chamada.total_presentes || 0),
-        totalFaltas: Number(chamada.total_faltas || 0),
-        totalJustificadas: Number(chamada.total_justificadas || 0),
-        observacoes: chamada.observacoes || '',
-        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-      }))
-    )
-
-    setChamadasSalvas(
-      (chamadasBanco || []).map((chamada) => ({
-        id: Number(chamada.id),
-        data: chamada.data,
-        classeId: Number(chamada.classe_id),
-        matricula: Number(chamada.matricula || 0),
-        totalPresentes: Number(chamada.total_presentes || 0),
-        totalFaltas: Number(chamada.total_faltas || 0),
-        visitantes: Number(chamada.visitantes || 0),
-        biblias: Number(chamada.biblias || 0),
-        revistas: Number(chamada.revistas || 0),
-        ofertas: Number(chamada.ofertas || 0),
-        totalGeralClasse: Number(chamada.total_geral_classe || 0),
-        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-      }))
-    )
-
-    if (classePermitidaId) {
-      setClasseChamadaId(String(classePermitidaId))
-    }
-
-    const configuracaoAtual = configuracoesBanco?.[0]
-
-    setConfiguracaoIgreja({
-      id: configuracaoAtual?.id || null,
-      nome_igreja:
-        configuracaoAtual?.nome_igreja ||
-        igrejaPilotoBanco?.nome_igreja ||
-        igrejaPilotoBanco?.nome ||
-        '',
-      congregacao: configuracaoAtual?.congregacao || igrejaPilotoBanco?.congregacao || '',
-      pastor_dirigente:
-        configuracaoAtual?.pastor_dirigente || igrejaPilotoBanco?.pastor_dirigente || '',
-      superintendente_ebd:
-        configuracaoAtual?.superintendente_ebd || igrejaPilotoBanco?.superintendente_ebd || '',
-      cidade: configuracaoAtual?.cidade || igrejaPilotoBanco?.cidade || '',
-      estado: configuracaoAtual?.estado || igrejaPilotoBanco?.estado || '',
-      bairro: configuracaoAtual?.bairro || igrejaPilotoBanco?.bairro || '',
-      endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
-      telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
-      email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
-    })
-  }
-
-  function converterNumero(valor) {
-    const numero = Number(valor)
-    return Number.isNaN(numero) ? 0 : numero
-  }
-
-  function buscarNomeClasse(classeId) {
-    const classeEncontrada = classes.find(
-      (classe) => classe.id === Number(classeId)
-    )
-
-    return classeEncontrada ? classeEncontrada.nome : 'Sem classe'
-  }
-
-  function buscarProfessoresDaClasse(classeId) {
-    return professoresSomente()
-      .filter((professor) => professor.classeId === Number(classeId))
-      .sort((a, b) => a.nome.localeCompare(b.nome))
-  }
-
-  function buscarTextoProfessoresDaClasse(classeId) {
-    const professoresDaClasse = buscarProfessoresDaClasse(classeId)
-
-    if (professoresDaClasse.length === 0) {
-      return 'Nenhum professor vinculado'
-    }
-
-    return professoresDaClasse.map((professor) => professor.nome).join(', ')
-  }
-
-  function buscarDataAtual() {
-    return new Date().toLocaleDateString('pt-BR')
-  }
-
-  function buscarDataUltimaChamada() {
-    if (chamadasSalvas.length === 0) {
-      return buscarDataAtual()
-    }
-
-    const ultimaChamada = chamadasSalvas[chamadasSalvas.length - 1]
-    return ultimaChamada.data || buscarDataAtual()
-  }
-
-  function formatarDataRelatorio(dataTexto) {
-    if (!dataTexto) {
-      return buscarDataAtual()
-    }
-
-    const partes = dataTexto.split('/')
-
-    if (partes.length !== 3) {
-      return dataTexto
-    }
-
-    const dia = Number(partes[0])
-    const mes = Number(partes[1]) - 1
-    const ano = Number(partes[2])
-
-    const data = new Date(ano, mes, dia)
-
-    if (Number.isNaN(data.getTime())) {
-      return dataTexto
-    }
-
-    const dataFormatada = data.toLocaleDateString('pt-BR', {
-      weekday: 'long',
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    })
-
-    return dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1)
-  }
-
-  function formatarDataCurtaRelatorio(dataTexto) {
-    if (!dataTexto) {
-      return buscarDataAtual()
-    }
-
-    const texto = String(dataTexto).trim()
-
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
-      return texto
-    }
-
-    const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/)
-
-    if (iso) {
-      return `${iso[3]}/${iso[2]}/${iso[1]}`
-    }
-
-    const partes = texto.split('/')
-
-    if (partes.length === 3) {
-      const dia = partes[0].padStart(2, '0')
-      const mes = partes[1].padStart(2, '0')
-      const ano = partes[2]
-      return `${dia}/${mes}/${ano}`
-    }
-
-    const data = new Date(texto)
-
-    if (!Number.isNaN(data.getTime())) {
-      return data.toLocaleDateString('pt-BR')
-    }
-
-    return texto
-  }
-
-  function buscarNomeIgrejaParaExibicao() {
-    return configuracaoIgreja.nome_igreja.trim() || 'EBD Fiel'
-  }
-
-  function montarEnderecoIgreja() {
-    return [
-      configuracaoIgreja.endereco,
-      configuracaoIgreja.bairro,
-      configuracaoIgreja.cidade,
-      configuracaoIgreja.estado,
-    ]
-      .filter((valor) => valor && valor.trim())
-      .join(' - ')
-  }
-
-  function alunosSomente() {
-    return alunos.filter((aluno) => (aluno.tipoPessoa || 'aluno') === 'aluno')
-  }
-
-  function professoresSomente() {
-    return alunos.filter((aluno) => aluno.tipoPessoa === 'professor')
-  }
-
-  function calcularMatriculaDaClasse(classeId) {
-    return alunos.filter(
-      (aluno) =>
-        aluno.classeId === Number(classeId) &&
-        (aluno.tipoPessoa || 'aluno') === 'aluno'
-    ).length
-  }
-
-  function buscarAlunosDaClasse(classeId) {
-    return alunos
-      .filter(
-        (aluno) =>
-          aluno.classeId === Number(classeId) &&
-          (aluno.tipoPessoa || 'aluno') === 'aluno'
-      )
-      .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
-  }
-
-  function alternarAlunosDaClasse(classeId) {
-    setClasseAlunosAbertaId((classeAtualId) =>
-      Number(classeAtualId) === Number(classeId) ? null : Number(classeId)
-    )
-  }
-
-  function formatarMoeda(valor) {
-    return converterNumero(valor).toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    })
-  }
-
-  function calcularTotalPresentes() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.totalPresentes),
-      0
-    )
-  }
-
-  function calcularTotalFaltas() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.totalFaltas),
-      0
-    )
-  }
-
-  function calcularTotalVisitantes() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.visitantes),
-      0
-    )
-  }
-
-  function calcularTotalBiblias() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.biblias),
-      0
-    )
-  }
-
-  function calcularTotalRevistas() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.revistas),
-      0
-    )
-  }
-
-  function calcularTotalOfertas() {
-    return chamadasSalvas.reduce(
-      (total, chamada) => total + converterNumero(chamada.ofertas),
-      0
-    )
-  }
-
-  function calcularFrequenciaGeral() {
-    const presentes = calcularTotalPresentes()
-    const faltas = calcularTotalFaltas()
-    const total = presentes + faltas
-
-    if (total === 0) {
-      return 0
-    }
-
-    return Math.round((presentes / total) * 100)
-  }
-
-
-  function calcularPercentualSeguro(parte, total) {
-    const parteNumero = converterNumero(parte)
-    const totalNumero = converterNumero(total)
-
-    if (totalNumero <= 0) {
-      return 0
-    }
-
-    return Math.round((parteNumero / totalNumero) * 100)
-  }
-
-  function buscarChamadasDaClasse(classeId) {
-    return chamadasSalvas.filter(
-      (chamada) => Number(chamada.classeId) === Number(classeId)
-    )
-  }
-
-  function montarDashboardPorClasse() {
-    return classes.map((classe) => {
-      const chamadasDaClasse = buscarChamadasDaClasse(classe.id)
-      const presentes = chamadasDaClasse.reduce(
-        (total, chamada) => total + converterNumero(chamada.totalPresentes),
-        0
-      )
-      const faltas = chamadasDaClasse.reduce(
-        (total, chamada) => total + converterNumero(chamada.totalFaltas),
-        0
-      )
-      const total = presentes + faltas
-
-      return {
-        classe,
-        matricula: calcularMatriculaDaClasse(classe.id),
-        chamadas: chamadasDaClasse.length,
-        presentes,
-        faltas,
-        frequencia: calcularPercentualSeguro(presentes, total),
-      }
-    })
-  }
-
-  function montarResumoFinanceiroEbd() {
-    const chamadasComOferta = chamadasSalvas.filter(
-      (chamada) => converterNumero(chamada.ofertas) > 0
-    )
-    const totalOfertas = calcularTotalOfertas()
-    const mediaPorChamada = chamadasComOferta.length > 0
-      ? totalOfertas / chamadasComOferta.length
-      : 0
-
-    const porClasse = classes.map((classe) => {
-      const chamadasDaClasse = buscarChamadasDaClasse(classe.id)
-      const total = chamadasDaClasse.reduce(
-        (soma, chamada) => soma + converterNumero(chamada.ofertas),
-        0
-      )
-
-      return {
-        classe,
-        chamadas: chamadasDaClasse.length,
-        total,
-      }
-    })
-
-    return {
-      totalOfertas,
-      mediaPorChamada,
-      chamadasComOferta: chamadasComOferta.length,
-      porClasse,
-    }
-  }
-
-  function buscarAlunoHistoricoSelecionado() {
-    return alunosSomente().find(
-      (aluno) => String(aluno.id) === String(alunoHistoricoSelecionadoId)
-    ) || null
-  }
-
-  function montarHistoricoDoAluno(alunoId) {
-    const aluno = alunosSomente().find((item) => String(item.id) === String(alunoId))
-
-    if (!aluno) {
-      return null
-    }
-
-    const registros = []
-
-    chamadasSalvas.forEach((chamada) => {
-      const registro = (chamada.registros || []).find(
-        (item) => String(item.alunoId ?? item.aluno_id) === String(aluno.id)
-      )
-
-      if (registro) {
-        registros.push({
-          data: chamada.data,
-          classe: buscarNomeClasse(chamada.classeId || aluno.classeId),
-          status: registro.status === 'presente' ? 'Presente' : 'Faltou',
-          visitantes: chamada.visitantes || 0,
-          biblias: chamada.biblias || 0,
-          revistas: chamada.revistas || 0,
-        })
-      }
-    })
-
-    const presentes = registros.filter((registro) => registro.status === 'Presente').length
-    const faltas = registros.filter((registro) => registro.status !== 'Presente').length
-
-    return {
-      aluno,
-      registros: registros.reverse(),
-      presentes,
-      faltas,
-      frequencia: calcularPercentualSeguro(presentes, registros.length),
-    }
-  }
-
-  function montarMensagemFaltosoWhatsApp(item) {
-    const nomeIgreja = buscarNomeIgrejaParaExibicao()
-    return [
-      `Olá, paz do Senhor! Aqui é da secretaria da EBD ${nomeIgreja}.`,
-      `Sentimos a falta de ${item.aluno.nome} na Escola Bíblica Dominical.`,
-      `Registramos ${item.motivo.toLowerCase()} e queremos saber se está tudo bem.`,
-      'Conte conosco. Será uma alegria receber vocês novamente na próxima EBD.',
-    ].join('\n')
-  }
-
-  function abrirWhatsAppFaltoso(item) {
-    const telefone = limparNumeroWhatsApp(item.aluno.telefone || '')
-
-    if (!telefone) {
-      alert('Este aluno não possui telefone/WhatsApp cadastrado.')
-      return
-    }
-
-    const mensagem = encodeURIComponent(montarMensagemFaltosoWhatsApp(item))
-    window.open(`https://wa.me/55${telefone}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
-  }
-
-  function copiarMensagemFaltoso(item) {
-    const mensagem = montarMensagemFaltosoWhatsApp(item)
-
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(mensagem)
-      alert('Mensagem copiada. Agora cole no WhatsApp do aluno/responsável.')
-      return
-    }
-
-    window.prompt('Copie a mensagem abaixo:', mensagem)
-  }
-
-  function montarBackupLocalSeguro() {
-    return {
-      versao: 'v41-backup-local-seguro',
-      geradoEm: new Date().toISOString(),
-      igrejaId: buscarIgrejaIdAtual(),
-      igreja: configuracaoIgreja,
-      totais: {
-        classes: classes.length,
-        alunos: alunosSomente().length,
-        professores: professoresSomente().length,
-        chamadas: chamadasSalvas.length,
-      },
-      dados: {
-        classes,
-        alunos,
-        chamadas: chamadasSalvas,
-        chamadasProfessores,
-        perfisIgreja,
-        vinculosProfessores,
-      },
-      observacao:
-        'Cópia de segurança exportada pelo painel da igreja. Não altera dados no Supabase e serve como arquivo de consulta em JSON.',
-    }
-  }
-
-  function baixarBackupLocalSeguro() {
-    const backup = montarBackupLocalSeguro()
-    const blob = new Blob([JSON.stringify(backup, null, 2)], {
-      type: 'application/json;charset=utf-8',
-    })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    const data = new Date().toISOString().slice(0, 10)
-    link.href = url
-    link.download = `backup-ebd-fiel-${buscarIgrejaIdAtual() || 'igreja'}-${data}.json`
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(url)
-  }
-
-  function copiarResumoAuditoriaLocal() {
-    const linhas = [
-      `Igreja: ${buscarNomeIgrejaParaExibicao()}`,
-      `Igreja ID: ${buscarIgrejaIdAtual() || 'não identificado'}`,
-      `Usuário: ${sessao?.user?.email || 'não identificado'}`,
-      `Perfil: ${perfilUsuario?.perfil || 'não identificado'}`,
-      `Classes: ${classes.length}`,
-      `Alunos: ${alunosSomente().length}`,
-      `Professores: ${professoresSomente().length}`,
-      `Chamadas de alunos: ${chamadasSalvas.length}`,
-      `Chamadas de professores: ${chamadasProfessores.length}`,
-      `Gerado em: ${new Date().toLocaleString('pt-BR')}`,
-    ]
-
-    const texto = linhas.join('\n')
-
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(texto)
-      alert('Resumo de auditoria copiado.')
-      return
-    }
-
-    window.prompt('Copie o resumo de auditoria:', texto)
-  }
-
-
-  function converterDataParaObjeto(dataTexto) {
-    if (!dataTexto) {
-      return null
-    }
-
-    const texto = String(dataTexto).trim()
-
-    if (!texto) {
-      return null
-    }
-
-    if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
-      const [ano, mes, dia] = texto.split('-').map(Number)
-      const data = new Date(ano, mes - 1, dia)
-      return Number.isNaN(data.getTime()) ? null : data
-    }
-
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
-      const [dia, mes, ano] = texto.split('/').map(Number)
-      const data = new Date(ano, mes - 1, dia)
-      return Number.isNaN(data.getTime()) ? null : data
-    }
-
-    const data = new Date(texto)
-    return Number.isNaN(data.getTime()) ? null : data
-  }
-
-  function chamadaEhDoMesAtual(chamada) {
-    const data = converterDataParaObjeto(chamada?.data)
-
-    if (!data) {
-      return false
-    }
-
-    const hoje = new Date()
-    return data.getFullYear() === hoje.getFullYear() && data.getMonth() === hoje.getMonth()
-  }
-
-  function formatarMesAtualExtenso() {
-    return new Date().toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric',
-    })
-  }
-
-  function calcularIdadePorDataNascimento(dataNascimento) {
-    if (!dataNascimento) {
-      return ''
-    }
-
-    const partes = String(dataNascimento).split('-')
-
-    if (partes.length !== 3) {
-      return ''
-    }
-
-    const hoje = new Date()
-    const ano = Number(partes[0])
-    const mes = Number(partes[1]) - 1
-    const dia = Number(partes[2])
-
-    if (!ano || Number.isNaN(mes) || !dia) {
-      return ''
-    }
-
-    let idade = hoje.getFullYear() - ano
-    const aniversarioEsteAno = new Date(hoje.getFullYear(), mes, dia)
-
-    if (hoje < aniversarioEsteAno) {
-      idade -= 1
-    }
-
-    return idade >= 0 ? idade : ''
-  }
-
-  function buscarAniversariantesDoMes() {
-    const hoje = new Date()
-    const mesAtual = hoje.getMonth() + 1
-
-    return alunosSomente()
-      .filter((aluno) => {
-        const partes = String(aluno.dataNascimento || aluno.data_nascimento || '').split('-')
-        return partes.length === 3 && Number(partes[1]) === mesAtual
-      })
-      .map((aluno) => ({
-        ...aluno,
-        classeNome: buscarNomeClasse(aluno.classeId ?? aluno.classe_id),
-        dataNascimentoFormatada: formatarDataNascimento(aluno.dataNascimento || aluno.data_nascimento),
-        idade: calcularIdadePorDataNascimento(aluno.dataNascimento || aluno.data_nascimento),
-      }))
-      .sort((a, b) => {
-        const diaA = Number(String(a.dataNascimento || a.data_nascimento || '').split('-')[2] || 0)
-        const diaB = Number(String(b.dataNascimento || b.data_nascimento || '').split('-')[2] || 0)
-        return diaA - diaB || String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR')
-      })
-  }
-
-  function montarMapaFrequenciaAlunos(filtrarMesAtual = true) {
-    const mapa = new Map()
-
-    alunosSomente().forEach((aluno) => {
-      mapa.set(String(aluno.id), {
-        aluno,
-        classeNome: buscarNomeClasse(aluno.classeId ?? aluno.classe_id),
-        presentes: 0,
-        faltas: 0,
-        total: 0,
-        chamadas: [],
-      })
-    })
-
-    chamadasSalvas
-      .filter((chamada) => !filtrarMesAtual || chamadaEhDoMesAtual(chamada))
-      .forEach((chamada) => {
-        const dataChamada = converterDataParaObjeto(chamada.data)
-
-        ;(chamada.registros || []).forEach((registro) => {
-          const alunoId = String(registro.alunoId ?? registro.aluno_id ?? '')
-          const item = mapa.get(alunoId)
-
-          if (!item) {
-            return
-          }
-
-          const status = String(registro.status || '').toLowerCase()
-          const presente = status === 'presente'
-          const falta = status === 'faltou' || status === 'falta' || status.includes('falt')
-
-          if (!presente && !falta) {
-            return
-          }
-
-          item.total += 1
-
-          if (presente) {
-            item.presentes += 1
-          }
-
-          if (falta) {
-            item.faltas += 1
-          }
-
-          item.chamadas.push({
-            data: dataChamada,
-            dataTexto: chamada.data,
-            status: presente ? 'presente' : 'faltou',
-          })
-        })
-      })
-
-    return mapa
-  }
-
-  function buscarDestaquesFrequencia() {
-    return Array.from(montarMapaFrequenciaAlunos(true).values())
-      .filter((item) => item.total > 0)
-      .map((item) => ({
-        ...item,
-        frequencia: Math.round((item.presentes / item.total) * 100),
-      }))
-      .filter((item) => item.frequencia >= 80)
-      .sort((a, b) =>
-        b.frequencia - a.frequencia ||
-        b.presentes - a.presentes ||
-        String(a.aluno.nome || '').localeCompare(String(b.aluno.nome || ''), 'pt-BR')
-      )
-  }
-
-  function calcularFaltasConsecutivas(chamadasAluno) {
-    const chamadasOrdenadas = [...chamadasAluno]
-      .filter((item) => item.data)
-      .sort((a, b) => b.data.getTime() - a.data.getTime())
-
-    let total = 0
-
-    for (const chamada of chamadasOrdenadas) {
-      if (chamada.status === 'faltou') {
-        total += 1
-      } else {
-        break
-      }
-    }
-
-    return total
-  }
-
-  function buscarAlertasDeFaltas() {
-    return Array.from(montarMapaFrequenciaAlunos(false).values())
-      .map((item) => {
-        const chamadasDoMes = item.chamadas.filter((chamada) => {
-          if (!chamada.data) return false
-          const hoje = new Date()
-          return chamada.data.getFullYear() === hoje.getFullYear() && chamada.data.getMonth() === hoje.getMonth()
-        })
-
-        const faltasMes = chamadasDoMes.filter((chamada) => chamada.status === 'faltou').length
-        const faltasConsecutivas = calcularFaltasConsecutivas(item.chamadas)
-        const ultimaChamada = [...item.chamadas]
-          .filter((chamada) => chamada.data)
-          .sort((a, b) => b.data.getTime() - a.data.getTime())[0]
-
-        return {
-          ...item,
-          faltasMes,
-          faltasConsecutivas,
-          ultimaData: ultimaChamada?.dataTexto || '',
-          motivo:
-            faltasConsecutivas >= 2
-              ? `${faltasConsecutivas} faltas consecutivas`
-              : `${faltasMes} faltas no mês`,
-        }
-      })
-      .filter((item) => item.faltasConsecutivas >= 2 || item.faltasMes >= 3)
-      .sort((a, b) =>
-        b.faltasConsecutivas - a.faltasConsecutivas ||
-        b.faltasMes - a.faltasMes ||
-        String(a.aluno.nome || '').localeCompare(String(b.aluno.nome || ''), 'pt-BR')
-      )
-  }
-
-  function imprimirHtmlEmIframe(htmlDocumento, idIframe = 'iframe-impressao-relatorio-extra') {
-    const iframeAnterior = document.getElementById(idIframe)
-
-    if (iframeAnterior) {
-      iframeAnterior.remove()
-    }
-
-    const iframe = document.createElement('iframe')
-    iframe.id = idIframe
-    iframe.title = 'Impressão EBD Fiel'
-    iframe.style.position = 'fixed'
-    iframe.style.right = '0'
-    iframe.style.bottom = '0'
-    iframe.style.width = '0'
-    iframe.style.height = '0'
-    iframe.style.border = '0'
-    iframe.style.visibility = 'hidden'
-
-    document.body.appendChild(iframe)
-
-    const documentoIframe = iframe.contentWindow?.document
-
-    if (!documentoIframe) {
-      alert('Não foi possível preparar a impressão. Tente novamente.')
-      iframe.remove()
-      return
-    }
-
-    documentoIframe.open()
-    documentoIframe.write(htmlDocumento)
-    documentoIframe.close()
-
-    const imprimirIframe = () => {
-      try {
-        iframe.contentWindow?.focus()
-        iframe.contentWindow?.print()
-      } catch (error) {
-        console.error('Erro ao imprimir relatório:', error)
-        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
-      }
-
-      setTimeout(() => {
-        iframe.remove()
-      }, 1500)
-    }
-
-    iframe.onload = () => {
-      setTimeout(imprimirIframe, 400)
-    }
-
-    setTimeout(() => {
-      if (document.body.contains(iframe)) {
-        imprimirIframe()
-      }
-    }, 900)
-  }
-
-  function montarDocumentoRelatorioExtra(titulo, subtitulo, conteudoHtml, orientacao = 'portrait') {
-    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'EBD Fiel'
-    const endereco = montarEnderecoIgreja()
-
-    return `
-      <!doctype html>
-      <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>${escaparHtmlRelatorio(titulo)} - EBD Fiel</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              margin: 0;
-              padding: 24px;
-              font-family: Arial, sans-serif;
-              color: #111827;
-              background: #fff;
-            }
-            .folha-extra {
-              width: 100%;
-              max-width: ${orientacao === 'landscape' ? '1120px' : '900px'};
-              margin: 0 auto;
-            }
-            .cabecalho-extra {
-              text-align: center;
-              margin-bottom: 18px;
-              padding-bottom: 10px;
-              border-bottom: 2px solid #103058;
-            }
-            .cabecalho-extra img {
-              width: 64px;
-              height: 64px;
-              object-fit: contain;
-              display: block;
-              margin: 0 auto 8px;
-            }
-            .cabecalho-extra h1 {
-              margin: 0 0 6px;
-              font-size: 22px;
-              color: #103058;
-              text-transform: uppercase;
-            }
-            .cabecalho-extra h2 {
-              margin: 0 0 5px;
-              font-size: 16px;
-              color: #111827;
-            }
-            .cabecalho-extra p {
-              margin: 2px 0;
-              font-size: 12px;
-              font-weight: 600;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              font-size: 12px;
-            }
-            th, td {
-              border: 1px solid #cbd5e1;
-              padding: 8px 7px;
-              vertical-align: middle;
-              word-break: break-word;
-            }
-            th {
-              background: #e0f2fe;
-              color: #103058;
-              text-align: left;
-              font-weight: 800;
-            }
-            td.numero, th.numero {
-              width: 44px;
-              text-align: center;
-            }
-            .texto-centro { text-align: center; }
-            .vazio {
-              padding: 26px;
-              border: 1px dashed #94a3b8;
-              border-radius: 12px;
-              text-align: center;
-              color: #475569;
-              font-weight: 700;
-            }
-            .cartoes-grid {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 14px;
-            }
-            .cartao-aniversario {
-              min-height: 210px;
-              padding: 18px;
-              border: 2px solid #f2b705;
-              border-radius: 18px;
-              background: linear-gradient(135deg, #fff7cc, #e0f7ff 70%, #ffffff);
-              page-break-inside: avoid;
-            }
-            .cartao-aniversario h3 {
-              margin: 0 0 10px;
-              font-size: 20px;
-              color: #103058;
-            }
-            .cartao-aniversario strong {
-              display: block;
-              margin: 10px 0;
-              font-size: 24px;
-              color: #111827;
-            }
-            .cartao-aniversario p {
-              margin: 0 0 8px;
-              font-size: 14px;
-              line-height: 1.45;
-            }
-            .assinatura-cartao {
-              margin-top: 14px !important;
-              font-weight: 800;
-              color: #103058;
-            }
-            @media print {
-              body { padding: 0; }
-              .folha-extra { max-width: none; }
-              @page { size: A4 ${orientacao}; margin: 10mm; }
-            }
-          </style>
-        </head>
-        <body>
-          <main class="folha-extra">
-            <div class="cabecalho-extra">
-              <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" />
-              <h1>${escaparHtmlRelatorio(nomeIgreja)}</h1>
-              ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
-              ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
-              ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
-              <h2>${escaparHtmlRelatorio(titulo)}</h2>
-              ${subtitulo ? `<p>${escaparHtmlRelatorio(subtitulo)}</p>` : ''}
-            </div>
-            ${conteudoHtml}
-          </main>
-        </body>
-      </html>
-    `
-  }
-
-
-  function mostrarRelatorioExtraNaTela(titulo, subtitulo, conteudoHtml, orientacao = 'portrait', idIframe = 'iframe-relatorio-extra') {
-    setRelatorioExtraVisualizacao({
-      titulo,
-      subtitulo,
-      conteudoHtml,
-      orientacao,
-      idIframe,
-    })
-    definirPaginaAtual('relatorios')
-
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        document.getElementById('visualizacao-relatorio-extra')?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
-      }, 120)
-    }
-  }
-
-  function imprimirRelatorioExtraVisualizado() {
-    if (!relatorioExtraVisualizacao) {
-      return
-    }
-
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        relatorioExtraVisualizacao.titulo,
-        relatorioExtraVisualizacao.subtitulo,
-        relatorioExtraVisualizacao.conteudoHtml,
-        relatorioExtraVisualizacao.orientacao
-      ),
-      relatorioExtraVisualizacao.idIframe
-    )
-  }
-
-  function abrirRelatorioAniversariantesSemana() {
-    const aniversariantes = buscarAniversariantesDaSemana()
-
-    const conteudo = aniversariantes.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Nome</th>
-              <th>Perfil</th>
-              <th>Classe/área</th>
-              <th>Data</th>
-              <th>Quando</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${aniversariantes.map((pessoa, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
-                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
-                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
-                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
-                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
-
-    mostrarRelatorioExtraNaTela(
-      'Aniversariantes da semana',
-      'Pessoas com aniversário hoje ou nos próximos 7 dias.',
-      conteudo,
-      'portrait',
-      'iframe-aniversariantes-semana'
-    )
-  }
-
-  function abrirRelatorioAniversariantesMes() {
-    const aniversariantes = buscarAniversariantesDoMes()
-
-    const conteudo = aniversariantes.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Nome</th>
-              <th>Classe</th>
-              <th>Data</th>
-              <th>Idade</th>
-              <th>Telefone</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${aniversariantes.map((aluno, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(aluno.nome)}</td>
-                <td>${escaparHtmlRelatorio(aluno.classeNome || 'Sem classe')}</td>
-                <td>${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</td>
-                <td class="texto-centro">${escaparHtmlRelatorio(aluno.idade || '')}</td>
-                <td>${escaparHtmlRelatorio(aluno.telefone || '')}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
-
-    mostrarRelatorioExtraNaTela(
-      'Aniversariantes do mês',
-      `Referência: ${formatarMesAtualExtenso()}`,
-      conteudo,
-      'portrait',
-      'iframe-aniversariantes-mes'
-    )
-  }
-
-  function abrirRelatorioAlertasFaltas() {
-    const alertas = buscarAlertasDeFaltas()
-
-    const conteudo = alertas.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Aluno</th>
-              <th>Classe</th>
-              <th>Faltas consecutivas</th>
-              <th>Faltas no mês</th>
-              <th>Última chamada</th>
-              <th>Alerta</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${alertas.map((item, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(item.aluno.nome)}</td>
-                <td>${escaparHtmlRelatorio(item.classeNome || 'Sem classe')}</td>
-                <td class="texto-centro">${item.faltasConsecutivas}</td>
-                <td class="texto-centro">${item.faltasMes}</td>
-                <td>${escaparHtmlRelatorio(item.ultimaData || '-')}</td>
-                <td>${escaparHtmlRelatorio(item.motivo)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum alerta de faltas encontrado no momento.</div>'
-
-    mostrarRelatorioExtraNaTela(
-      'Alertas de faltas',
-      'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
-      conteudo,
-      'landscape',
-      'iframe-alertas-faltas'
-    )
-  }
-
-  function abrirRelatorioDestaquesFrequencia() {
-    const destaques = buscarDestaquesFrequencia()
-
-    const conteudo = destaques.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Aluno</th>
-              <th>Classe</th>
-              <th>Presenças</th>
-              <th>Chamadas</th>
-              <th>Frequência</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${destaques.map((item, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(item.aluno.nome)}</td>
-                <td>${escaparHtmlRelatorio(item.classeNome || 'Sem classe')}</td>
-                <td class="texto-centro">${item.presentes}</td>
-                <td class="texto-centro">${item.total}</td>
-                <td class="texto-centro">${item.frequencia}%</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
-
-    mostrarRelatorioExtraNaTela(
-      'Destaques de frequência',
-      `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
-      conteudo,
-      'portrait',
-      'iframe-destaques-frequencia'
-    )
-  }
-
-  function abrirCartoesAniversariantes() {
-    const aniversariantes = buscarAniversariantesDoMes()
-
-    if (aniversariantes.length === 0) {
-      alert('Nenhum aniversariante encontrado para este mês.')
-      return
-    }
-
-    const textoOpcoes = [
-      '0 - Todos os aniversariantes do mês',
-      ...aniversariantes.map((aluno, indice) => `${indice + 1} - ${aluno.nome}`),
-    ].join('\n')
-
-    const escolha = window.prompt(
-      `Quais cartões deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todos ou o número de uma pessoa.`,
-      '0'
-    )
-
-    if (escolha === null) {
-      return
-    }
-
-    const escolhaNumerica = Number.parseInt(escolha, 10)
-
-    if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > aniversariantes.length) {
-      alert('Opção inválida. Tente novamente e escolha um número da lista.')
-      return
-    }
-
-    const selecionados = escolhaNumerica === 0
-      ? aniversariantes
-      : [aniversariantes[escolhaNumerica - 1]]
-
-    const conteudo = `
-      <div class="cartoes-grid">
-        ${selecionados.map((aluno) => `
-          <article class="cartao-aniversario">
-            <h3>Feliz aniversário!</h3>
-            <p>A Escola Bíblica Dominical parabeniza:</p>
-            <strong>${escaparHtmlRelatorio(aluno.nome)}</strong>
-            <p>
-              Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
-              Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
-            </p>
-            <p><strong>Versículo bíblico:</strong> “Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”</p>
-            <p><strong>Salmo 118:24</strong></p>
-            <p><strong>Data:</strong> ${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</p>
-            <p class="assinatura-cartao">Com carinho, Escola Bíblica Dominical</p>
-          </article>
-        `).join('')}
-      </div>
-    `
-
-    mostrarRelatorioExtraNaTela(
-      'Cartões de aniversariantes',
-      `Referência: ${formatarMesAtualExtenso()}`,
-      conteudo,
-      'portrait',
-      'iframe-cartoes-aniversariantes'
-    )
-  }
-
-  function abrirRelatorioParaImpressao() {
-    const relatorio = document.querySelector('.relatorio-folha')
-
-    if (!relatorio) {
-      alert('Relatório não encontrado para impressão.')
-      return
-    }
-
-    const janela = window.open('', '_blank')
-
-    if (!janela) {
-      alert(
-        'O navegador bloqueou a abertura da impressão. No celular, use o botão Baixar PDF.'
-      )
-      return
-    }
-
-    janela.document.open()
-    janela.document.write(`
-      <!doctype html>
-      <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Relatório EBD Fiel</title>
-
-          <style>
-            * {
-              box-sizing: border-box;
-            }
-
-            body {
-              margin: 0;
-              padding: 24px;
-              font-family: Arial, sans-serif;
-              color: #000;
-              background: #fff;
-            }
-
-            .area-acoes {
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-bottom: 20px;
-            }
-
-            .area-acoes button {
-              border: 0;
-              border-radius: 8px;
-              padding: 12px 18px;
-              font-size: 15px;
-              font-weight: 700;
-              cursor: pointer;
-              background: #2563eb;
-              color: #fff;
-            }
-
-            .area-acoes .secundario {
-              background: #e5e7eb;
-              color: #111827;
-            }
-
-            .relatorio-folha {
-              width: 100%;
-              max-width: 980px;
-              margin: 0 auto;
-              background: #fff;
-            }
-
-            .cabecalho-relatorio {
-              text-align: center;
-              margin-bottom: 16px;
-              padding-bottom: 8px;
-              border-bottom: 2px dotted #000;
-            }
-
-            .logo-relatorio {
-              width: 76px;
-              height: 76px;
-              object-fit: contain;
-              display: block;
-              margin: 0 auto 8px;
-            }
-
-            .cabecalho-relatorio h3 {
-              margin: 0 0 6px 0;
-              font-size: 20px;
-              font-weight: 700;
-            }
-
-            .cabecalho-relatorio p {
-              margin: 0;
-              font-size: 14px;
-              font-weight: 600;
-            }
-
-            .tabela-container {
-              width: 100%;
-              overflow-x: visible;
-            }
-
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              font-size: 11px;
-            }
-
-            th,
-            td {
-              border: 1px solid #000;
-              padding: 5px 4px;
-              text-align: center;
-              vertical-align: middle;
-              word-break: break-word;
-            }
-
-            th {
-              font-weight: 700;
-              background: #f3f4f6;
-            }
-
-            td:nth-child(2),
-            th:nth-child(2) {
-              text-align: left;
-              width: 22%;
-            }
-
-            .linha-total td {
-              font-weight: 700;
-              background: #f3f4f6;
-            }
-
-            .linha-domingo-anterior td {
-              font-weight: 700;
-            }
-
-            .relatorio-folha {
-              max-width: 1120px;
-              border: 1px solid #cbd5e1;
-              border-radius: 18px;
-              padding: 20px;
-              box-shadow: none;
-            }
-
-            .cabecalho-relatorio-oficial {
-              display: grid;
-              grid-template-columns: 1.2fr 1.4fr 170px;
-              gap: 14px;
-              align-items: center;
-              text-align: left;
-              margin-bottom: 16px;
-              padding-bottom: 14px;
-              border-bottom: 1px solid #d8e0eb;
-            }
-
-            .cabecalho-relatorio-marca {
-              display: flex;
-              align-items: center;
-              gap: 12px;
-            }
-
-            .logo-relatorio {
-              width: 58px;
-              height: 58px;
-              margin: 0;
-            }
-
-            .relatorio-selo-institucional {
-              display: inline-block;
-              margin-bottom: 4px;
-              color: #b7791f;
-              font-size: 9px;
-              font-weight: 800;
-              letter-spacing: 0.08em;
-              text-transform: uppercase;
-            }
-
-            .cabecalho-relatorio h3 {
-              margin: 0 0 4px;
-              color: #0f2a44;
-              font-size: 18px;
-              line-height: 1.15;
-              text-transform: uppercase;
-            }
-
-            .cabecalho-relatorio p,
-            .relatorio-info-igreja p {
-              margin: 0 0 3px;
-              color: #475569;
-              font-size: 10.5px;
-              line-height: 1.35;
-              font-weight: 500;
-            }
-
-            .relatorio-info-igreja strong {
-              color: #0f2a44;
-            }
-
-            .relatorio-data-selo {
-              border: 1px solid #d6c28b;
-              background: #fffaf0;
-              border-radius: 12px;
-              padding: 10px;
-              text-align: center;
-            }
-
-            .relatorio-data-selo span,
-            .relatorio-data-selo small {
-              display: block;
-              color: #64748b;
-              font-size: 9px;
-              font-weight: 700;
-            }
-
-            .relatorio-data-selo strong {
-              display: block;
-              color: #0f2a44;
-              font-size: 16px;
-              margin: 2px 0;
-            }
-
-            table {
-              border: 1px solid #cbd5e1;
-              border-radius: 12px;
-              overflow: hidden;
-              font-size: 10.5px;
-            }
-
-            th,
-            td {
-              border: 1px solid #d6dee9;
-              padding: 7px 6px;
-              color: #1f2937;
-            }
-
-            th {
-              background: #123c63;
-              color: #ffffff;
-              font-size: 10px;
-              letter-spacing: 0.01em;
-            }
-
-            .linha-total td {
-              background: #eef6ff;
-              color: #0f2a44;
-              border-top: 2px solid #8aa4bf;
-              font-weight: 800;
-            }
-
-            .linha-domingo-anterior td {
-              background: #fffaf0;
-              color: #5f4b16;
-              text-align: left;
-              font-weight: 700;
-            }
-
-            .linha-domingo-anterior span,
-            .linha-domingo-anterior small {
-              display: inline-block;
-              margin-right: 8px;
-            }
-
-            .linha-professores-titulo td {
-              background: #123c63 !important;
-              color: #ffffff !important;
-              padding: 9px 8px;
-              border-color: #123c63;
-            }
-
-            .relatorio-professores-titulo-conteudo {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              gap: 8px;
-              flex-wrap: wrap;
-              text-align: center;
-            }
-
-            .relatorio-professores-titulo-conteudo strong {
-              text-transform: uppercase;
-              letter-spacing: 0.03em;
-            }
-
-            .relatorio-professores-titulo-conteudo span {
-              background: rgba(255, 255, 255, 0.15);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              border-radius: 999px;
-              padding: 3px 7px;
-              font-size: 9.5px;
-            }
-
-            .linha-professores-cabecalho td {
-              background: #f7eec7 !important;
-              color: #0f2a44 !important;
-              font-weight: 800;
-            }
-
-            .linha-professor-tabela-relatorio td {
-              border-color: #d6dee9 !important;
-            }
-
-            .status-relatorio-professor {
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 999px;
-              padding: 3px 8px;
-              font-size: 9.5px;
-              font-weight: 800;
-              background: #e2e8f0;
-              color: #334155;
-            }
-
-            .status-relatorio-professor.status-presente {
-              background: #dcfce7;
-              color: #166534;
-            }
-
-            .status-relatorio-professor.status-falta {
-              background: #fee2e2;
-              color: #991b1b;
-            }
-
-            .rodape-relatorio-oficial {
-              margin-top: 12px;
-              padding-top: 8px;
-              border-top: 1px solid #e2e8f0;
-              color: #64748b;
-              text-align: center;
-              font-size: 9.5px;
-            }
-
-            @media print {
-              body {
-                padding: 0;
-              }
-
-              .area-acoes {
-                display: none;
-              }
-
-              .relatorio-folha {
-                max-width: none;
-              }
-
-              @page {
-                size: A4 landscape;
-                margin: 10mm;
-              }
-            }
-          </style>
-        </head>
-
-        <body>
-          <div class="area-acoes">
-            <button onclick="window.print()">Imprimir / Salvar PDF</button>
-            <button class="secundario" onclick="window.close()">Fechar</button>
-          </div>
-
-          ${relatorio.outerHTML}
-
-          <script>
-            setTimeout(function () {
-              try {
-                window.print()
-              } catch (error) {
-                console.log(error)
-              }
-            }, 800)
-          </script>
-        </body>
-      </html>
-    `)
-    janela.document.close()
-  }
-
-  function escaparHtmlRelatorio(valor) {
-    return String(valor ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;')
-  }
-
-  function montarRelatorioEmBrancoHTML() {
-    const endereco = montarEnderecoIgreja()
-    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'Relatório em branco'
-    const linhasClasses = classes.length > 0 ? classes : classesIniciais
-
-    const linhasTabela = linhasClasses
-      .map((classe, indice) => `
-        <tr>
-          <td>${indice + 1}</td>
-          <td>${escaparHtmlRelatorio(classe.nome)}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      `)
-      .join('')
-
-    const linhasProfessores = Array.from({ length: Math.max(8, professoresSomente().length || 0) })
-      .map((_, indice) => {
-        const professor = professoresSomente()[indice]
-        return `
-          <tr>
-            <td>${indice + 1}</td>
-            <td colspan="3">${escaparHtmlRelatorio(professor?.nome || '')}</td>
-            <td colspan="3">${escaparHtmlRelatorio(buscarNomeClasse(professor?.classeId))}</td>
-            <td colspan="2"></td>
-            <td colspan="1"></td>
-            <td colspan="1"></td>
-          </tr>
-        `
-      })
-      .join('')
-
-    return `
-      <div class="relatorio-folha relatorio-folha-em-branco">
-        <div class="cabecalho-relatorio">
-          <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
-          <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
-          ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
-          ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
-          ${configuracaoIgreja.superintendente_ebd ? `<p>Superintendente da EBD: ${escaparHtmlRelatorio(configuracaoIgreja.superintendente_ebd)}</p>` : ''}
-          ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
-          <p>RELATÓRIO EM BRANCO PARA RASCUNHO</p>
-          <p>Data: ____ / ____ / ______</p>
-        </div>
-
-        <div class="tabela-container">
-          <table class="tabela tabela-ebd">
-            <thead>
-              <tr>
-                <th>Nº</th>
-                <th>Classes</th>
-                <th>Matrícula</th>
-                <th>Ausência</th>
-                <th>Presença</th>
-                <th>Visitante</th>
-                <th>Total</th>
-                <th>Bíblia</th>
-                <th>Revista</th>
-                <th>Ofertas</th>
-                <th>%</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${linhasTabela}
-              <tr class="linha-total">
-                <td colspan="2">TOTAL GERAL</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr class="linha-domingo-anterior">
-                <td colspan="11">DOMINGO anterior</td>
-              </tr>
-              <tr class="linha-professores-titulo">
-                <td colspan="11">CHAMADA DOS PROFESSORES</td>
-              </tr>
-              <tr class="linha-professores-cabecalho">
-                <td>Nº</td>
-                <td colspan="3">Professor</td>
-                <td colspan="3">Classe de referência</td>
-                <td colspan="2">Presente</td>
-                <td colspan="1">Faltou</td>
-                <td colspan="1">Justificou</td>
-              </tr>
-              ${linhasProfessores}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="area-observacoes-rascunho">
-          <strong>Observações:</strong>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    `
-  }
-
-  function abrirRelatorioEmBrancoParaImpressao() {
-    const htmlRelatorio = montarRelatorioEmBrancoHTML()
-    const janela = window.open('', '_blank')
-
-    if (!janela) {
-      alert('O navegador bloqueou a abertura da impressão. Permita pop-ups para imprimir o modelo em branco.')
-      return
-    }
-
-    janela.document.open()
-    janela.document.write(`
-      <!doctype html>
-      <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Relatório em branco - EBD Fiel</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              margin: 0;
-              padding: 24px;
-              font-family: Arial, sans-serif;
-              color: #000;
-              background: #fff;
-            }
-            .area-acoes {
-              display: flex;
-              gap: 12px;
-              justify-content: center;
-              margin-bottom: 20px;
-            }
-            .area-acoes button {
-              border: 0;
-              border-radius: 8px;
-              padding: 12px 18px;
-              font-size: 15px;
-              font-weight: 700;
-              cursor: pointer;
-              background: #103058;
-              color: #fff;
-            }
-            .area-acoes .secundario {
-              background: #e5e7eb;
-              color: #111827;
-            }
-            .relatorio-folha {
-              width: 100%;
-              max-width: 1100px;
-              margin: 0 auto;
-              background: #fff;
-            }
-            .cabecalho-relatorio {
-              text-align: center;
-              margin-bottom: 16px;
-              padding-bottom: 8px;
-              border-bottom: 2px dotted #000;
-            }
-            .logo-relatorio {
-              width: 76px;
-              height: 76px;
-              object-fit: contain;
-              display: block;
-              margin: 0 auto 8px;
-            }
-            .cabecalho-relatorio h3 {
-              margin: 0 0 6px 0;
-              font-size: 20px;
-              font-weight: 700;
-              text-transform: uppercase;
-            }
-            .cabecalho-relatorio p {
-              margin: 0;
-              font-size: 13px;
-              font-weight: 600;
-            }
-            .tabela-container { width: 100%; overflow: visible; }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              font-size: 11px;
-            }
-            th, td {
-              border: 1px solid #000;
-              padding: 7px 5px;
-              text-align: center;
-              vertical-align: middle;
-              height: 28px;
-              word-break: break-word;
-            }
-            th { font-weight: 700; background: #f3f4f6; }
-            td:nth-child(2), th:nth-child(2) { text-align: left; width: 22%; }
-            .linha-total td, .linha-professores-titulo td, .linha-professores-cabecalho td {
-              font-weight: 700;
-              background: #f3f4f6;
-            }
-            .linha-domingo-anterior td { font-weight: 700; text-align: left; }
-            .area-observacoes-rascunho {
-              margin-top: 14px;
-              font-size: 12px;
-              page-break-inside: avoid;
-            }
-            .area-observacoes-rascunho strong { display: block; margin-bottom: 8px; }
-            .area-observacoes-rascunho div {
-              height: 24px;
-              border-bottom: 1px solid #000;
-            }
-            @media print {
-              body { padding: 0; }
-              .area-acoes { display: none; }
-              .relatorio-folha { max-width: none; }
-              @page { size: A4 landscape; margin: 10mm; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="area-acoes">
-            <button onclick="window.print()">Imprimir / Salvar PDF</button>
-            <button class="secundario" onclick="window.close()">Fechar</button>
-          </div>
-          ${htmlRelatorio}
-          <script>
-            setTimeout(function () {
-              try { window.print() } catch (error) { console.log(error) }
-            }, 800)
-          </script>
-        </body>
-      </html>
-    `)
-    janela.document.close()
-  }
-
-
-  function montarChamadaPorClasseEmBrancoHTML(classesSelecionadas = null) {
-    const endereco = montarEnderecoIgreja()
-    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'EBD Fiel'
-    const linhasClassesBase = classes.length > 0 ? classes : classesIniciais
-    const linhasClasses = classesSelecionadas && classesSelecionadas.length > 0 ? classesSelecionadas : linhasClassesBase
-
-    const paginasClasses = linhasClasses
-      .map((classe) => {
-        const alunosDaClasse = alunos
-          .filter((aluno) => {
-            const classeDoAluno = aluno.classeId ?? aluno.classe_id
-            const tipoPessoa = (aluno.tipoPessoa || aluno.tipo_pessoa || 'aluno').toLowerCase()
-            return classeDoAluno === classe.id && tipoPessoa !== 'professor'
-          })
-          .sort((a, b) => String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR'))
-
-        const totalLinhasPorClasse = alunosDaClasse.length > 0 ? alunosDaClasse.length + 5 : 20
-
-        const linhasAlunos = Array.from({ length: totalLinhasPorClasse })
-          .map((_, indice) => {
-            const aluno = alunosDaClasse[indice]
-
-            return `
-              <tr>
-                <td>${String(indice + 1).padStart(2, '0')}</td>
-                <td>${aluno?.nome ? escaparHtmlRelatorio(aluno.nome) : ''}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            `
-          })
-          .join('')
-
-        return `
-          <section class="folha-chamada-classe">
-            <div class="cabecalho-relatorio cabecalho-chamada-classe">
-              <img src="/logo-oficial-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
-              <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
-              ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
-              ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
-              ${configuracaoIgreja.superintendente_ebd ? `<p>Superintendente da EBD: ${escaparHtmlRelatorio(configuracaoIgreja.superintendente_ebd)}</p>` : ''}
-              ${endereco ? `<p>${escaparHtmlRelatorio(endereco)}</p>` : ''}
-              <p class="titulo-chamada-classe">CHAMADA DA CLASSE</p>
-            </div>
-
-            <div class="dados-chamada-classe">
-              <p><strong>Classe:</strong> ${escaparHtmlRelatorio(classe.nome)}</p>
-              <p><strong>Professor(a):</strong> ___________________________________________</p>
-              <p><strong>Data:</strong> ____ / ____ / ______</p>
-            </div>
-
-            <table class="tabela-chamada-classe">
-              <thead>
-                <tr>
-                  <th>Nº</th>
-                  <th>Nome do aluno</th>
-                  <th>Presente</th>
-                  <th>Falta</th>
-                  <th>Bíblia</th>
-                  <th>Revista</th>
-                  <th>Observação</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${linhasAlunos}
-              </tbody>
-            </table>
-
-            <div class="resumo-chamada-classe">
-              <div><strong>Presentes:</strong> ______</div>
-              <div><strong>Faltas:</strong> ______</div>
-              <div><strong>Visitantes:</strong> ______</div>
-              <div><strong>Bíblias:</strong> ______</div>
-              <div><strong>Revistas:</strong> ______</div>
-              <div><strong>Oferta:</strong> R$ ______</div>
-            </div>
-
-            <div class="observacoes-chamada-classe">
-              <strong>Observações:</strong>
-              <div></div>
-              <div></div>
-            </div>
-          </section>
-        `
-      })
-      .join('')
-
-    return `
-      <div class="chamadas-por-classe-em-branco">
-        ${paginasClasses}
-      </div>
-    `
-  }
-
-  function abrirChamadaPorClasseParaImpressao() {
-    const classesDisponiveis = classes.length > 0 ? classes : classesIniciais
-
-    if (!classesDisponiveis.length) {
-      alert('Nenhuma classe encontrada para gerar a chamada.')
-      return
-    }
-
-    const textoOpcoes = [
-      '0 - Todas as classes',
-      ...classesDisponiveis.map((classe, indice) => `${indice + 1} - ${classe.nome}`),
-    ].join('\n')
-
-    const escolha = window.prompt(
-      `Qual chamada deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todas ou o número de uma classe.`,
-      '0'
-    )
-
-    if (escolha === null) {
-      return
-    }
-
-    const escolhaNumerica = Number.parseInt(escolha, 10)
-
-    if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > classesDisponiveis.length) {
-      alert('Opção inválida. Tente novamente e escolha um número da lista.')
-      return
-    }
-
-    const classesSelecionadas = escolhaNumerica === 0
-      ? classesDisponiveis
-      : [classesDisponiveis[escolhaNumerica - 1]]
-
-    const htmlChamada = montarChamadaPorClasseEmBrancoHTML(classesSelecionadas)
-    const documentoChamada = `
-      <!doctype html>
-      <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>PDF por classe - EBD Fiel</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              margin: 0;
-              padding: 24px;
-              font-family: Arial, sans-serif;
-              color: #000;
-              background: #fff;
-            }
-            .folha-chamada-classe {
-              width: 100%;
-              max-width: 980px;
-              margin: 0 auto 28px;
-              padding: 0;
-              background: #fff;
-              page-break-after: always;
-            }
-            .folha-chamada-classe:last-child {
-              page-break-after: auto;
-            }
-            .cabecalho-relatorio {
-              text-align: center;
-              margin-bottom: 14px;
-              padding-bottom: 8px;
-              border-bottom: 2px dotted #000;
-            }
-            .logo-relatorio {
-              width: 68px;
-              height: 68px;
-              object-fit: contain;
-              display: block;
-              margin: 0 auto 6px;
-            }
-            .cabecalho-relatorio h3 {
-              margin: 0 0 5px 0;
-              font-size: 19px;
-              font-weight: 700;
-              text-transform: uppercase;
-            }
-            .cabecalho-relatorio p {
-              margin: 0;
-              font-size: 12px;
-              font-weight: 600;
-            }
-            .titulo-chamada-classe {
-              margin-top: 6px !important;
-              font-size: 14px !important;
-              font-weight: 800 !important;
-              letter-spacing: 0.04em;
-            }
-            .dados-chamada-classe {
-              display: grid;
-              grid-template-columns: 1.4fr 1fr 0.7fr;
-              gap: 10px;
-              margin-bottom: 12px;
-              font-size: 12px;
-              font-weight: 600;
-            }
-            .dados-chamada-classe p {
-              margin: 0;
-              padding: 8px;
-              border: 1px solid #000;
-              min-height: 34px;
-            }
-            .tabela-chamada-classe {
-              width: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              font-size: 11px;
-            }
-            .tabela-chamada-classe th,
-            .tabela-chamada-classe td {
-              border: 1px solid #000;
-              padding: 6px 5px;
-              text-align: center;
-              height: 28px;
-              vertical-align: middle;
-            }
-            .tabela-chamada-classe th {
-              background: #f3f4f6;
-              font-weight: 700;
-            }
-            .tabela-chamada-classe th:nth-child(1),
-            .tabela-chamada-classe td:nth-child(1) {
-              width: 42px;
-            }
-            .tabela-chamada-classe th:nth-child(2),
-            .tabela-chamada-classe td:nth-child(2) {
-              width: 34%;
-              text-align: left;
-            }
-            .resumo-chamada-classe {
-              display: grid;
-              grid-template-columns: repeat(6, 1fr);
-              gap: 8px;
-              margin-top: 12px;
-              font-size: 11px;
-            }
-            .resumo-chamada-classe div {
-              border: 1px solid #000;
-              padding: 8px;
-              min-height: 34px;
-            }
-            .observacoes-chamada-classe {
-              margin-top: 10px;
-              font-size: 12px;
-              page-break-inside: avoid;
-            }
-            .observacoes-chamada-classe strong {
-              display: block;
-              margin-bottom: 6px;
-            }
-            .observacoes-chamada-classe div {
-              height: 22px;
-              border-bottom: 1px solid #000;
-            }
-            @media print {
-              body { padding: 0; }
-              .folha-chamada-classe { max-width: none; margin-bottom: 0; }
-              @page { size: A4 portrait; margin: 10mm; }
-            }
-          </style>
-        </head>
-        <body>
-          ${htmlChamada}
-        </body>
-      </html>
-    `
-
-    const iframeAnterior = document.getElementById('iframe-impressao-chamada-classe')
-    if (iframeAnterior) {
-      iframeAnterior.remove()
-    }
-
-    const iframe = document.createElement('iframe')
-    iframe.id = 'iframe-impressao-chamada-classe'
-    iframe.title = 'Impressão da chamada por classe'
-    iframe.style.position = 'fixed'
-    iframe.style.right = '0'
-    iframe.style.bottom = '0'
-    iframe.style.width = '0'
-    iframe.style.height = '0'
-    iframe.style.border = '0'
-    iframe.style.visibility = 'hidden'
-
-    document.body.appendChild(iframe)
-
-    const documentoIframe = iframe.contentWindow?.document
-
-    if (!documentoIframe) {
-      alert('Não foi possível preparar a impressão. Tente novamente.')
-      iframe.remove()
-      return
-    }
-
-    documentoIframe.open()
-    documentoIframe.write(documentoChamada)
-    documentoIframe.close()
-
-    const imprimirIframe = () => {
-      try {
-        iframe.contentWindow?.focus()
-        iframe.contentWindow?.print()
-      } catch (error) {
-        console.error('Erro ao imprimir chamada por classe:', error)
-        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
-      }
-
-      setTimeout(() => {
-        iframe.remove()
-      }, 1500)
-    }
-
-    iframe.onload = () => {
-      setTimeout(imprimirIframe, 400)
-    }
-
-    setTimeout(() => {
-      if (document.body.contains(iframe)) {
-        imprimirIframe()
-      }
-    }, 900)
-  }
-
-
-  async function baixarRelatorioPDF() {
-    const relatorioOriginal = document.querySelector('.relatorio-folha')
-
-    if (!relatorioOriginal) {
-      alert('Relatório não encontrado para gerar PDF.')
-      return
-    }
-
-    try {
-      const areaTemporaria = document.createElement('div')
-
-      areaTemporaria.style.position = 'fixed'
-      areaTemporaria.style.left = '-9999px'
-      areaTemporaria.style.top = '0'
-      areaTemporaria.style.width = '1200px'
-      areaTemporaria.style.background = '#ffffff'
-      areaTemporaria.style.padding = '24px'
-      areaTemporaria.style.zIndex = '-1'
-
-      const relatorioClone = relatorioOriginal.cloneNode(true)
-
-      relatorioClone.style.width = '1150px'
-      relatorioClone.style.maxWidth = '1150px'
-      relatorioClone.style.background = '#ffffff'
-
-      const tabelaContainer = relatorioClone.querySelector('.tabela-container')
-      if (tabelaContainer) {
-        tabelaContainer.style.overflow = 'visible'
-        tabelaContainer.style.width = '100%'
-      }
-
-      const tabela = relatorioClone.querySelector('table')
-      if (tabela) {
-        tabela.style.width = '100%'
-        tabela.style.tableLayout = 'fixed'
-        tabela.style.borderCollapse = 'collapse'
-      }
-
-      areaTemporaria.appendChild(relatorioClone)
-      document.body.appendChild(areaTemporaria)
-
-      const canvas = await html2canvas(relatorioClone, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        windowWidth: 1200,
-      })
-
-      document.body.removeChild(areaTemporaria)
-
-      const imagem = canvas.toDataURL('image/png')
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      })
-
-      const larguraPagina = pdf.internal.pageSize.getWidth()
-      const alturaPagina = pdf.internal.pageSize.getHeight()
-
-      const margem = 8
-      const larguraUtil = larguraPagina - margem * 2
-      const alturaImagem = (canvas.height * larguraUtil) / canvas.width
-
-      if (alturaImagem <= alturaPagina - margem * 2) {
-        pdf.addImage(imagem, 'PNG', margem, margem, larguraUtil, alturaImagem)
-      } else {
-        let alturaRestante = alturaImagem
-        let deslocamento = 0
-
-        while (alturaRestante > 0) {
-          pdf.addImage(
-            imagem,
-            'PNG',
-            margem,
-            margem - deslocamento,
-            larguraUtil,
-            alturaImagem
-          )
-
-          alturaRestante -= alturaPagina - margem * 2
-          deslocamento += alturaPagina - margem * 2
-
-          if (alturaRestante > 0) {
-            pdf.addPage()
-          }
-        }
-      }
-
-      pdf.save('relatorio-ebd-fiel.pdf')
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error)
-      alert('Não foi possível gerar o PDF. Tente novamente.')
-    }
-  }
-
-  function abrirNovaClasse() {
-    setNovaClasse({ nome: '', professor: '' })
-    setClasseEditandoId(null)
-    setMostrarFormularioClasse(true)
-  }
-
-  function editarClasse(classe) {
-    setNovaClasse({
-      nome: classe.nome,
-      professor: classe.professor,
-    })
-    setClasseEditandoId(classe.id)
-    setMostrarFormularioClasse(true)
-  }
-
-  function cancelarFormularioClasse() {
-    setNovaClasse({ nome: '', professor: '' })
-    setClasseEditandoId(null)
-    setMostrarFormularioClasse(false)
-  }
-
-  async function salvarClasse(event) {
-    event.preventDefault()
-
-    if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode cadastrar ou editar classes.')
-      return
-    }
-
-    if (!novaClasse.nome.trim()) {
-      alert('Preencha o nome da classe.')
-      return
-    }
-
-    if (classeEditandoId) {
-      const { error } = await supabase
-        .from('classes')
-        .update({
-          nome: novaClasse.nome,
-          professor: novaClasse.professor || '',
-        })
-        .eq('id', classeEditandoId)
-
-      if (error) {
-        console.error(error)
-        alert('Erro ao salvar alterações da classe.')
-        return
-      }
-    } else {
-      const { error } = await supabase.from('classes').insert({
-        id: Date.now(),
-        nome: novaClasse.nome,
-        professor: novaClasse.professor,
-        igreja_id: buscarIgrejaIdAtual(),
-      })
-
-      if (error) {
-        console.error(error)
-        alert('Erro ao salvar classe.')
-        return
-      }
-    }
-
-    await buscarTodosOsDados()
-    cancelarFormularioClasse()
-  }
-
-  async function excluirClasse(classeId) {
-    if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode excluir classes.')
-      return
-    }
-
-    const existemAlunos = alunos.some(
-      (aluno) => aluno.classeId === Number(classeId)
-    )
-
-    if (existemAlunos) {
-      alert('Não é possível excluir essa classe porque existem alunos nela.')
-      return
-    }
-
-    const confirmar = window.confirm('Tem certeza que deseja excluir esta classe?')
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase.from('classes').delete().eq('id', classeId)
-
-    if (error) {
-      console.error(error)
-      alert('Erro ao excluir classe.')
-      return
-    }
-
-    await buscarTodosOsDados()
-  }
-
-  function abrirNovoAluno(tipoPessoa = 'aluno') {
-    setNovoAluno({
-      nome: '',
-      classeId: '',
-      telefone: '',
-      dataNascimento: '',
-      tipoPessoa,
-    })
-    setAlunoEditandoId(null)
-    setMostrarFormularioAluno(true)
-  }
-
-  function abrirNovoAlunoDaClasse(classeId) {
-    setNovoAluno({
-      nome: '',
-      classeId: String(classeId),
-      telefone: '',
-      dataNascimento: '',
-      tipoPessoa: 'aluno',
-    })
-    setAlunoEditandoId(null)
-    setMostrarFormularioAluno(true)
-  }
-
-  function abrirNovoProfessorDaClasse(classeId) {
-    setNovoAluno({
-      nome: '',
-      classeId: String(classeId),
-      telefone: '',
-      dataNascimento: '',
-      tipoPessoa: 'professor',
-    })
-    setAlunoEditandoId(null)
-    setMostrarFormularioAluno(true)
-  }
-
-  function editarProfessorDaClasse(professor) {
-    editarAluno(professor)
-    setNovoAluno({
-      nome: professor.nome,
-      classeId: String(professor.classeId),
-      telefone: professor.telefone,
-      dataNascimento: professor.dataNascimento || '',
-      tipoPessoa: 'professor',
-    })
-  }
-
-  function editarAluno(aluno) {
-    setNovoAluno({
-      nome: aluno.nome,
-      classeId: String(aluno.classeId),
-      telefone: aluno.telefone,
-      dataNascimento: aluno.dataNascimento || '',
-      tipoPessoa: aluno.tipoPessoa || 'aluno',
-    })
-    setAlunoEditandoId(aluno.id)
-    setMostrarFormularioAluno(true)
-  }
-
-  function cancelarFormularioAluno() {
-    setNovoAluno({ nome: '', classeId: '', telefone: '', dataNascimento: '', tipoPessoa: 'aluno' })
-    setAlunoEditandoId(null)
-    setMostrarFormularioAluno(false)
-  }
-
-  function normalizarNomeCadastro(valor) {
-    return String(valor || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .toLowerCase()
-  }
-
-  function removerNomeProfessorDoTextoClasse(textoProfessores, nomeProfessor) {
-    const nomeNormalizado = normalizarNomeCadastro(nomeProfessor)
-
-    return String(textoProfessores || '')
-      .split(/,|;|\/| e /i)
-      .map((nome) => nome.trim())
-      .filter(Boolean)
-      .filter((nome) => normalizarNomeCadastro(nome) !== nomeNormalizado)
-      .join(', ')
-  }
-
-  async function existePessoaDuplicadaNaClasse({ nome, classeId, tipoPessoa, ignorarId = null }) {
-    const igrejaAtualId = buscarIgrejaIdAtual()
-
-    if (!igrejaAtualId || !nome || !classeId) {
-      return false
-    }
-
-    const nomeNormalizado = normalizarNomeCadastro(nome)
-
-    const duplicadoLocal = alunos.some((aluno) => {
-      return (
-        Number(aluno.igreja_id || igrejaAtualId) === Number(igrejaAtualId) &&
-        Number(aluno.classeId || aluno.classe_id) === Number(classeId) &&
-        String(aluno.tipoPessoa || aluno.tipo_pessoa || 'aluno') === String(tipoPessoa || 'aluno') &&
-        normalizarNomeCadastro(aluno.nome) === nomeNormalizado &&
-        String(aluno.id) !== String(ignorarId || '')
-      )
-    })
-
-    if (duplicadoLocal) {
-      return true
-    }
-
-    const { data, error } = await supabase
-      .from('alunos')
-      .select('id, nome')
-      .eq('igreja_id', igrejaAtualId)
-      .eq('classe_id', Number(classeId))
-      .eq('tipo_pessoa', tipoPessoa || 'aluno')
-
-    if (error) {
-      console.error('Erro ao verificar duplicidade:', error)
-      return false
-    }
-
-    return (data || []).some((registro) => {
-      return (
-        normalizarNomeCadastro(registro.nome) === nomeNormalizado &&
-        String(registro.id) !== String(ignorarId || '')
-      )
-    })
-  }
-
-  async function salvarAluno(event) {
-    event.preventDefault()
-
-    if (salvandoAluno) {
-      return
-    }
-
-    if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode cadastrar ou editar alunos.')
-      return
-    }
-
-    const nomeLimpo = novoAluno.nome.replace(/\s+/g, ' ').trim()
-    const tipoPessoaCadastro = novoAluno.tipoPessoa || 'aluno'
-
-    if (!nomeLimpo || !novoAluno.classeId) {
-      alert('Preencha o nome do aluno e selecione uma classe.')
-      return
-    }
-
-    setSalvandoAluno(true)
-
-    try {
-      const duplicado = await existePessoaDuplicadaNaClasse({
-        nome: nomeLimpo,
-        classeId: novoAluno.classeId,
-        tipoPessoa: tipoPessoaCadastro,
-        ignorarId: alunoEditandoId,
-      })
-
-      if (duplicado) {
-        alert(
-          tipoPessoaCadastro === 'professor'
-            ? 'Já existe um professor com esse nome vinculado a esta classe.'
-            : 'Já existe um aluno com esse nome matriculado nesta classe.'
-        )
-        return
-      }
-
-      const alunoBanco = {
-        nome: nomeLimpo,
-        classe_id: Number(novoAluno.classeId),
-        telefone: novoAluno.telefone,
-        data_nascimento: novoAluno.dataNascimento || null,
-        tipo_pessoa: tipoPessoaCadastro,
-      }
-
-      if (alunoEditandoId) {
-        const { error } = await supabase
-          .from('alunos')
-          .update(alunoBanco)
-          .eq('id', alunoEditandoId)
-
-        if (error) {
-          console.error(error)
-          alert('Erro ao salvar alterações do aluno.')
-          return
-        }
-      } else {
-        const { error } = await supabase.from('alunos').insert({
-          id: Date.now(),
-          ...alunoBanco,
-          igreja_id: buscarIgrejaIdAtual(),
-        })
-
-        if (error) {
-          console.error(error)
-          alert('Erro ao salvar aluno.')
-          return
-        }
-      }
-
-      await buscarTodosOsDados()
-      cancelarFormularioAluno()
-    } finally {
-      setSalvandoAluno(false)
-    }
-  }
-
-    async function excluirAluno(alunoId) {
-    if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode excluir alunos ou professores.')
-      return
-    }
-
-    const cadastroEncontrado = alunos.find((aluno) => Number(aluno.id) === Number(alunoId))
-    const ehProfessor = cadastroEncontrado?.tipoPessoa === 'professor'
-
-    const confirmar = window.confirm(
-      ehProfessor
-        ? 'Tem certeza que deseja excluir este professor?'
-        : 'Tem certeza que deseja excluir este aluno?'
-    )
-
-    if (!confirmar) {
-      return
-    }
-
-    if (ehProfessor && cadastroEncontrado?.classeId) {
-      const classeDoProfessor = classes.find(
-        (classe) => Number(classe.id) === Number(cadastroEncontrado.classeId)
-      )
-
-      if (classeDoProfessor?.professor) {
-        const textoAtualizado = removerNomeProfessorDoTextoClasse(
-          classeDoProfessor.professor,
-          cadastroEncontrado.nome
-        )
-
-        const { error: erroAtualizarClasse } = await supabase
-          .from('classes')
-          .update({ professor: textoAtualizado })
-          .eq('id', cadastroEncontrado.classeId)
-
-        if (erroAtualizarClasse) {
-          console.error(erroAtualizarClasse)
-          alert('Erro ao remover o professor da classe.')
-          return
-        }
-      }
-    }
-
-    const { error } = await supabase.from('alunos').delete().eq('id', alunoId)
-
-    if (error) {
-      console.error(error)
-      alert(ehProfessor ? 'Erro ao excluir professor.' : 'Erro ao excluir aluno.')
-      return
-    }
-
-    await buscarTodosOsDados()
-  }
-
-  function filtrarCadastrosPorTipo(tipoPessoa) {
-    return alunos.filter((aluno) => {
-      const nomeCombina = aluno.nome
-        .toLowerCase()
-        .includes(buscaAluno.toLowerCase())
-
-      const classeCombina =
-        !filtroClasseAluno || aluno.classeId === Number(filtroClasseAluno)
-
-      const tipoCombina = (aluno.tipoPessoa || 'aluno') === tipoPessoa
-
-      return nomeCombina && classeCombina && tipoCombina
-    })
-  }
-
-  function filtrarAlunos() {
-    return filtrarCadastrosPorTipo('aluno')
-  }
-
-  function filtrarProfessores() {
-    return filtrarCadastrosPorTipo('professor')
-  }
-
-  function limparFiltrosAlunos() {
-    setBuscaAluno('')
-    setFiltroClasseAluno('')
-  }
-
-  function buscarProfessoresDaIgreja() {
-    return alunos
-      .filter((pessoa) => pessoa.tipoPessoa === 'professor')
-      .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''))
-  }
-
-  function alterarPresencaProfessor(perfilId, status) {
-    setPresencasProfessores({
-      ...presencasProfessores,
-      [perfilId]: status,
-    })
-  }
-
-  function buscarDataUltimaChamadaProfessores() {
-    if (chamadasProfessores.length === 0) {
-      return buscarDataAtual()
-    }
-
-    const ultimaChamada = chamadasProfessores[chamadasProfessores.length - 1]
-    return ultimaChamada.data || buscarDataAtual()
-  }
-
-  function calcularTotalProfessoresPresentes() {
-    return chamadasProfessores.reduce(
-      (total, chamada) => total + converterNumero(chamada.totalPresentes),
-      0
-    )
-  }
-
-  function calcularTotalProfessoresFaltas() {
-    return chamadasProfessores.reduce(
-      (total, chamada) => total + converterNumero(chamada.totalFaltas),
-      0
-    )
-  }
-
-  function calcularTotalProfessoresJustificadas() {
-    return chamadasProfessores.reduce(
-      (total, chamada) => total + converterNumero(chamada.totalJustificadas),
-      0
-    )
-  }
-
-  function buscarUltimaChamadaProfessores() {
-    if (chamadasProfessores.length === 0) {
-      return null
-    }
-
-    return chamadasProfessores[chamadasProfessores.length - 1]
-  }
-
-  function calcularResumoUltimaChamadaProfessores() {
-    const ultimaChamada = buscarUltimaChamadaProfessores()
-
-    if (!ultimaChamada) {
-      return {
-        totalProfessores: professoresSomente().length,
-        presentes: 0,
-        faltaram: 0,
-        justificaram: 0,
-        data: buscarDataAtual(),
-        registros: [],
-      }
-    }
-
-    return {
-      totalProfessores: ultimaChamada.totalProfessores,
-      presentes: ultimaChamada.totalPresentes,
-      faltaram: ultimaChamada.totalFaltas,
-      justificaram: ultimaChamada.totalJustificadas,
-      data: ultimaChamada.data,
-      registros: ultimaChamada.registros || [],
-    }
-  }
-
-  function traduzirStatusProfessor(status) {
-    if (status === 'presente') return 'Presente'
-    if (status === 'faltou') return 'Faltou'
-    if (status === 'justificou') return 'Justificou'
-    return 'Sem marcação'
-  }
-
-  function calcularPercentualPresencaProfessores() {
-    const resumo = calcularResumoUltimaChamadaProfessores()
-    const total = converterNumero(resumo.totalProfessores)
-
-    if (total === 0) {
-      return 0
-    }
-
-    return Math.round((converterNumero(resumo.presentes) / total) * 100)
-  }
-
-  function alterarPresenca(alunoId, status) {
-    setPresencas((presencasAtuais) => ({
-      ...presencasAtuais,
-      [String(alunoId)]: status,
-    }))
-  }
-
-  function marcarTodosAlunos(status) {
-    setMensagemChamada(null)
-
-    if (!classeChamadaId) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: 'Selecione uma classe antes de marcar a chamada.',
-      })
-      return
-    }
-
-    const alunosDaClasse = alunos.filter(
-      (aluno) =>
-        Number(aluno.classeId) === Number(classeChamadaId) &&
-        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
-    )
-
-    if (alunosDaClasse.length === 0) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: 'Não encontrei alunos nessa classe. Verifique se os alunos estão vinculados à classe escolhida.',
-      })
-      return
-    }
-
-    setPresencas((presencasAtuais) => {
-      const novasPresencas = { ...presencasAtuais }
-
-      alunosDaClasse.forEach((aluno) => {
-        novasPresencas[String(aluno.id)] = status
-      })
-
-      return novasPresencas
-    })
-  }
-
-  function alterarDadosExtras(campo, valor) {
-    setDadosExtrasChamada({
-      ...dadosExtrasChamada,
-      [campo]: valor,
-    })
-  }
-
-  async function salvarChamada() {
-    setMensagemChamada(null)
-
-    if (usuarioEhProfessor() && !professorPodeAcessarClasse(classeChamadaId)) {
-      setMensagemChamada({
-        tipo: 'erro',
-        texto: 'Professor pode fazer chamada apenas das classes vinculadas pela secretaria.',
-      })
-      return
-    }
-
-    if (!classeChamadaId) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: 'Selecione uma classe antes de salvar a chamada.',
-      })
-      return
-    }
-
-    const classeSelecionadaId = Number(classeChamadaId)
-    const classeSelecionada = classes.find(
-      (classe) => Number(classe.id) === classeSelecionadaId
-    )
-
-    if (!classeSelecionada) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: 'A classe selecionada não foi encontrada. Atualize a página e escolha a classe novamente.',
-      })
-      return
-    }
-
-    const alunosDaClasse = alunos.filter(
-      (aluno) =>
-        Number(aluno.classeId) === classeSelecionadaId &&
-        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
-    )
-
-    if (alunosDaClasse.length === 0) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: `Não encontrei alunos cadastrados na classe ${classeSelecionada.nome}. Verifique se os alunos estão vinculados a essa classe.`,
-      })
-      return
-    }
-
-    const presencasAtuais = { ...presencas }
-
-    const alunosSemMarcacao = alunosDaClasse.filter(
-      (aluno) => !presencasAtuais[String(aluno.id)]
-    )
-
-    if (alunosSemMarcacao.length > 0) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: `Ainda falta marcar ${alunosSemMarcacao.length} aluno(s): ${alunosSemMarcacao
-          .map((aluno) => aluno.nome)
-          .join(', ')}`,
-      })
-      return
-    }
-
-    const totalPresentes = alunosDaClasse.filter(
-      (aluno) => presencasAtuais[String(aluno.id)] === 'presente'
-    ).length
-
-    const totalFaltas = alunosDaClasse.filter(
-      (aluno) => presencasAtuais[String(aluno.id)] === 'faltou'
-    ).length
-
-    const visitantes = converterNumero(dadosExtrasChamada.visitantes)
-    const biblias = converterNumero(dadosExtrasChamada.biblias)
-    const revistas = converterNumero(dadosExtrasChamada.revistas)
-    const ofertas = converterNumero(dadosExtrasChamada.ofertas)
-
-    const chamadaBanco = {
-      id: Date.now(),
-      data: dataAulaChamada || buscarDataAtual(),
-      igreja_id: buscarIgrejaIdAtual(),
-      classe_id: classeSelecionadaId,
-      matricula: alunosDaClasse.length,
-      total_presentes: totalPresentes,
-      total_faltas: totalFaltas,
-      visitantes,
-      biblias,
-      revistas,
-      ofertas,
-      total_geral_classe: totalPresentes + visitantes,
-      registros: alunosDaClasse.map((aluno) => ({
-        alunoId: aluno.id,
-        nome: aluno.nome,
-        status: presencasAtuais[String(aluno.id)],
-      })),
-    }
-
-    const { error } = await supabase.from('chamadas').insert(chamadaBanco)
-
-    if (error) {
-      console.error(error)
-      setMensagemChamada({
-        tipo: 'erro',
-        texto: 'Não foi possível salvar a chamada. Verifique sua conexão e tente novamente.',
-      })
-      return
-    }
-
-    await buscarTodosOsDados()
-
-    setPresencas({})
-    setDataAulaChamada(new Date().toISOString().slice(0, 10))
-    setDadosExtrasChamada({
-      visitantes: '',
-      biblias: '',
-      revistas: '',
-      ofertas: '',
-    })
-    setClasseChamadaId(String(classeSelecionadaId))
-    setMensagemChamada({
-      tipo: 'sucesso',
-      texto: `Chamada dos alunos da classe ${classeSelecionada.nome} salva com sucesso.`,
-    })
-  }
-
-  function alterarConfiguracaoIgreja(campo, valor) {
-    setConfiguracaoIgreja({
-      ...configuracaoIgreja,
-      [campo]: valor,
-    })
-  }
-
-  async function salvarConfiguracaoIgreja(event) {
-    event.preventDefault()
-
-    if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode alterar as configurações da igreja.')
-      return
-    }
-
-    if (!sessao?.user?.id) {
-      alert('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
-      return
-    }
-
-    if (!buscarIgrejaIdAtual()) {
-      alert('Igreja não identificada. Saia e entre novamente no sistema.')
-      return
-    }
-
-    setSalvandoConfiguracaoIgreja(true)
-
-    const dadosConfiguracao = {
-      user_id: sessao.user.id,
-      igreja_id: buscarIgrejaIdAtual(),
-      nome_igreja: configuracaoIgreja.nome_igreja.trim(),
-      congregacao: configuracaoIgreja.congregacao.trim(),
-      pastor_dirigente: configuracaoIgreja.pastor_dirigente.trim(),
-      superintendente_ebd: configuracaoIgreja.superintendente_ebd.trim(),
-      cidade: configuracaoIgreja.cidade.trim(),
-      estado: configuracaoIgreja.estado.trim(),
-      bairro: configuracaoIgreja.bairro.trim(),
-      endereco: configuracaoIgreja.endereco.trim(),
-      telefone: configuracaoIgreja.telefone.trim(),
-      email: configuracaoIgreja.email.trim(),
-      updated_at: new Date().toISOString(),
-    }
-
-    try {
-      if (configuracaoIgreja.id) {
-        const { error } = await supabase
-          .from('configuracoes_igreja')
-          .update(dadosConfiguracao)
-          .eq('id', configuracaoIgreja.id)
-
-        if (error) {
-          throw error
-        }
-      } else {
-        const { data, error } = await supabase
-          .from('configuracoes_igreja')
-          .insert(dadosConfiguracao)
-          .select()
-          .single()
-
-        if (error) {
-          throw error
-        }
-
-        setConfiguracaoIgreja({
-          id: data.id,
-          nome_igreja: data.nome_igreja || '',
-          congregacao: data.congregacao || '',
-          pastor_dirigente: data.pastor_dirigente || '',
-          superintendente_ebd: data.superintendente_ebd || '',
-          cidade: data.cidade || '',
-          estado: data.estado || '',
-          bairro: data.bairro || '',
-          endereco: data.endereco || '',
-          telefone: data.telefone || '',
-          email: data.email || '',
-        })
-      }
-
-      await buscarTodosOsDados(sessao)
-      alert('Configurações da igreja salvas com sucesso!')
-    } catch (error) {
-      console.error('Erro ao salvar configurações da igreja:', error)
-      alert(error?.message || 'Erro ao salvar configurações da igreja.')
-    } finally {
-      setSalvandoConfiguracaoIgreja(false)
-    }
-  }
-
-  function montarRelatorioPorClasse() {
-    return classes.map((classe, indice) => {
-      const chamadasDaClasse = chamadasSalvas.filter(
-        (chamada) => chamada.classeId === classe.id
-      )
-
-      const ultimaChamada = chamadasDaClasse[chamadasDaClasse.length - 1]
-      const matricula = calcularMatriculaDaClasse(classe.id)
-      const presenca = ultimaChamada ? ultimaChamada.totalPresentes : 0
-      const ausencia = ultimaChamada ? ultimaChamada.totalFaltas : 0
-      const visitantes = ultimaChamada ? ultimaChamada.visitantes : 0
-      const biblias = ultimaChamada ? ultimaChamada.biblias : 0
-      const revistas = ultimaChamada ? ultimaChamada.revistas : 0
-      const ofertas = ultimaChamada ? ultimaChamada.ofertas : 0
-      const frequencia =
-        matricula === 0 ? 0 : Math.round((presenca / matricula) * 100)
-
-      return {
-        numero: indice + 1,
-        classeId: classe.id,
-        classe: classe.nome,
-        matricula,
-        ausencia,
-        presenca,
-        visitantes,
-        total: presenca + visitantes,
-        biblias,
-        revistas,
-        ofertas,
-        frequencia,
-      }
-    })
-  }
-
-  function calcularTotaisRelatorio() {
-    const linhas = montarRelatorioPorClasse()
-
-    const totais = linhas.reduce(
-      (acc, linha) => ({
-        matricula: acc.matricula + linha.matricula,
-        ausencia: acc.ausencia + linha.ausencia,
-        presenca: acc.presenca + linha.presenca,
-        visitantes: acc.visitantes + linha.visitantes,
-        total: acc.total + linha.total,
-        biblias: acc.biblias + linha.biblias,
-        revistas: acc.revistas + linha.revistas,
-        ofertas: acc.ofertas + linha.ofertas,
-      }),
-      {
-        matricula: 0,
-        ausencia: 0,
-        presenca: 0,
-        visitantes: 0,
-        total: 0,
-        biblias: 0,
-        revistas: 0,
-        ofertas: 0,
-      }
-    )
-
-    return {
-      ...totais,
-      frequencia:
-        totais.matricula === 0
-          ? 0
-          : Math.round((totais.presenca / totais.matricula) * 100),
-    }
-  }
-
-  if (verificandoSessao && !sessao) {
-    return (
-      <div className="tela-login tela-mensagem">
-        <section className="painel-apresentacao">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Sistema comercial pronto para igrejas</span>
-            <h2>Organize classes, alunos, chamadas e relatórios em um só lugar.</h2>
-            <p>
-              Acesse o painel para acompanhar os dados da sua EBD com uma interface
-              moderna, simples e profissional.
-            </p>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-mensagem">
-          <div className="mensagem-status-icone">
-            <Icone nome="check" className="icone-status" />
-          </div>
-          <h2>Verificando acesso...</h2>
-          <p>Aguarde um momento enquanto conferimos sua sessão.</p>
-        </section>
-      </div>
-    )
-  }
-
-  if (sessao && telaPublica === 'novaSenha') {
-    return (
-      <div className="tela-login tela-recuperacao-senha">
-        <section className="painel-apresentacao painel-recuperacao-senha">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Redefinição segura de senha.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Nova senha</span>
-            <h2>Crie uma nova senha de acesso.</h2>
-            <p>
-              Digite uma nova senha para continuar usando o sistema com segurança.
-            </p>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-recuperacao-senha">
-          <div className="topo-cartao-login">
-            <div className="topo-cartao-icone">
-              <Icone nome="usuarios" className="icone-status" />
-            </div>
-            <div>
-              <h2>Definir nova senha</h2>
-              <p>Sua nova senha precisa ter pelo menos 6 caracteres.</p>
-            </div>
-          </div>
-
-          <form className="formulario formulario-login" onSubmit={salvarNovaSenhaRecuperacao}>
-            <label>
-              Nova senha
-              <input
-                type="password"
-                value={novaSenhaRecuperacao}
-                onChange={(event) => setNovaSenhaRecuperacao(event.target.value)}
-                placeholder="Digite a nova senha"
-                autoComplete="new-password"
-              />
-            </label>
-
-            <label>
-              Confirmar nova senha
-              <input
-                type="password"
-                value={confirmarNovaSenhaRecuperacao}
-                onChange={(event) =>
-                  setConfirmarNovaSenhaRecuperacao(event.target.value)
-                }
-                placeholder="Digite a nova senha novamente"
-                autoComplete="new-password"
-              />
-            </label>
-
-            {erroNovaSenha && <div className="aviso aviso-cadastro-piloto">{erroNovaSenha}</div>}
-
-            <button
-              className="botao-principal botao-largura-total"
-              type="submit"
-              disabled={carregandoNovaSenha}
-            >
-              {carregandoNovaSenha ? 'Salvando...' : 'Salvar nova senha'}
-            </button>
-          </form>
-        </section>
-      </div>
-    )
-  }
-
-  if (!sessao && telaPublica === 'recuperarSenha') {
-    return (
-      <div className="tela-login tela-recuperacao-senha">
-        <section className="painel-apresentacao painel-recuperacao-senha">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Recuperação de acesso.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Esqueci minha senha</span>
-            <h2>Receba um link para redefinir sua senha.</h2>
-            <p>
-              Informe o e-mail usado no cadastro. O sistema enviará um link seguro para
-              você criar uma nova senha.
-            </p>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-recuperacao-senha">
-          <button
-            className="botao-voltar-publico"
-            type="button"
-            onClick={() => setTelaPublica('login')}
-          >
-            ← Voltar para login
-          </button>
-
-          <div className="topo-cartao-login">
-            <div className="topo-cartao-icone">
-              <Icone nome="usuarios" className="icone-status" />
-            </div>
-            <div>
-              <h2>Recuperar senha</h2>
-              <p>Digite seu e-mail para receber o link de recuperação.</p>
-            </div>
-          </div>
-
-          <form className="formulario formulario-login" onSubmit={enviarLinkRecuperacaoSenha}>
-            <label>
-              E-mail cadastrado
-              <input
-                type="email"
-                value={emailRecuperacao}
-                onChange={(event) => setEmailRecuperacao(event.target.value)}
-                placeholder="seuemail@exemplo.com"
-                autoComplete="email"
-              />
-            </label>
-
-            {erroRecuperacao && <div className="aviso aviso-cadastro-piloto">{erroRecuperacao}</div>}
-            {mensagemRecuperacao && (
-              <div className="aviso aviso-sucesso-cadastro">{mensagemRecuperacao}</div>
-            )}
-
-            <button
-              className="botao-principal botao-largura-total"
-              type="submit"
-              disabled={carregandoRecuperacao}
-            >
-              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperação'}
-            </button>
-          </form>
-        </section>
-      </div>
-    )
-  }
-
-  if (!sessao && telaPublica === 'cadastroEnviado') {
-    return (
-      <div className="tela-login tela-cadastro-enviado">
-        <section className="painel-apresentacao painel-cadastro-enviado">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Cadastro recebido com sucesso.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Aguardando aprovação</span>
-            <h2>Sua solicitação foi enviada.</h2>
-            <p>
-              O administrador vai conferir os dados da igreja e liberar o acesso para
-              o teste piloto.
-            </p>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-cadastro-enviado">
-          <div className="mensagem-status-icone mensagem-status-sucesso">
-            <Icone nome="check" className="icone-status" />
-          </div>
-
-          <h2>Cadastro enviado!</h2>
-
-          <p>
-            {ultimoCadastroPilotoEnviado.nomeIgreja
-              ? `Recebemos o cadastro da igreja ${ultimoCadastroPilotoEnviado.nomeIgreja}.`
-              : 'Recebemos o cadastro da sua igreja.'}
-          </p>
-
-          <div className="resumo-cadastro-enviado">
-            {ultimoCadastroPilotoEnviado.responsavel && (
-              <span>Responsável: {ultimoCadastroPilotoEnviado.responsavel}</span>
-            )}
-            {ultimoCadastroPilotoEnviado.email && (
-              <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
-            )}
-            <span>Status: aguardando aprovação</span>
-          </div>
-
-          <div className="aviso-aprovacao-cadastro">
-            <strong>O que acontece agora?</strong>
-            <p>
-              Aguarde a aprovação do administrador. Após a liberação, você poderá
-              entrar normalmente com o e-mail e a senha cadastrados.
-            </p>
-          </div>
-
-          <button
-            className="botao-principal botao-largura-total"
-            type="button"
-            onClick={() => setTelaPublica('login')}
-          >
-            Voltar para login
-          </button>
-        </section>
-      </div>
-    )
-  }
-
-  if (!sessao && telaPublica === 'cadastroPiloto') {
-    return (
-      <div className="tela-login tela-cadastro-piloto">
-        <section className="painel-apresentacao painel-cadastro-piloto">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Cadastro do teste piloto fechado.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Exclusivo para o grupo</span>
-            <h2>Crie o acesso da sua igreja para avaliação.</h2>
-            <p>
-              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
-              testar classes, alunos, professores, chamadas, relatórios e mensagens.
-            </p>
-          </div>
-
-          <div className="beneficios-login">
-            <div className="beneficio-item">
-              <Icone nome="check" className="icone-beneficio" />
-              <span>Código do piloto obrigatório</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="igreja" className="icone-beneficio" />
-              <span>Sede ou congregação</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="usuarios" className="icone-beneficio" />
-              <span>Secretaria ou superintendência</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="relatorios" className="icone-beneficio" />
-              <span>Aprovação pelo administrador</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-cadastro-piloto">
-          <button
-            className="botao-voltar-publico"
-            type="button"
-            onClick={() => setTelaPublica('login')}
-          >
-            ← Voltar para login
-          </button>
-
-          <div className="topo-cartao-login">
-            <div className="topo-cartao-icone">
-              <Icone nome="igreja" className="icone-status" />
-            </div>
-            <div>
-              <h2>Criar acesso do piloto</h2>
-              <p>Preencha seus dados e os dados da igreja participante.</p>
-            </div>
-          </div>
-
-          <form className="formulario formulario-cadastro-piloto" onSubmit={cadastrarAcessoPiloto}>
-            <div className="grupo-cadastro-piloto">
-              <h3>Responsável</h3>
-
-              <label>
-                Nome
-                <input
-                  type="text"
-                  value={cadastroPiloto.nomeResponsavel}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      nomeResponsavel: event.target.value,
-                    })
-                  }
-                  placeholder="Seu nome completo"
-                />
-              </label>
-
-              <label>
-                Cargo
-                <select
-                  value={cadastroPiloto.cargoResponsavel}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      cargoResponsavel: event.target.value,
-                    })
-                  }
-                >
-                  <option value="secretario">Secretário(a)</option>
-                  <option value="superintendente">Superintendente</option>
-                </select>
-              </label>
-
-              <label>
-                E-mail de acesso
-                <input
-                  type="email"
-                  value={cadastroPiloto.email}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, email: event.target.value })
-                  }
-                  placeholder="seuemail@exemplo.com"
-                  autoComplete="email"
-                />
-              </label>
-
-              <div className="campo-telefone-cadastro">
-                <label>
-                  DDD
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength="2"
-                    value={cadastroPiloto.telefoneDdd || ''}
-                    onChange={(event) =>
-                      setCadastroPiloto({
-                        ...cadastroPiloto,
-                        telefoneDdd: event.target.value.replace(/\D/g, '').slice(0, 2),
-                      })
-                    }
-                    placeholder="27"
-                    required
-                  />
-                </label>
-
-                <label>
-                  WhatsApp / telefone
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={cadastroPiloto.telefoneNumero || ''}
-                    onChange={(event) =>
-                      setCadastroPiloto({
-                        ...cadastroPiloto,
-                        telefoneNumero: event.target.value.replace(/\D/g, ''),
-                      })
-                    }
-                    placeholder="999999999"
-                    required
-                  />
-                </label>
-              </div>
-
-              <label>
-                Senha
-                <input
-                  type="password"
-                  value={cadastroPiloto.senha}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, senha: event.target.value })
-                  }
-                  placeholder="Mínimo 6 caracteres"
-                  autoComplete="new-password"
-                />
-              </label>
-
-              <label>
-                Confirmar senha
-                <input
-                  type="password"
-                  value={cadastroPiloto.confirmarSenha}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      confirmarSenha: event.target.value,
-                    })
-                  }
-                  placeholder="Digite a senha novamente"
-                  autoComplete="new-password"
-                />
-              </label>
-
-              <label>
-                Código do piloto
-                <input
-                  type="text"
-                  value={cadastroPiloto.codigoPiloto}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      codigoPiloto: event.target.value,
-                    })
-                  }
-                  placeholder="Código informado no grupo"
-                />
-              </label>
-            </div>
-
-            <div className="grupo-cadastro-piloto">
-              <h3>Dados da igreja</h3>
-
-              <label>
-                Nome da igreja
-                <input
-                  type="text"
-                  value={cadastroPiloto.nomeIgreja}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      nomeIgreja: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Assembleia de Deus..."
-                />
-              </label>
-
-              <label>
-                Tipo
-                <select
-                  value={cadastroPiloto.tipoIgreja}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      tipoIgreja: event.target.value,
-                    })
-                  }
-                >
-                  <option value="sede">Sede</option>
-                  <option value="congregacao">Congregação</option>
-                </select>
-              </label>
-
-              <label>
-                Congregação
-                <input
-                  type="text"
-                  value={cadastroPiloto.congregacao}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      congregacao: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Sede, Betel, Vila Nova..."
-                />
-              </label>
-
-              <label>
-                Pastor/Dirigente
-                <input
-                  type="text"
-                  value={cadastroPiloto.pastorDirigente}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      pastorDirigente: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Pr. João Silva"
-                />
-              </label>
-
-              <label>
-                Cidade
-                <input
-                  type="text"
-                  value={cadastroPiloto.cidade}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, cidade: event.target.value })
-                  }
-                />
-              </label>
-
-              <label>
-                Estado
-                <select
-                  value={cadastroPiloto.estado}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, estado: event.target.value })
-                  }
-                  required
-                >
-                  <option value="">Selecione o estado</option>
-                  {ESTADOS_BRASIL.map((estado) => (
-                    <option key={estado.sigla} value={estado.sigla}>
-                      {estado.sigla} - {estado.nome}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Bairro
-                <input
-                  type="text"
-                  value={cadastroPiloto.bairro}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, bairro: event.target.value })
-                  }
-                />
-              </label>
-
-              <label className="campo-cadastro-piloto-largo">
-                Endereço
-                <input
-                  type="text"
-                  value={cadastroPiloto.endereco}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      endereco: event.target.value,
-                    })
-                  }
-                  placeholder="Rua ou avenida"
-                />
-              </label>
-
-              <label>
-                Número
-                <input
-                  type="text"
-                  value={cadastroPiloto.numeroEndereco}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      numeroEndereco: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: 146"
-                />
-              </label>
-
-              <label className="campo-cadastro-piloto-largo">
-                Complemento
-                <input
-                  type="text"
-                  value={cadastroPiloto.complementoEndereco}
-                  onChange={(event) =>
-                    setCadastroPiloto({
-                      ...cadastroPiloto,
-                      complementoEndereco: event.target.value,
-                    })
-                  }
-                  placeholder="Opcional: sala, fundos, referência..."
-                />
-              </label>
-
-              <label>
-                CEP
-                <input
-                  type="text"
-                  value={cadastroPiloto.cep}
-                  onChange={(event) =>
-                    setCadastroPiloto({ ...cadastroPiloto, cep: event.target.value })
-                  }
-                  placeholder="Ex: 36000-000"
-                />
-              </label>
-
-              {cadastroPiloto.tipoIgreja === 'congregacao' && (
-                <>
-                  <label>
-                    Sede filiada
-                    <input
-                      type="text"
-                      value={cadastroPiloto.sedeFiliadaNome}
-                      onChange={(event) =>
-                        setCadastroPiloto({
-                          ...cadastroPiloto,
-                          sedeFiliadaNome: event.target.value,
-                        })
-                      }
-                      placeholder="Nome da igreja sede"
-                    />
-                  </label>
-
-                  <label className="campo-cadastro-piloto-largo">
-                    Endereço da sede
-                    <input
-                      type="text"
-                      value={cadastroPiloto.sedeFiliadaEndereco}
-                      onChange={(event) =>
-                        setCadastroPiloto({
-                          ...cadastroPiloto,
-                          sedeFiliadaEndereco: event.target.value,
-                        })
-                      }
-                      placeholder="Rua ou avenida da sede"
-                    />
-                  </label>
-
-                  <label>
-                    Número da sede
-                    <input
-                      type="text"
-                      value={cadastroPiloto.sedeFiliadaNumero}
-                      onChange={(event) =>
-                        setCadastroPiloto({
-                          ...cadastroPiloto,
-                          sedeFiliadaNumero: event.target.value,
-                        })
-                      }
-                      placeholder="Ex: 100"
-                    />
-                  </label>
-
-                  <label className="campo-cadastro-piloto-largo">
-                    Complemento da sede
-                    <input
-                      type="text"
-                      value={cadastroPiloto.sedeFiliadaComplemento}
-                      onChange={(event) =>
-                        setCadastroPiloto({
-                          ...cadastroPiloto,
-                          sedeFiliadaComplemento: event.target.value,
-                        })
-                      }
-                      placeholder="Opcional"
-                    />
-                  </label>
-
-                  <label>
-                    CEP da sede
-                    <input
-                      type="text"
-                      value={cadastroPiloto.sedeFiliadaCep}
-                      onChange={(event) =>
-                        setCadastroPiloto({
-                          ...cadastroPiloto,
-                          sedeFiliadaCep: event.target.value,
-                        })
-                      }
-                      placeholder="Ex: 36000-000"
-                    />
-                  </label>
-                </>
-              )}
-            </div>
-
-            {erroCadastroPiloto && <div className="aviso aviso-cadastro-piloto">{erroCadastroPiloto}</div>}
-            {sucessoCadastroPiloto && <div className="aviso aviso-sucesso-cadastro">{sucessoCadastroPiloto}</div>}
-
-            <button
-              className="botao-principal botao-largura-total"
-              type="submit"
-              disabled={carregandoCadastroPiloto}
-            >
-              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovação'}
-            </button>
-          </form>
-        </section>
-      </div>
-    )
-  }
-
-  if (!sessao && telaPublica === 'login') {
-    return (
-      <div className="tela-login tela-login-v70">
-        <section className="painel-apresentacao painel-login-v70">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto apresentacao-login-v70">
-            <span className="selo-apresentacao">Área segura da igreja</span>
-            <h2>Acesse o sistema da sua Escola Bíblica Dominical.</h2>
-            <p>
-              Entre para cuidar de classes, alunos, professores, chamadas, relatórios
-              e configurações em um ambiente simples e organizado.
-            </p>
-          </div>
-
-          <div className="preview-login-v70" aria-hidden="true">
-            <div className="preview-login-card preview-login-card-maior">
-              <span>Chamada digital</span>
-              <strong>Presenças registradas</strong>
-              <small>Dados separados por igreja</small>
-            </div>
-            <div className="preview-login-card">
-              <span>Relatórios</span>
-              <strong>PDF pronto</strong>
-              <small>Organização para a secretaria</small>
-            </div>
-            <div className="preview-login-card">
-              <span>Frequência</span>
-              <strong>100%</strong>
-              <small>Acompanhamento semanal</small>
-            </div>
-          </div>
-
-          <div className="beneficios-login beneficios-login-v70">
-            <div className="beneficio-item">
-              <Icone nome="classes" className="icone-beneficio" />
-              <span>Classes organizadas</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="alunos" className="icone-beneficio" />
-              <span>Alunos e professores</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="chamada" className="icone-beneficio" />
-              <span>Chamada digital</span>
-            </div>
-            <div className="beneficio-item">
-              <Icone nome="relatorios" className="icone-beneficio" />
-              <span>Relatórios modernos</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-login-v70">
-          <button
-            className="botao-voltar-publico"
-            type="button"
-            onClick={() => setTelaPublica('landing')}
-          >
-            ← Voltar para apresentação
-          </button>
-
-          <div className="topo-cartao-login">
-            <div className="topo-cartao-icone">
-              <Icone nome="usuarios" className="icone-status" />
-            </div>
-            <div>
-              <h2>Acesse sua conta</h2>
-              <p>Entre com o e-mail e a senha cadastrados para gerenciar sua igreja.</p>
-            </div>
-          </div>
-
-          <div className="aviso-login-aprovado aviso-login-v70">
-            Use este acesso somente se sua igreja já foi aprovada pelo administrador.
-          </div>
-
-          <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
-            <label>
-              E-mail
-              <input
-                type="email"
-                value={emailLogin}
-                onChange={(event) => setEmailLogin(event.target.value)}
-                placeholder="seuemail@exemplo.com"
-                autoComplete="email"
-              />
-            </label>
-
-            <label>
-              Senha
-              <input
-                type="password"
-                value={senhaLogin}
-                onChange={(event) => setSenhaLogin(event.target.value)}
-                placeholder="Digite sua senha"
-                autoComplete="current-password"
-              />
-            </label>
-
-            {erroLogin && <div className="aviso">{erroLogin}</div>}
-
-            <button
-              className="botao-principal botao-largura-total"
-              type="submit"
-              disabled={carregandoLogin}
-            >
-              {carregandoLogin ? 'Entrando...' : 'Entrar'}
-            </button>
-          </form>
-
-          <div className="bloco-criar-piloto bloco-cadastro-destaque bloco-cadastro-v70">
-            <span className="selo-primeiro-acesso">Primeiro acesso?</span>
-            <h3>Solicitar cadastro da igreja</h3>
-            <p>
-              Ainda não tem acesso? Cadastre sua igreja para análise e liberação do
-              administrador.
-            </p>
-
-            <button
-              className="botao-cadastrar-igreja botao-largura-total"
-              type="button"
-              onClick={() => setTelaPublica('cadastroPiloto')}
-            >
-              Solicitar cadastro da igreja
-            </button>
-          </div>
-        </section>
-      </div>
-    )
-  }
-
-  if (!sessao) {
-    return (
-      <div className="pagina-publica modelo-exato-ebd">
-        <nav className="navbar">
-          <div className="nav-container">
-            <div className="logo logo-com-imagem-oficial">
-              <div className="logo-icon logo-icon-oficial">
-                <img
-                  src="/logo-oficial-ebd-fiel.png"
-                  alt="Logo oficial EBD Fiel"
-                  className="logo-oficial-navbar"
-                />
-              </div>
-              <div>
-                <div className="logo-text">
-                  {'EBD '}<span>{'Fiel'}</span>
-                </div>
-                <div className="logo-sub">{'ESCOLA B\u00cdBLICA DOMINICAL'}</div>
-              </div>
-            </div>
-
-            <button
-              className={`menu-toggle ${menuPublicoAberto ? 'active' : ''}`}
-              type="button"
-              aria-label="Abrir menu"
-              onClick={() => setMenuPublicoAberto(!menuPublicoAberto)}
-            >
-              <span className="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </button>
-
-            <div className="nav-links">
-              <a href="#recursos">{'Recursos'}</a>
-              <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'Dúvidas'}</a>
-              <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
-                {'Entrar no sistema'}
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        <div className={`mobile-menu ${menuPublicoAberto ? 'active' : ''}`}>
-          <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>
-            {'Recursos'}
-          </a>
-          <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>
-            {'Benef\u00edcios'}
-          </a>
-          <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
-            {'Planos'}
-          </a>
-          <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            {'Dúvidas'}
-          </a>
-          <button
-            className="btn-nav-mobile"
-            type="button"
-            onClick={() => {
-              setMenuPublicoAberto(false)
-              setTelaPublica('login')
-            }}
-          >
-            {'Entrar no sistema'}
-          </button>
-        </div>
-
-        {menuPublicoAberto && (
-          <button
-            className="menu-overlay active"
-            aria-label="Fechar menu"
-            type="button"
-            onClick={() => setMenuPublicoAberto(false)}
-          />
-        )}
-
-        <main>
-          <section className="hero">
-            <div className="hero-content">
-              <div className="hero-copy">
-
-                <h1>
-                  {'Organize sua '}
-                  <span>{'Escola Bíblica Dominical'}</span>
-                  {' em poucos minutos'}
-                </h1>
-
-                <p>
-                  {'Controle classes, alunos, professores, chamadas e relatórios em um só lugar, sem planilhas e sem retrabalho.'}
-                </p>
-
-                <button className="btn-primary btn-hero-login-v70" type="button" onClick={() => setTelaPublica('login')}>
-                  {'Entrar no sistema'}
-                </button>
-
-                <div className="hero-stats">
-                  <div className="stat">
-                    <div className="stat-number">{'10'}</div>
-                    <div className="stat-label">{'Igrejas no piloto'}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">{'PDF'}</div>
-                    <div className="stat-label">{'Relatórios prontos'}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">{'24/7'}</div>
-                    <div className="stat-label">{'Online'}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hero-mockup">
-                <div className="mockup-header">
-                  <div className="mockup-dot mockup-red"></div>
-                  <div className="mockup-dot mockup-gold"></div>
-                  <div className="mockup-dot mockup-green"></div>
-                </div>
-
-                <div className="mockup-body">
-                  <div className="mockup-check">{'✓'}</div>
-                  <h3>{'Painel da EBD'}</h3>
-                  <p>{'Resumo simples para secretaria, professores e liderança.'}</p>
-
-                  <div className="mockup-metricas-v70">
-                    <div>
-                      <strong>{'24'}</strong>
-                      <span>{'presentes'}</span>
-                    </div>
-                    <div>
-                      <strong>{'92%'}</strong>
-                      <span>{'frequência'}</span>
-                    </div>
-                    <div>
-                      <strong>{'PDF'}</strong>
-                      <span>{'relatório'}</span>
-                    </div>
-                  </div>
-
-                  <div className="mockup-lista-v70">
-                    <span>{'Classes organizadas'}</span>
-                    <span>{'Chamada digital'}</span>
-                    <span>{'Aniversariantes da semana'}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section" id="recursos">
-            <div className="container">
-              <h2 className="section-title">{'Recursos que fazem a diferen\u00e7a'}</h2>
-              <p className="section-subtitle">
-                {'Tudo o que sua igreja precisa para uma gest\u00e3o eficiente da EBD.'}
-              </p>
-
-              <div className="features-grid">
-                <article className="feature-card">
-                  <div className="feature-icon">{'\u2713'}</div>
-                  <h3>{'Chamada digital simples'}</h3>
-                  <p>{'Registre a presen\u00e7a dos alunos e professores pelo computador ou celular.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\u26EA'}</div>
-                  <h3>{'Dados separados por igreja'}</h3>
-                  <p>{'Cada igreja tem suas pr\u00f3prias informa\u00e7\u00f5es organizadas com seguran\u00e7a.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDCC4'}</div>
-                  <h3>{'Relat\u00f3rios prontos em PDF'}</h3>
-                  <p>{'A secretaria gera relat\u00f3rios organizados sem montar tudo manualmente.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83C\uDF10'}</div>
-                  <h3>{'Acesso online'}</h3>
-                  <p>{'Use o sistema pelo navegador, sem instala\u00e7\u00e3o complicada.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDC65'}</div>
-                  <h3>{'Gest\u00e3o de classes e alunos'}</h3>
-                  <p>{'Cadastre turmas, alunos, professores e acompanhe tudo em um s\u00f3 lugar.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDCCA'}</div>
-                  <h3>{'Apoio para lideran\u00e7a'}</h3>
-                  <p>{'Acompanhe frequ\u00eancia, organiza\u00e7\u00e3o e evolu\u00e7\u00e3o da EBD com mais clareza.'}</p>
-                </article>
-              </div>
-            </div>
-          </section>
-
-          <section className="section section-soft">
-            <div className="container">
-              <h2 className="section-title">{'Chega de planilhas, pap\u00e9is e relat\u00f3rios manuais'}</h2>
-
-              <div className="comparison">
-                <div className="comparison-grid">
-                  <article className="comparison-card before">
-                    <div className="comparison-icon">{'\u26A0'}</div>
-                    <h3>{'Antes'}</h3>
-                    <ul>
-                      <li>{'Listas de presen\u00e7a em papel'}</li>
-                      <li>{'Dados espalhados'}</li>
-                      <li>{'Relat\u00f3rios feitos manualmente'}</li>
-                    </ul>
-                  </article>
-
-                  <article className="comparison-card after">
-                    <div className="comparison-icon">{'\u2714'}</div>
-                    <h3>{'Depois com o EBD Fiel'}</h3>
-                    <ul>
-                      <li>{'Chamada digital'}</li>
-                      <li>{'Classes e alunos organizados'}</li>
-                      <li>{'Relat\u00f3rios prontos em PDF'}</li>
-                    </ul>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section" id="beneficios">
-            <div className="container">
-              <h2 className="section-title">{'Feito para quem cuida da EBD'}</h2>
-
-              <div className="personas-grid">
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\uD83D\uDCCB'}</div>
-                  <h3>{'Secretaria'}</h3>
-                  <p>{'Organiza cadastros, classes, relat\u00f3rios e informa\u00e7\u00f5es gerais.'}</p>
-                </article>
-
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\uD83D\uDCDA'}</div>
-                  <h3>{'Professores'}</h3>
-                  <p>{'Fazem chamada, acompanham suas turmas e ajudam na organiza\u00e7\u00e3o semanal.'}</p>
-                </article>
-
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\u2B50'}</div>
-                  <h3>{'Lideran\u00e7a'}</h3>
-                  <p>{'Visualiza dados importantes para cuidar melhor da Escola B\u00edblica Dominical.'}</p>
-                </article>
-              </div>
-            </div>
-          </section>
-
-          <section className="section section-plans" id="planos">
-            <div className="container">
-              <h2 className="section-title">{'Planos e acesso'}</h2>
-
-              <div className="plans-grid">
-                <article className="plan-card">
-                  <div className="plan-badge">{'Fechado'}</div>
-                  <h3>{'Teste piloto'}</h3>
-                  <div className="plan-price">{'Gratuito'}</div>
-                  <p>{'Para igrejas do grupo selecionadas.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Entrar'}
-                  </button>
-                </article>
-
-                <article className="plan-card featured">
-                  <div className="plan-badge">{'Mais usado'}</div>
-                  <h3>{'Plano Igreja'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para uso completo na rotina da EBD.'}</p>
-                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                    {'J\u00e1 sou cliente'}
-                  </button>
-                </article>
-
-                <article className="plan-card">
-                  <h3>{'Plano Personalizado'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para igrejas com necessidades espec\u00edficas.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Acessar sistema'}
-                  </button>
-                </article>
-              </div>
-
-              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
-            </div>
-          </section>
-
-          <section className="section" id="faq">
-            <div className="container">
-              <h2 className="section-title">{'Perguntas frequentes'}</h2>
-
-              <div className="faq-list">
-                <details className="faq-item">
-                  <summary>{'Como fa\u00e7o para participar do teste piloto?'}</summary>
-                  <p>
-                    {'O teste piloto \u00e9 exclusivo para participantes do grupo de WhatsApp da EBD Fiel.'}
-                  </p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'O sistema funciona no celular?'}</summary>
-                  <p>{'Sim. O EBD Fiel funciona no celular, tablet e computador.'}</p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'Os dados da minha igreja s\u00e3o seguros?'}</summary>
-                  <p>{'Sim. Cada igreja tem seus dados separados e acesso controlado por usu\u00e1rio.'}</p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'Preciso instalar algum software?'}</summary>
-                  <p>{'N\u00e3o. O EBD Fiel \u00e9 online e acessado pelo navegador.'}</p>
-                </details>
-              </div>
-            </div>
-          </section>
-        </main>
-
-        <footer className="footer">
-          <div className="footer-grid">
-            <div>
-              <div className="footer-logo">{'EBD FIEL'}</div>
-              <p>{'Fiel \u00e0 Palavra, organizado para servir melhor.'}</p>
-              <p className="footer-gold">{'Escola B\u00edblica Dominical'}</p>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Mapa do site'}</h4>
-              <a href="#recursos">{'Recursos'}</a>
-              <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'Dúvidas'}</a>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Contato'}</h4>
-              <span>{'WhatsApp'}</span>
-              <span>{'contato@ebdfiel.com.br'}</span>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Teste exclusivo'}</h4>
-              <p>{'Grupo fechado para participantes'}</p>
-              <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('login')}>
-                {'J\u00e1 sou cliente'}
-              </button>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <p>{'\u00a9 2026 EBD Fiel - Todos os direitos reservados.'}</p>
-          </div>
-        </footer>
-      </div>
-    )
-  }
-
-  if (carregando && !sessao) {
-    return (
-      <div className="tela-login tela-mensagem">
-        <section className="painel-apresentacao">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-mensagem">
-          <div className="mensagem-status-icone">
-            <Icone nome="painel" className="icone-status" />
-          </div>
-          <h2>Carregando...</h2>
-          <p>Buscando dados da igreja, classes, alunos e chamadas.</p>
-        </section>
-      </div>
-    )
-  }
-
-  if (sessao && igrejaAtualPiloto?.status_piloto === 'pendente' && !usuarioEhAdminSistema()) {
-    return (
-      <div className="tela-login tela-mensagem">
-        <section className="painel-apresentacao">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Gestão da Escola Bíblica Dominical.</p>
-            </div>
-          </div>
-
-          <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Cadastro recebido</span>
-            <h2>Seu acesso está aguardando aprovação.</h2>
-            <p>
-              A equipe administradora vai conferir os dados da igreja e liberar o uso
-              do sistema.
-            </p>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-mensagem">
-          <div className="mensagem-status-icone">
-            <Icone nome="check" className="icone-status" />
-          </div>
-          <h2>Aguardando aprovação</h2>
-          <p>
-            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
-            a validação.
-          </p>
-          <button className="botao-secundario" onClick={sairDoSistema}>
-            Sair
-          </button>
-        </section>
-      </div>
-    )
-  }
-
-  if (erroSistema) {
-    return (
-      <div className="tela-login tela-mensagem">
-        <section className="painel-apresentacao">
-          <div className="marca-login">
-            <div className="logo-simbolo">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-imagem"
-              />
-            </div>
-            <div>
-              <h1>EBD Fiel</h1>
-              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="cartao-login cartao-mensagem">
-          <div className="mensagem-status-icone mensagem-erro-icone">
-            <Icone nome="configuracoes" className="icone-status" />
-          </div>
-          <h2>Erro ao carregar</h2>
-          <p>{erroSistema}</p>
-
-          <button
-            className="botao-principal botao-largura-total"
-            onClick={() => carregarDadosOnline()}
-          >
-            Tentar novamente
-          </button>
-        </section>
-      </div>
-    )
-  }
-
-
-  function formatarDataNascimento(dataTexto) {
-    if (!dataTexto) {
-      return ''
-    }
-
-    const partes = dataTexto.split('-')
-
-    if (partes.length !== 3) {
-      return dataTexto
-    }
-
-    return `${partes[2]}/${partes[1]}/${partes[0]}`
-  }
-
-  function calcularDiasAteAniversario(dataNascimento) {
-    if (!dataNascimento) {
-      return null
-    }
-
-    const partes = dataNascimento.split('-')
-
-    if (partes.length !== 3) {
-      return null
-    }
-
-    const hoje = new Date()
-    hoje.setHours(0, 0, 0, 0)
-
-    const mes = Number(partes[1]) - 1
-    const dia = Number(partes[2])
-
-    let aniversario = new Date(hoje.getFullYear(), mes, dia)
-    aniversario.setHours(0, 0, 0, 0)
-
-    if (aniversario < hoje) {
-      aniversario = new Date(hoje.getFullYear() + 1, mes, dia)
-      aniversario.setHours(0, 0, 0, 0)
-    }
-
-    const diferenca = aniversario.getTime() - hoje.getTime()
-    return Math.round(diferenca / (1000 * 60 * 60 * 24))
-  }
-
-  function buscarAniversariantesDaSemana() {
-    if (!usuarioEhSecretaria()) {
-      return []
-    }
-
-    const aniversariantesAlunos = alunos
-      .filter((aluno) => aluno.dataNascimento)
-      .map((aluno) => ({
-        id: `aluno-${aluno.id}`,
-        nome: aluno.nome,
-        tipo: aluno.tipoPessoa === 'professor' ? 'Professor' : 'Aluno',
-        detalhe: buscarNomeClasse(aluno.classeId),
-        dataNascimento: aluno.dataNascimento,
-        dias: calcularDiasAteAniversario(aluno.dataNascimento),
-      }))
-
-    const aniversariantesEquipe = perfisIgreja
-      .filter((perfil) => perfil.data_nascimento)
-      .map((perfil) => ({
-        id: `perfil-${perfil.id}`,
-        nome: perfil.nome || perfil.email,
-        tipo: perfil.perfil === 'professor' ? 'Professor' : 'Secretaria',
-        detalhe:
-          perfil.perfil === 'professor' && perfil.classe_id
-            ? buscarNomeClasse(perfil.classe_id)
-            : 'Equipe da igreja',
-        dataNascimento: perfil.data_nascimento,
-        dias: calcularDiasAteAniversario(perfil.data_nascimento),
-      }))
-
-    return [...aniversariantesAlunos, ...aniversariantesEquipe]
-      .filter((pessoa) => pessoa.dias !== null && pessoa.dias >= 0 && pessoa.dias <= 7)
-      .sort((a, b) => a.dias - b.dias || a.nome.localeCompare(b.nome))
-  }
-
-  function descreverAniversario(dias) {
-    if (dias === 0) {
-      return 'Hoje'
-    }
-
-    if (dias === 1) {
-      return 'Amanhã'
-    }
-
-    return `Em ${dias} dias`
-  }
-
-  function abrirNovoPerfil() {
-    setNovoPerfil({
-      userId: '',
-      nome: '',
-      email: '',
-      perfil: 'professor',
-      classeIds: [],
-      dataNascimento: '',
-    })
-    setPerfilEditandoId(null)
-    setMostrarFormularioPerfil(true)
-  }
-
-  function editarPerfil(perfil) {
-    setNovoPerfil({
-      userId: perfil.user_id || '',
-      nome: perfil.nome || '',
-      email: perfil.email || '',
-      perfil: perfil.perfil || 'professor',
-      classeIds:
-        perfil.perfil === 'professor'
-          ? buscarClassesVinculadasAoProfessor(perfil.id).map(String)
-          : [],
-      dataNascimento: perfil.data_nascimento || '',
-    })
-    setPerfilEditandoId(perfil.id)
-    setMostrarFormularioPerfil(true)
-  }
-
-  function cancelarFormularioPerfil() {
-    setNovoPerfil({
-      userId: '',
-      nome: '',
-      email: '',
-      perfil: 'professor',
-      classeIds: [],
-      dataNascimento: '',
-    })
-    setPerfilEditandoId(null)
-    setMostrarFormularioPerfil(false)
-  }
-
-  async function salvarPerfilUsuario(event) {
-    event.preventDefault()
-
-    if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode cadastrar usuários.')
-      return
-    }
-
-    if (!novoPerfil.userId.trim()) {
-      alert('Informe o User UID do usuário criado no Supabase Auth.')
-      return
-    }
-
-    if (!novoPerfil.nome.trim() || !novoPerfil.email.trim()) {
-      alert('Informe o nome e o e-mail do usuário.')
-      return
-    }
-
-    if (novoPerfil.perfil === 'professor' && novoPerfil.classeIds.length === 0) {
-      alert('Selecione pelo menos uma classe do professor.')
-      return
-    }
-
-    const dadosPerfil = {
-      user_id: novoPerfil.userId.trim(),
-      nome: novoPerfil.nome.trim(),
-      email: novoPerfil.email.trim(),
-      perfil: novoPerfil.perfil,
-      classe_id:
-        novoPerfil.perfil === 'professor'
-          ? Number(novoPerfil.classeIds[0])
-          : null,
-      data_nascimento: novoPerfil.dataNascimento || null,
-      igreja_id: buscarIgrejaIdAtual(),
-    }
-
-    const { data: perfilSalvo, error } = await supabase
-      .from('perfis_usuarios')
-      .upsert(dadosPerfil, { onConflict: 'user_id' })
-      .select()
-      .single()
-
-    if (error) {
-      mostrarErroSistema(error, 'Erro ao salvar usuário.')
-      return
-    }
-
-    const { error: erroRemoverVinculos } = await supabase
-      .from('classes_professores')
-      .delete()
-      .eq('perfil_usuario_id', perfilSalvo.id)
-
-    if (erroRemoverVinculos) {
-      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vínculos do professor.')
-      return
-    }
-
-    if (perfilSalvo.perfil === 'professor' && novoPerfil.classeIds.length > 0) {
-      const vinculosParaSalvar = novoPerfil.classeIds.map((classeId) => ({
-        igreja_id: buscarIgrejaIdAtual(),
-        classe_id: Number(classeId),
-        perfil_usuario_id: perfilSalvo.id,
-        ativo: true,
-      }))
-
-      const { error: erroInserirVinculos } = await supabase
-        .from('classes_professores')
-        .insert(vinculosParaSalvar)
-
-      if (erroInserirVinculos) {
-        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor às classes.')
-        return
-      }
-    }
-
-    await buscarTodosOsDados()
-    cancelarFormularioPerfil()
-    alert('Usuário salvo com sucesso!')
-  }
-
-  async function excluirPerfilUsuario(perfil) {
-    if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode excluir usuários.')
-      return
-    }
-
-    if (perfil.user_id === sessao?.user?.id) {
-      alert('Você não pode excluir o seu próprio perfil de secretaria.')
-      return
-    }
-
-    const confirmar = window.confirm(
-      `Deseja remover o perfil de ${perfil.nome || perfil.email}?`
-    )
-
-    if (!confirmar) {
-      return
-    }
-
-    const { error } = await supabase
-      .from('perfis_usuarios')
-      .delete()
-      .eq('id', perfil.id)
-
-    if (error) {
-      mostrarErroSistema(error, 'Erro ao remover perfil.')
-      return
-    }
-
-    await buscarTodosOsDados()
-  }
-
-  function abrirJanelaAniversariantesSemana() {
-    setJanelaAniversariantesAberta(true)
-  }
-
-  function fecharJanelaAniversariantesSemana() {
-    setJanelaAniversariantesAberta(false)
-    setAniversarianteCartaoId(null)
-  }
-
-  function montarHtmlTabelaAniversariantesSemana(aniversariantes = buscarAniversariantesDaSemana()) {
-    return aniversariantes.length > 0
-      ? `
-        <table>
-          <thead>
-            <tr>
-              <th class="numero">Nº</th>
-              <th>Nome</th>
-              <th>Função</th>
-              <th>Classe/área</th>
-              <th>Data</th>
-              <th>Quando</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${aniversariantes.map((pessoa, indice) => `
-              <tr>
-                <td class="numero">${indice + 1}</td>
-                <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
-                <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
-                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
-                <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
-                <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `
-      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
-  }
-
-  function imprimirAniversariantesSemana() {
-    const aniversariantes = buscarAniversariantesDaSemana()
-
-    imprimirHtmlEmIframe(
-      montarDocumentoRelatorioExtra(
-        'Aniversariantes da semana',
-        'Pessoas com aniversário hoje ou nos próximos 7 dias.',
-        montarHtmlTabelaAniversariantesSemana(aniversariantes),
-        'portrait'
-      ),
-      'iframe-aniversariantes-semana-painel'
-    )
-  }
-
-  async function baixarPdfAniversariantesSemana() {
-    const area = aniversariantesSemanaRef.current
-
-    if (!area) {
-      alert('Não foi possível encontrar a lista de aniversariantes para gerar o PDF.')
-      return
-    }
-
-    try {
-      const canvas = await html2canvas(area, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true,
-      })
-
-      const imagem = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      })
-
-      const larguraPagina = pdf.internal.pageSize.getWidth()
-      const alturaPagina = pdf.internal.pageSize.getHeight()
-      const margem = 10
-      const larguraUtil = larguraPagina - margem * 2
-      const alturaImagem = (canvas.height * larguraUtil) / canvas.width
-
-      if (alturaImagem <= alturaPagina - margem * 2) {
-        pdf.addImage(imagem, 'PNG', margem, margem, larguraUtil, alturaImagem)
-      } else {
-        let alturaRestante = alturaImagem
-        let deslocamento = 0
-
-        while (alturaRestante > 0) {
-          pdf.addImage(imagem, 'PNG', margem, margem - deslocamento, larguraUtil, alturaImagem)
-          alturaRestante -= alturaPagina - margem * 2
-          deslocamento += alturaPagina - margem * 2
-
-          if (alturaRestante > 0) {
-            pdf.addPage()
-          }
-        }
-      }
-
-      pdf.save('aniversariantes-da-semana-ebd-fiel.pdf')
-    } catch (error) {
-      console.error('Erro ao gerar PDF de aniversariantes:', error)
-      alert('Não foi possível gerar o PDF. Tente novamente.')
-    }
-  }
-
-
-  function obterAniversarianteSelecionadoCartao(aniversariantes) {
-    if (!Array.isArray(aniversariantes) || aniversariantes.length === 0) {
-      return null
-    }
-
-    return aniversariantes.find((pessoa) => pessoa.id === aniversarianteCartaoId) || aniversariantes[0]
-  }
-
-  function limparNomeParaArquivo(valor) {
-    return String(valor || 'aniversariante')
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
-      .replace(/[^a-z0-9]+/gi, '-')
-      .replace(/^-+|-+$/g, '')
-      .toLowerCase() || 'aniversariante'
-  }
-
-  function baixarCanvasComoPng(canvas, nomeArquivo) {
-    const link = document.createElement('a')
-    link.href = canvas.toDataURL('image/png')
-    link.download = nomeArquivo
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-  }
-
-  function transformarCanvasEmArquivoPng(canvas, nomeArquivo) {
-    return new Promise((resolve, reject) => {
-      if (!canvas) {
-        reject(new Error('Cartão não encontrado.'))
-        return
-      }
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          reject(new Error('Não foi possível preparar a imagem do cartão.'))
-          return
-        }
-
-        resolve(new File([blob], nomeArquivo, { type: 'image/png' }))
-      }, 'image/png')
-    })
-  }
-
-  async function capturarCartaoAniversario() {
-    const area = cartaoAniversarioRef.current
-
-    if (!area) {
-      alert('Selecione um aniversariante para gerar o cartão.')
-      return null
-    }
-
-    return html2canvas(area, {
-      scale: 3,
-      backgroundColor: '#ffffff',
-      useCORS: true,
-    })
-  }
-
-  async function baixarImagemCartaoAniversario() {
-    try {
-      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
-      const canvas = await capturarCartaoAniversario()
-
-      if (!canvas) {
-        return
-      }
-
-      baixarCanvasComoPng(
-        canvas,
-        `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
-      )
-    } catch (error) {
-      console.error('Erro ao baixar cartão de aniversário:', error)
-      alert('Não foi possível baixar o cartão. Tente novamente.')
-    }
-  }
-
-  async function enviarCartaoPeloWhatsApp() {
-    try {
-      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
-      const canvas = await capturarCartaoAniversario()
-
-      if (!canvas) {
-        return
-      }
-
-      const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
-      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉\n\nA Escola Bíblica Dominical preparou este cartão com carinho. Que Deus abençoe sua vida com paz, alegria e muitas vitórias.`
-
-      try {
-        const arquivo = await transformarCanvasEmArquivoPng(canvas, nomeArquivo)
-        const dadosCompartilhamento = {
-          title: `Cartão de aniversário - ${aniversariante?.nome || 'Aniversariante'}`,
-          text: mensagemWhatsApp,
-          files: [arquivo],
-        }
-
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
-          await navigator.share(dadosCompartilhamento)
-          return
-        }
-      } catch (erroCompartilhamento) {
-        console.warn('Compartilhamento direto com imagem indisponível neste navegador:', erroCompartilhamento)
-      }
-
-      baixarCanvasComoPng(canvas, nomeArquivo)
-
-      const mensagem = encodeURIComponent(
-        `${mensagemWhatsApp}\n\nO cartão foi baixado em imagem. Anexe a imagem no WhatsApp para enviar ao aniversariante.`
-      )
-      const janelaWhatsApp = window.open(`https://wa.me/?text=${mensagem}`, '_blank', 'noopener,noreferrer')
-
-      if (!janelaWhatsApp) {
-        alert('O cartão foi baixado. Abra o WhatsApp e anexe a imagem para enviar ao aniversariante.')
-      } else {
-        alert('Neste navegador não foi possível enviar imagem e mensagem juntos automaticamente. O cartão foi baixado e o WhatsApp foi aberto com a mensagem pronta.')
-      }
-    } catch (error) {
-      console.error('Erro ao abrir WhatsApp para envio do cartão:', error)
-      alert('Não foi possível abrir o WhatsApp. O cartão pode ser baixado pelo botão Baixar cartão.')
-    }
-  }
-
-  async function baixarPdfCartaoAniversario() {
-    try {
-      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
-      const canvas = await capturarCartaoAniversario()
-
-      if (!canvas) {
-        return
-      }
-
-      const imagem = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      })
-
-      const larguraPagina = pdf.internal.pageSize.getWidth()
-      const alturaPagina = pdf.internal.pageSize.getHeight()
-      const larguraCartao = Math.min(170, larguraPagina - 20)
-      const alturaCartao = (canvas.height * larguraCartao) / canvas.width
-      const x = (larguraPagina - larguraCartao) / 2
-      const y = Math.max(8, (alturaPagina - alturaCartao) / 2)
-
-      pdf.addImage(imagem, 'PNG', x, y, larguraCartao, alturaCartao)
-      pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
-    } catch (error) {
-      console.error('Erro ao gerar PDF do cartão de aniversário:', error)
-      alert('Não foi possível gerar o PDF do cartão. Tente novamente.')
-    }
-  }
-
-  async function imprimirCartaoAniversario() {
-    try {
-      const canvas = await capturarCartaoAniversario()
-
-      if (!canvas) {
-        return
-      }
-
-      const imagem = canvas.toDataURL('image/png')
-
-      imprimirHtmlEmIframe(
-        `
-          <!doctype html>
-          <html lang="pt-BR">
-            <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>Cartão de aniversário</title>
-              <style>
-                * { box-sizing: border-box; }
-                body {
-                  margin: 0;
-                  min-height: 100vh;
-                  display: grid;
-                  place-items: center;
-                  padding: 10mm;
-                  background: #ffffff;
-                }
-                img {
-                  width: min(170mm, 100%);
-                  height: auto;
-                  display: block;
-                  border-radius: 10mm;
-                }
-                @media print {
-                  @page { size: A4 portrait; margin: 8mm; }
-                  body { padding: 0; }
-                }
-              </style>
-            </head>
-            <body>
-              <img src="${imagem}" alt="Cartão de aniversário" />
-            </body>
-          </html>
-        `,
-        'iframe-cartao-aniversario-individual'
-      )
-    } catch (error) {
-      console.error('Erro ao imprimir cartão de aniversário:', error)
-      alert('Não foi possível imprimir o cartão. Tente novamente.')
-    }
-  }
-
-  function renderizarJanelaAniversariantesSemana() {
-    const aniversariantes = buscarAniversariantesDaSemana()
-    const aniversariantesHoje = aniversariantes.filter((pessoa) => Number(pessoa.dias) === 0)
-    const proximosAniversariantes = aniversariantes.filter((pessoa) => Number(pessoa.dias) > 0)
-    const aniversarianteCartao = obterAniversarianteSelecionadoCartao(aniversariantes)
-
-    return (
-      <div
-        className="janela-aniversariantes-fundo"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Aniversariantes da semana"
-        onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            fecharJanelaAniversariantesSemana()
-          }
-        }}
-      >
-        <div className="janela-aniversariantes-conteudo">
-          <button
-            type="button"
-            className="janela-aniversariantes-fechar"
-            aria-label="Fechar aniversariantes da semana"
-            onClick={fecharJanelaAniversariantesSemana}
-          >
-            ×
-          </button>
-
-          <div className="janela-aniversariantes-papel" ref={aniversariantesSemanaRef}>
-            <div className="janela-aniversariantes-topo">
-              <div>
-                <span className="hero-tag">Agenda da semana</span>
-                <h3>Aniversariantes da semana</h3>
-                <p>
-                  Confira alunos, professores e secretarias que fazem aniversário hoje ou nos próximos 7 dias.
-                </p>
-              </div>
-              <div className="janela-aniversariantes-selo">🎁</div>
-            </div>
-
-            <div className="janela-aniversariantes-resumo">
-              <div>
-                <strong>{aniversariantes.length}</strong>
-                <span>Total na semana</span>
-              </div>
-              <div>
-                <strong>{aniversariantesHoje.length}</strong>
-                <span>Hoje</span>
-              </div>
-              <div>
-                <strong>{proximosAniversariantes.length}</strong>
-                <span>Próximos dias</span>
-              </div>
-            </div>
-
-            {aniversariantes.length > 0 ? (
-              <div className="janela-aniversariantes-lista">
-                {aniversariantes.map((pessoa) => (
-                  <article
-                    className={`janela-aniversariante-item${aniversarianteCartao?.id === pessoa.id ? ' ativo' : ''}`}
-                    key={pessoa.id}
-                  >
-                    <div className="janela-aniversariante-icone">🎉</div>
-                    <div>
-                      <strong>{pessoa.nome}</strong>
-                      <p>{pessoa.tipo} • {pessoa.detalhe || 'Sem informação'}</p>
-                    </div>
-                    <span>{formatarDataNascimento(pessoa.dataNascimento)}</span>
-                    <em>{descreverAniversario(pessoa.dias)}</em>
-                    <button
-                      type="button"
-                      className="botao-mini-cartao"
-                      onClick={() => setAniversarianteCartaoId(pessoa.id)}
-                    >
-                      Ver cartão
-                    </button>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className="janela-aniversariantes-vazio">
-                Nenhum aniversário cadastrado para os próximos 7 dias.
-              </div>
-            )}
-
-            {aniversarianteCartao && (
-              <div className="cartao-aniversario-area">
-                <div className="cartao-aniversario-info">
-                  <span className="hero-tag">Cartão individual</span>
-                  <h4>Cartão pronto para {aniversarianteCartao.nome}</h4>
-                  <p>
-                    Baixe a imagem para enviar pelo WhatsApp ou imprima em papel A4.
-                    O cartão não usa cruz nem vela; mantém apenas Bíblia/livros e elementos delicados.
-                  </p>
-                </div>
-
-                <div className="cartao-aniversario-visualizacao">
-                  <article className="cartao-aniversario-oficial" ref={cartaoAniversarioRef}>
-                    <div className="cartao-aniversario-moldura">
-                      <div className="cartao-aniversario-livro" aria-hidden="true">📖</div>
-                      <div className="cartao-aniversario-pomba" aria-hidden="true">🕊️</div>
-                      <div className="cartao-aniversario-flores cartao-aniversario-flores-esquerda" aria-hidden="true">
-                        <span></span><span></span><span></span><span></span>
-                      </div>
-                      <div className="cartao-aniversario-presente" aria-hidden="true">
-                        <div className="presente-laco"></div>
-                        <div className="presente-caixa"></div>
-                      </div>
-                      <div className="cartao-aniversario-bolo" aria-hidden="true">
-                        <div className="bolo-camada bolo-camada-superior"></div>
-                        <div className="bolo-camada bolo-camada-inferior"></div>
-                        <div className="bolo-base"></div>
-                      </div>
-
-                      <div className="cartao-aniversario-texto">
-                        <h4>
-                          <span>Feliz</span>
-                          <em>aniversário,</em>
-                          <strong>{aniversarianteCartao.nome}!</strong>
-                        </h4>
-
-                        <div className="cartao-aniversario-divisor" aria-hidden="true">❤</div>
-
-                        <p className="cartao-aniversario-mensagem">
-                          Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
-                          Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
-                        </p>
-
-                        <section className="cartao-aniversario-versiculo">
-                          <span>📖 Versículo bíblico</span>
-                          <p>“Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”</p>
-                          <strong>Salmo 118:24</strong>
-                        </section>
-
-                        <footer>
-                          <em>Com carinho,</em>
-                          <strong>Escola Bíblica Dominical</strong>
-                        </footer>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            )}
-
-            <div className="janela-aniversariantes-rodape">
-              <strong>Mensagem sugerida:</strong>
-              <p>
-                Que esta data seja lembrada com carinho pela Escola Bíblica Dominical.
-                Deus abençoe cada vida com graça, sabedoria e crescimento na Palavra.
-              </p>
-            </div>
-          </div>
-
-          <div className="janela-aniversariantes-acoes janela-aniversariantes-acoes-completas">
-            <button className="botao-principal" type="button" onClick={baixarImagemCartaoAniversario} disabled={!aniversarianteCartao}>
-              Baixar cartão
-            </button>
-            <button className="botao-secundario" type="button" onClick={enviarCartaoPeloWhatsApp} disabled={!aniversarianteCartao}>
-              Enviar imagem no WhatsApp
-            </button>
-            <button className="botao-secundario" type="button" onClick={baixarPdfCartaoAniversario} disabled={!aniversarianteCartao}>
-              Baixar PDF do cartão
-            </button>
-            <button className="botao-secundario" type="button" onClick={imprimirCartaoAniversario} disabled={!aniversarianteCartao}>
-              Imprimir cartão
-            </button>
-            <button className="botao-secundario" type="button" onClick={baixarPdfAniversariantesSemana}>
-              PDF da lista
-            </button>
-            <button className="botao-secundario" type="button" onClick={imprimirAniversariantesSemana}>
-              Imprimir lista
-            </button>
-            <button className="botao-secundario" type="button" onClick={fecharJanelaAniversariantesSemana}>
-              Fechar
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  function renderizarFeedbackPiloto() {
-    if (!igrejaEstaEmTestePiloto()) {
-      return null
-    }
-
-    return (
-      <div className={`feedback-piloto-card feedback-piloto-card-compacto${formularioSugestaoAberto ? ' feedback-piloto-card-aberto' : ''}`}>
-        <div className="feedback-piloto-topo feedback-piloto-topo-compacto">
-          <div>
-            <span className="hero-tag">Ajude a melhorar</span>
-            <h3>Enviar sugestão para a equipe EBD Fiel</h3>
-            <p>
-              Registre dúvidas, sugestões, elogios ou pontos de melhoria. A equipe poderá acompanhar e responder pela plataforma.
-            </p>
-          </div>
-
-          <button
-            className="botao-secundario"
-            type="button"
-            onClick={() => setFormularioSugestaoAberto((aberto) => !aberto)}
-          >
-            {formularioSugestaoAberto ? 'Ocultar formulário' : 'Enviar sugestão'}
-          </button>
-        </div>
-
-        {formularioSugestaoAberto && (
-          <form className="feedback-piloto-form feedback-piloto-form-moderno" onSubmit={enviarFeedbackPiloto}>
-            <div className="feedback-form-grid">
-              <label className="feedback-campo feedback-campo-tipo">
-                <span>Tipo de mensagem</span>
-                <select
-                  value={feedbackPiloto.tipo}
-                  onChange={(event) =>
-                    setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
-                  }
-                >
-                  <option value="sugestao">Sugestão</option>
-                  <option value="erro">Erro encontrado</option>
-                  <option value="duvida">Dúvida</option>
-                  <option value="elogio">Elogio</option>
-                </select>
-              </label>
-
-              <div className="feedback-dica">
-                <strong>Ajude a melhorar o piloto</strong>
-                <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
-              </div>
-            </div>
-
-            <label className="feedback-campo feedback-campo-mensagem">
-              <div className="feedback-label-linha">
-                <span>Mensagem</span>
-                <small>{feedbackPiloto.mensagem.length}/1000</small>
-              </div>
-
-              <textarea
-                value={feedbackPiloto.mensagem}
-                maxLength="1000"
-                onChange={(event) =>
-                  setFeedbackPiloto({ ...feedbackPiloto, mensagem: event.target.value })
-                }
-                placeholder="Ex: Na chamada dos professores, senti falta de visualizar todos os professores cadastrados antes de salvar..."
-                rows="6"
-              />
-            </label>
-
-            <div className="feedback-acoes">
-              <button className="botao-feedback-enviar" type="submit" disabled={carregandoFeedback}>
-                <span>{carregandoFeedback ? 'Enviando...' : 'Enviar mensagem'}</span>
-                <strong>→</strong>
-              </button>
-
-              <p>
-                Sua mensagem fica registrada para os administradores acompanharem e responderem pela própria plataforma.
-              </p>
-            </div>
-          </form>
-        )}
-
-        {feedbacksIgreja.length > 0 && (
-          <div className="feedbacks-recentes-igreja feedbacks-recentes-igreja-compacto">
-            <h4>Últimas mensagens enviadas</h4>
-
-            {feedbacksIgreja.slice(0, formularioSugestaoAberto ? 4 : 2).map((feedback) => (
-              <div
-                className={`feedback-recente-item ${feedback.resposta_admin ? 'feedback-com-resposta' : ''}`}
-                key={feedback.id}
-              >
-                <strong>{feedback.tipo}</strong>
-                <p>{feedback.mensagem}</p>
-                <span>{formatarDataHoraFeedback(feedback.created_at)}</span>
-
-                {feedback.resposta_admin ? (
-                  <div className="feedback-resposta-igreja">
-                    <strong>Resposta da equipe EBD Fiel</strong>
-                    <p>{feedback.resposta_admin}</p>
-                    <small>{formatarDataHoraFeedback(feedback.respondido_em)}</small>
-                  </div>
-                ) : (
-                  <small className="feedback-aguardando-resposta">
-                    Aguardando resposta da equipe.
-                  </small>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
-
-
-  function renderizarDashboardAvancado() {
-    const dadosClasse = montarDashboardPorClasse()
-    const maiorFrequencia = dadosClasse.reduce(
-      (maior, item) => Math.max(maior, item.frequencia),
-      0
-    )
-    const alertasFaltas = buscarAlertasDeFaltas()
-    const destaques = buscarDestaquesFrequencia().slice(0, 5)
-
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Resumo geral da EBD</h2>
-            <p>Indicadores visuais sem alterar os cadastros existentes.</p>
-          </div>
-          <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-            Abrir relatórios
-          </button>
-        </div>
-
-        <div className="dashboard-v41-hero">
-          <div>
-            <span className="selo-publico">Visão geral</span>
-            <h3>{buscarNomeIgrejaParaExibicao()}</h3>
-            <p>Resumo automático de presença, matrícula, classes e acompanhamento pastoral da secretaria.</p>
-          </div>
-          <div className="dashboard-v41-circulo">
-            <strong>{calcularFrequenciaGeral()}%</strong>
-            <span>frequência geral</span>
-          </div>
-        </div>
-
-        <div className="cards cards-estatisticas dashboard-v41-cards">
-          <CardResumo icone="alunos" titulo="Matrícula" valor={alunosSomente().length} descricao="alunos cadastrados" />
-          <CardResumo icone="classes" titulo="Classes" valor={classes.length} descricao="turmas ativas" />
-          <CardResumo icone="chamada" titulo="Chamadas" valor={chamadasSalvas.length} descricao="registros de alunos" />
-          <CardResumo icone="check" titulo="Alertas" valor={alertasFaltas.length} descricao="alunos para acompanhar" destaque />
-        </div>
-
-        <div className="dashboard-v41-grid">
-          <div className="dashboard-v41-bloco">
-            <h3>Frequência por classe</h3>
-            <div className="lista-graficos-v41">
-              {dadosClasse.map((item) => (
-                <div className="linha-grafico-v41" key={item.classe.id}>
-                  <div className="linha-grafico-v41-topo">
-                    <strong>{item.classe.nome}</strong>
-                    <span>{item.frequencia}%</span>
-                  </div>
-                  <div className="barra-grafico-v41" aria-label={`Frequência ${item.frequencia}%`}>
-                    <span style={{ width: `${item.frequencia}%` }} />
-                  </div>
-                  <p>{item.presentes} presenças, {item.faltas} faltas, {item.chamadas} chamada(s).</p>
-                </div>
-              ))}
-              {dadosClasse.length === 0 && <p className="texto-sem-aniversariantes">Nenhuma classe cadastrada ainda.</p>}
-            </div>
-          </div>
-
-          <div className="dashboard-v41-bloco">
-            <h3>Destaques e cuidado</h3>
-            <div className="lista-dashboard-v41">
-              {destaques.map((item) => (
-                <div className="item-dashboard-v41" key={item.aluno.id}>
-                  <div>
-                    <strong>{item.aluno.nome}</strong>
-                    <p>{item.classeNome} - {item.frequencia}% de frequência</p>
-                  </div>
-                  <span>⭐</span>
-                </div>
-              ))}
-              {alertasFaltas.slice(0, 5).map((item) => (
-                <div className="item-dashboard-v41 item-dashboard-alerta-v41" key={`alerta-${item.aluno.id}`}>
-                  <div>
-                    <strong>{item.aluno.nome}</strong>
-                    <p>{item.classeNome} - {item.motivo}</p>
-                  </div>
-                  <button className="botao-secundario botao-pequeno botao-sem-margem" type="button" onClick={() => abrirWhatsAppFaltoso(item)}>
-                    WhatsApp
-                  </button>
-                </div>
-              ))}
-              {destaques.length === 0 && alertasFaltas.length === 0 && (
-                <p className="texto-sem-aniversariantes">Faça chamadas para gerar indicadores.</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarHistoricoAluno() {
-    const alunosFiltrados = alunosSomente()
-      .filter((aluno) => !classeHistoricoFiltroId || Number(aluno.classeId) === Number(classeHistoricoFiltroId))
-      .sort((a, b) => String(a.nome || '').localeCompare(String(b.nome || ''), 'pt-BR'))
-    const historico = montarHistoricoDoAluno(alunoHistoricoSelecionadoId)
-
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Histórico individual do aluno</h2>
-            <p>Consulta somente leitura, usando chamadas já salvas.</p>
-          </div>
-        </div>
-
-        <div className="filtros filtros-historico-v41">
-          <label>
-            Filtrar por classe
-            <select value={classeHistoricoFiltroId} onChange={(event) => {
-              setClasseHistoricoFiltroId(event.target.value)
-              setAlunoHistoricoSelecionadoId('')
-            }}>
-              <option value="">Todas as classes</option>
-              {classes.map((classe) => (
-                <option key={classe.id} value={classe.id}>{classe.nome}</option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            Aluno
-            <select value={alunoHistoricoSelecionadoId} onChange={(event) => setAlunoHistoricoSelecionadoId(event.target.value)}>
-              <option value="">Selecione um aluno</option>
-              {alunosFiltrados.map((aluno) => (
-                <option key={aluno.id} value={aluno.id}>{aluno.nome}</option>
-              ))}
-            </select>
-          </label>
-
-          <button className="botao-secundario" type="button" onClick={() => setAlunoHistoricoSelecionadoId('')}>
-            Limpar
-          </button>
-        </div>
-
-        {historico ? (
-          <div className="historico-v41">
-            <div className="historico-v41-resumo">
-              <div>
-                <span className="selo-publico">Aluno</span>
-                <h3>{historico.aluno.nome}</h3>
-                <p>{buscarNomeClasse(historico.aluno.classeId)} • {historico.aluno.telefone || 'sem telefone'}</p>
-              </div>
-              <div className="historico-v41-numeros">
-                <div><strong>{historico.frequencia}%</strong><span>frequência</span></div>
-                <div><strong>{historico.presentes}</strong><span>presenças</span></div>
-                <div><strong>{historico.faltas}</strong><span>faltas</span></div>
-              </div>
-            </div>
-
-            <div className="tabela-container">
-              <table className="tabela">
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Classe</th>
-                    <th>Status</th>
-                    <th>Visitantes</th>
-                    <th>Bíblias</th>
-                    <th>Revistas</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {historico.registros.map((registro, indice) => (
-                    <tr key={`${registro.data}-${indice}`}>
-                      <td>{registro.data}</td>
-                      <td>{registro.classe}</td>
-                      <td>{registro.status}</td>
-                      <td>{registro.visitantes}</td>
-                      <td>{registro.biblias}</td>
-                      <td>{registro.revistas}</td>
-                    </tr>
-                  ))}
-                  {historico.registros.length === 0 && (
-                    <tr>
-                      <td colSpan="6">Nenhuma chamada encontrada para este aluno.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div className="aviso"><p>Selecione um aluno para visualizar o histórico.</p></div>
-        )}
-      </section>
-    )
-  }
-
-  function renderizarFinanceiroEbd() {
-    const resumo = montarResumoFinanceiroEbd()
-
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Controle financeiro da EBD</h2>
-            <p>Resumo das ofertas lançadas nas chamadas. Não cria nem altera lançamentos no banco.</p>
-          </div>
-        </div>
-
-        <div className="cards cards-estatisticas">
-          <CardResumo icone="relatorios" titulo="Total de ofertas" valor={formatarMoeda(resumo.totalOfertas)} descricao="soma das chamadas" destaque />
-          <CardResumo icone="chamada" titulo="Chamadas com oferta" valor={resumo.chamadasComOferta} descricao="registros com valor informado" />
-          <CardResumo icone="check" titulo="Média por chamada" valor={formatarMoeda(resumo.mediaPorChamada)} descricao="média dos registros com oferta" />
-        </div>
-
-        <div className="financeiro-v41-bloco">
-          <h3>Ofertas por classe</h3>
-          <div className="tabela-container">
-            <table className="tabela">
-              <thead>
-                <tr>
-                  <th>Classe</th>
-                  <th>Chamadas</th>
-                  <th>Total lançado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {resumo.porClasse.map((item) => (
-                  <tr key={item.classe.id}>
-                    <td>{item.classe.nome}</td>
-                    <td>{item.chamadas}</td>
-                    <td>{formatarMoeda(item.total)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="aviso aviso-financeiro-v41">
-            <p>Para preservar segurança, esta fase usa somente o campo “ofertas” das chamadas existentes. Lançamentos financeiros avançados podem ser ativados depois em tabela própria.</p>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-
-  async function executarDiagnosticoCarregamento() {
-    setCarregandoDiagnostico(true)
-
-    const montarErro = (erro) => {
-      if (!erro) return null
-      return {
-        message: erro.message || '',
-        details: erro.details || '',
-        hint: erro.hint || '',
-        code: erro.code || '',
-      }
-    }
-
-    const comTempoLimite = (promessa, nome, ms = 8000) =>
-      Promise.race([
-        promessa,
-        new Promise((resolve) => {
-          window.setTimeout(() => {
-            resolve({
-              data: null,
-              error: {
-                message: `Tempo esgotado ao consultar ${nome}.`,
-                details: 'A consulta não respondeu dentro do tempo esperado.',
-                code: 'TIMEOUT_DIAGNOSTICO',
-              },
-              count: null,
-            })
-          }, ms)
-        }),
-      ])
-
-    const resultado = {
-      momento: new Date().toLocaleString('pt-BR'),
-      url: typeof window !== 'undefined' ? window.location.href : '',
-      navegador: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-      sessao: null,
-      usuario: null,
-      perfilPorUserId: null,
-      perfilPorEmail: null,
-      perfilUsado: null,
-      igreja: null,
-      contagens: {},
-      amostras: {},
-      erros: {},
-      estadoTela: {
-        paginaAtual: paginaAtualRef.current,
-        igrejaIdEstado: igrejaId,
-        perfilEstado: perfilUsuarioRef.current,
-        classesNaTela: classes.length,
-        alunosNaTela: alunos.length,
-        professoresNaTela: professoresSomente().length,
-        chamadasNaTela: chamadasSalvas.length,
-      },
-    }
-
-    try {
-      const { data: sessaoData, error: erroSessao } = await comTempoLimite(supabase.auth.getSession(), 'getSession')
-      resultado.erros.getSession = montarErro(erroSessao)
-      const sessaoAtual = sessaoData?.session || sessaoRef.current || null
-
-      resultado.sessao = sessaoAtual
-        ? {
-            existe: true,
-            email: sessaoAtual.user?.email || '',
-            userId: sessaoAtual.user?.id || '',
-            expiraEm: sessaoAtual.expires_at || null,
-          }
-        : { existe: false }
-
-      const { data: usuarioData, error: erroUsuario } = await comTempoLimite(supabase.auth.getUser(), 'getUser')
-      resultado.erros.getUser = montarErro(erroUsuario)
-      resultado.usuario = usuarioData?.user
-        ? {
-            email: usuarioData.user.email || '',
-            userId: usuarioData.user.id || '',
-          }
-        : null
-
-      const userId = sessaoAtual?.user?.id || usuarioData?.user?.id || ''
-      const email = String(sessaoAtual?.user?.email || usuarioData?.user?.email || '').toLowerCase()
-
-      if (userId) {
-        const { data, error } = await comTempoLimite(
-          supabase
-            .from('perfis_usuarios')
-            .select('*')
-            .eq('user_id', userId),
-          'perfilPorUserId'
-        )
-
-        resultado.perfilPorUserId = data || []
-        resultado.erros.perfilPorUserId = montarErro(error)
-      }
-
-      if (email) {
-        const { data, error } = await comTempoLimite(
-          supabase
-            .from('perfis_usuarios')
-            .select('*')
-            .ilike('email', email),
-          'perfilPorEmail'
-        )
-
-        resultado.perfilPorEmail = data || []
-        resultado.erros.perfilPorEmail = montarErro(error)
-      }
-
-      const perfilUsado =
-        (Array.isArray(resultado.perfilPorUserId) && resultado.perfilPorUserId[0]) ||
-        (Array.isArray(resultado.perfilPorEmail) && resultado.perfilPorEmail[0]) ||
-        perfilUsuarioRef.current ||
-        null
-
-      resultado.perfilUsado = perfilUsado
-
-      const igrejaAtualId = Number(perfilUsado?.igreja_id || igrejaId || 0)
-
-      if (igrejaAtualId) {
-        const consultas = [
-          ['classes', supabase.from('classes').select('id,nome,igreja_id', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-          ['alunos', supabase.from('alunos').select('id,nome,igreja_id,classe_id,tipo_pessoa', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-          ['chamadas', supabase.from('chamadas').select('id,igreja_id,classe_id,data', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-          ['chamadas_professores', supabase.from('chamadas_professores').select('id,igreja_id,data', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-          ['classes_professores', supabase.from('classes_professores').select('id,igreja_id,classe_id,perfil_usuario_id,ativo', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-          ['configuracoes_igreja', supabase.from('configuracoes_igreja').select('id,igreja_id,nome_igreja', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
-        ]
-
-        for (const [nome, consulta] of consultas) {
-          const { data, error, count } = await comTempoLimite(consulta, nome)
-          resultado.contagens[nome] = typeof count === 'number' ? count : Array.isArray(data) ? data.length : 0
-          resultado.amostras[nome] = data || []
-          resultado.erros[nome] = montarErro(error)
-        }
-
-        const { data: igrejaData, error: erroIgreja } = await comTempoLimite(
-          supabase
-            .from('igrejas')
-            .select('*')
-            .eq('id', igrejaAtualId)
-            .maybeSingle(),
-          'igreja'
-        )
-
-        resultado.igreja = igrejaData || null
-        resultado.erros.igreja = montarErro(erroIgreja)
-      } else {
-        resultado.erros.igrejaId = { message: 'Nenhum igreja_id foi encontrado no perfil carregado.' }
-      }
-    } catch (error) {
-      resultado.erros.geral = montarErro(error) || { message: String(error) }
-    }
-
-    console.log('Diagnóstico EBD Fiel:', resultado)
-    setDiagnosticoCarregamento(resultado)
-    setCarregandoDiagnostico(false)
-  }
-
-  function textoDiagnosticoCarregamento() {
-    return JSON.stringify(diagnosticoCarregamento || {}, null, 2)
-  }
-
-  function copiarTextoComFallback(texto) {
-    if (typeof document === 'undefined') {
-      return false
-    }
-
-    const textarea = document.createElement('textarea')
-    textarea.value = texto
-    textarea.setAttribute('readonly', '')
-    textarea.style.position = 'fixed'
-    textarea.style.top = '-9999px'
-    textarea.style.left = '-9999px'
-    textarea.style.opacity = '0'
-    document.body.appendChild(textarea)
-    textarea.focus()
-    textarea.select()
-    textarea.setSelectionRange(0, texto.length)
-
-    let copiado = false
-
-    try {
-      copiado = document.execCommand('copy')
-    } catch (error) {
-      console.error('Fallback de cópia falhou:', error)
-      copiado = false
-    }
-
-    document.body.removeChild(textarea)
-    return copiado
-  }
-
-  function baixarDiagnosticoCarregamento(event) {
-    event?.preventDefault?.()
-    event?.stopPropagation?.()
-
-    if (!diagnosticoCarregamento || typeof document === 'undefined') {
-      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de baixar.' })
-      return
-    }
-
-    const texto = textoDiagnosticoCarregamento()
-    const blob = new Blob([texto], { type: 'application/json;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `diagnostico-ebd-fiel-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-    setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico baixado com sucesso.' })
-  }
-
-  async function copiarDiagnosticoCarregamento(event) {
-    event?.preventDefault?.()
-    event?.stopPropagation?.()
-
-    if (!diagnosticoCarregamento) {
-      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de copiar.' })
-      return
-    }
-
-    const texto = textoDiagnosticoCarregamento()
-
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(texto)
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
-        return
-      }
-
-      const copiado = copiarTextoComFallback(texto)
-      if (copiado) {
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
-        return
-      }
-
-      baixarDiagnosticoCarregamento(event)
-      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
-    } catch (error) {
-      console.error('Erro ao copiar diagnóstico:', error)
-      const copiado = copiarTextoComFallback(texto)
-
-      if (copiado) {
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
-        return
-      }
-
-      baixarDiagnosticoCarregamento(event)
-      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
-    }
-  }
-
-  function renderizarBackupAuditoria() {
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Segurança e auditoria</h2>
-            <p>Ferramentas seguras de leitura para conferência e cópia local da igreja.</p>
-          </div>
-        </div>
-
-        <div className="backup-v41-grid">
-          <div className="backup-v41-card">
-            <span className="selo-publico">Cópia de segurança local</span>
-            <h3>Exportar dados da igreja</h3>
-            <p>Gera um arquivo JSON com os dados carregados na sessão atual. Não modifica cadastros no Supabase.</p>
-            <button className="botao-principal" type="button" onClick={baixarBackupLocalSeguro}>
-              Baixar backup JSON
-            </button>
-          </div>
-
-          <div className="backup-v41-card">
-            <span className="selo-publico">Auditoria</span>
-            <h3>Resumo da sessão</h3>
-            <p>Copie um resumo com igreja, usuário, perfil e totais para suporte técnico.</p>
-            <button className="botao-secundario" type="button" onClick={copiarResumoAuditoriaLocal}>
-              Copiar resumo
-            </button>
-          </div>
-        </div>
-
-        <div className="resumo resumo-alerta-claro">
-          <h3>Próxima camada recomendada</h3>
-          <p>Para backup automático real, use o SQL seguro enviado junto com esta versão para criar tabela de auditoria/backups sem alterar tabelas existentes.</p>
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarPainel() {
-    const aniversariantesDaSemana = buscarAniversariantesDaSemana()
-    const aniversariantesDoMesPainel = usuarioEhSecretaria() ? buscarAniversariantesDoMes() : []
-    const aniversariantesHojePainel = aniversariantesDaSemana.filter((pessoa) => Number(pessoa.dias) === 0)
-    const alertasDeFaltasPainel = usuarioEhSecretaria() ? buscarAlertasDeFaltas() : []
-    const destaquesDeFrequenciaPainel = usuarioEhSecretaria() ? buscarDestaquesFrequencia() : []
-    const aniversariantesPreviewPainel = aniversariantesDaSemana.slice(0, 3)
-
-    return (
-      <section className="conteudo">
-        <div className="hero-painel">
-          <div className="hero-painel-conteudo">
-            <div className="linha-tags-painel">
-              <span className="hero-tag">Painel da igreja</span>
-              <span className="hero-tag hero-tag-clara">
-                {usuarioEhProfessor() ? 'Perfil: Professor' : 'Perfil: Secretaria'}
-              </span>
-            </div>
-            <h2>{buscarNomeIgrejaParaExibicao()}</h2>
-            <p>
-              Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
-              com uma estrutura pronta para uso e comercialização.
-            </p>
-
-            <div className="hero-painel-metricas" aria-label="Resumo da igreja">
-              <span><strong>{classes.length}</strong> classes</span>
-              <span><strong>{alunosSomente().length}</strong> alunos</span>
-              <span><strong>{professoresSomente().length}</strong> professores</span>
-              <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
-            </div>
-
-            {(usuarioEhSecretaria() || usuarioEhProfessor()) && (
-              <button
-                className="atalho-chamada-topo"
-                type="button"
-                onClick={() => navegarParaPagina('chamada')}
-                aria-label="Ir para chamada"
-              >
-                <span className="atalho-chamada-topo-icone">
-                  <Icone nome="chamada" className="icone-svg" />
-                </span>
-                <span className="atalho-chamada-topo-texto">
-                  <strong>Fazer chamada</strong>
-                  <small>Atalho principal para registrar presença</small>
-                </span>
-              </button>
-            )}
-
-            <div className="hero-acoes">
-              {usuarioEhSecretaria() && (
-                <button className="botao-principal" type="button" onClick={() => navegarParaPagina('configuracoes')}>
-                  Ajustar dados da igreja
-                </button>
-              )}
-              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-                Ver relatórios
-              </button>
-
-              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('dashboard')}>
-                Ver resumo geral
-              </button>
-
-              <button className="botao-secundario botao-manual-painel" type="button" onClick={() => navegarParaPagina('manual')}>
-                Ver manual do usuário
-              </button>
-            </div>
-          </div>
-
-          <div className="hero-painel-destaque">
-            <div className="hero-icone-area">
-              <Icone nome="biblia" className="icone-hero" />
-            </div>
-            <h3>Resumo rápido</h3>
-            <p>Dados sincronizados automaticamente no Supabase.</p>
-            <ul>
-              <li>{classes.length} classes ativas</li>
-              <li>{alunosSomente().length} alunos cadastrados</li>
-              <li>{professoresSomente().length} professores cadastrados</li>
-              <li>{chamadasSalvas.length} chamadas registradas</li>
-              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="cards cards-estatisticas">
-          <CardResumo
-            icone="classes"
-            titulo="Classes"
-            valor={classes.length}
-            descricao="Turmas organizadas para a EBD."
-          />
-          <CardResumo
-            icone="alunos"
-            titulo="Alunos"
-            valor={alunos.length}
-            descricao="Participantes cadastrados no sistema."
-          />
-          <CardResumo
-            icone="usuarios"
-            titulo="Professores"
-            valor={professoresSomente().length}
-            descricao="Participantes da chamada dos professores."
-          />
-
-          <CardResumo
-            icone="chamada"
-            titulo="Chamadas"
-            valor={chamadasSalvas.length}
-            descricao="Registros salvos de presença."
-          />
-          <CardResumo
-            icone="check"
-            titulo="Frequência geral"
-            valor={`${calcularFrequenciaGeral()}%`}
-            descricao="Média de presença nas chamadas lançadas."
-            destaque
-          />
-        </div>
-
-        {usuarioEhSecretaria() && (
-          <div className="acoes-rapidas-painel">
-            <div>
-              <span className="hero-tag">Ações rápidas</span>
-              <h3>O que deseja fazer agora?</h3>
-            </div>
-
-            <div className="acoes-rapidas-grade">
-              <button className="acao-rapida-principal" type="button" onClick={() => navegarParaPagina('chamada')}>
-                <strong>Fazer chamada</strong>
-                <span>Registrar presença da classe</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  navegarParaPagina('alunos')
-                  abrirNovoAluno('aluno')
-                }}
-              >
-                <strong>Cadastrar aluno</strong>
-                <span>Adicionar novo participante</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  navegarParaPagina('professores')
-                  abrirNovoAluno('professor')
-                }}
-              >
-                <strong>Cadastrar professor</strong>
-                <span>Adicionar professor da EBD</span>
-              </button>
-
-              <button type="button" onClick={abrirJanelaAniversariantesSemana}>
-                <strong>Ver aniversariantes</strong>
-                <span>Semana, PDF e impressão</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {usuarioEhSecretaria() && (
-          <div className="alertas-ebd-painel">
-            <div className="alertas-ebd-cabecalho">
-              <div>
-                <span className="hero-tag">Acompanhamento da secretaria</span>
-                <h3>Alertas da EBD</h3>
-                <p>
-                  Acompanhe aniversariantes, faltas recorrentes e alunos com boa frequência.
-                </p>
-              </div>
-              <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-                Ver relatórios
-              </button>
-            </div>
-
-            <div className="alertas-ebd-grade">
-              <button className="alerta-ebd-card" type="button" onClick={abrirJanelaAniversariantesSemana}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">🎂</span>
-                <div>
-                  <strong>Aniversariantes</strong>
-                  <p>
-                    {aniversariantesDaSemana.length > 0
-                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversário nesta semana.`
-                      : 'Nenhum aniversariante encontrado nesta semana.'}
-                  </p>
-                </div>
-                <em>{aniversariantesHojePainel.length > 0 ? `${aniversariantesHojePainel.length} hoje` : 'Semana'}</em>
-              </button>
-
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-faltas">⚠️</span>
-                <div>
-                  <strong>Alertas de faltas</strong>
-                  <p>
-                    {alertasDeFaltasPainel.length > 0
-                      ? `${alertasDeFaltasPainel.length} aluno${alertasDeFaltasPainel.length === 1 ? '' : 's'} precisando de atenção.`
-                      : 'Nenhum alerta de faltas no momento.'}
-                  </p>
-                </div>
-                <em>{alertasDeFaltasPainel.length}</em>
-              </button>
-
-              <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioDestaquesFrequencia}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-destaque">⭐</span>
-                <div>
-                  <strong>Destaques de frequência</strong>
-                  <p>
-                    {destaquesDeFrequenciaPainel.length > 0
-                      ? `${destaquesDeFrequenciaPainel.length} aluno${destaquesDeFrequenciaPainel.length === 1 ? '' : 's'} com boa frequência.`
-                      : 'Sem destaques calculados ainda.'}
-                  </p>
-                </div>
-                <em>{destaquesDeFrequenciaPainel.length}</em>
-              </button>
-            </div>
-          </div>
-        )}
-
-
-
-        {usuarioEhSecretaria() && (
-          <div className="painel-aniversariantes-resumo">
-            <div className="painel-aniversariantes-topo">
-              <div>
-                <span className="hero-tag">Agenda da semana</span>
-                <h3>Aniversariantes da semana</h3>
-                <p>Veja rapidamente quem deve receber atenção especial nos próximos dias.</p>
-              </div>
-              <button className="botao-secundario" type="button" onClick={abrirJanelaAniversariantesSemana}>
-                Ver lista completa
-              </button>
-            </div>
-
-            {aniversariantesPreviewPainel.length > 0 ? (
-              <div className="painel-aniversariantes-lista">
-                {aniversariantesPreviewPainel.map((pessoa) => (
-                  <button
-                    className="painel-aniversariante-item"
-                    type="button"
-                    key={pessoa.id}
-                    onClick={abrirJanelaAniversariantesSemana}
-                  >
-                    <span className="avatar-aniversariante-painel">
-                      {String(pessoa.nome || '?').trim().charAt(0).toUpperCase() || '?'}
-                    </span>
-                    <div className="painel-aniversariante-dados">
-                      <strong>{pessoa.nome}</strong>
-                      <p>{pessoa.tipo} • {pessoa.detalhe}</p>
-                    </div>
-                    <span className="tag-prazo-aniversario">{descreverAniversario(pessoa.dias)}</span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="texto-sem-aniversariantes">
-                Nenhum aniversário cadastrado para os próximos 7 dias.
-              </p>
-            )}
-          </div>
-        )}
-
-        {janelaAniversariantesAberta && renderizarJanelaAniversariantesSemana()}
-
-
-        {renderizarFeedbackPiloto()}
-
-        <div className="grade-resumos-comerciais grade-configuracoes-rapidas">
-          <button
-            className="resumo resumo-comercial resumo-alerta-claro card-configuracao-rapida"
-            type="button"
-            onClick={() => navegarParaPagina('configuracoes')}
-          >
-            <span className="icone-configuracao-rapida"><Icone nome="configuracoes" className="icone-svg" /></span>
-            <div>
-              <h3>Personalização da igreja</h3>
-              <p>
-                {configuracaoIgreja.nome_igreja
-                  ? 'Dados configurados para relatórios e PDFs.'
-                  : 'Configure nome, endereço e contatos da igreja.'}
-              </p>
-            </div>
-          </button>
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarFormularioProfessorClasse() {
-    if (!mostrarFormularioAluno || !['professor', 'aluno'].includes(novoAluno.tipoPessoa)) {
-      return null
-    }
-
-    const formularioProfessor = novoAluno.tipoPessoa === 'professor'
-
-    return (
-      <form className="formulario formulario-professor-classe formulario-pessoa-classe" onSubmit={salvarAluno}>
-        <div className="topo-formulario-inline">
-          <div>
-            <h3>
-              {alunoEditandoId
-                ? formularioProfessor
-                  ? 'Editar professor'
-                  : 'Editar aluno'
-                : formularioProfessor
-                  ? 'Novo professor'
-                  : 'Novo aluno'}
-            </h3>
-            <p>
-              {formularioProfessor
-                ? 'Este cadastro também aparece no menu Professores e na Chamada dos professores.'
-                : 'Este aluno será cadastrado diretamente na classe selecionada e aparecerá na chamada dos alunos.'}
-            </p>
-          </div>
-        </div>
-
-        <div className="grade-campos grade-campos-configuracoes">
-          <label>
-            Nome
-            <input
-              type="text"
-              value={novoAluno.nome}
-              onChange={(event) =>
-                setNovoAluno({ ...novoAluno, nome: event.target.value })
-              }
-              placeholder={formularioProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
-            />
-          </label>
-
-          <label>
-            Classe de referência
-            <select
-              value={novoAluno.classeId}
-              onChange={(event) =>
-                setNovoAluno({ ...novoAluno, classeId: event.target.value })
-              }
-            >
-              <option value="">Selecione uma classe</option>
-
-              {classes.map((classe) => (
-                <option key={classe.id} value={classe.id}>
-                  {classe.nome}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            Telefone
-            <input
-              type="text"
-              value={novoAluno.telefone}
-              onChange={(event) =>
-                setNovoAluno({ ...novoAluno, telefone: event.target.value })
-              }
-              placeholder="Ex: (11) 99999-0000"
-            />
-          </label>
-
-          <label>
-            Data de nascimento
-            <input
-              type="date"
-              value={novoAluno.dataNascimento}
-              onChange={(event) =>
-                setNovoAluno({
-                  ...novoAluno,
-                  dataNascimento: event.target.value,
-                })
-              }
-            />
-          </label>
-        </div>
-
-        <div className="grupo-botoes">
-          <button className="botao-principal" type="submit" disabled={salvandoAluno}>
-            {salvandoAluno
-              ? 'Salvando...'
-              : alunoEditandoId
-                ? 'Salvar alterações'
-                : formularioProfessor
-                  ? 'Salvar professor'
-                  : 'Salvar aluno'}
-          </button>
-
-          <button
-            className="botao-secundario"
-            type="button"
-            onClick={cancelarFormularioAluno}
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
-    )
-  }
-
-  function renderizarClasses() {
-    if (!podeGerenciarCadastros()) {
-      return (
-        <section className="conteudo">
-          <h2>Acesso restrito</h2>
-          <p>O cadastro de classes é gerenciado pela secretaria.</p>
-        </section>
-      )
-    }
-
-    return (
-      <section className="conteudo pagina-interna pagina-classes">
-        <div className="topo-pagina topo-pagina-interna">
-          <div>
-            <span className="subtitulo-pagina-interna">Gestão de turmas</span>
-            <h2>Classes</h2>
-            <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
-          </div>
-
-          {!mostrarFormularioClasse && (
-            <button className="botao-principal" type="button" onClick={abrirNovaClasse}>
-              Nova classe
-            </button>
-          )}
-        </div>
-
-        {mostrarFormularioClasse && (
-          <form className="formulario formulario-editar-classe" onSubmit={salvarClasse}>
-            <div className="cabecalho-formulario-editar-classe">
-              <span>{classeEditandoId ? 'Editar classe' : 'Nova classe'}</span>
-              <h3>{classeEditandoId ? 'Alterar nome da classe' : 'Cadastrar nova classe'}</h3>
-              <p>
-                {classeEditandoId
-                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarão nesta mesma turma.'
-                  : 'Crie uma nova turma para organizar alunos, professores e chamadas da EBD.'}
-              </p>
-            </div>
-
-            <label>
-              Nome da classe
-              <input
-                type="text"
-                value={novaClasse.nome}
-                onChange={(event) =>
-                  setNovaClasse({ ...novaClasse, nome: event.target.value })
-                }
-                placeholder="Ex: Jovens, Adultos, Crianças..."
-                autoFocus
-              />
-            </label>
-
-            <div className="grupo-botoes">
-              <button className="botao-principal" type="submit">
-                {classeEditandoId ? 'Salvar novo nome da classe' : 'Salvar classe'}
-              </button>
-
-              <button
-                className="botao-secundario"
-                type="button"
-                onClick={cancelarFormularioClasse}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        )}
-
-        {renderizarFormularioProfessorClasse()}
-
-        <div className="aviso aviso-classes-professores aviso-classes-moderno">
-          <p>
-            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrícula de cada turma.
-          </p>
-        </div>
-
-        <div className="lista lista-classes-modernas">
-          {classes.map((classe, indiceClasse) => {
-            const professoresDaClasse = buscarProfessoresDaClasse(classe.id)
-            const matriculaClasse = calcularMatriculaDaClasse(classe.id)
-
-            return (
-              <div
-                className={`item-lista classe-card-moderno classe-cor-${(indiceClasse % 5) + 1}`}
-                key={classe.id}
-              >
-                <div className="classe-card-faixa">
-                  <div className="classe-card-titulo-bloco">
-                    <span className="classe-card-selo">Classe</span>
-                    <h3>{classe.nome}</h3>
-                  </div>
-
-                  <div className="classe-card-matricula">
-                    <strong>{matriculaClasse}</strong>
-                    <span>alunos</span>
-                  </div>
-                </div>
-
-                <div className="classe-card-corpo">
-                  <div className="classe-card-resumo">
-                    <div className="classe-card-resumo-item resumo-matricula">
-                      <strong>Matrícula</strong>
-                      <span>{matriculaClasse} alunos</span>
-                    </div>
-                  </div>
-
-                  <div className="professores-na-classe professores-na-classe-compacto">
-                    {professoresDaClasse.length > 0 ? (
-                      professoresDaClasse.map((professor) => (
-                        <div className="professor-classe-linha" key={professor.id}>
-                          <span className="professor-classe-nome">Professor: {professor.nome}</span>
-
-                          <div className="professor-classe-acoes">
-                            <button
-                              className="botao-editar botao-pequeno"
-                              onClick={() => editarProfessorDaClasse(professor)}
-                            >
-                              Editar
-                            </button>
-
-                            <button
-                              className="botao-excluir botao-pequeno"
-                              onClick={() => excluirAluno(professor.id)}
-                            >
-                              Excluir
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="texto-sem-professor">
-                        Nenhum professor vinculado a esta classe.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="classe-card-acoes">
-                    <button
-                      className="botao-principal botao-sem-margem"
-                      onClick={() => abrirNovoAlunoDaClasse(classe.id)}
-                    >
-                      Novo aluno
-                    </button>
-
-                    <button
-                      className="botao-principal botao-verde"
-                      onClick={() => abrirNovoProfessorDaClasse(classe.id)}
-                    >
-                      Novo professor
-                    </button>
-
-                    <button
-                      className="botao-secundario"
-                      onClick={() => alternarAlunosDaClasse(classe.id)}
-                    >
-                      {Number(classeAlunosAbertaId) === Number(classe.id)
-                        ? 'Ocultar alunos'
-                        : `Ver alunos (${matriculaClasse})`}
-                    </button>
-
-                    <button
-                      className="botao-editar"
-                      onClick={() => editarClasse(classe)}
-                    >
-                      Alterar nome
-                    </button>
-
-                    <button
-                      className="botao-excluir"
-                      onClick={() => excluirClasse(classe.id)}
-                    >
-                      Excluir classe
-                    </button>
-                  </div>
-
-                  {Number(classeAlunosAbertaId) === Number(classe.id) && (
-                    <div className="alunos-da-classe">
-                      <div className="alunos-da-classe-topo">
-                        <strong>Alunos da classe</strong>
-                        <span>{matriculaClasse} aluno(s)</span>
-                      </div>
-
-                      {buscarAlunosDaClasse(classe.id).length > 0 ? (
-                        <div className="alunos-da-classe-lista">
-                          {buscarAlunosDaClasse(classe.id).map((aluno) => (
-                            <div className="aluno-classe-linha" key={aluno.id}>
-                              <span>{aluno.nome}</span>
-
-                              <div className="aluno-classe-acoes">
-                                <button
-                                  className="botao-editar botao-pequeno"
-                                  onClick={() => editarAluno(aluno)}
-                                >
-                                  Editar
-                                </button>
-
-                                <button
-                                  className="botao-excluir botao-pequeno"
-                                  onClick={() => excluirAluno(aluno.id)}
-                                >
-                                  Excluir
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="texto-sem-professor">
-                          Nenhum aluno cadastrado nesta classe.
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarCadastroPessoas(tipoPessoaPagina) {
-    const ehPaginaProfessor = tipoPessoaPagina === 'professor'
-    const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
-    const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
-    const descricaoPagina = ehPaginaProfessor
-      ? 'Cadastre, edite e organize os professores. A classe de referência também atualiza a lista de professores em Classes.'
-      : usuarioEhProfessor()
-        ? 'Veja os alunos vinculados às suas classes.'
-        : 'Cadastre, edite, busque e organize os alunos por classe.'
-    const obterInicialCadastro = (nome) => String(nome || '?').trim().charAt(0).toUpperCase() || '?'
-
-    return (
-      <section className={`conteudo pagina-interna pagina-cadastros pagina-${tipoPessoaPagina}s`}>
-        <div className="topo-pagina topo-pagina-interna">
-          <div>
-            <span className="subtitulo-pagina-interna">{ehPaginaProfessor ? 'Equipe de ensino' : 'Cadastro e acompanhamento'}</span>
-            <h2>{tituloPagina}</h2>
-            <p>{descricaoPagina}</p>
-          </div>
-
-          {podeGerenciarCadastros() && !mostrarFormularioAluno && (
-            <button
-              className="botao-principal"
-              type="button"
-              onClick={() => abrirNovoAluno(tipoPessoaPagina)}
-            >
-              {ehPaginaProfessor ? 'Novo professor' : 'Novo aluno'}
-            </button>
-          )}
-        </div>
-
-        {mostrarFormularioAluno && novoAluno.tipoPessoa === tipoPessoaPagina && (
-          <form className="formulario" onSubmit={salvarAluno}>
-            <label>
-              Nome
-              <input
-                type="text"
-                value={novoAluno.nome}
-                onChange={(event) =>
-                  setNovoAluno({ ...novoAluno, nome: event.target.value })
-                }
-                placeholder={ehPaginaProfessor ? 'Ex: Leandro Silva' : 'Ex: Ana Clara'}
-              />
-            </label>
-
-            <label>
-              Tipo
-              <select
-                value={novoAluno.tipoPessoa}
-                onChange={(event) =>
-                  setNovoAluno({ ...novoAluno, tipoPessoa: event.target.value })
-                }
-              >
-                <option value="aluno">Aluno</option>
-                <option value="professor">Professor</option>
-              </select>
-            </label>
-
-            <label>
-              Classe de referência
-              <select
-                value={novoAluno.classeId}
-                onChange={(event) =>
-                  setNovoAluno({ ...novoAluno, classeId: event.target.value })
-                }
-              >
-                <option value="">Selecione uma classe</option>
-
-                {classes.map((classe) => (
-                  <option key={classe.id} value={classe.id}>
-                    {classe.nome}
-                  </option>
-                ))}
-              </select>
-              <small className="texto-ajuda-campo">
-                Aluno aparece na chamada dos alunos. Professor aparece na chamada dos professores e na lista de professores da classe.
-              </small>
-            </label>
-
-            <label>
-              Telefone
-              <input
-                type="text"
-                value={novoAluno.telefone}
-                onChange={(event) =>
-                  setNovoAluno({ ...novoAluno, telefone: event.target.value })
-                }
-                placeholder="Ex: (11) 99999-0000"
-              />
-            </label>
-
-            <label>
-              Data de nascimento
-              <input
-                type="date"
-                value={novoAluno.dataNascimento}
-                onChange={(event) =>
-                  setNovoAluno({
-                    ...novoAluno,
-                    dataNascimento: event.target.value,
-                  })
-                }
-              />
-            </label>
-
-            <div className="grupo-botoes">
-              <button className="botao-principal" type="submit" disabled={salvandoAluno}>
-                {salvandoAluno ? 'Salvando...' : alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
-              </button>
-
-              <button
-                className="botao-secundario"
-                type="button"
-                onClick={cancelarFormularioAluno}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="filtros">
-          <label>
-            Buscar {ehPaginaProfessor ? 'professor' : 'aluno'}
-            <input
-              type="text"
-              value={buscaAluno}
-              onChange={(event) => setBuscaAluno(event.target.value)}
-              placeholder={ehPaginaProfessor ? 'Digite o nome do professor' : 'Digite o nome do aluno'}
-            />
-          </label>
-
-          {usuarioEhSecretaria() && (
-            <label>
-              Filtrar por classe
-              <select
-                value={filtroClasseAluno}
-                onChange={(event) => setFiltroClasseAluno(event.target.value)}
-              >
-                <option value="">Todas as classes</option>
-
-                {classes.map((classe) => (
-                  <option key={classe.id} value={classe.id}>
-                    {classe.nome}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-
-          <button className="botao-secundario" type="button" onClick={limparFiltrosAlunos}>
-            Limpar filtros
-          </button>
-        </div>
-
-        <p className="contador-resultados">
-          Mostrando {cadastrosFiltrados.length} de{' '}
-          {ehPaginaProfessor ? professoresSomente().length : alunosSomente().length}{' '}
-          {ehPaginaProfessor ? 'professores' : 'alunos'}
-        </p>
-
-        <div className="lista lista-cadastros-moderna">
-          {cadastrosFiltrados.map((aluno) => (
-            <div className="item-lista item-com-acoes cadastro-card-moderno" key={aluno.id}>
-              <div className="cadastro-card-identidade">
-                <span className="cadastro-avatar" aria-hidden="true">
-                  {obterInicialCadastro(aluno.nome)}
-                </span>
-
-                <div className="cadastro-card-textos">
-                  <h3>{aluno.nome}</h3>
-                  <div className="cadastro-metadados">
-                    <span>{(aluno.tipoPessoa || 'aluno') === 'professor' ? 'Professor' : 'Aluno'}</span>
-                    <span>{buscarNomeClasse(aluno.classeId)}</span>
-                    {aluno.telefone && <span>{aluno.telefone}</span>}
-                    {aluno.dataNascimento && (
-                      <span>Nasc.: {formatarDataNascimento(aluno.dataNascimento)}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {podeGerenciarCadastros() && (
-                <div className="acoes-item acoes-cadastro">
-                  <button
-                    className="botao-editar"
-                    onClick={() => editarAluno(aluno)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    className="botao-excluir"
-                    onClick={() => excluirAluno(aluno.id)}
-                  >
-                    Excluir
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarAlunos() {
-    return renderizarCadastroPessoas('aluno')
-  }
-
-  function renderizarProfessores() {
-    return renderizarCadastroPessoas('professor')
-  }
-
-  function renderizarUsuarios() {
-    if (!usuarioEhSecretaria()) {
-      return (
-        <section className="conteudo">
-          <h2>Acesso restrito</h2>
-          <p>O cadastro de usuários é gerenciado pela secretaria.</p>
-        </section>
-      )
-    }
-
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Usuários</h2>
-            <p>
-              Cadastre secretarias e professores da igreja. O login precisa existir
-              primeiro em Authentication no Supabase.
-            </p>
-          </div>
-
-          {!mostrarFormularioPerfil && (
-            <button className="botao-principal" onClick={abrirNovoPerfil}>
-              Novo usuário
-            </button>
-          )}
-        </div>
-
-        <div className="aviso aviso-usuarios">
-          <p>
-            <strong>Importante:</strong> primeiro crie o usuário em
-            Supabase → Authentication → Users. Depois copie o User UID e cadastre
-            aqui para vincular o perfil, a classe e a data de nascimento.
-          </p>
-        </div>
-
-        {mostrarFormularioPerfil && (
-          <form className="formulario" onSubmit={salvarPerfilUsuario}>
-            <div className="grade-campos grade-campos-configuracoes">
-              <label>
-                User UID do Supabase
-                <input
-                  type="text"
-                  value={novoPerfil.userId}
-                  onChange={(event) =>
-                    setNovoPerfil({ ...novoPerfil, userId: event.target.value })
-                  }
-                  placeholder="Ex: 5fd49a5b-b331-4d66-aace-e458384f2f51"
-                />
-              </label>
-
-              <label>
-                Nome
-                <input
-                  type="text"
-                  value={novoPerfil.nome}
-                  onChange={(event) =>
-                    setNovoPerfil({ ...novoPerfil, nome: event.target.value })
-                  }
-                  placeholder="Ex: Leandro Silva"
-                />
-              </label>
-
-              <label>
-                E-mail
-                <input
-                  type="email"
-                  value={novoPerfil.email}
-                  onChange={(event) =>
-                    setNovoPerfil({ ...novoPerfil, email: event.target.value })
-                  }
-                  placeholder="Ex: professor@igreja.com"
-                />
-              </label>
-
-              <label>
-                Perfil
-                <select
-                  value={novoPerfil.perfil}
-                  onChange={(event) =>
-                    setNovoPerfil({
-                      ...novoPerfil,
-                      perfil: event.target.value,
-                      classeIds:
-                        event.target.value === 'secretaria'
-                          ? []
-                          : novoPerfil.classeIds,
-                    })
-                  }
-                >
-                  <option value="professor">Professor</option>
-                  <option value="secretaria">Secretaria</option>
-                </select>
-              </label>
-
-              {novoPerfil.perfil === 'professor' && (
-                <div className="campo-classes-professor">
-                  <span>Classes do professor</span>
-                  <div className="lista-checkboxes-classes">
-                    {classes.map((classe) => {
-                      const classeIdTexto = String(classe.id)
-                      const selecionada = novoPerfil.classeIds.includes(classeIdTexto)
-
-                      return (
-                        <label key={classe.id} className="checkbox-classe-professor">
-                          <input
-                            type="checkbox"
-                            checked={selecionada}
-                            onChange={(event) => {
-                              const novasClasses = event.target.checked
-                                ? [...novoPerfil.classeIds, classeIdTexto]
-                                : novoPerfil.classeIds.filter((id) => id !== classeIdTexto)
-
-                              setNovoPerfil({
-                                ...novoPerfil,
-                                classeIds: novasClasses,
-                              })
-                            }}
-                          />
-                          <span>{classe.nome}</span>
-                        </label>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <label>
-                Data de nascimento
-                <input
-                  type="date"
-                  value={novoPerfil.dataNascimento}
-                  onChange={(event) =>
-                    setNovoPerfil({
-                      ...novoPerfil,
-                      dataNascimento: event.target.value,
-                    })
-                  }
-                />
-              </label>
-            </div>
-
-            <div className="grupo-botoes">
-              <button className="botao-principal" type="submit">
-                {perfilEditandoId ? 'Salvar alterações' : 'Salvar usuário'}
-              </button>
-
-              <button
-                className="botao-secundario"
-                type="button"
-                onClick={cancelarFormularioPerfil}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="lista">
-          {perfisIgreja.map((perfil) => (
-            <div className="item-lista item-com-acoes" key={perfil.id}>
-              <div>
-                <h3>{perfil.nome || perfil.email}</h3>
-                <p>E-mail: {perfil.email}</p>
-                <p>
-                  Perfil:{' '}
-                  {perfil.perfil === 'professor' ? 'Professor' : 'Secretaria'}
-                </p>
-                {perfil.perfil === 'professor' && (
-                  <p>
-                    Classes:{' '}
-                    {buscarNomesClassesDoProfessor(perfil.id, perfil.classe_id) ||
-                      'Nenhuma classe vinculada'}
-                  </p>
-                )}
-                {perfil.data_nascimento && (
-                  <p>
-                    Nascimento: {formatarDataNascimento(perfil.data_nascimento)}
-                  </p>
-                )}
-              </div>
-
-              <div className="acoes-item">
-                <button
-                  className="botao-editar"
-                  onClick={() => editarPerfil(perfil)}
-                >
-                  Editar
-                </button>
-
-                <button
-                  className="botao-excluir"
-                  onClick={() => excluirPerfilUsuario(perfil)}
-                >
-                  Remover perfil
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  async function salvarChamadaProfessores() {
-    setMensagemChamada(null)
-
-    if (!usuarioEhSecretaria()) {
-      setMensagemChamada({
-        tipo: 'erro',
-        texto: 'Apenas a secretaria pode salvar a chamada dos professores.',
-      })
-      return
-    }
-
-    const professores = buscarProfessoresDaIgreja()
-
-    if (professores.length === 0) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: 'Ainda não há professores cadastrados em Usuários.',
-      })
-      return
-    }
-
-    const professoresSemMarcacao = professores.filter(
-      (professor) => !presencasProfessores[professor.id]
-    )
-
-    if (professoresSemMarcacao.length > 0) {
-      setMensagemChamada({
-        tipo: 'aviso',
-        texto: `Ainda falta marcar ${professoresSemMarcacao.length} professor(es): ${professoresSemMarcacao
-          .map((professor) => professor.nome)
-          .join(', ')}`,
-      })
-      return
-    }
-
-    const totalPresentes = professores.filter(
-      (professor) => presencasProfessores[professor.id] === 'presente'
-    ).length
-
-    const totalFaltas = professores.filter(
-      (professor) => presencasProfessores[professor.id] === 'faltou'
-    ).length
-
-    const totalJustificadas = professores.filter(
-      (professor) => presencasProfessores[professor.id] === 'justificou'
-    ).length
-
-    const chamadaBanco = {
-      id: Date.now(),
-      igreja_id: buscarIgrejaIdAtual(),
-      data: dataAulaChamada || buscarDataAtual(),
-      total_professores: professores.length,
-      total_presentes: totalPresentes,
-      total_faltas: totalFaltas,
-      total_justificadas: totalJustificadas,
-      observacoes: observacoesChamadaProfessores.trim(),
-      registros: professores.map((professor) => ({
-        pessoaId: professor.id,
-        nome: professor.nome,
-        telefone: professor.telefone || '',
-        status: presencasProfessores[professor.id],
-        classeReferencia: buscarNomeClasse(professor.classeId),
-      })),
-    }
-
-    const { error } = await supabase
-      .from('chamadas_professores')
-      .insert(chamadaBanco)
-
-    if (error) {
-      console.error(error)
-      setMensagemChamada({
-        tipo: 'erro',
-        texto: 'Não foi possível salvar a chamada dos professores. Verifique sua conexão e tente novamente.',
-      })
-      return
-    }
-
-    await buscarTodosOsDados()
-
-    setPresencasProfessores({})
-    setObservacoesChamadaProfessores('')
-    setMensagemChamada({
-      tipo: 'sucesso',
-      texto: 'Chamada dos professores salva com sucesso.',
-    })
-  }
-
-  function renderizarChamada() {
-    const classeSelecionadaId = classeChamadaId ? Number(classeChamadaId) : null
-    const classeSelecionada = classes.find(
-      (classe) => Number(classe.id) === Number(classeSelecionadaId)
-    )
-    const alunosDaClasse = alunos.filter(
-      (aluno) =>
-        Number(aluno.classeId) === Number(classeSelecionadaId) &&
-        String(aluno.tipoPessoa || 'aluno').toLowerCase() === 'aluno'
-    )
-    const professoresDaIgreja = buscarProfessoresDaIgreja()
-
-    return (
-      <section className="conteudo pagina-interna pagina-chamada">
-        <div className="topo-pagina topo-pagina-interna">
-          <div>
-            <span className="subtitulo-pagina-interna">Registro de frequência</span>
-            <h2>Chamada</h2>
-            <p>
-              {usuarioEhProfessor()
-                ? 'Faça a chamada das classes vinculadas pela secretaria.'
-                : 'Registre a chamada dos alunos e a chamada separada dos professores.'}
-            </p>
-          </div>
-        </div>
-
-        {usuarioEhSecretaria() && (
-          <div className="abas-chamada">
-            <button
-              className={tipoChamada === 'alunos' ? 'ativo' : ''}
-              type="button"
-              onClick={() => {
-                setTipoChamada('alunos')
-                setMensagemChamada(null)
-              }}
-            >
-              Chamada dos alunos
-            </button>
-
-            <button
-              className={tipoChamada === 'professores' ? 'ativo' : ''}
-              type="button"
-              onClick={() => {
-                setTipoChamada('professores')
-                setMensagemChamada(null)
-              }}
-            >
-              Chamada dos professores
-            </button>
-          </div>
-        )}
-
-        {mensagemChamada && (
-          <div
-            className={`mensagem-chamada ${mensagemChamada.tipo}`}
-            role="status"
-            aria-live="polite"
-          >
-            <p>{mensagemChamada.texto}</p>
-            <button
-              type="button"
-              onClick={() => setMensagemChamada(null)}
-              aria-label="Fechar mensagem da chamada"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
-        {(tipoChamada === 'alunos' || usuarioEhProfessor()) && (
-          <>
-            <div className="formulario">
-              <label>
-                Classe
-                <select
-                  value={classeChamadaId}
-                  onChange={(event) => {
-                    setMensagemChamada(null)
-                    setClasseChamadaId(event.target.value)
-                    setPresencas({})
-                    setDadosExtrasChamada({
-                      visitantes: '',
-                      biblias: '',
-                      revistas: '',
-                      ofertas: '',
-                    })
-                  }}
-                >
-                  <option value="">Selecione uma classe</option>
-
-                  {classes.map((classe) => (
-                    <option key={classe.id} value={classe.id}>
-                      {classe.nome}
-                    </option>
-                  ))}
-                </select>
-                {usuarioEhProfessor() && (
-                  <small className="texto-ajuda-campo">
-                    Você só verá as classes vinculadas pela secretaria.
-                  </small>
-                )}
-              </label>
-
-              <label>
-                Data da aula
-                <input
-                  type="date"
-                  value={dataAulaChamada}
-                  onChange={(event) => setDataAulaChamada(event.target.value)}
-                />
-                <small className="texto-ajuda-campo">
-                  O sistema preenche com a data de hoje, mas você pode alterar.
-                </small>
-              </label>
-
-              {classeChamadaId && (
-                <div className="grade-campos">
-                  <label>
-                    Visitantes
-                    <input
-                      type="number"
-                      min="0"
-                      value={dadosExtrasChamada.visitantes}
-                      onChange={(event) =>
-                        alterarDadosExtras('visitantes', event.target.value)
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Bíblias
-                    <input
-                      type="number"
-                      min="0"
-                      value={dadosExtrasChamada.biblias}
-                      onChange={(event) =>
-                        alterarDadosExtras('biblias', event.target.value)
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Revistas
-                    <input
-                      type="number"
-                      min="0"
-                      value={dadosExtrasChamada.revistas}
-                      onChange={(event) =>
-                        alterarDadosExtras('revistas', event.target.value)
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Ofertas R$
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={dadosExtrasChamada.ofertas}
-                      onChange={(event) =>
-                        alterarDadosExtras('ofertas', event.target.value)
-                      }
-                      placeholder="Ex: 25.50"
-                    />
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {classeChamadaId && classeSelecionada && alunosDaClasse.length === 0 && !mensagemChamada && (
-              <div className="aviso">
-                <p>
-                  Não encontrei alunos vinculados à classe {classeSelecionada.nome}.
-                  Verifique o cadastro dos alunos antes de salvar a chamada.
-                </p>
-              </div>
-            )}
-
-            {alunosDaClasse.length > 0 && (
-              <>
-                <div className="resumo-chamada">
-                  <p>
-                    <strong>Matrícula:</strong> {alunosDaClasse.length}
-                  </p>
-
-                  <p>
-                    <strong>Visitantes:</strong>{' '}
-                    {converterNumero(dadosExtrasChamada.visitantes)}
-                  </p>
-
-                  <p>
-                    <strong>Ofertas:</strong>{' '}
-                    {formatarMoeda(dadosExtrasChamada.ofertas)}
-                  </p>
-                </div>
-
-                <div className="acoes-chamada-rapida">
-                  <button
-                    type="button"
-                    className="botao-marcar-todos presente"
-                    onClick={() => marcarTodosAlunos('presente')}
-                  >
-                    Marcar todos como presentes
-                  </button>
-
-                  <button
-                    type="button"
-                    className="botao-marcar-todos faltou"
-                    onClick={() => marcarTodosAlunos('faltou')}
-                  >
-                    Marcar todos como faltaram
-                  </button>
-                </div>
-
-                <div className="lista">
-                  {alunosDaClasse.map((aluno) => (
-                    <div className="item-lista item-chamada" key={aluno.id}>
-                      <div>
-                        <h3>{aluno.nome}</h3>
-                        <p>Classe: {buscarNomeClasse(aluno.classeId)}</p>
-                      </div>
-
-                      <div className="acoes-chamada">
-                        <button
-                          type="button"
-                          className={
-                            presencas[String(aluno.id)] === 'presente'
-                              ? 'botao-presenca ativo-presente'
-                              : 'botao-presenca'
-                          }
-                          onClick={() => alterarPresenca(aluno.id, 'presente')}
-                        >
-                          Presente
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            presencas[String(aluno.id)] === 'faltou'
-                              ? 'botao-falta ativo-falta'
-                              : 'botao-falta'
-                          }
-                          onClick={() => alterarPresenca(aluno.id, 'faltou')}
-                        >
-                          Faltou
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <button type="button" className="botao-principal" onClick={salvarChamada}>
-                  Salvar chamada dos alunos
-                </button>
-              </>
-            )}
-          </>
-        )}
-
-        {usuarioEhSecretaria() && tipoChamada === 'professores' && (
-          <>
-            <div className="formulario formulario-data-chamada">
-              <label>
-                Data da aula
-                <input
-                  type="date"
-                  value={dataAulaChamada}
-                  onChange={(event) => setDataAulaChamada(event.target.value)}
-                />
-                <small className="texto-ajuda-campo">
-                  Use a data do domingo/aula referente à chamada.
-                </small>
-              </label>
-            </div>
-
-            <div className="resumo-chamada resumo-professores">
-              <p>
-                <strong>Professores cadastrados:</strong> {professoresDaIgreja.length}
-              </p>
-              <p>
-                <strong>Última chamada:</strong> {buscarDataUltimaChamadaProfessores()}
-              </p>
-              <p>
-                <strong>Chamadas salvas:</strong> {chamadasProfessores.length}
-              </p>
-            </div>
-
-            {professoresDaIgreja.length === 0 && (
-              <div className="aviso">
-                <p>
-                  Nenhum professor cadastrado. Vá em Alunos e Professores,
-                  cadastre uma pessoa com tipo Professor.
-                </p>
-              </div>
-            )}
-
-            {professoresDaIgreja.length > 0 && (
-              <>
-                <div className="lista">
-                  {professoresDaIgreja.map((professor) => (
-                    <div className="item-lista item-chamada" key={professor.id}>
-                      <div>
-                        <h3>{professor.nome}</h3>
-                        {professor.telefone && <p>Telefone: {professor.telefone}</p>}
-                        <p>Classe de referência: {buscarNomeClasse(professor.classeId)}</p>
-                      </div>
-
-                      <div className="acoes-chamada acoes-chamada-professores">
-                        <button
-                          type="button"
-                          className={
-                            presencasProfessores[professor.id] === 'presente'
-                              ? 'botao-presenca ativo-presente'
-                              : 'botao-presenca'
-                          }
-                          onClick={() =>
-                            alterarPresencaProfessor(professor.id, 'presente')
-                          }
-                        >
-                          Presente
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            presencasProfessores[professor.id] === 'faltou'
-                              ? 'botao-falta ativo-falta'
-                              : 'botao-falta'
-                          }
-                          onClick={() =>
-                            alterarPresencaProfessor(professor.id, 'faltou')
-                          }
-                        >
-                          Faltou
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            presencasProfessores[professor.id] === 'justificou'
-                              ? 'botao-justificou ativo-justificou'
-                              : 'botao-justificou'
-                          }
-                          onClick={() =>
-                            alterarPresencaProfessor(professor.id, 'justificou')
-                          }
-                        >
-                          Justificou
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="formulario formulario-observacao-professores">
-                  <label>
-                    Observações da chamada dos professores
-                    <input
-                      type="text"
-                      value={observacoesChamadaProfessores}
-                      onChange={(event) =>
-                        setObservacoesChamadaProfessores(event.target.value)
-                      }
-                      placeholder="Ex: troca de professor, viagem, justificativa geral..."
-                    />
-                  </label>
-                </div>
-
-                <button
-                  type="button"
-                  className="botao-principal"
-                  onClick={salvarChamadaProfessores}
-                >
-                  Salvar chamada dos professores
-                </button>
-              </>
-            )}
-          </>
-        )}
-      </section>
-    )
-  }
-
-  function obterTempoOrdenacaoChamada(dataTexto, id = 0) {
-    const texto = String(dataTexto || '').trim()
-
-    if (!texto) {
-      return Number(id) || 0
-    }
-
-    const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/)
-
-    if (iso) {
-      const dataIso = new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]))
-      return Number.isNaN(dataIso.getTime()) ? Number(id) || 0 : dataIso.getTime()
-    }
-
-    const br = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
-
-    if (br) {
-      const dataBr = new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1]))
-      return Number.isNaN(dataBr.getTime()) ? Number(id) || 0 : dataBr.getTime()
-    }
-
-    const dataLivre = new Date(texto)
-    return Number.isNaN(dataLivre.getTime()) ? Number(id) || 0 : dataLivre.getTime()
-  }
-
-  function montarHistoricoChamadasRecentes() {
-    const historicoAlunos = chamadasSalvas.map((chamada) => {
-      const classe = classes.find((item) => Number(item.id) === Number(chamada.classeId))
-
-      return {
-        id: chamada.id,
-        chave: `alunos-${chamada.id}`,
-        tipo: 'alunos',
-        titulo: `Chamada dos alunos${classe?.nome ? ` — ${classe.nome}` : ''}`,
-        classe: classe?.nome || 'Classe não encontrada',
-        data: chamada.data,
-        resumo: [
-          `Presentes: ${converterNumero(chamada.totalPresentes)}`,
-          `Faltas: ${converterNumero(chamada.totalFaltas)}`,
-          `Visitantes: ${converterNumero(chamada.visitantes)}`,
-          `Total: ${converterNumero(chamada.totalGeralClasse)}`,
-        ],
-      }
-    })
-
-    const historicoProfessores = chamadasProfessores.map((chamada) => ({
-      id: chamada.id,
-      chave: `professores-${chamada.id}`,
-      tipo: 'professores',
-      titulo: 'Chamada dos professores',
-      classe: 'Professores da igreja',
-      data: chamada.data,
-      resumo: [
-        `Presentes: ${converterNumero(chamada.totalPresentes)}`,
-        `Faltaram: ${converterNumero(chamada.totalFaltas)}`,
-        `Justificaram: ${converterNumero(chamada.totalJustificadas)}`,
-        `Total: ${converterNumero(chamada.totalProfessores)}`,
-      ],
-    }))
-
-    return [...historicoAlunos, ...historicoProfessores]
-      .sort((a, b) => {
-        const tempoA = obterTempoOrdenacaoChamada(a.data, a.id)
-        const tempoB = obterTempoOrdenacaoChamada(b.data, b.id)
-
-        if (tempoA !== tempoB) {
-          return tempoB - tempoA
-        }
-
-        return Number(b.id || 0) - Number(a.id || 0)
-      })
-      .slice(0, 24)
-  }
-
-  async function excluirChamadaHistorico(item, event) {
-    event?.preventDefault?.()
-    event?.stopPropagation?.()
-
-    if (!item?.id) {
-      setMensagemHistoricoChamadas({
-        tipo: 'erro',
-        texto: 'Não encontrei o identificador dessa chamada.',
-      })
-      return
-    }
-
-    const igrejaAtualId = buscarIgrejaIdAtual()
-
-    if (!igrejaAtualId) {
-      setMensagemHistoricoChamadas({
-        tipo: 'erro',
-        texto: 'Não foi possível confirmar a igreja atual. Atualize os dados e tente novamente.',
-      })
-      return
-    }
-
-    const dataFormatada = formatarDataCurtaRelatorio(item.data)
-    const confirmou = window.confirm(
-      `Deseja realmente excluir esta chamada?\n\n${item.titulo}\nData: ${dataFormatada}\n\nEssa ação remove apenas o registro da chamada. Alunos, classes e professores não serão apagados.`
-    )
-
-    if (!confirmou) {
-      return
-    }
-
-    setExcluindoChamadaId(item.chave)
-    setMensagemHistoricoChamadas(null)
-
-    try {
-      const tabela = item.tipo === 'professores' ? 'chamadas_professores' : 'chamadas'
-      const { error } = await supabase
-        .from(tabela)
-        .delete()
-        .eq('id', item.id)
-        .eq('igreja_id', igrejaAtualId)
-
-      if (error) {
-        throw error
-      }
-
-      if (item.tipo === 'professores') {
-        setChamadasProfessores((atuais) => atuais.filter((chamada) => Number(chamada.id) !== Number(item.id)))
-      } else {
-        setChamadasSalvas((atuais) => atuais.filter((chamada) => Number(chamada.id) !== Number(item.id)))
-      }
-
-      setMensagemHistoricoChamadas({
-        tipo: 'sucesso',
-        texto: 'Chamada excluída com sucesso. Os cadastros da igreja não foram alterados.',
-      })
-    } catch (error) {
-      console.error('Erro ao excluir chamada:', error)
-      setMensagemHistoricoChamadas({
-        tipo: 'erro',
-        texto: 'Não foi possível excluir a chamada. Verifique sua permissão e tente novamente.',
-      })
-    } finally {
-      setExcluindoChamadaId(null)
-    }
-  }
-
-  function renderizarHistoricoChamadasRelatorio() {
-    if (!usuarioEhSecretaria()) {
-      return null
-    }
-
-    const historicoChamadas = montarHistoricoChamadasRecentes()
-
-    return (
-      <div className="historico-chamadas-relatorio no-print">
-        <div className="historico-chamadas-topo">
-          <div>
-            <span className="selo-publico">Histórico</span>
-            <h3>Histórico de chamadas</h3>
-            <p>
-              Encontre chamadas lançadas por engano e exclua apenas o registro da chamada, sem apagar alunos, classes ou professores.
-            </p>
-          </div>
-
-          <button
-            className="botao-secundario"
-            type="button"
-            onClick={() =>
-              buscarTodosOsDados().catch((error) => {
-                console.error('Erro ao atualizar histórico de chamadas:', error)
-                setMensagemHistoricoChamadas({
-                  tipo: 'erro',
-                  texto: 'Não foi possível atualizar o histórico agora. Tente novamente.',
-                })
-              })
-            }
-          >
-            Atualizar histórico
-          </button>
-        </div>
-
-        {mensagemHistoricoChamadas && (
-          <div className={`aviso-historico-chamadas ${mensagemHistoricoChamadas.tipo}`}>
-            <p>{mensagemHistoricoChamadas.texto}</p>
-            <button
-              type="button"
-              onClick={() => setMensagemHistoricoChamadas(null)}
-              aria-label="Fechar mensagem do histórico de chamadas"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
-        {historicoChamadas.length > 0 ? (
-          <div className="lista-historico-chamadas">
-            {historicoChamadas.map((item) => (
-              <article className="card-historico-chamada" key={item.chave}>
-                <div className="historico-chamada-data">
-                  <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
-                  <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
-                </div>
-
-                <div className="historico-chamada-conteudo">
-                  <h4>{item.titulo}</h4>
-                  <p>{item.classe}</p>
-                  <div className="historico-chamada-resumo">
-                    {item.resumo.map((linha) => (
-                      <span key={linha}>{linha}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  className="botao-excluir botao-excluir-chamada"
-                  type="button"
-                  onClick={(event) => excluirChamadaHistorico(item, event)}
-                  disabled={excluindoChamadaId === item.chave}
-                >
-                  {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
-                </button>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="aviso aviso-historico-vazio">
-            <p>Nenhuma chamada registrada até o momento.</p>
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  function renderizarRelatorios() {
-    const linhasRelatorio = montarRelatorioPorClasse()
-    const totaisRelatorio = calcularTotaisRelatorio()
-    const dataRelatorio = buscarDataUltimaChamada()
-    const dataRelatorioFormatada = formatarDataRelatorio(dataRelatorio)
-    const dataRelatorioCurta = formatarDataCurtaRelatorio(dataRelatorio)
-    const resumoProfessores = calcularResumoUltimaChamadaProfessores()
-    const percentualProfessores = calcularPercentualPresencaProfessores()
-
-    return (
-      <section className="conteudo pagina-interna pagina-relatorios">
-        <div className="topo-pagina topo-pagina-interna no-print">
-          <div>
-            <span className="subtitulo-pagina-interna">Análises e documentos</span>
-            <h2>Relatórios</h2>
-            <p>
-              {usuarioEhProfessor()
-                ? 'Relatório da sua classe no modelo da Escola Bíblica Dominical.'
-                : 'Relatório geral no modelo da Escola Bíblica Dominical.'}
-            </p>
-          </div>
-
-          <div className="relatorio-orientacao no-print">
-            <span>Confira o relatório abaixo e use os botões no final da folha.</span>
-          </div>
-        </div>
-
-        <div className="relatorios-dashboard no-print">
-          <div className="relatorios-hero">
-            <div>
-              <span className="selo-publico">Relatórios da EBD</span>
-              <h3>Resumo geral da Escola Bíblica Dominical</h3>
-              <p>
-                Acompanhe alunos, classes, frequência e presença dos professores
-                com uma visualização mais clara e moderna.
-              </p>
-            </div>
-
-            <div className="relatorios-percentual">
-              <strong>{calcularFrequenciaGeral()}%</strong>
-              <span>frequência geral</span>
-            </div>
-          </div>
-
-          <div className="cards cards-relatorios-modernas">
-            <div className="card card-relatorio-moderna">
-              <span>Classes</span>
-              <strong>{classes.length}</strong>
-              <p>classes cadastradas</p>
-            </div>
-
-            <div className="card card-relatorio-moderna">
-              <span>Alunos</span>
-              <strong>{alunosSomente().length}</strong>
-              <p>alunos na chamada</p>
-            </div>
-
-            <div className="card card-relatorio-moderna">
-              <span>Chamadas</span>
-              <strong>{chamadasSalvas.length}</strong>
-              <p>chamadas de alunos salvas</p>
-            </div>
-
-            <div className="card card-relatorio-moderna destaque">
-              <span>Frequência</span>
-              <strong>{calcularFrequenciaGeral()}%</strong>
-              <p>média geral de presença</p>
-            </div>
-          </div>
-
-          {usuarioEhSecretaria() && (
-            <div className="relatorio-professores-moderno">
-              <div className="cabecalho-relatorio-professores">
-                <div>
-                  <span className="selo-publico">Professores</span>
-                  <h3>Resumo da última chamada dos professores</h3>
-                  <p>Data da chamada: {formatarDataRelatorio(resumoProfessores.data)}</p>
-                </div>
-
-                <div className="circulo-presenca-professores">
-                  <strong>{percentualProfessores}%</strong>
-                  <span>presentes</span>
-                </div>
-              </div>
-
-              <div className="grade-professores-resumo">
-                <div>
-                  <span>Total de professores</span>
-                  <strong>{resumoProfessores.totalProfessores}</strong>
-                </div>
-
-                <div>
-                  <span>Presentes</span>
-                  <strong>{resumoProfessores.presentes}</strong>
-                </div>
-
-                <div>
-                  <span>Faltaram</span>
-                  <strong>{resumoProfessores.faltaram}</strong>
-                </div>
-
-                <div>
-                  <span>Justificaram</span>
-                  <strong>{resumoProfessores.justificaram}</strong>
-                </div>
-              </div>
-
-              {resumoProfessores.registros.length > 0 && (
-                <div className="lista-professores-relatorio">
-                  {resumoProfessores.registros.map((registro, indice) => (
-                    <div className="linha-professor-relatorio" key={`${registro.nome}-${indice}`}>
-                      <div>
-                        <strong>{registro.nome}</strong>
-                        {registro.classeReferencia && <p>{registro.classeReferencia}</p>}
-                        {registro.classes && <p>{registro.classes}</p>}
-                      </div>
-
-                      <span className={`status-professor status-${registro.status}`}>
-                        {traduzirStatusProfessor(registro.status)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="relatorio-folha">
-          <div className="cabecalho-relatorio cabecalho-relatorio-oficial">
-            <div className="cabecalho-relatorio-marca">
-              <img
-                src="/logo-oficial-ebd-fiel.png"
-                alt="Logo EBD Fiel"
-                className="logo-relatorio"
-              />
-
-              <div className="cabecalho-relatorio-titulos">
-                <span className="relatorio-selo-institucional">Relatório oficial da EBD</span>
-                <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
-                {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
-              </div>
-            </div>
-
-            <div className="relatorio-info-igreja">
-              {configuracaoIgreja.pastor_dirigente && (
-                <p><strong>Dirigente:</strong> {configuracaoIgreja.pastor_dirigente}</p>
-              )}
-              {configuracaoIgreja.superintendente_ebd && (
-                <p><strong>Superintendente:</strong> {configuracaoIgreja.superintendente_ebd}</p>
-              )}
-              {montarEnderecoIgreja() && <p><strong>Endereço:</strong> {montarEnderecoIgreja()}</p>}
-              {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
-                <p>
-                  <strong>Contato:</strong>{' '}
-                  {[configuracaoIgreja.telefone, configuracaoIgreja.email]
-                    .filter(Boolean)
-                    .join(' | ')}
-                </p>
-              )}
-            </div>
-
-            <div className="relatorio-data-selo">
-              <span>Data da EBD</span>
-              <strong>{dataRelatorioCurta}</strong>
-              <small>{dataRelatorioFormatada}</small>
-            </div>
-          </div>
-
-          <div className="tabela-container">
-            <table className="tabela tabela-ebd">
-              <thead>
-                <tr>
-                  <th>Nº</th>
-                  <th>Classes</th>
-                  <th>Matrícula</th>
-                  <th>Ausência</th>
-                  <th>Presença</th>
-                  <th>Visitante</th>
-                  <th>Total</th>
-                  <th>Bíblia</th>
-                  <th>Revista</th>
-                  <th>Ofertas</th>
-                  <th>Frequência</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {linhasRelatorio.map((linha) => (
-                  <tr key={linha.classeId}>
-                    <td>{linha.numero}</td>
-                    <td>{linha.classe}</td>
-                    <td>{linha.matricula}</td>
-                    <td>{linha.ausencia}</td>
-                    <td>{linha.presenca}</td>
-                    <td>{linha.visitantes}</td>
-                    <td>{linha.total}</td>
-                    <td>{linha.biblias}</td>
-                    <td>{linha.revistas}</td>
-                    <td>{formatarMoeda(linha.ofertas)}</td>
-                    <td>{linha.frequencia}%</td>
-                  </tr>
-                ))}
-
-                <tr className="linha-total">
-                  <td colSpan="2">TOTAL GERAL</td>
-                  <td>{totaisRelatorio.matricula}</td>
-                  <td>{totaisRelatorio.ausencia}</td>
-                  <td>{totaisRelatorio.presenca}</td>
-                  <td>{totaisRelatorio.visitantes}</td>
-                  <td>{totaisRelatorio.total}</td>
-                  <td>{totaisRelatorio.biblias}</td>
-                  <td>{totaisRelatorio.revistas}</td>
-                  <td>{formatarMoeda(totaisRelatorio.ofertas)}</td>
-                  <td>{totaisRelatorio.frequencia}%</td>
-                </tr>
-
-                <tr className="linha-domingo-anterior">
-                  <td colSpan="11">
-                    <span>Domingo anterior</span>
-                    <small>Dados comparativos da última Escola Bíblica Dominical.</small>
-                  </td>
-                </tr>
-
-                {usuarioEhSecretaria() && (
-                  <>
-                    <tr className="linha-professores-titulo">
-                      <td colSpan="11">
-                        <div className="relatorio-professores-titulo-conteudo">
-                          <strong>Chamada dos professores</strong>
-                          <span>Total: {resumoProfessores.totalProfessores}</span>
-                          <span>Presentes: {resumoProfessores.presentes}</span>
-                          <span>Faltaram: {resumoProfessores.faltaram}</span>
-                          <span>Justificaram: {resumoProfessores.justificaram}</span>
-                          <span>Frequência: {percentualProfessores}%</span>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr className="linha-professores-cabecalho">
-                      <td>Nº</td>
-                      <td colSpan="3">Professor</td>
-                      <td colSpan="3">Classe de referência</td>
-                      <td colSpan="2">Situação</td>
-                      <td colSpan="2">Data</td>
-                    </tr>
-
-                    {resumoProfessores.registros.length > 0 ? (
-                      resumoProfessores.registros.map((registro, indice) => (
-                        <tr
-                          className="linha-professor-tabela-relatorio"
-                          key={`${registro.nome}-${indice}`}
-                        >
-                          <td>{indice + 1}</td>
-                          <td colSpan="3">{registro.nome}</td>
-                          <td colSpan="3">
-                            {registro.classeReferencia || registro.classes || '-'}
-                          </td>
-                          <td colSpan="2">
-                            <span className={`status-relatorio-professor status-${registro.status}`}>
-                              {traduzirStatusProfessor(registro.status)}
-                            </span>
-                          </td>
-                          <td colSpan="2">{formatarDataCurtaRelatorio(resumoProfessores.data)}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="linha-professor-tabela-relatorio">
-                        <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
-                      </tr>
-                    )}
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="rodape-relatorio-oficial">
-            Relatório gerado pelo EBD Fiel — Gestão inteligente para Escola Bíblica Dominical • Gerado em {buscarDataAtual()}
-          </div>
-        </div>
-
-        {renderizarHistoricoChamadasRelatorio()}
-
-        <div className="relatorio-acoes-rodape no-print">
-          <div>
-            <strong>Ações do relatório</strong>
-            <span>Imprima, salve em PDF ou gere uma folha em branco para rascunho.</span>
-          </div>
-
-          <div className="relatorio-acoes-botoes">
-            <button
-              className="botao-principal"
-              onClick={abrirRelatorioParaImpressao}
-            >
-              Imprimir / Salvar PDF
-            </button>
-
-            <button className="botao-secundario" onClick={baixarRelatorioPDF}>
-              Baixar PDF
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirRelatorioEmBrancoParaImpressao}
-            >
-              Relatório em branco
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirChamadaPorClasseParaImpressao}
-            >
-              PDF por classe
-            </button>
-
-
-            <button
-              className="botao-secundario"
-              onClick={abrirRelatorioAniversariantesMes}
-            >
-              Aniversariantes do mês
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirRelatorioAlertasFaltas}
-            >
-              Alertas de faltas
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirRelatorioDestaquesFrequencia}
-            >
-              Destaques de frequência
-            </button>
-
-            <button
-              className="botao-secundario"
-              onClick={abrirCartoesAniversariantes}
-            >
-              Cartões de aniversariantes
-            </button>
-          </div>
-        </div>
-
-        {relatorioExtraVisualizacao && (
-          <div className="visualizacao-relatorio-extra no-print" id="visualizacao-relatorio-extra">
-            <div className="visualizacao-relatorio-extra-topo">
-              <div>
-                <span className="selo-publico">Visualização</span>
-                <h3>{relatorioExtraVisualizacao.titulo}</h3>
-                <p>{relatorioExtraVisualizacao.subtitulo}</p>
-                <small>Confira as informações antes de gerar o PDF ou mandar para impressão. Esta visualização não altera nenhum cadastro da igreja.</small>
-              </div>
-              <div className="visualizacao-relatorio-extra-acoes">
-                <button className="botao-principal" type="button" onClick={imprimirRelatorioExtraVisualizado}>
-                  Baixar ou imprimir
-                </button>
-                <button className="botao-secundario" type="button" onClick={() => setRelatorioExtraVisualizacao(null)}>
-                  Fechar visualização
-                </button>
-              </div>
-            </div>
-            <div className="visualizacao-relatorio-extra-corpo" dangerouslySetInnerHTML={{ __html: relatorioExtraVisualizacao.conteudoHtml }} />
-          </div>
-        )}
-      </section>
-    )
-  }
-
-  function renderizarConfiguracoes() {
-    if (!podeGerenciarCadastros()) {
-      return (
-        <section className="conteudo">
-          <h2>Acesso restrito</h2>
-          <p>As configurações da igreja são gerenciadas pela secretaria.</p>
-        </section>
-      )
-    }
-
-    return (
-      <section className="conteudo">
-        <div className="topo-pagina">
-          <div>
-            <h2>Configurações da Igreja</h2>
-            <p>Preencha os dados que aparecerão nos relatórios e PDFs.</p>
-          </div>
-        </div>
-
-        <form className="formulario" onSubmit={salvarConfiguracaoIgreja}>
-          <div className="grade-campos grade-campos-configuracoes">
-            <label>
-              Nome da igreja
-              <input
-                type="text"
-                value={configuracaoIgreja.nome_igreja}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('nome_igreja', event.target.value)
-                }
-                placeholder="Ex: Assembleia de Deus Ministério..."
-              />
-            </label>
-
-            <label>
-              Congregação / departamento
-              <input
-                type="text"
-                value={configuracaoIgreja.congregacao}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('congregacao', event.target.value)
-                }
-                placeholder="Ex: Escola Bíblica Dominical"
-              />
-            </label>
-
-            <label>
-              Pastor ou dirigente
-              <input
-                type="text"
-                value={configuracaoIgreja.pastor_dirigente}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja(
-                    'pastor_dirigente',
-                    event.target.value
-                  )
-                }
-                placeholder="Ex: Pr. João Silva"
-              />
-            </label>
-
-            <label>
-              Superintendente da EBD
-              <input
-                type="text"
-                value={configuracaoIgreja.superintendente_ebd}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja(
-                    'superintendente_ebd',
-                    event.target.value
-                  )
-                }
-                placeholder="Ex: Irmã Maria Helena"
-              />
-            </label>
-
-            <label>
-              Telefone / WhatsApp
-              <input
-                type="text"
-                value={configuracaoIgreja.telefone}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('telefone', event.target.value)
-                }
-                placeholder="Ex: (11) 99999-0000"
-              />
-            </label>
-
-            <label>
-              E-mail
-              <input
-                type="email"
-                value={configuracaoIgreja.email}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('email', event.target.value)
-                }
-                placeholder="Ex: contato@igreja.com.br"
-              />
-            </label>
-
-            <label>
-              Endereço
-              <input
-                type="text"
-                value={configuracaoIgreja.endereco}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('endereco', event.target.value)
-                }
-                placeholder="Ex: Rua das Flores, 123"
-              />
-            </label>
-
-            <label>
-              Bairro
-              <input
-                type="text"
-                value={configuracaoIgreja.bairro}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('bairro', event.target.value)
-                }
-                placeholder="Ex: Centro"
-              />
-            </label>
-
-            <label>
-              Cidade
-              <input
-                type="text"
-                value={configuracaoIgreja.cidade}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('cidade', event.target.value)
-                }
-                placeholder="Ex: São Paulo"
-              />
-            </label>
-
-            <label>
-              Estado
-              <select
-                value={configuracaoIgreja.estado}
-                onChange={(event) =>
-                  alterarConfiguracaoIgreja('estado', event.target.value)
-                }
-              >
-                <option value="">Selecione o estado</option>
-                {ESTADOS_BRASIL.map((estado) => (
-                  <option key={estado.sigla} value={estado.sigla}>
-                    {estado.sigla} - {estado.nome}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div className="grupo-botoes">
-            <button
-              className="botao-principal"
-              type="submit"
-              disabled={salvandoConfiguracaoIgreja}
-            >
-              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configurações'}
-            </button>
-          </div>
-        </form>
-
-        <div className="resumo">
-          <h3>Prévia do cabeçalho</h3>
-          <p>
-            <strong>{buscarNomeIgrejaParaExibicao()}</strong>
-          </p>
-          {configuracaoIgreja.congregacao && (
-            <p>{configuracaoIgreja.congregacao}</p>
-          )}
-          {configuracaoIgreja.pastor_dirigente && (
-            <p>Dirigente: {configuracaoIgreja.pastor_dirigente}</p>
-          )}
-          {configuracaoIgreja.superintendente_ebd && (
-            <p>Superintendente da EBD: {configuracaoIgreja.superintendente_ebd}</p>
-          )}
-          {montarEnderecoIgreja() && <p>{montarEnderecoIgreja()}</p>}
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarAlertasFeedbackAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return null
-    }
-
-    const feedbacksNaoLidos = feedbacksAdmin.filter((feedback) => !feedback.lido)
-
-    return (
-      <div className="admin-feedback-alertas">
-        <div className="admin-feedback-topo">
-          <div>
-            <span className="selo-admin">Mensagens das igrejas</span>
-            <h3>Respostas recebidas</h3>
-            <p>
-              Toda mensagem enviada pelas igrejas aparece aqui para acompanhamento.
-            </p>
-          </div>
-
-          <strong>{feedbacksNaoLidos.length}</strong>
-        </div>
-
-        {feedbacksAdmin.length === 0 ? (
-          <p className="texto-sem-feedback">Nenhuma mensagem recebida ainda.</p>
-        ) : (
-          <div className="lista-feedbacks-admin">
-            {feedbacksAdmin.slice(0, 12).map((feedback) => (
-              <article
-                className={`feedback-admin-item ${feedback.lido ? 'feedback-lido' : 'feedback-novo'}`}
-                key={feedback.id}
-              >
-                <div className="feedback-admin-conteudo">
-                  <div className="linha-feedback-admin">
-                    <strong>{buscarNomeIgrejaFeedback(feedback)}</strong>
-                    <span>
-                      {feedback.resposta_admin ? 'Respondido' : feedback.lido ? 'Lido' : 'Novo'}
-                    </span>
-                  </div>
-
-                  <p>{feedback.mensagem}</p>
-
-                  <small>
-                    {feedback.tipo} - {feedback.nome_usuario || feedback.email_usuario || 'Usuário'} •{' '}
-                    {formatarDataHoraFeedback(feedback.created_at)}
-                  </small>
-
-                  {feedback.resposta_admin && (
-                    <div className="feedback-resposta-admin">
-                      <strong>Resposta enviada:</strong>
-                      <p>{feedback.resposta_admin}</p>
-                      <small>
-                        Respondido por {feedback.respondido_por || 'administrador'} em{' '}
-                        {formatarDataHoraFeedback(feedback.respondido_em)}
-                        {feedback.notificado_em
-                          ? ` - Notificado em ${formatarDataHoraFeedback(feedback.notificado_em)}`
-                          : ''}
-                      </small>
-                    </div>
-                  )}
-
-                  {feedbackRespondendoId === feedback.id && (
-                    <div className="feedback-responder-box">
-                      <label>
-                        Resposta à mensagem
-                        <textarea
-                          value={respostaFeedbackAdmin}
-                          onChange={(event) => setRespostaFeedbackAdmin(event.target.value)}
-                          placeholder="Escreva a resposta que a igreja verá na área de mensagens..."
-                          rows="5"
-                        />
-                      </label>
-
-                      <div className="feedback-responder-acoes">
-                        <button
-                          type="button"
-                          className="botao-principal"
-                          disabled={enviandoRespostaFeedback}
-                          onClick={() => salvarRespostaFeedback(feedback)}
-                        >
-                          {enviandoRespostaFeedback ? 'Salvando...' : 'Salvar resposta'}
-                        </button>
-
-                        <button
-                          type="button"
-                          className="botao-secundario"
-                          onClick={cancelarRespostaFeedback}
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="acoes-feedback-admin">
-                  {!feedback.lido && (
-                    <button
-                      className="botao-secundario"
-                      onClick={() => marcarFeedbackComoLido(feedback.id)}
-                    >
-                      Marcar como lido
-                    </button>
-                  )}
-
-                  <button
-                    className="botao-secundario"
-                    onClick={() => abrirRespostaFeedback(feedback)}
-                  >
-                    {feedback.resposta_admin ? 'Editar resposta' : 'Responder'}
-                  </button>
-
-                  {feedback.resposta_admin && (
-                    <>
-                      <button
-                        className="botao-secundario"
-                        onClick={() => copiarRespostaFeedback(feedback)}
-                      >
-                        Copiar resposta
-                      </button>
-
-                      <button
-                        className="botao-secundario"
-                        onClick={() => enviarRespostaEmailFeedback(feedback)}
-                      >
-                        Enviar e-mail
-                      </button>
-
-                      <button
-                        className="botao-verde"
-                        onClick={() => enviarRespostaWhatsAppFeedback(feedback)}
-                      >
-                        WhatsApp
-                      </button>
-                    </>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  function renderizarUsuariosVinculadosIgreja(igreja) {
-    const acessosDaIgreja = buscarAcessosDaIgrejaAdmin(igreja.id)
-
-    return (
-      <div className="usuarios-vinculados-igreja">
-        <div className="usuarios-vinculados-topo">
-          <div>
-            <strong>Usuários vinculados a esta igreja</strong>
-            <span>{acessosDaIgreja.length} usuário(s)</span>
-          </div>
-
-          <button
-            type="button"
-            className="botao-secundario"
-            onClick={() => abrirNovoAcessoAdmin(igreja)}
-          >
-            Novo acesso para esta igreja
-          </button>
-        </div>
-
-        {acessosDaIgreja.length === 0 && (
-          <div className="aviso usuarios-vinculados-vazio">
-            <p>Nenhum usuário vinculado a esta igreja.</p>
-          </div>
-        )}
-
-        {acessosDaIgreja.map((acesso) => (
-          <article className="usuario-vinculado-card" key={acesso.user_id}>
-            <div>
-              <div className="linha-acesso-admin">
-                <h4>{acesso.nome || acesso.email}</h4>
-                <span>{acesso.perfil}</span>
-              </div>
-
-              <p>{acesso.email}</p>
-              <small>User UID: {acesso.user_id}</small>
-            </div>
-
-            <div className="acoes-usuario-vinculado">
-              <button
-                className="botao-secundario"
-                onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}
-              >
-                Enviar recuperação
-              </button>
-
-              <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
-                WhatsApp
-              </button>
-
-              <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
-                Copiar contato
-              </button>
-
-              <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
-                Editar acesso
-              </button>
-
-              <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
-                Remover acesso
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
-    )
-  }
-
-  function copiarCadastroIncompletoAdmin(cadastro) {
-    const texto = [
-      `User UID: ${cadastro.user_id}`,
-      `E-mail: ${cadastro.email || 'Sem e-mail'}`,
-      `Criado em: ${formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}`,
-    ].join('\n')
-
-    navigator.clipboard
-      ?.writeText(texto)
-      .then(() => alert('Dados do cadastro incompleto copiados.'))
-      .catch(() => window.prompt('Copie os dados abaixo:', texto))
-  }
-
-  function prepararVinculoCadastroIncompleto(cadastro) {
-    setNovoAcessoAdmin({
-      userId: cadastro.user_id || '',
-      nome: '',
-      email: cadastro.email || '',
-      perfil: 'secretaria',
-      igrejaId: '',
-      classeId: '',
-      dataNascimento: '',
-    })
-    setAcessoAdminEditandoUserId(null)
-    setMostrarFormularioAcessoAdmin(true)
-
-    window.setTimeout(() => {
-      const formulario = document.querySelector('.formulario-admin-acesso')
-
-      if (formulario) {
-        formulario.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }, 120)
-  }
-
-  function renderizarCadastrosIncompletosAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return null
-    }
-
-    return (
-      <div className="admin-acessos-bloco">
-        <div className="admin-acessos-bloco-topo">
-          <div>
-            <span className="selo-admin">Auditoria de acessos</span>
-            <h3>Cadastros incompletos</h3>
-            <p>
-              Usuários que existem no Supabase Authentication, mas ainda não possuem perfil
-              em perfis_usuarios. A solução mais limpa costuma ser excluir o
-              usuário no Authentication e pedir novo cadastro.
-            </p>
-          </div>
-
-          <strong>{cadastrosIncompletosAdmin.length}</strong>
-        </div>
-
-        <div className="grupo-botoes">
-          <button
-            className="botao-secundario"
-            type="button"
-            onClick={carregarCadastrosIncompletosAdmin}
-            disabled={carregandoCadastrosIncompletosAdmin}
-          >
-            {carregandoCadastrosIncompletosAdmin ? 'Atualizando...' : 'Atualizar auditoria'}
-          </button>
-        </div>
-
-        {erroCadastrosIncompletosAdmin && (
-          <div className="aviso aviso-cadastro-piloto">
-            <p>{erroCadastrosIncompletosAdmin}</p>
-          </div>
-        )}
-
-        {!erroCadastrosIncompletosAdmin && cadastrosIncompletosAdmin.length === 0 && (
-          <div className="aviso aviso-sucesso-cadastro">
-            <p>Nenhum cadastro incompleto encontrado agora.</p>
-          </div>
-        )}
-
-        {cadastrosIncompletosAdmin.length > 0 && (
-          <div className="lista-acessos-admin">
-            {cadastrosIncompletosAdmin.map((cadastro) => (
-              <article className="acesso-admin-card" key={cadastro.user_id}>
-                <div>
-                  <div className="linha-acesso-admin">
-                    <h4>{cadastro.email || 'Usuário sem e-mail'}</h4>
-                    <span>Sem perfil</span>
-                  </div>
-
-                  <p>Criado em: {formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}</p>
-                  <small>User UID: {cadastro.user_id}</small>
-                </div>
-
-                <div className="acoes-acesso-admin">
-                  <button
-                    className="botao-secundario"
-                    type="button"
-                    onClick={() => copiarCadastroIncompletoAdmin(cadastro)}
-                  >
-                    Copiar dados
-                  </button>
-
-                  <button
-                    className="botao-editar"
-                    type="button"
-                    onClick={() => prepararVinculoCadastroIncompleto(cadastro)}
-                  >
-                    Preparar vínculo
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  function renderizarAcessosAdmin() {
-    if (!usuarioEhAdminSistema()) {
-      return null
-    }
-
-    const acessosFiltrados = filtrarAcessosAdmin()
-    const totalSecretarias = acessosAdmin.filter((acesso) => acesso.perfil === 'secretaria').length
-    const totalProfessores = acessosAdmin.filter((acesso) => acesso.perfil === 'professor').length
-
-    return (
-      <div className="admin-acessos-bloco">
-        <div className="admin-acessos-topo">
-          <div>
-            <span className="selo-admin">Igrejas e acessos</span>
-            <h3>Controle comercial de usuários</h3>
-            <p>
-              Vincule secretarias e professores às igrejas cadastradas. Para criar o login,
-              primeiro crie o usuário em Supabase → Authentication → Users e cole o User UID aqui.
-            </p>
-          </div>
-
-          <button className="botao-principal" onClick={() => abrirNovoAcessoAdmin()}>
-            Novo acesso
-          </button>
-        </div>
-
-        <div className="admin-acessos-resumo">
-          <div>
-            <strong>{acessosAdmin.length}</strong>
-            <span>acessos vinculados</span>
-          </div>
-
-          <div>
-            <strong>{totalSecretarias}</strong>
-            <span>secretarias</span>
-          </div>
-
-          <div>
-            <strong>{totalProfessores}</strong>
-            <span>professores</span>
-          </div>
-        </div>
-
-        {mostrarFormularioAcessoAdmin && (
-          <form className="formulario formulario-admin-acesso" onSubmit={salvarAcessoAdmin}>
-            <div className="topo-formulario-inline">
-              <div>
-                <h3>{acessoAdminEditandoUserId ? 'Editar acesso' : 'Novo acesso'}</h3>
-                <p>
-                  Este vínculo define qual igreja o usuário acessa e qual perfil ele terá no sistema.
-                </p>
-              </div>
-            </div>
-
-            <div className="grade-campos grade-campos-configuracoes">
-              <label>
-                Igreja
-                <select
-                  value={novoAcessoAdmin.igrejaId}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, igrejaId: event.target.value })
-                  }
-                >
-                  <option value="">Selecione uma igreja</option>
-                  {igrejasAdmin.map((igreja) => (
-                    <option value={igreja.id} key={igreja.id}>
-                      {igreja.nome_igreja || igreja.nome} {igreja.congregacao ? `- ${igreja.congregacao}` : ''}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Perfil
-                <select
-                  value={novoAcessoAdmin.perfil}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, perfil: event.target.value })
-                  }
-                >
-                  <option value="secretaria">Secretaria</option>
-                  <option value="professor">Professor</option>
-                  <option value="admin">Administrador local</option>
-                </select>
-              </label>
-
-              <label>
-                User UID do Supabase
-                <input
-                  type="text"
-                  value={novoAcessoAdmin.userId}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, userId: event.target.value })
-                  }
-                  placeholder="Ex: 9a764fab-2000-4fb4-8ee0-9275a139e0f6"
-                />
-              </label>
-
-              <label>
-                Nome
-                <input
-                  type="text"
-                  value={novoAcessoAdmin.nome}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, nome: event.target.value })
-                  }
-                  placeholder="Ex: Secretaria da igreja"
-                />
-              </label>
-
-              <label>
-                E-mail
-                <input
-                  type="email"
-                  value={novoAcessoAdmin.email}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, email: event.target.value })
-                  }
-                  placeholder="Ex: secretaria@igreja.com"
-                />
-              </label>
-
-              <label>
-                ID da classe
-                <input
-                  type="number"
-                  value={novoAcessoAdmin.classeId}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({ ...novoAcessoAdmin, classeId: event.target.value })
-                  }
-                  placeholder="Opcional, normalmente só para professor"
-                />
-              </label>
-
-              <label>
-                Data de nascimento
-                <input
-                  type="date"
-                  value={novoAcessoAdmin.dataNascimento}
-                  onChange={(event) =>
-                    setNovoAcessoAdmin({
-                      ...novoAcessoAdmin,
-                      dataNascimento: event.target.value,
-                    })
-                  }
-                />
-              </label>
-            </div>
-
-            <div className="grupo-botoes">
-              <button className="botao-principal" type="submit">
-                Salvar acesso
-              </button>
-
-              <button
-                className="botao-secundario"
-                type="button"
-                onClick={limparFormularioAcessoAdmin}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="filtros filtros-admin-acessos">
-          <label>
-            Buscar acesso
-            <input
-              type="text"
-              value={buscaAcessoAdmin}
-              onChange={(event) => setBuscaAcessoAdmin(event.target.value)}
-              placeholder="Buscar por nome, e-mail, telefone, WhatsApp, perfil ou igreja"
-            />
-          </label>
-
-          <button className="botao-secundario" onClick={carregarAcessosAdmin}>
-            Atualizar acessos
-          </button>
-        </div>
-
-        <div className="lista-acessos-admin">
-          {acessosFiltrados.map((acesso) => (
-            <article className="acesso-admin-card" key={acesso.user_id}>
-              <div>
-                <div className="linha-acesso-admin">
-                  <h4>{acesso.nome || acesso.email}</h4>
-                  <span>{acesso.perfil}</span>
-                </div>
-
-                <p>{acesso.email}</p>
-                <p>Igreja: {buscarNomeIgrejaAdmin(acesso.igreja_id)}</p>
-
-                {(() => {
-                  const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
-
-                  return (
-                    <div className="contato-acesso-admin">
-                      {contato.responsavel && (
-                        <p>Responsável: {contato.responsavel}</p>
-                      )}
-
-                      {contato.whatsapp && (
-                        <p>WhatsApp: {contato.whatsapp}</p>
-                      )}
-
-                      {contato.telefone && contato.telefone !== contato.whatsapp && (
-                        <p>Telefone: {contato.telefone}</p>
-                      )}
-
-                      {contato.email && contato.email !== acesso.email && (
-                        <p>E-mail da igreja: {contato.email}</p>
-                      )}
-                    </div>
-                  )
-                })()}
-
-                <small>User UID: {acesso.user_id}</small>
-              </div>
-
-              <div className="acoes-acesso-admin">
-                <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
-                  Enviar recuperação
-                </button>
-
-                <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
-                  WhatsApp
-                </button>
-
-                <button className="botao-secundario" onClick={() => copiarContatoAcessoAdmin(acesso)}>
-                  Copiar contato
-                </button>
-
-                <button className="botao-editar" onClick={() => editarAcessoAdmin(acesso)}>
-                  Editar
-                </button>
-
-                <button className="botao-excluir" onClick={() => removerAcessoAdmin(acesso)}>
-                  Remover
-                </button>
-              </div>
-            </article>
-          ))}
-
-          {acessosFiltrados.length === 0 && (
-            <div className="aviso">
-              <p>Nenhum acesso encontrado.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  function renderizarAdministracao() {
-    if (!usuarioEhAdminSistema()) {
-      return (
-        <section className="conteudo">
-          <h2>Acesso restrito</h2>
-          <p>Esta área é exclusiva para administradores do sistema.</p>
-        </section>
-      )
-    }
-
-    const igrejasFiltradas = filtrarIgrejasAdmin()
-    const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente').length
-    const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
-    const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
-    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
-
-    return (
-      <section className="conteudo conteudo-admin-comercial">
-        <div className="topo-pagina topo-admin-sistema">
-          <div>
-            <span className="selo-admin">Administração do sistema</span>
-            <h2>Administração comercial</h2>
-            <p>
-              Gerencie igrejas, sedes, congregações, acessos, uso da plataforma, recuperação de senha e respostas em um único lugar.
-            </p>
-          </div>
-
-          {!mostrarFormularioIgrejaAdmin && (
-            <button className="botao-principal" onClick={abrirNovaIgrejaAdmin}>
-              Nova igreja
-            </button>
-          )}
-        </div>
-
-        <div className="cards cards-admin-sistema">
-          <div className="card card-admin">
-            <span>Total</span>
-            <strong>{igrejasAdmin.length}</strong>
-            <p>igrejas cadastradas</p>
-          </div>
-
-          <div className="card card-admin">
-            <span>Pendentes</span>
-            <strong>{igrejasPendentes}</strong>
-            <p>aguardando aprovação</p>
-          </div>
-
-          <div className="card card-admin">
-            <span>Em uso</span>
-            <strong>{igrejasTeste}</strong>
-            <p>usando a plataforma</p>
-          </div>
-
-          <div className="card card-admin">
-            <span>Ativas</span>
-            <strong>{igrejasAtivas}</strong>
-            <p>liberadas para uso</p>
-          </div>
-
-          <div className="card card-admin">
-            <span>Pausadas</span>
-            <strong>{igrejasPausadas}</strong>
-            <p>aguardando retorno</p>
-          </div>
-        </div>
-
-
-        <div className="diagnostico-carregamento-card diagnostico-admin-card">
-          <div className="diagnostico-carregamento-cabecalho">
-            <div>
-              <span className="hero-tag">Suporte técnico</span>
-              <h3>Diagnóstico do carregamento</h3>
-              <p>
-                Ferramenta exclusiva do administrador para conferir sessão, perfil,
-                igreja vinculada e retorno das consultas do Supabase quando alguma igreja relatar dados zerados.
-              </p>
-            </div>
-            <div className="diagnostico-acoes">
-              <button
-                className="botao-secundario botao-diagnostico"
-                type="button"
-                onClick={executarDiagnosticoCarregamento}
-                disabled={carregandoDiagnostico}
-              >
-                {carregandoDiagnostico ? 'Verificando...' : 'Executar diagnóstico'}
-              </button>
-
-              <button
-                className="botao-secundario botao-diagnostico"
-                type="button"
-                onClick={() => carregarDadosOnline(sessaoRef.current, recuperarContextoSuporteAdminAtual())}
-              >
-                Recarregar dados atuais
-              </button>
-            </div>
-          </div>
-
-          {diagnosticoCarregamento ? (
-            <>
-              <div className="diagnostico-grid">
-                <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessão'}</span></div>
-                <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'não encontrado'}</span></div>
-                <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'não encontrado'}</span></div>
-                <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'não encontrado'}</span></div>
-                <div><strong>Classes Supabase</strong><span>{diagnosticoCarregamento.contagens?.classes ?? 'sem consulta'}</span></div>
-                <div><strong>Alunos Supabase</strong><span>{diagnosticoCarregamento.contagens?.alunos ?? 'sem consulta'}</span></div>
-                <div><strong>Chamadas Supabase</strong><span>{diagnosticoCarregamento.contagens?.chamadas ?? 'sem consulta'}</span></div>
-                <div><strong>Classes na tela</strong><span>{diagnosticoCarregamento.estadoTela?.classesNaTela ?? classes.length}</span></div>
-              </div>
-
-              <div className="grupo-botoes diagnostico-botoes-final">
-                <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
-                  Copiar diagnóstico
-                </button>
-                <button className="botao-secundario" type="button" onClick={baixarDiagnosticoCarregamento}>
-                  Baixar diagnóstico
-                </button>
-              </div>
-
-              {mensagemDiagnosticoAdmin && (
-                <div className={`mensagem-diagnostico-admin ${mensagemDiagnosticoAdmin.tipo}`} role="status" aria-live="polite">
-                  <p>{mensagemDiagnosticoAdmin.texto}</p>
-                  <button
-                    type="button"
-                    onClick={() => setMensagemDiagnosticoAdmin(null)}
-                    aria-label="Fechar mensagem do diagnóstico"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-
-              <details className="diagnostico-detalhes">
-                <summary>Ver diagnóstico completo</summary>
-                <pre>{JSON.stringify(diagnosticoCarregamento, null, 2)}</pre>
-              </details>
-            </>
-          ) : (
-            <div className="aviso diagnostico-admin-aviso">
-              <p>Execute o diagnóstico quando precisar conferir carregamento de sessão, perfil, igreja e dados retornados.</p>
-            </div>
-          )}
-        </div>
-
-        {renderizarAlertasFeedbackAdmin()}
-
-        {renderizarCadastrosIncompletosAdmin()}
-
-        {/* Usuários vinculados agora aparecem dentro de cada igreja. */}
-
-        {mostrarFormularioIgrejaAdmin && (
-          <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
-            <div className="topo-formulario-inline">
-              <div>
-                <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja'}</h3>
-                <p>
-                  Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
-                  Depois crie o usuário no Supabase, em Authentication → Users, e vincule o acesso.
-                </p>
-              </div>
-            </div>
-
-            <div className="grade-campos grade-campos-configuracoes">
-              <label>
-                Nome da igreja
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.nome_igreja}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      nome_igreja: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Assembleia de Deus Campo..."
-                />
-              </label>
-
-              <label>
-                Congregação
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.congregacao}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      congregacao: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Sede, Betel, Vila Nova..."
-                />
-              </label>
-
-              <label>
-                Pastor/Dirigente
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.pastor_dirigente}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      pastor_dirigente: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: Pr. João Silva"
-                />
-              </label>
-
-              <label>
-                Status da plataforma
-                <select
-                  value={novaIgrejaAdmin.status_piloto}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      status_piloto: event.target.value,
-                    })
-                  }
-                >
-                  <option value="pendente">Pendente</option>
-                  <option value="teste">Em uso</option>
-                  <option value="ativa">Ativa</option>
-                  <option value="pausada">Pausada</option>
-                  <option value="cancelada">Cancelada</option>
-                </select>
-              </label>
-
-              <label>
-                Cidade
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.cidade}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      cidade: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                Estado
-                <select
-                  value={novaIgrejaAdmin.estado}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      estado: event.target.value,
-                    })
-                  }
-                >
-                  <option value="">Selecione o estado</option>
-                  {ESTADOS_BRASIL.map((estado) => (
-                    <option key={estado.sigla} value={estado.sigla}>
-                      {estado.sigla} - {estado.nome}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Bairro
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.bairro}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      bairro: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label className="campo-sede-filiada">
-                Endereço da igreja
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.endereco}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      endereco: event.target.value,
-                    })
-                  }
-                  placeholder="Rua ou avenida"
-                />
-              </label>
-
-              <label>
-                Número
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.numero_endereco}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      numero_endereco: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: 146"
-                />
-              </label>
-
-              <label className="campo-sede-filiada">
-                Complemento
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.complemento_endereco}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      complemento_endereco: event.target.value,
-                    })
-                  }
-                  placeholder="Opcional"
-                />
-              </label>
-
-              <label>
-                CEP da igreja
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.cep}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      cep: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: 36000-000"
-                />
-              </label>
-
-              <label>
-                Tipo de igreja
-                <select
-                  value={novaIgrejaAdmin.tipo_igreja}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      tipo_igreja: event.target.value,
-                    })
-                  }
-                >
-                  <option value="sede">Sede</option>
-                  <option value="congregacao">Congregação</option>
-                </select>
-              </label>
-
-              {novaIgrejaAdmin.tipo_igreja === 'congregacao' && (
-                <>
-                  <label>
-                    Sede filiada
-                    <input
-                      type="text"
-                      value={novaIgrejaAdmin.sede_filiada_nome}
-                      onChange={(event) =>
-                        setNovaIgrejaAdmin({
-                          ...novaIgrejaAdmin,
-                          sede_filiada_nome: event.target.value,
-                        })
-                      }
-                      placeholder="Ex: Assembleia de Deus Sede"
-                    />
-                  </label>
-
-                  <label className="campo-sede-filiada">
-                    Endereço da sede
-                    <input
-                      type="text"
-                      value={novaIgrejaAdmin.sede_filiada_endereco}
-                      onChange={(event) =>
-                        setNovaIgrejaAdmin({
-                          ...novaIgrejaAdmin,
-                          sede_filiada_endereco: event.target.value,
-                        })
-                      }
-                      placeholder="Rua ou avenida da sede"
-                    />
-                  </label>
-
-                  <label>
-                    Número da sede
-                    <input
-                      type="text"
-                      value={novaIgrejaAdmin.sede_filiada_numero}
-                      onChange={(event) =>
-                        setNovaIgrejaAdmin({
-                          ...novaIgrejaAdmin,
-                          sede_filiada_numero: event.target.value,
-                        })
-                      }
-                      placeholder="Ex: 100"
-                    />
-                  </label>
-
-                  <label className="campo-sede-filiada">
-                    Complemento da sede
-                    <input
-                      type="text"
-                      value={novaIgrejaAdmin.sede_filiada_complemento}
-                      onChange={(event) =>
-                        setNovaIgrejaAdmin({
-                          ...novaIgrejaAdmin,
-                          sede_filiada_complemento: event.target.value,
-                        })
-                      }
-                      placeholder="Opcional"
-                    />
-                  </label>
-
-                  <label>
-                    CEP da sede
-                    <input
-                      type="text"
-                      value={novaIgrejaAdmin.sede_filiada_cep}
-                      onChange={(event) =>
-                        setNovaIgrejaAdmin({
-                          ...novaIgrejaAdmin,
-                          sede_filiada_cep: event.target.value,
-                        })
-                      }
-                      placeholder="Ex: 36000-000"
-                    />
-                  </label>
-                </>
-              )}
-
-              <label>
-                Telefone da igreja
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.telefone}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      telefone: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                E-mail da igreja
-                <input
-                  type="email"
-                  value={novaIgrejaAdmin.email}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      email: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                Responsável
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.responsavel_nome}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      responsavel_nome: event.target.value,
-                    })
-                  }
-                  placeholder="Nome da secretaria responsável"
-                />
-              </label>
-
-              <label>
-                E-mail do responsável
-                <input
-                  type="email"
-                  value={novaIgrejaAdmin.responsavel_email}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      responsavel_email: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                WhatsApp do responsável
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.responsavel_whatsapp}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      responsavel_whatsapp: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: 27 99999-9999"
-                />
-              </label>
-
-              <label>
-                Limite de usuários
-                <input
-                  type="number"
-                  min="1"
-                  value={novaIgrejaAdmin.limite_usuarios}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      limite_usuarios: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                Início do acompanhamento
-                <input
-                  type="date"
-                  value={novaIgrejaAdmin.data_inicio_piloto}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      data_inicio_piloto: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label>
-                Fim do acompanhamento
-                <input
-                  type="date"
-                  value={novaIgrejaAdmin.data_fim_piloto}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      data_fim_piloto: event.target.value,
-                    })
-                  }
-                />
-              </label>
-
-              <label className="campo-observacoes-admin">
-                Observações internas
-                <input
-                  type="text"
-                  value={novaIgrejaAdmin.observacoes_piloto}
-                  onChange={(event) =>
-                    setNovaIgrejaAdmin({
-                      ...novaIgrejaAdmin,
-                      observacoes_piloto: event.target.value,
-                    })
-                  }
-                  placeholder="Ex: igreja em implantação ou acompanhamento inicial"
-                />
-              </label>
-            </div>
-
-            <div className="grupo-botoes">
-              <button className="botao-principal" type="submit">
-                {igrejaAdminEditandoId ? 'Salvar alterações' : 'Salvar igreja'}
-              </button>
-
-              <button
-                className="botao-secundario"
-                type="button"
-                onClick={limparFormularioIgrejaAdmin}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="filtros filtros-admin">
-          <label>
-            Buscar igreja
-            <input
-              type="text"
-              value={buscaIgrejaAdmin}
-              onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
-              placeholder="Buscar por igreja, congregação, responsável ou e-mail"
-            />
-          </label>
-
-          <button className="botao-secundario" onClick={carregarIgrejasAdmin}>
-            Atualizar lista
-          </button>
-        </div>
-
-        <div className="lista lista-admin-igrejas">
-          {igrejasFiltradas.map((igreja) => (
-            <div className="item-lista item-com-acoes igreja-admin-card" key={igreja.id}>
-              <div>
-                <div className="linha-titulo-admin">
-                  <h3>{igreja.nome_igreja}</h3>
-                  <span className={`status-piloto status-${igreja.status_piloto || 'teste'}`}>
-                    {igreja.status_piloto === 'teste'
-                      ? 'Em uso'
-                      : igreja.status_piloto === 'ativa'
-                        ? 'Ativa'
-                        : igreja.status_piloto === 'pendente'
-                          ? 'Pendente'
-                          : igreja.status_piloto === 'pausada'
-                            ? 'Pausada'
-                            : igreja.status_piloto === 'cancelada'
-                              ? 'Cancelada'
-                              : 'Em uso'}
-                  </span>
-                  {igreja.status_piloto === 'pendente' && (
-                    <span className="selo-aguardando-aprovacao">
-                      aguardando decisão
-                    </span>
-                  )}
-                </div>
-
-                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
-                {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
-                <div className="dados-igreja-admin">
-                  <p>
-                    Tipo:{' '}
-                    <strong>
-                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
-                    </strong>
-                  </p>
-
-                  {(igreja.cidade || igreja.estado) && (
-                    <p>
-                      Local: {igreja.cidade}
-                      {igreja.estado ? `/${igreja.estado}` : ''}
-                    </p>
-                  )}
-
-                  {(igreja.endereco || igreja.bairro || igreja.cep) && (
-                    <p>
-                      Endereço: {igreja.endereco}
-                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
-                      {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
-                      {igreja.bairro ? `, ${igreja.bairro}` : ''}
-                      {igreja.cep ? ` - CEP ${igreja.cep}` : ''}
-                    </p>
-                  )}
-
-                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_nome && (
-                    <p>
-                      Sede filiada: <strong>{igreja.sede_filiada_nome}</strong>
-                    </p>
-                  )}
-
-                  {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
-                    <p>
-                      Endereço da sede: {igreja.sede_filiada_endereco}
-                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
-                      {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
-                      {igreja.sede_filiada_cep ? ` - CEP ${igreja.sede_filiada_cep}` : ''}
-                    </p>
-                  )}
-                </div>
-
-                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
-                {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
-                {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
-                <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
-                {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
-                  <p>
-                    Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
-                    {igreja.data_fim_piloto || 'sem fim'}
-                  </p>
-                )}
-              </div>
-
-              <div className="acoes-item acoes-aprovacao-igreja">
-                {igreja.status_piloto === 'pendente' && (
-                  <div className="grupo-aprovacao-rapida">
-                    <button
-                      className="botao-aprovar-igreja"
-                      onClick={() => aprovarIgrejaPiloto(igreja)}
-                    >
-                      Aprovar
-                    </button>
-
-                    <button
-                      className="botao-nao-aprovar-igreja"
-                      onClick={() => naoAprovarIgrejaPiloto(igreja)}
-                    >
-                      Não aprovar
-                    </button>
-                  </div>
-                )}
-
-                {igreja.status_piloto !== 'pendente' && igreja.status_piloto !== 'teste' && (
-                  <button
-                    className="botao-aprovar-igreja"
-                    onClick={() => aprovarIgrejaPiloto(igreja)}
-                  >
-                    Liberar uso
-                  </button>
-                )}
-
-                {igreja.status_piloto === 'teste' && (
-                  <div className="grupo-aviso-aprovacao">
-                    <button
-                      className="botao-whatsapp-admin"
-                      onClick={() => abrirWhatsAppAprovacao(igreja)}
-                    >
-                      Avisar WhatsApp
-                    </button>
-
-                    <button
-                      className="botao-copiar-admin"
-                      onClick={() => copiarMensagemAprovacao(igreja)}
-                    >
-                      Copiar mensagem
-                    </button>
-                  </div>
-                )}
-
-                <button type="button" className="botao-acessar-igreja" onClick={(event) => acessarIgrejaComoSuporte(igreja, event)}>
-                  Acessar igreja
-                </button>
-
-                <button type="button" className="botao-principal" onClick={() => abrirNovoAcessoAdmin(igreja)}>
-                  Vincular acesso
-                </button>
-
-                <button
-                  className="botao-secundario botao-usuarios-vinculados"
-                  type="button"
-                  onClick={() => alternarUsuariosDaIgreja(igreja.id)}
-                >
-                  {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
-                    ? 'Ocultar usuários'
-                    : `Usuários vinculados (${contarAcessosDaIgreja(igreja.id)})`}
-                </button>
-
-                <button type="button" className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
-                  Editar dados
-                </button>
-
-                <button type="button" className="botao-excluir" onClick={() => excluirIgrejaAdmin(igreja)}>
-                  Excluir
-                </button>
-              </div>
-
-              {Number(igrejaUsuariosAbertaId) === Number(igreja.id) &&
-                renderizarUsuariosVinculadosIgreja(igreja)}
-            </div>
-          ))}
-
-          {igrejasFiltradas.length === 0 && (
-            <div className="aviso">
-              <p>Nenhuma igreja encontrada.</p>
-            </div>
-          )}
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarManualUsuario() {
-    const passosManual = [
-      {
-        numero: '01',
-        titulo: 'Confira os dados da igreja',
-        texto:
-          'Ao entrar no sistema, confira se o nome da igreja, congregação, dirigente, cidade e demais dados estão corretos.',
-        local: 'Painel ou Configurações',
-      },
-      {
-        numero: '02',
-        titulo: 'Cadastre as classes da EBD',
-        texto:
-          'Crie as turmas da Escola Bíblica Dominical. Exemplo: Crianças, Adolescentes, Jovens, Adultos, Novos Convertidos.',
-        local: 'Menu Classes',
-      },
-      {
-        numero: '03',
-        titulo: 'Cadastre os alunos',
-        texto:
-          'Inclua os alunos em suas respectivas classes. O cadastro pode ser feito pelo menu Alunos ou diretamente dentro da classe.',
-        local: 'Menu Alunos ou Classes',
-      },
-      {
-        numero: '04',
-        titulo: 'Cadastre os professores',
-        texto:
-          'Cadastre os professores da EBD e vincule cada professor à classe em que ele atua. Uma classe pode ter mais de um professor.',
-        local: 'Menu Professores ou Classes',
-      },
-      {
-        numero: '05',
-        titulo: 'Faça a chamada dos alunos',
-        texto:
-          'Na data da EBD, registre presença, falta, visitantes, Bíblias, revistas, ofertas e demais informações da chamada.',
-        local: 'Menu Chamada',
-      },
-      {
-        numero: '06',
-        titulo: 'Faça a chamada dos professores',
-        texto:
-          'Registre também a presença dos professores em uma chamada separada, facilitando o acompanhamento da equipe docente.',
-        local: 'Menu Chamada',
-      },
-      {
-        numero: '07',
-        titulo: 'Acompanhe aniversariantes',
-        texto:
-          'Use o painel para acompanhar aniversariantes cadastrados e facilitar os avisos da secretaria da EBD.',
-        local: 'Painel',
-      },
-      {
-        numero: '08',
-        titulo: 'Gere relatórios',
-        texto:
-          'Depois de registrar as chamadas, gere o relatório em PDF com os dados da EBD, incluindo alunos e professores.',
-        local: 'Menu Relatórios',
-      },
-      {
-        numero: '09',
-        titulo: 'Envie feedback do piloto',
-        texto:
-          'Durante o teste piloto, envie sugestões, dúvidas, dificuldades ou elogios para ajudar a melhorar o sistema.',
-        local: 'Painel',
-      },
-    ]
-
-    return (
-      <section className="conteudo manual-usuario-pagina">
-        <div className="manual-hero">
-          <div>
-            <span className="selo-manual">Primeiros passos</span>
-            <h2>Manual do usuário EBD Fiel</h2>
-            <p>
-              Siga este roteiro para configurar sua igreja e começar a usar o sistema
-              na rotina da Escola Bíblica Dominical.
-            </p>
-          </div>
-
-          <button className="botao-principal" onClick={() => navegarParaPagina('classes')}>
-            Começar pelas classes
-          </button>
-        </div>
-
-        <div className="manual-alerta">
-          <strong>Ordem recomendada:</strong>
-          <span>
-            primeiro confira os dados da igreja, depois cadastre classes, alunos,
-            professores, faça a chamada e gere os relatórios.
-          </span>
-        </div>
-
-        <div className="manual-grid">
-          {passosManual.map((passo) => (
-            <article className="manual-card" key={passo.numero}>
-              <div className="manual-numero">{passo.numero}</div>
-
-              <div>
-                <span className="manual-local">{passo.local}</span>
-                <h3>{passo.titulo}</h3>
-                <p>{passo.texto}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="manual-secao-detalhada">
-          <div className="manual-secao-cabecalho">
-            <span className="selo-manual">Professor</span>
-            <h3>Como o professor faz a chamada da classe</h3>
-            <p>
-              O professor consegue registrar chamada apenas das classes em que estiver
-              vinculado pela secretaria ou administração da igreja.
-            </p>
-          </div>
-
-          <div className="manual-lista-passos">
-            <article>
-              <strong>1. Entrar no sistema</strong>
-              <p>
-                O professor deve acessar o sistema usando o e-mail e a senha cadastrados
-                pela igreja.
-              </p>
-            </article>
-
-            <article>
-              <strong>2. Abrir o menu Chamada</strong>
-              <p>
-                Depois do login, clique em <b>Chamada</b>. O sistema mostrará somente a
-                classe ou as classes vinculadas ao professor.
-              </p>
-            </article>
-
-            <article>
-              <strong>3. Selecionar a classe e preencher a chamada</strong>
-              <p>
-                Escolha a classe, marque presença, falta ou justificativa para cada aluno
-                e preencha os campos adicionais, como visitantes, Bíblias, revistas,
-                ofertas e observações.
-              </p>
-            </article>
-
-            <article>
-              <strong>4. Conferir e salvar</strong>
-              <p>
-                Antes de salvar, confira a data, a classe selecionada e os totais. Depois
-                clique em <b>Salvar chamada</b>. A informação ficará disponível para os
-                relatórios da igreja.
-              </p>
-            </article>
-          </div>
-
-          <div className="manual-observacao">
-            <strong>Importante:</strong> se nenhuma classe aparecer para o professor, a
-            secretaria precisa verificar se ele está vinculado à classe correta.
-          </div>
-        </div>
-
-        <div className="manual-secao-detalhada manual-secao-secretaria">
-          <div className="manual-secao-cabecalho">
-            <span className="selo-manual">Secretaria</span>
-            <h3>Como vincular o professor à classe</h3>
-            <p>
-              Para que o professor consiga fazer chamada, ele precisa estar cadastrado e
-              ligado à classe correta dentro da igreja.
-            </p>
-          </div>
-
-          <div className="manual-lista-passos">
-            <article>
-              <strong>1. Acessar a página Classes</strong>
-              <p>
-                No menu principal, clique em <b>Classes</b> e localize a classe onde o
-                professor atua.
-              </p>
-            </article>
-
-            <article>
-              <strong>2. Clicar em Novo professor</strong>
-              <p>
-                Dentro do card da classe, clique em <b>Novo professor</b> para cadastrar
-                ou vincular o professor naquela turma.
-              </p>
-            </article>
-
-            <article>
-              <strong>3. Informar os dados do professor</strong>
-              <p>
-                Preencha o nome do professor e, quando solicitado, o e-mail de acesso.
-                Confirme se a classe exibida é realmente a classe correta.
-              </p>
-            </article>
-
-            <article>
-              <strong>4. Salvar e conferir o vínculo</strong>
-              <p>
-                Depois de salvar, o nome do professor deve aparecer dentro da classe.
-                Esse vínculo é o que libera a chamada daquela turma para o professor.
-              </p>
-            </article>
-          </div>
-
-          <div className="manual-observacao">
-            <strong>Quando o professor não enxergar a classe:</strong> confira se o usuário
-            dele está cadastrado como <b>professor</b>, se o e-mail está correto, se a
-            classe ainda existe e se o vínculo foi salvo na classe certa.
-          </div>
-        </div>
-
-        <div className="manual-final">
-          <div>
-            <h3>Dica para o teste piloto</h3>
-            <p>
-              Use o sistema em uma rotina real da EBD e envie feedback sempre que
-              encontrar algo confuso, difícil ou que possa melhorar.
-            </p>
-          </div>
-
-          <button className="botao-secundario" onClick={() => navegarParaPagina('painel')}>
-            Voltar ao painel
-          </button>
-        </div>
-      </section>
-    )
-  }
-
-  function renderizarPagina() {
-    if (paginaAtual === 'administracao' && !usuarioEhAdminSistema()) {
-      return renderizarPainel()
-    }
-
-    if (usuarioEhAdminSistema() && !perfilUsuario?.igreja_id && paginaAtual !== 'administracao') {
-      return renderizarAdministracao()
-    }
-
-    if (!usuarioEhSecretaria() && ['classes', 'professores', 'usuarios', 'configuracoes'].includes(paginaAtual)) {
-      return renderizarPainel()
-    }
-
-    if (paginaAtual === 'painel') return renderizarPainel()
-    if (paginaAtual === 'dashboard') return renderizarDashboardAvancado()
-    if (paginaAtual === 'classes') return renderizarClasses()
-    if (paginaAtual === 'alunos') return renderizarAlunos()
-    if (paginaAtual === 'professores') return renderizarProfessores()
-    if (paginaAtual === 'usuarios') return renderizarUsuarios()
-    if (paginaAtual === 'chamada') return renderizarChamada()
-    if (paginaAtual === 'relatorios') return renderizarRelatorios()
-    if (paginaAtual === 'historico') return renderizarHistoricoAluno()
-    if (paginaAtual === 'financeiro') return renderizarFinanceiroEbd()
-    if (paginaAtual === 'backup') return renderizarBackupAuditoria()
-    if (paginaAtual === 'manual') return renderizarManualUsuario()
-    if (paginaAtual === 'configuracoes') return renderizarConfiguracoes()
-    if (paginaAtual === 'administracao') return renderizarAdministracao()
-
-    return renderizarPainel()
-  }
-
-  return (
-    <div className={`app ${menuInternoAberto ? 'menu-interno-ativo' : ''}`}>
-      <header className="topo-mobile-interno">
-        <div className="marca-mobile-interna">
-          <div className="logo-simbolo logo-simbolo-sidebar">
-            <img
-              src="/logo-oficial-ebd-fiel.png"
-              alt="Logo EBD Fiel"
-              className="logo-imagem"
-            />
-          </div>
-          <div>
-            <strong>EBD Fiel</strong>
-            <span>Escola Bíblica Dominical</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="botao-inicio-interno"
-          onClick={() => navegarParaPagina('painel')}
-          aria-label="Voltar à página inicial"
-        >
-          <Icone nome="painel" className="icone-svg" />
-          <span>Página inicial</span>
-        </button>
-
-        <button
-          type="button"
-          className={`botao-menu-interno ${menuInternoAberto ? 'ativo' : ''}`}
-          aria-label={menuInternoAberto ? 'Fechar menu' : 'Abrir menu'}
-          aria-expanded={menuInternoAberto}
-          onClick={() => setMenuInternoAberto((menuAberto) => !menuAberto)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </header>
-
-      {menuInternoAberto && (
-        <button
-          type="button"
-          className="overlay-menu-interno"
-          aria-label="Fechar menu lateral"
-          onClick={() => setMenuInternoAberto(false)}
-        />
-      )}
-
-      <aside className={`menu-lateral ${menuInternoAberto ? 'menu-lateral-aberto' : ''}`}>
-        <div className="marca-sidebar">
-          <div className="logo-simbolo logo-simbolo-sidebar">
-            <img
-              src="/logo-oficial-ebd-fiel.png"
-              alt="Logo EBD Fiel"
-              className="logo-imagem"
-            />
-          </div>
-          <div>
-            <h1>EBD Fiel</h1>
-            <p>Gestão da Escola Bíblica</p>
-          </div>
-
-          <button
-            type="button"
-            className="fechar-menu-interno"
-            aria-label="Fechar menu"
-            onClick={() => setMenuInternoAberto(false)}
-          >
-            ×
-          </button>
-        </div>
-
-        <nav className="menu-navegacao">
-          {menu.filter(menuPermitidoParaUsuario).map((item) => (
-            <button
-              type="button"
-              key={item.id}
-              className={paginaAtual === item.id ? 'ativo' : ''}
-              onClick={() => navegarParaPagina(item.id)}
-            >
-              <span className="icone-menu">
-                <Icone nome={item.icone} className="icone-svg" />
-              </span>
-              <span>{item.nome}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="cartao-usuario-sidebar">
-          <p className="titulo-usuario-sidebar">Logado como</p>
-          <strong>{sessao?.user?.email}</strong>
-          <span className="selo-perfil-sidebar">
-            {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
-          </span>
-
-          <button type="button" className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
-            <Icone nome="sair" className="icone-svg" />
-            <span>Sair</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="area-principal">
-        {modoSuporteAdminAtivo() && (
-          <div className="banner-modo-suporte">
-            <div>
-              <span>Modo suporte ativo</span>
-              <strong>
-                Você está visualizando a igreja{' '}
-                {igrejaSuporteAdmin?.nome_igreja ||
-                  igrejaAtualPiloto?.nome_igreja ||
-                  buscarNomeIgrejaParaExibicao()}
-              </strong>
-              <p>Você continua logado como administrador do sistema.</p>
-            </div>
-
-            <button type="button" className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
-              Sair do modo suporte
-            </button>
-          </div>
-        )}
-
-        {renderizarPagina()}
-      </main>
-    </div>
-  )
+/* Logo oficial da marca na área pública */
+.marca-login .logo-simbolo,
+.marca-publica .logo-publica {
+  background: #ffffff;
+  overflow: hidden;
 }
 
-export default App
+.marca-login .logo-imagem {
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.marca-publica .logo-imagem {
+  padding: 4px;
+  border-radius: 14px;
+}
+
+@media (max-width: 720px) {
+  .marca-publica .logo-publica {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+
+/* Ajustes premium da tela de login */
+.tela-login .painel-apresentacao {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(96, 165, 250, 0.22), transparent 28%),
+    radial-gradient(circle at 86% 82%, rgba(37, 99, 235, 0.24), transparent 32%),
+    linear-gradient(145deg, #071225 0%, #10255c 54%, #1d4ed8 100%);
+}
+
+.tela-login .marca-login {
+  align-items: center;
+}
+
+.tela-login .marca-login .logo-simbolo {
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  padding: 6px;
+  background: #ffffff;
+  box-shadow: 0 18px 38px rgba(2, 6, 23, 0.22);
+}
+
+.tela-login .marca-login h1 {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.tela-login .marca-login p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tela-login .apresentacao-texto {
+  max-width: 680px;
+}
+
+.tela-login .apresentacao-texto h2 {
+  color: #ffffff;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+}
+
+.tela-login .apresentacao-texto p {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 20px;
+  max-width: 620px;
+}
+
+.tela-login .selo-apresentacao {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.tela-login .beneficio-item {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.08);
+}
+
+.tela-login .beneficio-item .icone-beneficio {
+  color: #dbeafe;
+}
+
+.tela-login .cartao-login {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.96);
+}
+
+.tela-login .botao-voltar-publico {
+  margin-bottom: 28px;
+  padding: 0;
+  color: #2563eb;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.tela-login .botao-voltar-publico:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.tela-login .topo-cartao-login {
+  align-items: flex-start;
+}
+
+.tela-login .topo-cartao-login h2 {
+  color: #0f172a;
+  font-size: 34px;
+  letter-spacing: -0.03em;
+}
+
+.tela-login .topo-cartao-login p {
+  color: #475569;
+  font-size: 18px;
+}
+
+.tela-login .topo-cartao-icone {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+}
+
+.tela-login .formulario-login {
+  padding: 28px;
+  border-radius: 24px;
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.1);
+}
+
+.tela-login .formulario input {
+  min-height: 56px;
+  font-weight: 700;
+}
+
+.tela-login .formulario input::placeholder {
+  color: #64748b;
+}
+
+.tela-login .botao-principal {
+  min-height: 56px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+@media (max-width: 1000px) {
+  .tela-login .painel-apresentacao {
+    min-height: auto;
+  }
+
+  .tela-login .marca-login .logo-simbolo {
+    width: 66px;
+    height: 66px;
+  }
+}
+
+@media (max-width: 720px) {
+  .tela-login .marca-login {
+    align-items: flex-start;
+  }
+
+  .tela-login .marca-login h1 {
+    font-size: 26px;
+  }
+
+  .tela-login .marca-login p {
+    font-size: 15px;
+  }
+
+  .tela-login .apresentacao-texto h2 {
+    font-size: 34px;
+  }
+
+  .tela-login .apresentacao-texto p {
+    font-size: 17px;
+  }
+}
+
+/* Landing page pública */
+.pagina-publica {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 34%),
+    linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
+  color: var(--cor-texto);
+}
+
+.topo-publico {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.marca-publica {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-publica {
+  width: 58px;
+  height: 58px;
+}
+
+.marca-publica strong {
+  display: block;
+  font-size: 22px;
+}
+
+.marca-publica span {
+  display: block;
+  margin-top: 3px;
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+}
+
+.menu-publico {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-publico a {
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.menu-publico a:hover {
+  color: var(--cor-primaria);
+}
+
+.menu-publico button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hero-publico {
+  width: min(1180px, calc(100% - 36px));
+  margin: 34px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(330px, 0.9fr);
+  gap: 34px;
+  align-items: center;
+}
+
+.hero-publico-texto {
+  display: grid;
+  gap: 22px;
+}
+
+.selo-publico {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.hero-publico h1 {
+  margin: 0;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.hero-publico p,
+.secao-beneficios-publica p,
+.cartao-plano-publico p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.75;
+  font-size: 17px;
+}
+
+.acoes-publicas {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.acoes-publicas .botao-principal,
+.acoes-publicas .botao-secundario {
+  margin-top: 0;
+}
+
+.link-botao-publico {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metricas-publicas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 540px;
+}
+
+.metricas-publicas div {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(219, 226, 234, 0.9);
+  box-shadow: var(--sombra-suave);
+}
+
+.metricas-publicas strong {
+  display: block;
+  font-size: 22px;
+}
+
+.metricas-publicas span {
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hero-publico-card {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.22), transparent 36%),
+    linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  border-radius: 32px;
+  padding: 22px;
+  box-shadow: 0 28px 65px rgba(30, 64, 175, 0.24);
+}
+
+.mini-dashboard {
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 26px;
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.mini-dashboard-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mini-dashboard-topo span {
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.mini-dashboard-topo strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 24px;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mini-grid div {
+  border: 1px solid var(--cor-borda);
+  border-radius: 18px;
+  padding: 16px;
+  display: grid;
+  gap: 6px;
+  color: var(--cor-primaria);
+}
+
+.mini-grid strong {
+  color: var(--cor-texto);
+}
+
+.mini-grid span {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+
+.linha-progresso-publica {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-radius: 18px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 16px;
+}
+
+.linha-progresso-publica span {
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.linha-progresso-publica strong {
+  color: var(--cor-primaria);
+  font-size: 24px;
+}
+
+.secao-publica {
+  width: min(1180px, calc(100% - 36px));
+  margin: 74px auto 0;
+}
+
+.cabecalho-secao-publica {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.cabecalho-secao-publica h2,
+.secao-beneficios-publica h2,
+.cartao-plano-publico h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+}
+
+.grade-recursos-publicos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.grade-recursos-publicos article {
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: var(--sombra-suave);
+}
+
+.icone-recurso-publico {
+  width: 34px;
+  height: 34px;
+  color: var(--cor-primaria);
+  margin-bottom: 12px;
+}
+
+.grade-recursos-publicos h3 {
+  margin: 0 0 8px;
+}
+
+.grade-recursos-publicos p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.65;
+}
+
+.secao-beneficios-publica {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.8fr);
+  gap: 28px;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 30px;
+  padding: 32px;
+  box-shadow: var(--sombra-padrao);
+}
+
+.lista-beneficios-publicos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.lista-beneficios-publicos li {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.cartao-plano-publico {
+  margin-bottom: 68px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 30%),
+    linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-radius: 32px;
+  padding: 36px;
+  display: grid;
+  gap: 18px;
+  box-shadow: 0 28px 65px rgba(15, 23, 42, 0.18);
+}
+
+.cartao-plano-publico h2,
+.cartao-plano-publico p {
+  color: #ffffff;
+}
+
+.botao-voltar-publico {
+  width: fit-content;
+  border: 0;
+  background: transparent;
+  color: var(--cor-primaria);
+  font-weight: 800;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1000px) {
+  .hero-publico,
+  .secao-beneficios-publica {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-recursos-publicos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .topo-publico {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .menu-publico {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .hero-publico {
+    margin-top: 16px;
+  }
+
+  .metricas-publicas,
+  .grade-recursos-publicos,
+  .mini-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .secao-publica {
+    margin-top: 46px;
+  }
+
+  .secao-beneficios-publica,
+  .cartao-plano-publico {
+    padding: 24px;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  body {
+    background: white;
+  }
+
+  .menu-lateral,
+  .no-print,
+  .cards,
+  .resumo,
+  .aviso,
+  .topo-pagina,
+  .topo-pagina p,
+  .hero-painel,
+  .hero-acoes,
+  .grade-resumos-comerciais {
+    display: none !important;
+  }
+
+  .app {
+    display: block;
+    min-height: auto;
+  }
+
+  .area-principal {
+    padding: 0;
+  }
+
+  .conteudo {
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background: white;
+  }
+
+  .relatorio-folha {
+    margin-top: 0;
+    border: none;
+    padding: 0;
+  }
+
+  .cabecalho-relatorio h3 {
+    font-size: 16px;
+  }
+
+  .cabecalho-relatorio p {
+    font-size: 12px;
+  }
+
+  .tabela-container {
+    overflow: visible;
+  }
+
+  .tabela-ebd {
+    width: 100%;
+    font-size: 11px;
+  }
+
+  .tabela-ebd th,
+  .tabela-ebd td {
+    padding: 5px;
+  }
+}
+
+
+
+
+
+
+
+.tipo-pessoa-destaque {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+/* Chamada dos professores */
+.abas-chamada {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.abas-chamada button {
+  border: 1px solid var(--cor-borda);
+  background: #ffffff;
+  color: var(--cor-texto);
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.abas-chamada button.ativo {
+  background: var(--cor-primaria);
+  color: #ffffff;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.2);
+}
+
+.resumo-professores {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.acoes-chamada-professores {
+  justify-content: flex-end;
+}
+
+.botao-justificou {
+  border: 1px solid #f59e0b;
+  background: #ffffff;
+  color: #b45309;
+  border-radius: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.botao-justificou:hover {
+  background: #fffbeb;
+}
+
+.ativo-justificou {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+}
+
+.formulario-observacao-professores {
+  margin-top: 18px;
+}
+
+@media (max-width: 800px) {
+  .abas-chamada,
+  .abas-chamada button,
+  .botao-justificou {
+    width: 100%;
+  }
+}
+
+/* Classes vinculadas ao professor */
+.campo-classes-professor {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.lista-checkboxes-classes {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.checkbox-classe-professor {
+  display: flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px !important;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+
+.checkbox-classe-professor input {
+  width: auto !important;
+  min-height: auto !important;
+}
+
+/* Cadastro de usuários */
+.aviso-usuarios {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-usuarios strong {
+  color: #1e40af;
+}
+
+/* Aniversariantes da semana */
+.alerta-aniversariantes {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  border: 1px solid #bfdbfe;
+  box-shadow: var(--sombra-suave);
+}
+
+.topo-alerta-aniversariantes {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.topo-alerta-aniversariantes h3 {
+  margin: 10px 0 0;
+  font-size: 22px;
+}
+
+.topo-alerta-aniversariantes > strong {
+  min-width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.lista-aniversariantes {
+  display: grid;
+  gap: 12px;
+}
+
+.item-aniversariante {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.item-aniversariante strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.item-aniversariante p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.item-aniversariante span {
+  flex-shrink: 0;
+  color: var(--cor-primaria);
+  font-weight: 800;
+}
+
+.texto-sem-aniversariantes {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .topo-alerta-aniversariantes,
+  .item-aniversariante {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Perfis de usuário */
+.linha-tags-painel {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.hero-tag-clara {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+.selo-perfil-sidebar {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.18);
+  color: #dbeafe;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.texto-ajuda-campo {
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+select:disabled,
+input:disabled {
+  background: #eef2f7;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+
+/* Ajuste para estrutura multiusuário por igreja */
+.aviso-perfil {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+
+/* Cadastro separado de alunos e professores */
+.menu-navegacao button span:last-child {
+  line-height: 1.2;
+}
+
+
+/* Professores puxados automaticamente nas classes */
+.aviso-classes-professores {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-classes-professores strong {
+  color: #1d4ed8;
+}
+
+
+/* Professores também gerenciados pela tela de Classes */
+.formulario-professor-classe {
+  margin-bottom: 22px;
+  background: #ffffff;
+}
+
+.topo-formulario-inline h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.topo-formulario-inline p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.professores-na-classe {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.professor-classe-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+}
+
+.professor-classe-linha span {
+  font-weight: 800;
+  color: var(--cor-texto);
+}
+
+.professor-classe-linha > div {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.botao-pequeno {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.botao-sem-margem {
+  margin-top: 0;
+}
+
+.texto-sem-professor {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .professor-classe-linha {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .professor-classe-linha > div,
+  .botao-sem-margem {
+    width: 100%;
+  }
+}
+
+
+/* Migração automática de professores das classes */
+.aviso-edicao-classe {
+  margin-top: 0;
+  background: #f8fbff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.aviso-edicao-classe p {
+  margin: 0;
+}
+
+
+/* Relatórios modernos */
+.relatorios-dashboard {
+  margin-top: 24px;
+  display: grid;
+  gap: 22px;
+}
+
+.relatorios-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding: 26px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 32%),
+    linear-gradient(135deg, #1d4ed8 0%, #172554 100%);
+  color: #ffffff;
+  box-shadow: 0 24px 50px rgba(37, 99, 235, 0.18);
+}
+
+.relatorios-hero .selo-publico {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.relatorios-hero h3 {
+  margin: 12px 0 8px;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.relatorios-hero p {
+  margin: 0;
+  max-width: 680px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.relatorios-percentual {
+  min-width: 150px;
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.relatorios-percentual strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.relatorios-percentual span {
+  display: block;
+  margin-top: 6px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.cards-relatorios-modernas {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-top: 0;
+}
+
+.card-relatorio-moderna {
+  display: grid;
+  gap: 6px;
+}
+
+.card-relatorio-moderna span {
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+}
+
+.card-relatorio-moderna strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.card-relatorio-moderna p {
+  margin: 0;
+}
+
+.relatorio-professores-moderno {
+  padding: 24px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  border: 1px solid #bfdbfe;
+  box-shadow: var(--sombra-suave);
+}
+
+.cabecalho-relatorio-professores {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cabecalho-relatorio-professores h3 {
+  margin: 10px 0 6px;
+  font-size: 26px;
+}
+
+.cabecalho-relatorio-professores p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.circulo-presenca-professores {
+  width: 116px;
+  height: 116px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.22);
+}
+
+.circulo-presenca-professores strong {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.circulo-presenca-professores span {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.grade-professores-resumo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.grade-professores-resumo div {
+  padding: 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.grade-professores-resumo span {
+  display: block;
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.grade-professores-resumo strong {
+  font-size: 32px;
+}
+
+.lista-professores-relatorio {
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.linha-professor-relatorio {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+}
+
+.linha-professor-relatorio strong {
+  display: block;
+}
+
+.linha-professor-relatorio p {
+  margin: 3px 0 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.status-professor {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.status-presente {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-faltou {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-justificou {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bloco-professores-pdf {
+  margin-top: 24px;
+}
+
+.bloco-professores-pdf h4 {
+  margin: 0 0 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tabela-professores-pdf,
+.tabela-professores-detalhe-pdf {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .relatorios-hero,
+  .cabecalho-relatorio-professores,
+  .linha-professor-relatorio {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .relatorios-percentual,
+  .circulo-presenca-professores {
+    border-radius: 22px;
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 22px;
+  }
+
+  .grade-professores-resumo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .grade-professores-resumo {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Página pública premium */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(37, 99, 235, 0.16), transparent 28%),
+    radial-gradient(circle at 90% 16%, rgba(14, 165, 233, 0.16), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 48%, #f8fbff 100%);
+}
+
+.topo-publico {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: min(1180px, calc(100% - 36px));
+  margin-top: 14px;
+  padding: 14px 18px;
+  border: 1px solid rgba(219, 226, 234, 0.85);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+}
+
+.hero-publico {
+  margin-top: 58px;
+  gap: 44px;
+}
+
+.hero-publico-texto {
+  gap: 24px;
+}
+
+.hero-publico h1 {
+  max-width: 760px;
+  font-size: clamp(42px, 5.7vw, 74px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  color: #0f172a;
+}
+
+.hero-publico p {
+  max-width: 690px;
+  font-size: 19px;
+  color: #334155;
+}
+
+.selo-publico {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.acoes-publicas .botao-principal {
+  padding: 15px 24px;
+  border-radius: 16px;
+  font-size: 16px;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.22);
+}
+
+.acoes-publicas .botao-secundario {
+  padding: 14px 22px;
+  border-radius: 16px;
+  font-size: 16px;
+}
+
+.metricas-publicas div {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 40%),
+    rgba(255, 255, 255, 0.86);
+}
+
+.metricas-publicas strong {
+  font-size: 26px;
+  color: #1d4ed8;
+}
+
+.hero-publico-card {
+  position: relative;
+  padding: 1px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.72)),
+    linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  box-shadow: 0 34px 80px rgba(37, 99, 235, 0.24);
+}
+
+.hero-publico-card::before {
+  content: "";
+  position: absolute;
+  inset: -26px;
+  z-index: -1;
+  border-radius: 42px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.18), transparent 68%);
+}
+
+.mini-dashboard {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.mini-dashboard-topo strong {
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.mini-grid div {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mini-grid div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.linha-progresso-publica {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.secao-impacto-publica {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(180px, 0.75fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.impacto-card {
+  padding: 24px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(219, 226, 234, 0.95);
+  box-shadow: var(--sombra-suave);
+}
+
+.impacto-card-principal {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 30%),
+    linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+}
+
+.impacto-card span {
+  display: inline-flex;
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.impacto-card-principal span {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.impacto-card strong {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 16px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+.impacto-card h2,
+.impacto-card h3 {
+  margin: 14px 0 10px;
+  letter-spacing: -0.03em;
+}
+
+.impacto-card h2 {
+  font-size: clamp(28px, 3.7vw, 44px);
+  line-height: 1.08;
+}
+
+.impacto-card h3 {
+  font-size: 21px;
+}
+
+.impacto-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.impacto-card-principal p {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 17px;
+}
+
+.grade-recursos-publicos article {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.grade-recursos-publicos article::after {
+  content: "";
+  position: absolute;
+  right: -26px;
+  top: -26px;
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.grade-recursos-publicos article:hover {
+  transform: translateY(-3px);
+  border-color: #bfdbfe;
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.1);
+}
+
+.secao-beneficios-publica {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 34%),
+    rgba(255, 255, 255, 0.94);
+}
+
+.lista-beneficios-publicos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lista-beneficios-publicos li::before {
+  content: "✓";
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 900;
+}
+
+.cartao-plano-publico {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.cartao-plano-publico::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 1100px) {
+  .secao-impacto-publica {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .impacto-card-principal {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .topo-publico {
+    position: static;
+    margin-top: 0;
+    border-radius: 0 0 24px 24px;
+    width: 100%;
+  }
+
+  .hero-publico {
+    margin-top: 28px;
+  }
+
+  .secao-impacto-publica {
+    grid-template-columns: 1fr;
+  }
+
+  .impacto-card-principal {
+    grid-column: span 1;
+  }
+
+  .hero-publico h1 {
+    font-size: 38px;
+  }
+}
+
+
+/* Página principal ultra moderna e mais colorida */
+.pagina-publica {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 8% 7%, rgba(37, 99, 235, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at 15% 76%, rgba(34, 197, 94, 0.12), transparent 30%),
+    radial-gradient(circle at 84% 86%, rgba(249, 115, 22, 0.11), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #eef6ff 42%, #f8fbff 100%);
+}
+
+.pagina-publica::before,
+.pagina-publica::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.pagina-publica::before {
+  width: 360px;
+  height: 360px;
+  left: -160px;
+  top: 190px;
+  background: rgba(37, 99, 235, 0.10);
+}
+
+.pagina-publica::after {
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  top: 520px;
+  background: rgba(14, 165, 233, 0.10);
+}
+
+.topo-publico,
+.hero-publico,
+.secao-publica {
+  position: relative;
+  z-index: 1;
+}
+
+.topo-publico {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.82));
+  border: 1px solid rgba(191, 219, 254, 0.9);
+}
+
+.menu-publico button,
+.acoes-publicas .botao-principal {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
+}
+
+.hero-publico {
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+}
+
+.hero-publico h1 {
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #0891b2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.selo-publico {
+  background: linear-gradient(135deg, #dbeafe 0%, #cffafe 100%);
+  color: #1d4ed8;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+}
+
+.hero-publico-card {
+  transform: perspective(900px) rotateY(-3deg) rotateX(2deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-publico-card:hover {
+  transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-4px);
+  box-shadow: 0 42px 90px rgba(37, 99, 235, 0.28);
+}
+
+.mini-dashboard {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.96);
+}
+
+.mini-dashboard-topo strong {
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mini-grid div:nth-child(1) {
+  border-color: #bfdbfe;
+}
+
+.mini-grid div:nth-child(2) {
+  border-color: #bbf7d0;
+}
+
+.mini-grid div:nth-child(3) {
+  border-color: #fed7aa;
+}
+
+.mini-grid div:nth-child(4) {
+  border-color: #ddd6fe;
+}
+
+.metricas-publicas div:nth-child(1) {
+  border-color: #bfdbfe;
+}
+
+.metricas-publicas div:nth-child(2) {
+  border-color: #ddd6fe;
+}
+
+.metricas-publicas div:nth-child(3) {
+  border-color: #bbf7d0;
+}
+
+.secao-impacto-publica {
+  align-items: stretch;
+}
+
+.impacto-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.impacto-card::after {
+  content: "";
+  position: absolute;
+  right: -44px;
+  bottom: -44px;
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.07);
+}
+
+.impacto-card:nth-child(3)::after {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.impacto-card:nth-child(4)::after {
+  background: rgba(249, 115, 22, 0.09);
+}
+
+.secao-experiencia-publica {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 32px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.18), transparent 28%),
+    linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0e7490 100%);
+  color: #ffffff;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.18);
+}
+
+.cabecalho-experiencia-publica .selo-publico {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cabecalho-experiencia-publica h2 {
+  margin: 16px 0 12px;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cabecalho-experiencia-publica p {
+  margin: 0;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.75;
+  font-size: 17px;
+}
+
+.grade-experiencia-publica {
+  display: grid;
+  gap: 16px;
+}
+
+.experiencia-card {
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.experiencia-card strong {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.experiencia-card h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.experiencia-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.65;
+}
+
+.experiencia-azul {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.36), rgba(14, 165, 233, 0.20));
+}
+
+.experiencia-verde {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.28), rgba(20, 184, 166, 0.18));
+}
+
+.experiencia-laranja {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.28), rgba(234, 179, 8, 0.16));
+}
+
+.grade-recursos-publicos article:nth-child(1) {
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+}
+
+.grade-recursos-publicos article:nth-child(2) {
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.grade-recursos-publicos article:nth-child(3) {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+}
+
+.grade-recursos-publicos article:nth-child(4) {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+}
+
+.cartao-plano-publico {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.22), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(37, 99, 235, 0.28), transparent 34%),
+    linear-gradient(135deg, #020617 0%, #172554 58%, #0e7490 100%);
+}
+
+.cartao-plano-publico .botao-principal {
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+}
+
+@media (max-width: 1000px) {
+  .hero-publico-card {
+    transform: none;
+  }
+
+  .secao-experiencia-publica {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Redesign estratégico inspirado em plataforma SaaS */
+:root {
+  --landing-primary: #0B3B5F;
+  --landing-primary-light: #2B5C8A;
+  --landing-accent: #E6B31E;
+  --landing-coral: #FF6B6B;
+  --landing-bg: #F9FAFB;
+  --landing-card-shadow: 0 24px 45px -18px rgba(11, 59, 95, 0.28);
+}
+
+.pagina-publica {
+  font-family: Inter, "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 8% 7%, rgba(230, 179, 30, 0.12), transparent 24%),
+    radial-gradient(circle at 90% 10%, rgba(95, 75, 139, 0.12), transparent 26%),
+    radial-gradient(circle at 18% 72%, rgba(11, 59, 95, 0.12), transparent 30%),
+    linear-gradient(180deg, #f9fafb 0%, #eef6fb 42%, #ffffff 100%);
+}
+
+.topo-publico {
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(11, 59, 95, 0.10);
+  box-shadow: 0 18px 42px rgba(11, 59, 95, 0.08);
+}
+
+.marca-publica strong {
+  color: var(--landing-primary);
+  letter-spacing: -0.03em;
+}
+
+.menu-publico a {
+  color: #334155;
+}
+
+.menu-publico a:hover {
+  color: var(--landing-primary);
+}
+
+.menu-publico button {
+  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  border-radius: 999px;
+  box-shadow: 0 12px 26px rgba(11, 59, 95, 0.22);
+}
+
+.hero-publico {
+  min-height: calc(100vh - 140px);
+  align-items: center;
+}
+
+.hero-publico h1 {
+  font-family: "Plus Jakarta Sans", Poppins, Inter, Arial, sans-serif;
+  font-size: clamp(44px, 6vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+  background: linear-gradient(135deg, #092f4b 0%, #0B3B5F 46%, #5F4B8B 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-publico p {
+  font-size: 20px;
+  line-height: 1.75;
+  color: #334155;
+}
+
+.selo-publico {
+  background: linear-gradient(135deg, #fff7d6 0%, #e0f2fe 100%);
+  color: var(--landing-primary);
+  border: 1px solid rgba(230, 179, 30, 0.22);
+}
+
+.acoes-publicas .botao-principal,
+.cartao-plano-publico .botao-principal {
+  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  border-radius: 999px;
+  padding: 14px 30px;
+  box-shadow: 0 18px 35px -12px rgba(11, 59, 95, 0.55);
+}
+
+.acoes-publicas .botao-principal:hover,
+.cartao-plano-publico .botao-principal:hover,
+.menu-publico button:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.acoes-publicas .botao-secundario {
+  border-radius: 999px;
+  border-color: rgba(11, 59, 95, 0.18);
+}
+
+.metricas-publicas div,
+.grade-recursos-publicos article,
+.impacto-card,
+.experiencia-card {
+  border-radius: 28px;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.metricas-publicas div:hover,
+.grade-recursos-publicos article:hover,
+.impacto-card:hover,
+.experiencia-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--landing-card-shadow);
+}
+
+.hero-publico-card {
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(230, 179, 30, 0.85), rgba(255, 107, 107, 0.45)),
+    linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  box-shadow: 0 38px 90px rgba(11, 59, 95, 0.28);
+}
+
+.mini-dashboard {
+  border-radius: 32px;
+}
+
+.mini-grid div {
+  border-radius: 22px;
+}
+
+.linha-progresso-publica {
+  background: linear-gradient(135deg, #fff7d6, #dbeafe);
+  border-color: rgba(230, 179, 30, 0.32);
+}
+
+.secao-impacto-publica {
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(185px, 0.8fr));
+}
+
+.impacto-card-principal {
+  background:
+    radial-gradient(circle at top right, rgba(230, 179, 30, 0.22), transparent 34%),
+    linear-gradient(135deg, #082f49 0%, #0B3B5F 55%, #5F4B8B 100%);
+}
+
+.impacto-card strong {
+  background: linear-gradient(135deg, #fff7d6, #dbeafe);
+  color: var(--landing-primary);
+}
+
+.secao-publico-alvo {
+  padding: 34px;
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
+}
+
+.grade-publico-alvo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.grade-publico-alvo article {
+  padding: 24px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid var(--cor-borda);
+}
+
+.grade-publico-alvo strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--landing-primary);
+  font-size: 20px;
+}
+
+.grade-publico-alvo p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.secao-selos-publicos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.secao-selos-publicos div {
+  padding: 22px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: var(--sombra-suave);
+}
+
+.secao-selos-publicos span {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff7d6;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.secao-selos-publicos strong {
+  display: block;
+  color: var(--landing-primary);
+  font-size: 18px;
+}
+
+.secao-experiencia-publica {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(230, 179, 30, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 78%, rgba(255, 107, 107, 0.16), transparent 28%),
+    linear-gradient(135deg, #082f49 0%, #0B3B5F 50%, #5F4B8B 100%);
+}
+
+.experiencia-laranja {
+  background: linear-gradient(135deg, rgba(230, 179, 30, 0.28), rgba(255, 107, 107, 0.18));
+}
+
+.cartao-plano-publico {
+  background:
+    radial-gradient(circle at top right, rgba(230, 179, 30, 0.22), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(255, 107, 107, 0.22), transparent 34%),
+    linear-gradient(135deg, #061826 0%, var(--landing-primary) 58%, #5F4B8B 100%);
+}
+
+.rodape-publico {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto 36px;
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 1.5fr 0.7fr 0.9fr;
+  gap: 26px;
+  border-radius: 32px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: 0 20px 45px rgba(11, 59, 95, 0.08);
+}
+
+.rodape-publico p {
+  margin: 14px 0 0;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.rodape-publico h3 {
+  margin: 0 0 12px;
+  color: var(--landing-primary);
+}
+
+.rodape-publico a,
+.rodape-publico button {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 800;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.rodape-publico a:hover,
+.rodape-publico button:hover {
+  color: var(--landing-primary);
+}
+
+.botao-whatsapp-flutuante {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 20;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 900;
+  box-shadow: 0 18px 36px rgba(11, 59, 95, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.botao-whatsapp-flutuante:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 24px 44px rgba(11, 59, 95, 0.34);
+}
+
+@media (max-width: 1000px) {
+  .secao-impacto-publica,
+  .grade-publico-alvo,
+  .secao-selos-publicos,
+  .rodape-publico {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-publico {
+    min-height: auto;
+  }
+
+  .botao-whatsapp-flutuante {
+    left: 18px;
+    right: 18px;
+    text-align: center;
+  }
+}
+
+
+/* Ajustes finais da página pública: contraste, CTA, mockup e seções */
+.hero-publico-card {
+  transform: perspective(1000px) rotateY(-4deg) rotateX(2deg) scale(1.04);
+  box-shadow: 0 44px 100px rgba(11, 59, 95, 0.34);
+}
+
+.hero-publico-card::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border-radius: 42px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(230, 179, 30, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(95, 75, 139, 0.18), transparent 34%);
+}
+
+.mini-dashboard {
+  transform: scale(1.02);
+}
+
+.acoes-publicas .botao-principal,
+.cartao-plano-publico .botao-principal {
+  background: linear-gradient(135deg, var(--landing-accent), #FF6B6B);
+  color: #111827;
+  font-weight: 900;
+  box-shadow: 0 18px 36px -10px rgba(230, 179, 30, 0.55);
+}
+
+.acoes-publicas .botao-principal:hover,
+.cartao-plano-publico .botao-principal:hover {
+  box-shadow: 0 24px 46px -14px rgba(255, 107, 107, 0.58);
+}
+
+.menu-publico button {
+  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  color: #ffffff;
+}
+
+.secao-experiencia-publica {
+  color: #ffffff;
+}
+
+.secao-experiencia-publica h2,
+.secao-experiencia-publica h3,
+.secao-experiencia-publica strong {
+  color: #ffffff;
+}
+
+.secao-experiencia-publica p {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.cabecalho-experiencia-publica h2 {
+  color: #ffffff;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.cabecalho-experiencia-publica p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.experiencia-card h3,
+.experiencia-card strong {
+  color: #ffffff;
+}
+
+.secao-organiza-sistema {
+  padding: 34px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(230, 179, 30, 0.12), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
+}
+
+.grade-organiza-sistema {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.grade-organiza-sistema article {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  border-radius: 26px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.grade-organiza-sistema article:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--landing-card-shadow);
+}
+
+.grade-organiza-sistema article::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  bottom: -38px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: rgba(11, 59, 95, 0.06);
+}
+
+.grade-organiza-sistema article:nth-child(2)::after,
+.grade-organiza-sistema article:nth-child(6)::after {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.grade-organiza-sistema article:nth-child(3)::after,
+.grade-organiza-sistema article:nth-child(5)::after {
+  background: rgba(230, 179, 30, 0.10);
+}
+
+.grade-organiza-sistema span {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 15px;
+  background: linear-gradient(135deg, var(--landing-primary), var(--landing-primary-light));
+  color: #ffffff;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.grade-organiza-sistema strong {
+  display: block;
+  font-size: 21px;
+  color: var(--landing-primary);
+  margin-bottom: 8px;
+}
+
+.grade-organiza-sistema p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.grade-publico-alvo article:nth-child(1) {
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  border-color: #bfdbfe;
+}
+
+.grade-publico-alvo article:nth-child(2) {
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+  border-color: #bbf7d0;
+}
+
+.grade-publico-alvo article:nth-child(3) {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+  border-color: #fed7aa;
+}
+
+.grade-publico-alvo article:nth-child(1)::before,
+.grade-publico-alvo article:nth-child(2)::before,
+.grade-publico-alvo article:nth-child(3)::before {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 18px;
+  margin-bottom: 14px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.grade-publico-alvo article:nth-child(1)::before {
+  content: "S";
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.grade-publico-alvo article:nth-child(2)::before {
+  content: "P";
+  background: #dcfce7;
+  color: #166534;
+}
+
+.grade-publico-alvo article:nth-child(3)::before {
+  content: "L";
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.cartao-plano-publico h2,
+.cartao-plano-publico p {
+  color: #ffffff;
+}
+
+.frase-confianca-cta {
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.cartao-plano-publico .acoes-publicas {
+  margin-top: 22px;
+}
+
+@media (max-width: 1000px) {
+  .hero-publico-card {
+    transform: none;
+  }
+
+  .grade-organiza-sistema {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grade-organiza-sistema {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Correção do bloco escuro: texto claro e melhor contraste */
+.impacto-card-principal h2,
+.impacto-card-principal h3,
+.impacto-card-principal strong {
+  color: #ffffff !important;
+}
+
+.impacto-card-principal p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.impacto-card-principal {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(230, 179, 30, 0.28), transparent 28%),
+    radial-gradient(circle at 10% 92%, rgba(14, 165, 233, 0.24), transparent 32%),
+    linear-gradient(135deg, #06283f 0%, #0B3B5F 52%, #5F4B8B 100%) !important;
+}
+
+.impacto-card-principal span {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+.impacto-card-principal h2 {
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+
+/* Repaginação moderna da área interna */
+.aplicacao,
+.app,
+.layout-app {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.10), transparent 24%),
+    radial-gradient(circle at 86% 12%, rgba(14, 165, 233, 0.10), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+}
+
+.menu-lateral,
+.sidebar {
+  background:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 30%),
+    linear-gradient(180deg, #07182f 0%, #0b1528 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 16px 0 42px rgba(15, 23, 42, 0.12);
+}
+
+.menu-lateral .marca-app,
+.sidebar .marca-app,
+.logo-area {
+  padding: 18px 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menu-lateral nav button,
+.menu-navegacao button,
+.sidebar nav button {
+  border-radius: 18px !important;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.menu-lateral nav button:hover,
+.menu-navegacao button:hover,
+.sidebar nav button:hover {
+  transform: translateX(3px);
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+.menu-lateral nav button.ativo,
+.menu-navegacao button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.26);
+}
+
+.usuario-logado,
+.card-usuario,
+.bloco-usuario {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.conteudo,
+.painel-conteudo,
+.area-conteudo,
+main.conteudo {
+  width: min(1180px, calc(100% - 34px));
+  margin-inline: auto;
+}
+
+.conteudo > h2,
+.topo-pagina h2 {
+  font-size: clamp(30px, 3vw, 42px);
+  letter-spacing: -0.045em;
+  color: #0f172a;
+}
+
+.topo-pagina {
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.topo-pagina p {
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.card,
+.resumo,
+.item-lista,
+.formulario,
+.filtros,
+.alerta-aniversariantes,
+.relatorio-professores-moderno,
+.secao-configuracoes,
+.aviso {
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.045), transparent 34%),
+    #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.86) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07) !important;
+}
+
+.item-lista {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.item-lista:hover {
+  transform: translateY(-2px);
+  border-color: #bfdbfe !important;
+  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.10) !important;
+}
+
+.grade-resumos-comerciais,
+.cards,
+.cards-estatisticas,
+.grade-professores-resumo {
+  gap: 18px !important;
+}
+
+.resumo,
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.resumo::after,
+.card::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  bottom: -38px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.055);
+}
+
+.resumo h3,
+.card h3 {
+  color: #0f172a;
+}
+
+.resumo p,
+.card p {
+  color: #475569;
+}
+
+.botao-principal,
+button.botao-principal {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.24);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.botao-principal:hover,
+button.botao-principal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 40px rgba(37, 99, 235, 0.30);
+}
+
+.botao-secundario,
+.botao-editar,
+.botao-excluir,
+.botao-presenca,
+.botao-falta,
+.botao-justificou {
+  border-radius: 14px !important;
+}
+
+input,
+select,
+textarea {
+  border-radius: 14px !important;
+  border-color: #cbd5e1 !important;
+  background: #ffffff !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.lista {
+  gap: 16px !important;
+}
+
+.item-com-acoes {
+  align-items: center;
+}
+
+.acoes-item,
+.acoes-chamada {
+  gap: 10px !important;
+}
+
+.abas-chamada {
+  padding: 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+  width: fit-content;
+}
+
+.abas-chamada button {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.abas-chamada button.ativo {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+}
+
+.relatorios-hero,
+.secao-experiencia-publica,
+.cartao-plano-publico {
+  border-radius: 34px !important;
+}
+
+.tabela,
+.tabela-ebd {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .conteudo,
+  .painel-conteudo,
+  .area-conteudo,
+  main.conteudo {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .topo-pagina {
+    flex-direction: column;
+  }
+
+  .abas-chamada {
+    width: 100%;
+    border-radius: 22px;
+  }
+}
+
+
+/* Relatório responsivo e professores integrados */
+.area-relatorio,
+.relatorio,
+.relatorio-ebd,
+.cabecalho-relatorio,
+.tabela-container,
+.tabela-relatorio-wrapper {
+  max-width: 100%;
+}
+
+.relatorio,
+.relatorio-ebd {
+  overflow: visible !important;
+}
+
+.tabela-container,
+.tabela-relatorio-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 18px;
+}
+
+.tabela-ebd,
+.tabela {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.relatorio-professores-integrado {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.titulo-integrado-professores {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbeafe;
+}
+
+.titulo-integrado-professores strong {
+  color: #0f172a;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.titulo-integrado-professores span {
+  color: #334155;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.professores-integrados-lista {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.professor-integrado-item {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.professor-integrado-item span {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.professor-integrado-item strong {
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+.bloco-professores-pdf {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .conteudo,
+  .area-conteudo,
+  .painel-conteudo,
+  main.conteudo {
+    width: min(100% - 16px, 1180px) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    padding: 14px !important;
+    border-radius: 20px !important;
+    width: 100%;
+  }
+
+  .cabecalho-relatorio {
+    text-align: center;
+  }
+
+  .cabecalho-relatorio h2,
+  .cabecalho-relatorio h3 {
+    font-size: 18px !important;
+  }
+
+  .cabecalho-relatorio p {
+    font-size: 13px !important;
+    line-height: 1.5;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    min-width: 720px;
+    font-size: 12px;
+  }
+
+  .relatorio-professores-integrado {
+    padding: 12px;
+  }
+
+  .professor-integrado-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .no-print,
+  .menu-lateral,
+  .sidebar,
+  .topo-pagina,
+  .botao-whatsapp-flutuante {
+    display: none !important;
+  }
+
+  .conteudo,
+  .area-conteudo,
+  .painel-conteudo,
+  main.conteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8mm !important;
+    margin: 0 !important;
+    border: 1px solid #0f172a !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+
+  .tabela-container,
+  .tabela-relatorio-wrapper {
+    overflow: visible !important;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 9px !important;
+    table-layout: fixed;
+  }
+
+  .tabela-ebd th,
+  .tabela-ebd td,
+  .tabela th,
+  .tabela td {
+    padding: 5px 4px !important;
+    word-break: break-word;
+  }
+
+  .relatorio-professores-integrado {
+    margin-top: 10px !important;
+    padding: 8px !important;
+    border: 1px solid #0f172a !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .titulo-integrado-professores {
+    padding-bottom: 6px;
+  }
+
+  .titulo-integrado-professores strong,
+  .titulo-integrado-professores span {
+    font-size: 10px !important;
+  }
+
+  .professores-integrados-lista {
+    gap: 4px;
+  }
+
+  .professor-integrado-item {
+    grid-template-columns: 1.2fr 1fr auto;
+    padding: 4px 6px !important;
+    border-radius: 0;
+    background: #ffffff !important;
+    font-size: 9px !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+}
+
+
+/* Relatório em formato vertical no celular */
+@media (max-width: 760px) {
+  .tabela-container,
+  .tabela-relatorio-wrapper {
+    overflow-x: visible !important;
+  }
+
+  .tabela-ebd,
+  .tabela {
+    min-width: 0 !important;
+  }
+
+  .tabela-ebd thead,
+  .tabela thead {
+    display: none;
+  }
+
+  .tabela-ebd,
+  .tabela-ebd tbody,
+  .tabela-ebd tr,
+  .tabela-ebd td,
+  .tabela,
+  .tabela tbody,
+  .tabela tr,
+  .tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela-ebd tr,
+  .tabela tr {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
+  }
+
+  .tabela-ebd tr:last-child,
+  .tabela tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .tabela-ebd td,
+  .tabela td {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding: 9px 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    text-align: right;
+    font-size: 14px;
+    word-break: normal;
+  }
+
+  .tabela-ebd td:last-child,
+  .tabela td:last-child {
+    border-bottom: none !important;
+  }
+
+  .tabela-ebd td::before,
+  .tabela td::before {
+    content: "";
+    flex-shrink: 0;
+    color: #475569;
+    font-weight: 900;
+    text-align: left;
+  }
+
+  .tabela-ebd td:nth-child(1)::before,
+  .tabela td:nth-child(1)::before {
+    content: "Classe";
+  }
+
+  .tabela-ebd td:nth-child(2)::before,
+  .tabela td:nth-child(2)::before {
+    content: "Matrícula";
+  }
+
+  .tabela-ebd td:nth-child(3)::before,
+  .tabela td:nth-child(3)::before {
+    content: "Ausência";
+  }
+
+  .tabela-ebd td:nth-child(4)::before,
+  .tabela td:nth-child(4)::before {
+    content: "Presença";
+  }
+
+  .tabela-ebd td:nth-child(5)::before,
+  .tabela td:nth-child(5)::before {
+    content: "Visitante";
+  }
+
+  .tabela-ebd td:nth-child(6)::before,
+  .tabela td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  .tabela-ebd td:nth-child(7)::before,
+  .tabela td:nth-child(7)::before {
+    content: "Bíblia";
+  }
+
+  .tabela-ebd td:nth-child(8)::before,
+  .tabela td:nth-child(8)::before {
+    content: "Revista";
+  }
+
+  .tabela-ebd td:nth-child(9)::before,
+  .tabela td:nth-child(9)::before {
+    content: "Ofertas";
+  }
+
+  .tabela-ebd td:nth-child(10)::before,
+  .tabela td:nth-child(10)::before {
+    content: "%";
+  }
+
+  .tabela-ebd tr:last-child,
+  .tabela tr:last-child {
+    background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+    border-color: #bfdbfe;
+  }
+
+  .tabela-ebd tr:last-child td:first-child,
+  .tabela tr:last-child td:first-child {
+    color: #1d4ed8;
+    font-weight: 900;
+  }
+}
+
+@media print {
+  .tabela-ebd,
+  .tabela,
+  .tabela-ebd thead,
+  .tabela thead,
+  .tabela-ebd tbody,
+  .tabela tbody,
+  .tabela-ebd tr,
+  .tabela tr,
+  .tabela-ebd td,
+  .tabela td {
+    display: revert !important;
+  }
+
+  .tabela-ebd td::before,
+  .tabela td::before {
+    content: none !important;
+  }
+}
+
+
+/* Navegação mobile: ao escolher uma opção, a página abre no topo */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 900px) {
+  .conteudo,
+  main.conteudo,
+  .area-conteudo,
+  .painel-conteudo {
+    scroll-margin-top: 12px;
+  }
+}
+
+
+/* Correção definitiva: menu mobile rola para a área principal */
+html {
+  scroll-behavior: smooth;
+}
+
+.area-principal {
+  scroll-margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .area-principal {
+    scroll-margin-top: 8px;
+  }
+}
+
+
+/* Administração do sistema */
+.selo-admin {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #dbeafe, #cffafe);
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.topo-admin-sistema {
+  align-items: center;
+}
+
+.cards-admin-sistema {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 24px;
+}
+
+.card-admin {
+  display: grid;
+  gap: 6px;
+}
+
+.card-admin span {
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+}
+
+.card-admin strong {
+  font-size: 34px;
+  color: #1d4ed8;
+}
+
+.formulario-admin-igreja {
+  margin-bottom: 24px;
+}
+
+.campo-observacoes-admin {
+  grid-column: span 2;
+}
+
+.filtros-admin {
+  margin-bottom: 22px;
+}
+
+.lista-admin-igrejas {
+  display: grid;
+  gap: 14px;
+}
+
+.igreja-admin-card {
+  align-items: center;
+}
+
+.linha-titulo-admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.linha-titulo-admin h3 {
+  margin: 0;
+}
+
+.status-piloto {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.status-teste {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-ativa {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pausada {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-cancelada {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 760px) {
+  .campo-observacoes-admin {
+    grid-column: span 1;
+  }
+
+  .igreja-admin-card {
+    align-items: flex-start;
+  }
+}
+
+
+/* Correção do logo no menu lateral */
+.marca-sidebar h1,
+.menu-lateral .marca-sidebar h1,
+.sidebar .marca-sidebar h1 {
+  color: #ffffff !important;
+}
+
+.marca-sidebar p,
+.menu-lateral .marca-sidebar p,
+.sidebar .marca-sidebar p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.marca-sidebar {
+  color: #ffffff;
+}
+
+/* Destacar melhor a Administração quando aparecer */
+.menu-navegacao button:last-child {
+  margin-top: 8px;
+}
+
+
+/* Tela cheia no PC: página pública e área logada */
+@media (min-width: 1024px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .pagina-publica {
+    width: 100%;
+    max-width: none;
+  }
+
+  .topo-publico,
+  .hero-publico,
+  .secao-publica,
+  .rodape-publico {
+    width: min(100% - 72px, 1440px) !important;
+    max-width: 1440px !important;
+  }
+
+  .hero-publico {
+    min-height: calc(100vh - 110px);
+    padding-top: 42px;
+    padding-bottom: 42px;
+  }
+
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    background:
+      radial-gradient(circle at 15% 8%, rgba(37, 99, 235, 0.08), transparent 28%),
+      linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  }
+
+  .menu-lateral {
+    width: 280px;
+    min-width: 280px;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: start;
+  }
+
+  .area-principal {
+    width: 100%;
+    min-width: 0;
+    padding: 28px 34px;
+  }
+
+  .conteudo,
+  main.conteudo,
+  .area-conteudo,
+  .painel-conteudo {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .conteudo > section,
+  .conteudo > div,
+  .topo-pagina,
+  .formulario,
+  .filtros,
+  .lista,
+  .cards,
+  .cards-estatisticas,
+  .relatorios-dashboard,
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    max-width: none !important;
+  }
+
+  .cards,
+  .cards-estatisticas,
+  .cards-admin-sistema {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .lista {
+    width: 100%;
+  }
+
+  .item-lista {
+    width: 100%;
+  }
+
+  .relatorio,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+  }
+}
+
+/* Em telas muito grandes, deixa a landing mais elegante sem ficar estreita */
+@media (min-width: 1500px) {
+  .topo-publico,
+  .hero-publico,
+  .secao-publica,
+  .rodape-publico {
+    width: min(100% - 96px, 1560px) !important;
+    max-width: 1560px !important;
+  }
+
+  .hero-publico h1 {
+    font-size: clamp(58px, 5vw, 86px);
+  }
+
+  .area-principal {
+    padding: 34px 42px;
+  }
+}
+
+/* No celular mantém layout em coluna, sem forçar largura de PC */
+@media (max-width: 1023px) {
+  .app {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    min-width: 0;
+    position: relative;
+  }
+
+  .area-principal {
+    width: 100%;
+    padding: 18px 10px;
+  }
+}
+
+
+/* Correção da página inicial no celular */
+@media (max-width: 760px) {
+  .pagina-publica {
+    overflow-x: hidden;
+  }
+
+  .topo-publico {
+    width: calc(100% - 20px) !important;
+    margin: 8px auto 0 !important;
+    padding: 14px !important;
+    border-radius: 24px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .topo-publico .marca-publica {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .topo-publico .marca-publica h1,
+  .topo-publico .marca-publica strong {
+    font-size: 24px !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    color: #0B3B5F !important;
+  }
+
+  .topo-publico .marca-publica p,
+  .topo-publico .marca-publica span {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    margin: 4px 0 0 !important;
+  }
+
+  .topo-publico .logo-simbolo,
+  .topo-publico .logo-publica {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+  }
+
+  .menu-publico {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .menu-publico a {
+    font-size: 13px !important;
+    text-align: center !important;
+    padding: 9px 4px !important;
+    border-radius: 999px !important;
+    background: #f8fafc !important;
+  }
+
+  .menu-publico button {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    border-radius: 999px !important;
+    font-size: 18px !important;
+  }
+
+  .hero-publico {
+    width: calc(100% - 24px) !important;
+    margin: 26px auto 0 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    overflow: visible !important;
+  }
+
+  .hero-publico-texto {
+    width: 100% !important;
+    display: grid !important;
+    gap: 18px !important;
+    text-align: center !important;
+    justify-items: center !important;
+  }
+
+  .hero-publico .selo-publico {
+    max-width: 100% !important;
+    padding: 11px 16px !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .hero-publico h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(38px, 13vw, 54px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.055em !important;
+    text-align: center !important;
+    margin: 0 !important;
+    word-break: normal !important;
+  }
+
+  .hero-publico p {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    text-align: center !important;
+    margin: 0 !important;
+  }
+
+  .acoes-publicas {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .acoes-publicas .botao-principal,
+  .acoes-publicas .botao-secundario {
+    width: 100% !important;
+    min-height: 52px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    border-radius: 18px !important;
+  }
+
+  .metricas-publicas {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .metricas-publicas div {
+    min-width: 0 !important;
+    padding: 14px 8px !important;
+  }
+
+  .metricas-publicas strong {
+    font-size: 20px !important;
+  }
+
+  .metricas-publicas span {
+    font-size: 11px !important;
+  }
+
+  .hero-publico-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    padding: 0 !important;
+    border-radius: 28px !important;
+    box-shadow: 0 24px 54px rgba(11, 59, 95, 0.20) !important;
+  }
+
+  .hero-publico-card::before,
+  .hero-publico-card::after {
+    display: none !important;
+  }
+
+  .mini-dashboard {
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    padding: 22px !important;
+    border-radius: 28px !important;
+  }
+
+  .mini-dashboard-topo {
+    align-items: flex-start !important;
+  }
+
+  .mini-dashboard-topo strong {
+    font-size: 28px !important;
+  }
+
+  .mini-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .mini-grid div {
+    min-height: auto !important;
+    padding: 22px 18px !important;
+  }
+
+  .linha-progresso-publica {
+    padding: 14px !important;
+  }
+
+  .botao-whatsapp-flutuante {
+    left: 14px !important;
+    right: 14px !important;
+    bottom: 12px !important;
+    width: auto !important;
+    text-align: center !important;
+    border-radius: 999px !important;
+    padding: 15px 18px !important;
+    font-size: 16px !important;
+  }
+
+  .secao-publica {
+    width: calc(100% - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+
+/* Página pública inspirada no modelo Sistema EBD */
+.hero-modelo-sistema-ebd {
+  position: relative;
+  align-items: center;
+  gap: 54px;
+  padding-top: 68px;
+  padding-bottom: 72px;
+}
+
+.hero-modelo-sistema-ebd::before {
+  content: "";
+  position: absolute;
+  inset: -40px -30px auto auto;
+  width: 420px;
+  height: 420px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(230, 179, 30, 0.18), transparent 64%);
+  pointer-events: none;
+}
+
+.logo-faixa-modelo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(11, 59, 95, 0.10);
+  box-shadow: 0 18px 38px rgba(11, 59, 95, 0.08);
+}
+
+.logo-faixa-imagem {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.logo-faixa-modelo strong,
+.logo-faixa-modelo span {
+  display: block;
+}
+
+.logo-faixa-modelo strong {
+  color: #0B3B5F;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.logo-faixa-modelo span {
+  color: #475569;
+  font-weight: 800;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.hero-modelo-texto h1 {
+  max-width: 720px;
+  font-size: clamp(48px, 6.4vw, 88px);
+  line-height: 0.96;
+  letter-spacing: -0.065em;
+}
+
+.hero-modelo-texto p {
+  max-width: 680px;
+}
+
+.selo-modelo {
+  margin-top: 4px;
+}
+
+.acoes-modelo {
+  margin-top: 8px;
+}
+
+.selos-download-modelo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  width: min(100%, 680px);
+  margin-top: 10px;
+}
+
+.selos-download-modelo div {
+  padding: 18px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 59, 95, 0.10);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
+  text-align: center;
+}
+
+.selos-download-modelo strong,
+.selos-download-modelo span {
+  display: block;
+}
+
+.selos-download-modelo strong {
+  color: #1d4ed8;
+  font-size: 21px;
+}
+
+.selos-download-modelo span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 5px;
+}
+
+.hero-video-modelo {
+  display: grid;
+  gap: 18px;
+}
+
+.video-card-modelo {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  min-height: 260px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(230, 179, 30, 0.16), transparent 36%),
+    linear-gradient(135deg, #082f49 0%, #0B3B5F 62%, #5F4B8B 100%);
+  color: #ffffff;
+  box-shadow: 0 30px 70px rgba(11, 59, 95, 0.24);
+}
+
+.video-topo-modelo {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 900;
+}
+
+.play-modelo {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  margin: 34px auto 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.play-modelo span {
+  transform: translateX(3px);
+  font-size: 28px;
+}
+
+.video-card-modelo h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.video-card-modelo p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+}
+
+.mini-dashboard-modelo {
+  transform: none;
+}
+
+.secao-caracteristicas-modelo,
+.secao-faq-modelo {
+  padding: 34px;
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
+}
+
+.grade-caracteristicas-modelo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.grade-caracteristicas-modelo article {
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.grade-caracteristicas-modelo article:hover,
+.mockup-lista-modelo div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 45px rgba(11, 59, 95, 0.12);
+}
+
+.icone-caracteristica-modelo {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  margin: 0 auto 18px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #dbeafe, #cffafe);
+  color: #1d4ed8;
+}
+
+.grade-caracteristicas-modelo h3 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.grade-caracteristicas-modelo p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.secao-tempo-modelo {
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 34px;
+  align-items: center;
+  padding: 42px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at left, rgba(230, 179, 30, 0.16), transparent 34%),
+    linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+  border: 1px solid #dbeafe;
+}
+
+.tempo-ilustracao-modelo {
+  display: grid;
+  place-items: center;
+}
+
+.circulo-tempo-modelo {
+  display: grid;
+  place-items: center;
+  width: min(260px, 70vw);
+  height: min(260px, 70vw);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff, transparent 34%),
+    linear-gradient(135deg, #0B3B5F, #2B5C8A);
+  color: #ffffff;
+  box-shadow: 0 28px 60px rgba(11, 59, 95, 0.22);
+}
+
+.circulo-tempo-modelo .icone-svg {
+  width: 88px;
+  height: 88px;
+}
+
+.secao-tempo-modelo h2,
+.secao-funcoes-modelo h2 {
+  margin: 18px 0 14px;
+  color: #0B3B5F;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.secao-tempo-modelo p {
+  color: #475569;
+  line-height: 1.8;
+  font-size: 17px;
+  margin-bottom: 22px;
+}
+
+.secao-funcoes-modelo {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 28px;
+  align-items: center;
+  padding: 42px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.10), transparent 34%),
+    #ffffff;
+  border: 1px solid rgba(11, 59, 95, 0.08);
+  box-shadow: 0 24px 55px rgba(11, 59, 95, 0.08);
+}
+
+.lista-funcoes-modelo {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 22px 0;
+  list-style: none;
+}
+
+.lista-funcoes-modelo li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: #334155;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.lista-funcoes-modelo li::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  margin-top: 8px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #1d4ed8;
+  box-shadow: 0 0 0 5px #dbeafe;
+}
+
+.frase-muito-mais {
+  display: block;
+  color: #0B3B5F;
+  font-size: 30px;
+}
+
+.mockup-funcoes-modelo {
+  padding: 18px;
+  border-radius: 34px;
+  background: #0B3B5F;
+  box-shadow: 0 30px 70px rgba(11, 59, 95, 0.22);
+}
+
+.mockup-barra-modelo {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.mockup-barra-modelo span {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.mockup-lista-modelo {
+  display: grid;
+  gap: 12px;
+}
+
+.mockup-lista-modelo div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  font-weight: 900;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.faq-modelo-lista {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.faq-modelo-lista details {
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.faq-modelo-lista summary {
+  cursor: pointer;
+  color: #0B3B5F;
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.faq-modelo-lista p {
+  margin: 12px 0 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.cartao-modelo-final {
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .hero-modelo-sistema-ebd,
+  .secao-tempo-modelo,
+  .secao-funcoes-modelo {
+    grid-template-columns: 1fr;
+  }
+
+  .grade-caracteristicas-modelo {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-video-modelo {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-modelo-sistema-ebd {
+    width: calc(100% - 24px) !important;
+    margin: 22px auto 0 !important;
+    padding: 0 0 34px !important;
+    gap: 22px !important;
+  }
+
+  .logo-faixa-modelo {
+    width: 100%;
+    border-radius: 24px;
+    justify-content: flex-start;
+  }
+
+  .hero-modelo-texto {
+    text-align: center !important;
+  }
+
+  .hero-modelo-texto h1 {
+    font-size: clamp(40px, 13vw, 58px) !important;
+  }
+
+  .selos-download-modelo {
+    grid-template-columns: 1fr;
+  }
+
+  .video-card-modelo {
+    min-height: auto;
+    text-align: center;
+  }
+
+  .video-topo-modelo {
+    justify-content: center;
+  }
+
+  .secao-caracteristicas-modelo,
+  .secao-tempo-modelo,
+  .secao-funcoes-modelo,
+  .secao-faq-modelo {
+    width: calc(100% - 24px) !important;
+    padding: 24px !important;
+  }
+
+  .mockup-funcoes-modelo {
+    padding: 14px;
+  }
+
+  .botao-whatsapp-flutuante {
+    display: none !important;
+  }
+}
+
+
+/* Ajuste com base nas cores da logo oficial: azul, amarelo, vermelho e verde */
+:root {
+  --logo-azul: #12A8E0;
+  --logo-amarelo: #FFCB05;
+  --logo-vermelho: #EF3E23;
+  --logo-verde: #009B4E;
+  --logo-azul-escuro: #073B63;
+}
+
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(255, 203, 5, 0.22), transparent 26%),
+    radial-gradient(circle at 92% 12%, rgba(18, 168, 224, 0.20), transparent 28%),
+    radial-gradient(circle at 12% 78%, rgba(0, 155, 78, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 82%, rgba(239, 62, 35, 0.10), transparent 26%),
+    linear-gradient(180deg, #fffdf3 0%, #f0f9ff 44%, #ffffff 100%) !important;
+}
+
+.topo-publico {
+  border-color: rgba(18, 168, 224, 0.22) !important;
+  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.10) !important;
+}
+
+.menu-publico button,
+.botao-principal,
+.acoes-publicas .botao-principal,
+.cartao-plano-publico .botao-principal,
+.botao-manual-modelo {
+  background: linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.26) !important;
+}
+
+.acoes-publicas .botao-secundario {
+  border-color: rgba(255, 203, 5, 0.65) !important;
+  background: #ffffff !important;
+}
+
+.selo-publico,
+.selo-modelo {
+  background: linear-gradient(135deg, rgba(255, 203, 5, 0.30), rgba(18, 168, 224, 0.16)) !important;
+  color: var(--logo-azul-escuro) !important;
+  border-color: rgba(18, 168, 224, 0.20) !important;
+}
+
+.hero-modelo-texto h1 {
+  background: linear-gradient(
+    135deg,
+    var(--logo-azul-escuro) 0%,
+    var(--logo-azul) 42%,
+    var(--logo-verde) 72%,
+    var(--logo-vermelho) 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.logo-faixa-modelo {
+  border-color: rgba(255, 203, 5, 0.35) !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 203, 5, 0.14), transparent 38%),
+    #ffffff !important;
+}
+
+.logo-faixa-modelo strong {
+  color: var(--logo-azul-escuro) !important;
+}
+
+.selos-download-modelo div:nth-child(1) {
+  border-color: rgba(18, 168, 224, 0.32) !important;
+}
+
+.selos-download-modelo div:nth-child(2) {
+  border-color: rgba(255, 203, 5, 0.46) !important;
+}
+
+.selos-download-modelo div:nth-child(3) {
+  border-color: rgba(0, 155, 78, 0.32) !important;
+}
+
+.selos-download-modelo strong {
+  color: var(--logo-azul-escuro) !important;
+}
+
+/* Manual interativo no lugar do vídeo */
+.manual-card-modelo {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 203, 5, 0.30), transparent 30%),
+    radial-gradient(circle at 90% 18%, rgba(18, 168, 224, 0.26), transparent 32%),
+    radial-gradient(circle at 18% 92%, rgba(0, 155, 78, 0.16), transparent 30%),
+    linear-gradient(135deg, #073B63 0%, #0B4F7A 62%, #0f766e 100%);
+  color: #ffffff;
+  box-shadow: 0 30px 70px rgba(7, 59, 99, 0.24);
+}
+
+.manual-card-modelo::after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 170px;
+  height: 170px;
+  border-radius: 999px;
+  background: rgba(239, 62, 35, 0.16);
+}
+
+.manual-topo-modelo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.manual-topo-modelo span,
+.manual-topo-modelo strong {
+  display: block;
+}
+
+.manual-topo-modelo span {
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 203, 5, 0.20);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.manual-topo-modelo strong {
+  margin-top: 10px;
+  font-size: 25px;
+  line-height: 1.14;
+  color: #ffffff;
+}
+
+.manual-topo-modelo .icone-svg {
+  color: #FFCB05;
+  width: 34px;
+  height: 34px;
+}
+
+.manual-passos-modelo {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.manual-passos-modelo details {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.manual-passos-modelo summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  cursor: pointer;
+  list-style: none;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.manual-passos-modelo summary::-webkit-details-marker {
+  display: none;
+}
+
+.manual-passos-modelo summary span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--logo-amarelo), #ffe680);
+  color: #073B63;
+  font-weight: 900;
+}
+
+.manual-passos-modelo p {
+  margin: 0;
+  padding: 0 16px 16px 62px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.botao-manual-modelo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 18px;
+  min-height: 52px;
+  border: none;
+  border-radius: 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.grade-caracteristicas-modelo article:nth-child(1) .icone-caracteristica-modelo {
+  background: rgba(18, 168, 224, 0.14) !important;
+  color: var(--logo-azul) !important;
+}
+
+.grade-caracteristicas-modelo article:nth-child(2) .icone-caracteristica-modelo {
+  background: rgba(0, 155, 78, 0.14) !important;
+  color: var(--logo-verde) !important;
+}
+
+.grade-caracteristicas-modelo article:nth-child(3) .icone-caracteristica-modelo {
+  background: rgba(255, 203, 5, 0.20) !important;
+  color: #b77900 !important;
+}
+
+.secao-tempo-modelo {
+  background:
+    radial-gradient(circle at left, rgba(255, 203, 5, 0.18), transparent 34%),
+    linear-gradient(135deg, #effaff 0%, #ffffff 100%) !important;
+  border-color: rgba(18, 168, 224, 0.20) !important;
+}
+
+.circulo-tempo-modelo {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 203, 5, 0.42), transparent 35%),
+    linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
+}
+
+.lista-funcoes-modelo li::before {
+  background: var(--logo-verde) !important;
+  box-shadow: 0 0 0 5px rgba(0, 155, 78, 0.12) !important;
+}
+
+.mockup-funcoes-modelo {
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.18), transparent 32%),
+    linear-gradient(135deg, var(--logo-azul-escuro), #0b4f7a) !important;
+}
+
+.mockup-barra-modelo span:nth-child(1) {
+  background: var(--logo-vermelho) !important;
+}
+
+.mockup-barra-modelo span:nth-child(2) {
+  background: var(--logo-amarelo) !important;
+}
+
+.mockup-barra-modelo span:nth-child(3) {
+  background: var(--logo-verde) !important;
+}
+
+.cartao-modelo-final {
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.22), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(0, 155, 78, 0.18), transparent 34%),
+    linear-gradient(135deg, #073B63 0%, #0B4F7A 58%, #0f766e 100%) !important;
+}
+
+@media (max-width: 760px) {
+  .manual-card-modelo {
+    padding: 22px;
+    border-radius: 28px;
+  }
+
+  .manual-topo-modelo {
+    align-items: center;
+  }
+
+  .manual-topo-modelo strong {
+    font-size: 22px;
+  }
+
+  .manual-passos-modelo p {
+    padding-left: 16px;
+  }
+}
+
+
+/* Área interna modernizada com cores da logo oficial */
+:root {
+  --logo-azul: #12A8E0;
+  --logo-amarelo: #FFCB05;
+  --logo-vermelho: #EF3E23;
+  --logo-verde: #009B4E;
+  --logo-azul-escuro: #073B63;
+  --logo-fundo: #F4FBFF;
+}
+
+.app {
+  background:
+    radial-gradient(circle at 16% 8%, rgba(18, 168, 224, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(255, 203, 5, 0.16), transparent 25%),
+    radial-gradient(circle at 82% 86%, rgba(0, 155, 78, 0.10), transparent 30%),
+    linear-gradient(180deg, #f7fcff 0%, #eef7ff 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(255, 203, 5, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 30%, rgba(18, 168, 224, 0.18), transparent 32%),
+    linear-gradient(180deg, #05283F 0%, #061B2E 100%) !important;
+}
+
+.marca-sidebar h1,
+.marca-sidebar strong {
+  color: #ffffff !important;
+}
+
+.marca-sidebar p,
+.marca-sidebar span {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.menu-navegacao button.ativo,
+.menu-lateral nav button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde)) !important;
+  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.28) !important;
+}
+
+.menu-navegacao button:hover,
+.menu-lateral nav button:hover,
+.sidebar nav button:hover {
+  background: rgba(255, 255, 255, 0.11) !important;
+}
+
+.usuario-logado,
+.card-usuario,
+.bloco-usuario {
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.08), transparent 28%),
+    rgba(255, 255, 255, 0.08) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 92% 6%, rgba(255, 203, 5, 0.08), transparent 26%),
+    radial-gradient(circle at 8% 92%, rgba(18, 168, 224, 0.08), transparent 26%) !important;
+}
+
+.topo-pagina {
+  padding: 24px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.14), transparent 28%),
+    #ffffff;
+  border: 1px solid rgba(18, 168, 224, 0.18);
+  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.08);
+}
+
+.topo-pagina h2 {
+  color: var(--logo-azul-escuro) !important;
+  font-size: clamp(34px, 4vw, 52px) !important;
+  line-height: 1;
+}
+
+.topo-pagina p {
+  color: #475569 !important;
+}
+
+.card,
+.resumo,
+.item-lista,
+.formulario,
+.filtros,
+.aviso,
+.secao-configuracoes {
+  border-color: rgba(18, 168, 224, 0.16) !important;
+}
+
+.botao-principal,
+button.botao-principal {
+  background: linear-gradient(135deg, var(--logo-azul-escuro), var(--logo-azul)) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.botao-verde {
+  background: linear-gradient(135deg, var(--logo-verde), #16a34a) !important;
+  color: #ffffff !important;
+}
+
+.botao-editar {
+  border-color: var(--logo-azul) !important;
+  color: #075985 !important;
+  background: #ffffff !important;
+}
+
+.botao-excluir {
+  border-color: var(--logo-vermelho) !important;
+  color: #b91c1c !important;
+  background: #ffffff !important;
+}
+
+.resumo::after,
+.card::after {
+  background: rgba(255, 203, 5, 0.11) !important;
+}
+
+/* Classes em destaque */
+.aviso-classes-moderno {
+  background:
+    linear-gradient(135deg, rgba(18, 168, 224, 0.09), rgba(255, 203, 5, 0.13)),
+    #ffffff !important;
+  border-color: rgba(18, 168, 224, 0.20) !important;
+}
+
+.classe-card-moderno {
+  position: relative;
+  overflow: hidden;
+  align-items: stretch !important;
+  gap: 24px !important;
+  padding: 26px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%) !important;
+  border: 1px solid rgba(18, 168, 224, 0.20) !important;
+  box-shadow: 0 20px 48px rgba(7, 59, 99, 0.09) !important;
+}
+
+.classe-card-moderno::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22px;
+  bottom: 22px;
+  width: 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--logo-azul), var(--logo-verde), var(--logo-amarelo));
+}
+
+.classe-card-conteudo {
+  width: 100%;
+}
+
+.classe-card-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.classe-card-selo {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.classe-card-cabecalho h3 {
+  margin: 0 !important;
+  color: var(--logo-azul-escuro) !important;
+  font-size: clamp(30px, 4vw, 46px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.04em;
+}
+
+.classe-card-matricula {
+  display: grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 86px;
+  padding: 14px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--logo-azul), var(--logo-verde));
+  color: #ffffff;
+  font-size: 34px;
+  line-height: 1;
+  box-shadow: 0 18px 36px rgba(18, 168, 224, 0.22);
+}
+
+.classe-card-matricula span {
+  margin-top: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.classe-card-info {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.classe-card-info p {
+  margin: 0;
+  padding: 14px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+}
+
+.classe-card-info strong,
+.classe-card-info span {
+  display: block;
+}
+
+.classe-card-info strong {
+  color: #64748b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.classe-card-info span {
+  margin-top: 5px;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.professores-na-classe {
+  border-radius: 20px !important;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+}
+
+.professor-classe-linha {
+  border-radius: 16px !important;
+  background: #ffffff !important;
+}
+
+.acoes-classe-card {
+  min-width: 190px;
+  display: grid !important;
+  align-content: start;
+}
+
+.acoes-classe-card button {
+  width: 100%;
+}
+
+.formulario-pessoa-classe {
+  border-color: rgba(0, 155, 78, 0.22) !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 155, 78, 0.08), transparent 30%),
+    #ffffff !important;
+}
+
+.formulario-pessoa-classe h3 {
+  color: var(--logo-azul-escuro);
+}
+
+@media (max-width: 900px) {
+  .classe-card-cabecalho,
+  .classe-card-info {
+    grid-template-columns: 1fr;
+  }
+
+  .classe-card-cabecalho {
+    display: grid;
+  }
+
+  .classe-card-matricula {
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .acoes-classe-card {
+    width: 100%;
+  }
+}
+
+
+/* Cores mais fortes e destaque maior para nomes das classes */
+:root {
+  --logo-azul: #00AEEF;
+  --logo-azul-forte: #006BB6;
+  --logo-amarelo: #FFD200;
+  --logo-vermelho: #F0442E;
+  --logo-verde: #00A651;
+  --logo-verde-forte: #008C44;
+  --logo-azul-escuro: #003B66;
+}
+
+/* Página inicial com cores mais vivas */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 6% 7%, rgba(255, 210, 0, 0.34), transparent 25%),
+    radial-gradient(circle at 92% 10%, rgba(0, 174, 239, 0.34), transparent 28%),
+    radial-gradient(circle at 12% 78%, rgba(0, 166, 81, 0.22), transparent 29%),
+    radial-gradient(circle at 86% 86%, rgba(240, 68, 46, 0.18), transparent 27%),
+    linear-gradient(180deg, #fff8d8 0%, #e8f8ff 42%, #ffffff 100%) !important;
+}
+
+.hero-modelo-texto h1 {
+  background: linear-gradient(
+    135deg,
+    #003B66 0%,
+    #006BB6 34%,
+    #00AEEF 58%,
+    #00A651 78%,
+    #F0442E 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.selo-publico,
+.selo-modelo {
+  background: linear-gradient(135deg, rgba(255, 210, 0, 0.52), rgba(0, 174, 239, 0.22)) !important;
+  border-color: rgba(0, 174, 239, 0.36) !important;
+  color: #003B66 !important;
+  box-shadow: 0 12px 28px rgba(0, 107, 182, 0.10);
+}
+
+.manual-card-modelo,
+.video-card-modelo,
+.cartao-modelo-final {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 210, 0, 0.35), transparent 30%),
+    radial-gradient(circle at 90% 18%, rgba(0, 174, 239, 0.34), transparent 32%),
+    radial-gradient(circle at 18% 92%, rgba(0, 166, 81, 0.22), transparent 30%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 55%, #008C44 100%) !important;
+}
+
+.botao-principal,
+.acoes-publicas .botao-principal,
+.cartao-plano-publico .botao-principal,
+.botao-manual-modelo {
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%) !important;
+  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.36) !important;
+}
+
+.acoes-publicas .botao-secundario {
+  border: 2px solid var(--logo-amarelo) !important;
+  color: var(--logo-azul-escuro) !important;
+}
+
+/* Área interna com cores mais fortes */
+.app {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(255, 210, 0, 0.26), transparent 28%),
+    radial-gradient(circle at 84% 90%, rgba(0, 166, 81, 0.16), transparent 30%),
+    linear-gradient(180deg, #eefaff 0%, #f7fbff 52%, #ffffff 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 210, 0, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.30), transparent 32%),
+    radial-gradient(circle at 20% 86%, rgba(0, 166, 81, 0.20), transparent 32%),
+    linear-gradient(180deg, #002E50 0%, #031A2E 100%) !important;
+}
+
+.menu-navegacao button.ativo,
+.menu-lateral nav button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
+  box-shadow: 0 22px 44px rgba(0, 174, 239, 0.38) !important;
+}
+
+.topo-pagina {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 210, 0, 0.25), transparent 30%),
+    radial-gradient(circle at 8% 92%, rgba(0, 174, 239, 0.16), transparent 30%),
+    #ffffff !important;
+  border: 1px solid rgba(0, 174, 239, 0.30) !important;
+}
+
+.topo-pagina h2 {
+  background: linear-gradient(135deg, #003B66, #006BB6, #00AEEF) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Novo destaque das classes */
+.classe-card-moderno {
+  padding: 0 !important;
+  border-radius: 34px !important;
+  overflow: hidden !important;
+  border: 2px solid rgba(0, 174, 239, 0.28) !important;
+  background: #ffffff !important;
+  box-shadow: 0 26px 60px rgba(0, 59, 102, 0.14) !important;
+}
+
+.classe-card-moderno::before {
+  display: none !important;
+}
+
+.classe-card-conteudo {
+  padding: 0 !important;
+}
+
+.classe-card-cabecalho {
+  position: relative;
+  margin: 0 !important;
+  padding: 30px 28px !important;
+  min-height: 190px;
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  align-items: center !important;
+  gap: 20px !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(255, 210, 0, 0.38), transparent 34%),
+    radial-gradient(circle at 12% 88%, rgba(0, 166, 81, 0.22), transparent 32%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 52%, #00AEEF 100%) !important;
+  color: #ffffff;
+}
+
+.classe-card-cabecalho::after {
+  content: "";
+  position: absolute;
+  right: -42px;
+  bottom: -42px;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: rgba(255, 210, 0, 0.20);
+}
+
+.classe-card-selo {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 14px !important;
+  padding: 8px 14px !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #ffffff !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.classe-card-cabecalho h3 {
+  position: relative;
+  z-index: 1;
+  color: #ffffff !important;
+  font-size: clamp(48px, 10vw, 82px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.07em !important;
+  text-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+.classe-card-matricula {
+  position: relative;
+  z-index: 1;
+  min-width: 128px !important;
+  min-height: 118px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.38), transparent 32%),
+    linear-gradient(135deg, #FFD200 0%, #00A651 100%) !important;
+  color: #ffffff !important;
+  font-size: 46px !important;
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18) !important;
+  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.classe-card-matricula span {
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900;
+}
+
+.classe-card-info {
+  padding: 22px 26px 0 !important;
+  margin-bottom: 16px !important;
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.classe-card-info p {
+  border-radius: 22px !important;
+  border: 1px solid rgba(0, 174, 239, 0.22) !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 30%),
+    #ffffff !important;
+  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.06);
+}
+
+.classe-card-info strong {
+  color: #006BB6 !important;
+}
+
+.classe-card-info span {
+  color: #0f172a !important;
+  font-size: 20px;
+}
+
+.professores-na-classe {
+  margin: 0 26px 22px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 30%),
+    #f8fcff !important;
+  border: 1px solid rgba(0, 174, 239, 0.18) !important;
+}
+
+.professor-classe-linha {
+  border: 1px solid rgba(0, 174, 239, 0.15) !important;
+  box-shadow: 0 12px 24px rgba(0, 59, 102, 0.05);
+}
+
+.acoes-classe-card {
+  padding: 0 26px 26px !important;
+  min-width: 220px !important;
+}
+
+.acoes-classe-card button {
+  min-height: 54px;
+  border-radius: 18px !important;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.acoes-classe-card .botao-principal {
+  background: linear-gradient(135deg, #003B66, #00AEEF) !important;
+}
+
+.acoes-classe-card .botao-verde {
+  background: linear-gradient(135deg, #008C44, #00A651) !important;
+}
+
+.item-lista:hover.classe-card-moderno {
+  transform: translateY(-4px);
+  box-shadow: 0 34px 72px rgba(0, 59, 102, 0.18) !important;
+}
+
+/* Cards e formulários mais vivos */
+.card,
+.resumo,
+.formulario,
+.filtros,
+.aviso,
+.item-lista:not(.classe-card-moderno) {
+  border-color: rgba(0, 174, 239, 0.24) !important;
+  box-shadow: 0 20px 45px rgba(0, 59, 102, 0.08) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00AEEF !important;
+  box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.14) !important;
+}
+
+@media (max-width: 900px) {
+  .classe-card-cabecalho {
+    grid-template-columns: 1fr !important;
+    min-height: auto;
+    padding: 30px 24px !important;
+  }
+
+  .classe-card-cabecalho h3 {
+    font-size: clamp(52px, 15vw, 76px) !important;
+  }
+
+  .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 86px !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  .classe-card-info {
+    grid-template-columns: 1fr !important;
+    padding: 20px 20px 0 !important;
+  }
+
+  .professores-na-classe {
+    margin: 0 20px 20px !important;
+  }
+
+  .acoes-classe-card {
+    padding: 0 20px 24px !important;
+  }
+}
+
+
+/* Landing oficial EBD Fiel: paleta da logo e layout profissional */
+:root {
+  --color-primary: #00AEEF;
+  --color-primary-dark: #006BB6;
+  --color-primary-deep: #003B66;
+  --color-yellow: #FFD200;
+  --color-yellow-soft: #FFF3B8;
+  --color-green: #00A651;
+  --color-green-dark: #008C44;
+  --color-green-soft: #E7F8EF;
+  --color-red: #F0442E;
+  --color-red-soft: #FFE8E2;
+  --color-text: #071827;
+  --color-muted: #5E6B78;
+  --color-border: #DDE7EF;
+  --color-bg: #F7FBFD;
+  --color-white: #FFFFFF;
+}
+
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(255, 210, 0, 0.30), transparent 26%),
+    radial-gradient(circle at 92% 10%, rgba(0, 174, 239, 0.26), transparent 28%),
+    radial-gradient(circle at 16% 82%, rgba(0, 166, 81, 0.14), transparent 30%),
+    linear-gradient(180deg, #fffdf0 0%, #eefaff 44%, #ffffff 100%) !important;
+}
+
+.hero-ebd-oficial {
+  width: min(100% - 64px, 1440px) !important;
+  min-height: calc(100vh - 120px);
+  align-items: center;
+  gap: 54px;
+  padding: 58px 0 72px !important;
+}
+
+.hero-ebd-texto h1 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(52px, 6.4vw, 88px);
+  line-height: 0.96;
+  letter-spacing: -0.07em;
+  background: linear-gradient(135deg, #003B66 0%, #006BB6 42%, #00AEEF 66%, #00A651 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-ebd-texto p {
+  max-width: 680px;
+  color: #334155;
+  font-size: 19px;
+  line-height: 1.75;
+}
+
+.selo-ebd-oficial,
+.selo-publico {
+  background: linear-gradient(135deg, rgba(255, 210, 0, 0.48), rgba(0, 174, 239, 0.16)) !important;
+  color: #003B66 !important;
+  border: 1px solid rgba(0, 174, 239, 0.24) !important;
+}
+
+.acoes-hero-oficial {
+  margin-top: 8px;
+}
+
+.selos-confianca-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.selos-confianca-hero span {
+  padding: 10px 13px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  color: #003B66;
+  font-weight: 900;
+  box-shadow: 0 12px 26px rgba(0, 59, 102, 0.06);
+}
+
+.mockup-sistema-oficial {
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+  border-radius: 38px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 210, 0, 0.22), transparent 28%),
+    radial-gradient(circle at 90% 18%, rgba(0, 174, 239, 0.24), transparent 32%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 56%, #008C44 100%);
+  box-shadow: 0 36px 80px rgba(0, 59, 102, 0.24);
+  color: #ffffff;
+}
+
+.mockup-sistema-topo,
+.mockup-chamada-oficial {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.mockup-sistema-topo span,
+.mockup-sistema-topo strong {
+  display: block;
+}
+
+.mockup-sistema-topo span {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 900;
+}
+
+.mockup-sistema-topo strong {
+  margin-top: 4px;
+  font-size: 30px;
+  color: #ffffff;
+}
+
+.mockup-presenca {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin: 22px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 210, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mockup-presenca strong {
+  font-size: 34px;
+  color: #FFD200;
+}
+
+.mockup-grid-oficial {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mockup-grid-oficial article {
+  padding: 20px;
+  border-radius: 24px;
+  background: #ffffff;
+  color: #071827;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.mockup-grid-oficial article .icone-svg {
+  color: #006BB6;
+}
+
+.mockup-grid-oficial article span,
+.mockup-grid-oficial article strong {
+  display: block;
+}
+
+.mockup-grid-oficial article span {
+  margin-top: 12px;
+  color: #64748b;
+  font-weight: 900;
+}
+
+.mockup-grid-oficial article strong {
+  margin-top: 4px;
+  font-size: 28px;
+  color: #003B66;
+}
+
+.mockup-chamada-oficial {
+  margin-top: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mockup-chamada-oficial strong,
+.mockup-chamada-oficial span {
+  display: block;
+}
+
+.mockup-chamada-oficial span {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 800;
+}
+
+.status-online-oficial {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #E7F8EF;
+  color: #008C44 !important;
+}
+
+.barra-confianca-oficial {
+  width: min(100% - 64px, 1440px);
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.barra-confianca-oficial span {
+  padding: 18px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  text-align: center;
+  font-weight: 900;
+  color: #003B66;
+  box-shadow: 0 16px 34px rgba(0, 59, 102, 0.06);
+}
+
+.secao-manual-oficial,
+.problema-solucao-oficial,
+.recursos-oficiais,
+.publico-oficial,
+.teste-piloto-oficial,
+.faq-oficial {
+  padding: 38px !important;
+  border-radius: 36px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(0, 174, 239, 0.16) !important;
+  box-shadow: 0 24px 60px rgba(0, 59, 102, 0.08) !important;
+}
+
+.manual-interativo-oficial {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.manual-interativo-oficial details {
+  border-radius: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.manual-interativo-oficial summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  list-style: none;
+  color: #003B66;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.manual-interativo-oficial summary::-webkit-details-marker {
+  display: none;
+}
+
+.manual-interativo-oficial summary span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #FFD200, #FFF3B8);
+  color: #003B66;
+}
+
+.manual-interativo-oficial p {
+  margin: 0;
+  padding: 0 20px 20px 72px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.botao-manual-oficial {
+  margin-top: 22px;
+}
+
+.comparativo-oficial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.comparativo-oficial article {
+  padding: 28px;
+  border-radius: 28px;
+  border: 1px solid #DDE7EF;
+}
+
+.antes-oficial {
+  background: #ffffff;
+}
+
+.depois-oficial {
+  background:
+    radial-gradient(circle at top right, rgba(0, 166, 81, 0.14), transparent 34%),
+    linear-gradient(135deg, #effaff, #ffffff);
+  border-color: rgba(0, 166, 81, 0.20) !important;
+}
+
+.comparativo-oficial h3 {
+  margin: 0 0 14px;
+  color: #003B66;
+  font-size: 26px;
+}
+
+.comparativo-oficial ul,
+.lista-seguranca-oficial {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.comparativo-oficial li {
+  color: #334155;
+  font-weight: 800;
+}
+
+.grade-recursos-oficiais,
+.grade-publico-oficial,
+.cards-planos-oficiais {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+}
+
+.grade-recursos-oficiais article,
+.grade-publico-oficial article,
+.cards-planos-oficiais article {
+  padding: 26px;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
+}
+
+.grade-recursos-oficiais article .icone-svg {
+  color: #006BB6;
+}
+
+.grade-recursos-oficiais h3,
+.grade-publico-oficial strong,
+.cards-planos-oficiais h3 {
+  display: block;
+  margin: 14px 0 8px;
+  color: #003B66;
+  font-size: 22px;
+}
+
+.grade-recursos-oficiais p,
+.grade-publico-oficial p,
+.cards-planos-oficiais p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.seguranca-oficial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 42px !important;
+  border-radius: 36px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+  color: #ffffff;
+}
+
+.seguranca-oficial h2 {
+  margin: 16px 0 12px;
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 1.05;
+}
+
+.seguranca-oficial p {
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.75;
+}
+
+.lista-seguranca-oficial span {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 900;
+}
+
+.acoes-teste-oficial {
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.cta-final-oficial {
+  text-align: center;
+  padding: 52px !important;
+  border-radius: 38px !important;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.24), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 166, 81, 0.20), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
+}
+
+.cta-final-oficial h2 {
+  margin: 16px auto 12px;
+  max-width: 780px;
+  color: #ffffff;
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: 1;
+}
+
+.cta-final-oficial p {
+  max-width: 740px;
+  margin: 0 auto 24px;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.75;
+}
+
+/* Área interna refinada */
+.app {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(0, 174, 239, 0.20), transparent 30%),
+    radial-gradient(circle at 92% 10%, rgba(255, 210, 0, 0.24), transparent 28%),
+    linear-gradient(180deg, #eefaff 0%, #ffffff 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 210, 0, 0.20), transparent 28%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.30), transparent 32%),
+    linear-gradient(180deg, #002E50 0%, #031A2E 100%) !important;
+}
+
+.menu-navegacao button.ativo,
+.menu-lateral nav button.ativo,
+.sidebar nav button.ativo {
+  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
+}
+
+.botao-principal,
+button.botao-principal {
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 56%, #00A651 100%) !important;
+  color: #ffffff !important;
+}
+
+.botao-verde {
+  background: linear-gradient(135deg, #008C44, #00A651) !important;
+  color: #ffffff !important;
+}
+
+.classe-card-cabecalho h3 {
+  color: #ffffff !important;
+  font-size: clamp(48px, 10vw, 82px) !important;
+  line-height: 0.92 !important;
+}
+
+@media (max-width: 1000px) {
+  .hero-ebd-oficial,
+  .seguranca-oficial,
+  .comparativo-oficial {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grade-recursos-oficiais,
+  .grade-publico-oficial,
+  .cards-planos-oficiais,
+  .barra-confianca-oficial {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-ebd-oficial {
+    width: calc(100% - 24px) !important;
+    min-height: auto;
+    padding: 24px 0 36px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-ebd-texto {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .hero-ebd-texto h1 {
+    font-size: clamp(38px, 12vw, 56px) !important;
+  }
+
+  .hero-ebd-texto p {
+    font-size: 16px;
+  }
+
+  .selos-confianca-hero,
+  .acoes-hero-oficial {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .mockup-grid-oficial,
+  .grade-recursos-oficiais,
+  .grade-publico-oficial,
+  .cards-planos-oficiais,
+  .barra-confianca-oficial {
+    grid-template-columns: 1fr;
+  }
+
+  .mockup-sistema-oficial,
+  .secao-manual-oficial,
+  .problema-solucao-oficial,
+  .recursos-oficiais,
+  .publico-oficial,
+  .teste-piloto-oficial,
+  .faq-oficial,
+  .seguranca-oficial,
+  .cta-final-oficial {
+    width: calc(100% - 24px) !important;
+    padding: 24px !important;
+  }
+
+  .manual-interativo-oficial p {
+    padding-left: 20px;
+  }
+
+  .comparativo-oficial {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* Feedback do teste piloto */
+.feedback-piloto-card,
+.admin-feedback-alertas {
+  margin-top: 24px;
+  padding: 26px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  box-shadow: 0 22px 52px rgba(0, 59, 102, 0.10);
+}
+
+.feedback-piloto-topo,
+.admin-feedback-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.feedback-piloto-topo h3,
+.admin-feedback-topo h3 {
+  margin: 10px 0 6px;
+  color: #003B66;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.05;
+}
+
+.feedback-piloto-topo p,
+.admin-feedback-topo p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.admin-feedback-topo > strong {
+  display: grid;
+  place-items: center;
+  min-width: 74px;
+  min-height: 74px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #F0442E, #FFD200);
+  color: #ffffff;
+  font-size: 34px;
+  box-shadow: 0 18px 36px rgba(240, 68, 46, 0.20);
+}
+
+.feedback-piloto-form {
+  display: grid;
+  gap: 14px;
+}
+
+.feedback-piloto-form textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.feedbacks-recentes-igreja {
+  margin-top: 22px;
+  display: grid;
+  gap: 10px;
+}
+
+.feedbacks-recentes-igreja h4 {
+  margin: 0;
+  color: #003B66;
+}
+
+.feedback-recente-item,
+.feedback-admin-item {
+  padding: 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #DDE7EF;
+}
+
+.feedback-recente-item strong {
+  color: #006BB6;
+  text-transform: capitalize;
+}
+
+.feedback-recente-item p,
+.feedback-admin-item p {
+  margin: 6px 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.feedback-recente-item span,
+.feedback-admin-item small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.lista-feedbacks-admin {
+  display: grid;
+  gap: 12px;
+}
+
+.feedback-admin-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.feedback-novo {
+  border-color: rgba(240, 68, 46, 0.30);
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.16), transparent 34%),
+    #ffffff;
+}
+
+.feedback-lido {
+  opacity: 0.78;
+}
+
+.linha-feedback-admin {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.linha-feedback-admin strong {
+  color: #003B66;
+  font-size: 18px;
+}
+
+.linha-feedback-admin span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #E7F8EF;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.feedback-novo .linha-feedback-admin span {
+  background: #FFE8E2;
+  color: #b91c1c;
+}
+
+.texto-sem-feedback {
+  margin: 0;
+  color: #64748b;
+  font-weight: 800;
+}
+
+/* Professores dentro da mesma tabela do relatório */
+.linha-professores-titulo td {
+  background:
+    linear-gradient(135deg, #003B66 0%, #006BB6 60%, #008C44 100%) !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  letter-spacing: 0.02em;
+}
+
+.linha-professores-cabecalho td {
+  background: #FFF3B8 !important;
+  color: #003B66 !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.tabela-ebd .linha-professores-titulo,
+.tabela-ebd .linha-professores-cabecalho,
+.tabela-ebd .linha-professor-tabela-relatorio {
+  display: table-row !important;
+}
+
+.tabela-ebd .linha-professores-titulo td,
+.tabela-ebd .linha-professores-cabecalho td,
+.tabela-ebd .linha-professor-tabela-relatorio td {
+  display: table-cell !important;
+}
+
+.linha-professor-tabela-relatorio td {
+  background: #ffffff !important;
+  color: #071827 !important;
+  font-weight: 700;
+  display: table-cell !important;
+  padding: 8px 6px !important;
+  border: 1px solid #0f172a !important;
+  vertical-align: middle;
+}
+
+@media (max-width: 760px) {
+  .feedback-piloto-card,
+  .admin-feedback-alertas {
+    padding: 20px;
+  }
+
+  .feedback-piloto-topo,
+  .admin-feedback-topo,
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .admin-feedback-topo > strong {
+    width: 100%;
+  }
+
+  .linha-professores-titulo td,
+  .linha-professores-cabecalho td,
+  .linha-professor-tabela-relatorio td {
+    display: table-cell !important;
+    width: auto !important;
+  }
+
+  .linha-professores-cabecalho {
+    display: none !important;
+  }
+
+  .linha-professor-tabela-relatorio td::before {
+    content: none !important;
+  }
+}
+
+@media print {
+  .feedback-piloto-card,
+  .admin-feedback-alertas {
+    display: none !important;
+  }
+
+  .linha-professores-titulo td {
+    background: #e5e7eb !important;
+    color: #000000 !important;
+  }
+
+  .linha-professores-cabecalho td {
+    background: #f3f4f6 !important;
+    color: #000000 !important;
+  }
+
+  .linha-professor-tabela-relatorio td {
+    background: #ffffff !important;
+    color: #000000 !important;
+    display: table-cell !important;
+  }
+}
+
+
+/* Feedback piloto - formulário largo, moderno e profissional */
+.feedback-piloto-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(22px, 3vw, 34px) !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 95% 0%, rgba(255, 210, 0, 0.30), transparent 34%),
+    radial-gradient(circle at 0% 100%, rgba(0, 174, 239, 0.18), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%) !important;
+  border: 1px solid rgba(0, 174, 239, 0.24) !important;
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.12) !important;
+}
+
+.feedback-piloto-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.feedback-piloto-topo {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px !important;
+}
+
+.feedback-piloto-topo h3 {
+  max-width: 980px;
+  margin-top: 12px !important;
+  color: #003B66 !important;
+  font-size: clamp(28px, 3.4vw, 44px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em;
+}
+
+.feedback-piloto-topo p {
+  max-width: 980px;
+  color: #334155 !important;
+  font-size: 16px;
+}
+
+.feedback-piloto-form-moderno {
+  position: relative;
+  z-index: 1;
+  display: grid !important;
+  gap: 18px !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+
+.feedback-form-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.feedback-campo {
+  display: grid !important;
+  gap: 9px !important;
+  width: 100% !important;
+  color: #003B66 !important;
+  font-weight: 900 !important;
+}
+
+.feedback-campo > span,
+.feedback-label-linha span {
+  color: #003B66;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+}
+
+.feedback-campo select,
+.feedback-campo textarea {
+  width: 100% !important;
+  display: block !important;
+  border: 1px solid rgba(0, 174, 239, 0.28) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #071827 !important;
+  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.05);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.feedback-campo select {
+  min-height: 54px;
+  padding: 0 16px !important;
+  border-radius: 18px !important;
+  font-weight: 800;
+}
+
+.feedback-campo textarea {
+  min-height: 220px !important;
+  padding: 18px 20px !important;
+  border-radius: 24px !important;
+  resize: vertical;
+  line-height: 1.65;
+  font-size: 16px;
+}
+
+.feedback-campo textarea::placeholder {
+  color: #64748b;
+}
+
+.feedback-campo select:focus,
+.feedback-campo textarea:focus {
+  outline: none !important;
+  border-color: #00AEEF !important;
+  box-shadow:
+    0 0 0 5px rgba(0, 174, 239, 0.14),
+    0 18px 36px rgba(0, 59, 102, 0.10) !important;
+}
+
+.feedback-dica {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-height: 76px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 36%),
+    linear-gradient(135deg, rgba(0, 174, 239, 0.10), rgba(0, 166, 81, 0.08));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.feedback-dica strong {
+  color: #003B66;
+  font-size: 16px;
+}
+
+.feedback-dica span {
+  color: #475569;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.feedback-label-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feedback-label-linha small {
+  color: #64748b;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.feedback-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.botao-feedback-enviar {
+  min-height: 58px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 16px;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 20px 42px rgba(0, 174, 239, 0.30);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-feedback-enviar strong {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.botao-feedback-enviar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 52px rgba(0, 174, 239, 0.38);
+  filter: saturate(1.08);
+}
+
+.botao-feedback-enviar:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+  transform: none;
+}
+
+.feedback-acoes p {
+  max-width: 520px;
+  margin: 0;
+  color: #64748b;
+  line-height: 1.55;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.feedbacks-recentes-igreja {
+  margin-top: 26px !important;
+  padding-top: 22px;
+  border-top: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.feedbacks-recentes-igreja h4 {
+  color: #003B66 !important;
+  font-size: 18px;
+}
+
+.feedback-recente-item {
+  border-radius: 20px !important;
+  border-color: rgba(0, 174, 239, 0.18) !important;
+  box-shadow: 0 12px 26px rgba(0, 59, 102, 0.05);
+}
+
+@media (max-width: 760px) {
+  .feedback-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-campo textarea {
+    min-height: 240px !important;
+  }
+
+  .feedback-acoes,
+  .botao-feedback-enviar {
+    width: 100%;
+  }
+
+  .feedback-acoes {
+    display: grid;
+  }
+}
+
+
+/* Administração comercial definitiva */
+.admin-acessos-bloco {
+  margin: 24px 0;
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.14), transparent 36%),
+    linear-gradient(180deg, #ffffff 0%, #f7fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.24);
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
+}
+
+.admin-acessos-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.admin-acessos-topo h3 {
+  margin: 10px 0 6px;
+  color: #003B66;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.admin-acessos-topo p {
+  max-width: 900px;
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.admin-acessos-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.admin-acessos-resumo div {
+  padding: 18px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
+}
+
+.admin-acessos-resumo strong,
+.admin-acessos-resumo span {
+  display: block;
+}
+
+.admin-acessos-resumo strong {
+  color: #003B66;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.admin-acessos-resumo span {
+  margin-top: 6px;
+  color: #64748b;
+  font-weight: 900;
+}
+
+.formulario-admin-acesso {
+  background:
+    radial-gradient(circle at top right, rgba(0, 166, 81, 0.08), transparent 34%),
+    #ffffff !important;
+  border-color: rgba(0, 166, 81, 0.22) !important;
+}
+
+.filtros-admin-acessos {
+  margin: 18px 0;
+  align-items: end;
+}
+
+.lista-acessos-admin {
+  display: grid;
+  gap: 12px;
+}
+
+.acesso-admin-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 16px 36px rgba(0, 59, 102, 0.06);
+}
+
+.linha-acesso-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.linha-acesso-admin h4 {
+  margin: 0;
+  color: #003B66;
+  font-size: 20px;
+}
+
+.linha-acesso-admin span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #E7F8EF;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.acesso-admin-card p {
+  margin: 6px 0 0;
+  color: #334155;
+  font-weight: 700;
+}
+
+.acesso-admin-card small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  word-break: break-all;
+}
+
+.acoes-acesso-admin {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.acoes-acesso-admin button {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .admin-acessos-topo,
+  .acesso-admin-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .admin-acessos-resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-acesso-admin {
+    width: 100%;
+  }
+}
+
+
+/* Teste fechado - sem solicitação pública de acesso */
+.aviso-teste-fechado {
+  display: inline-flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.22), transparent 34%),
+    rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  color: #003B66;
+  font-weight: 900;
+  line-height: 1.45;
+  box-shadow: 0 14px 28px rgba(0, 59, 102, 0.06);
+}
+
+.aviso-teste-fechado-centro {
+  justify-content: center;
+  text-align: center;
+}
+
+.acoes-hero-oficial .botao-principal,
+.acoes-teste-oficial .botao-principal,
+.cta-final-oficial .botao-principal {
+  min-height: 56px;
+  border-radius: 18px;
+}
+
+@media (max-width: 760px) {
+  .aviso-teste-fechado {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+
+/* Cadastro de igrejas AD: sede, congregação e endereço completo */
+.campo-sede-filiada {
+  grid-column: span 2;
+}
+
+.dados-igreja-admin {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.dados-igreja-admin p {
+  margin: 0 !important;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.dados-igreja-admin strong {
+  color: #003B66;
+}
+
+.formulario-admin-igreja select,
+.formulario-admin-igreja input {
+  min-height: 48px;
+}
+
+@media (max-width: 760px) {
+  .campo-sede-filiada {
+    grid-column: span 1;
+  }
+
+  .dados-igreja-admin {
+    padding: 12px;
+  }
+}
+
+
+/* Cadastro do piloto fechado */
+.tela-cadastro-piloto {
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.35fr);
+}
+
+.painel-cadastro-piloto {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-piloto {
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.formulario-cadastro-piloto {
+  gap: 20px;
+}
+
+.grupo-cadastro-piloto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.12), transparent 34%),
+    #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 14px 30px rgba(0, 59, 102, 0.05);
+}
+
+.grupo-cadastro-piloto h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #003B66;
+  font-size: 22px;
+}
+
+.campo-cadastro-piloto-largo {
+  grid-column: 1 / -1;
+}
+
+.bloco-criar-piloto {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(0, 174, 239, 0.08), rgba(0, 166, 81, 0.07));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.bloco-criar-piloto p {
+  margin: 0 0 12px;
+  color: #003B66;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.aviso-cadastro-piloto {
+  border-color: rgba(240, 68, 46, 0.28) !important;
+  background: #FFE8E2 !important;
+  color: #991b1b !important;
+}
+
+.aviso-sucesso-cadastro {
+  border-color: rgba(0, 166, 81, 0.28) !important;
+  background: #E7F8EF !important;
+  color: #166534 !important;
+}
+
+.status-pendente {
+  background: #fff3b8;
+  color: #92400e;
+}
+
+.contato-fechado-publico {
+  display: inline-flex;
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .grupo-cadastro-piloto {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-cadastro-piloto-largo {
+    grid-column: span 1;
+  }
+}
+
+
+/* Recuperação de senha */
+.tela-recuperacao-senha {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
+}
+
+.painel-recuperacao-senha {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-recuperacao-senha {
+  justify-content: center;
+}
+
+.botao-link-login {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #003B66;
+  font-weight: 900;
+  margin-top: 4px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.botao-link-login:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .tela-recuperacao-senha {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Aprovação rápida de igrejas no painel administrativo */
+.acoes-aprovacao-igreja {
+  gap: 10px !important;
+}
+
+.grupo-aprovacao-rapida {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 36%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.20);
+}
+
+.botao-aprovar-igreja,
+.botao-nao-aprovar-igreja {
+  min-height: 48px;
+  border-radius: 16px;
+  padding: 0 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 900;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-aprovar-igreja {
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.22);
+}
+
+.botao-nao-aprovar-igreja {
+  background: #ffffff;
+  color: #b91c1c;
+  border: 1px solid rgba(240, 68, 46, 0.42);
+}
+
+.botao-aprovar-igreja:hover,
+.botao-nao-aprovar-igreja:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08);
+}
+
+.selo-aguardando-aprovacao {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff3b8;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 760px) {
+  .grupo-aprovacao-rapida {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Mensagem pós-cadastro e aviso de aprovação */
+.tela-cadastro-enviado {
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 520px);
+}
+
+.painel-cadastro-enviado {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 22%, rgba(0, 174, 239, 0.28), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 62%, #008C44 100%) !important;
+}
+
+.cartao-cadastro-enviado {
+  justify-content: center;
+}
+
+.mensagem-status-sucesso {
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 166, 81, 0.22);
+}
+
+.resumo-cadastro-enviado {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+}
+
+.resumo-cadastro-enviado span {
+  color: #003B66;
+  font-weight: 900;
+}
+
+.aviso-aprovacao-cadastro {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background: #E7F8EF;
+  border: 1px solid rgba(0, 166, 81, 0.22);
+}
+
+.aviso-aprovacao-cadastro strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #008C44;
+}
+
+.aviso-aprovacao-cadastro p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.grupo-aviso-aprovacao {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(37, 211, 102, 0.16), transparent 36%),
+    #ffffff;
+  border: 1px solid rgba(0, 166, 81, 0.18);
+}
+
+.botao-whatsapp-admin,
+.botao-copiar-admin {
+  min-height: 46px;
+  border-radius: 16px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-whatsapp-admin {
+  border: none;
+  background: linear-gradient(135deg, #008C44, #00A651);
+  color: #ffffff;
+  box-shadow: 0 14px 30px rgba(0, 166, 81, 0.20);
+}
+
+.botao-copiar-admin {
+  background: #ffffff;
+  color: #003B66;
+  border: 1px solid rgba(0, 174, 239, 0.26);
+}
+
+@media (max-width: 900px) {
+  .tela-cadastro-enviado {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Destaque para cadastro do piloto na tela de login */
+.aviso-login-aprovado {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  color: #475569;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.bloco-cadastro-destaque {
+  position: relative;
+  margin-top: 22px !important;
+  padding: 24px !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.34), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.22), transparent 36%),
+    linear-gradient(135deg, #ffffff 0%, #ecfff6 100%) !important;
+  border: 1px solid rgba(0, 166, 81, 0.26) !important;
+  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.14);
+  overflow: hidden;
+}
+
+.bloco-cadastro-destaque::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.selo-primeiro-acesso {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0, 174, 239, 0.12);
+  color: #003B66;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bloco-cadastro-destaque h3 {
+  margin: 12px 0 8px;
+  color: #003B66;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.bloco-cadastro-destaque p {
+  margin: 0 0 18px !important;
+  color: #334155 !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+}
+
+.botao-cadastrar-igreja {
+  min-height: 60px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 950;
+  font-size: 16px;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 22px 46px rgba(0, 174, 239, 0.32);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.botao-cadastrar-igreja:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 60px rgba(0, 174, 239, 0.42);
+  filter: saturate(1.08);
+}
+
+@media (max-width: 760px) {
+  .bloco-cadastro-destaque {
+    padding: 22px !important;
+  }
+
+  .botao-cadastrar-igreja {
+    min-height: 58px;
+  }
+}
+
+
+/* Manual do usuário */
+.botao-manual-painel {
+  border-color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.manual-usuario-pagina {
+  display: grid;
+  gap: 22px;
+}
+
+.manual-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 22px;
+  padding: clamp(24px, 4vw, 42px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.28), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.18), transparent 36%),
+    linear-gradient(135deg, #ffffff 0%, #f7fcff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.22);
+  box-shadow: 0 26px 64px rgba(0, 59, 102, 0.10);
+}
+
+.selo-manual {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  color: #003B66;
+  background: rgba(0, 174, 239, 0.12);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.manual-hero h2 {
+  margin: 12px 0 10px;
+  color: #003B66;
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.manual-hero p {
+  max-width: 820px;
+  margin: 0;
+  color: #475569;
+  font-size: 18px;
+  line-height: 1.65;
+  font-weight: 700;
+}
+
+.manual-alerta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: #E7F8EF;
+  border: 1px solid rgba(0, 166, 81, 0.22);
+  color: #334155;
+  line-height: 1.5;
+}
+
+.manual-alerta strong {
+  color: #008C44;
+}
+
+.manual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.manual-card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  min-height: 250px;
+  padding: 22px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.13), transparent 36%),
+    #ffffff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+  box-shadow: 0 18px 44px rgba(0, 59, 102, 0.07);
+  overflow: hidden;
+}
+
+.manual-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.manual-numero {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #003B66, #00AEEF);
+  font-weight: 950;
+  font-size: 18px;
+  box-shadow: 0 14px 28px rgba(0, 174, 239, 0.22);
+}
+
+.manual-local {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: #008C44;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+}
+
+.manual-card h3 {
+  margin: 0 0 8px;
+  color: #003B66;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.manual-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.manual-final {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 24px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.15), transparent 34%),
+    linear-gradient(135deg, #003B66, #006BB6);
+  color: #ffffff;
+  box-shadow: 0 24px 56px rgba(0, 59, 102, 0.18);
+}
+
+.manual-final h3 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.manual-final p {
+  max-width: 760px;
+  margin: 0;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 700;
+}
+
+.manual-final .botao-secundario {
+  background: #ffffff;
+  color: #003B66;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 1100px) {
+  .manual-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .manual-hero,
+  .manual-final {
+    display: grid;
+  }
+}
+
+@media (max-width: 720px) {
+  .manual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manual-alerta {
+    display: grid;
+  }
+
+  .manual-card {
+    min-height: auto;
+  }
+}
+
+
+/* Endereço com número separado */
+.formulario-cadastro-piloto .campo-cadastro-piloto-largo,
+.formulario-admin-igreja .campo-sede-filiada {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .formulario-cadastro-piloto .campo-cadastro-piloto-largo {
+    grid-column: span 2 !important;
+  }
+
+  .formulario-admin-igreja .campo-sede-filiada {
+    grid-column: span 2 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .formulario-cadastro-piloto .campo-cadastro-piloto-largo,
+  .formulario-admin-igreja .campo-sede-filiada {
+    grid-column: span 1 !important;
+  }
+}
+
+
+/* Cards de classes em modo compacto */
+@media (min-width: 761px) {
+  .classe-card,
+  .card-classe,
+  .item-classe,
+  .classe-card-moderna,
+  .classe-destaque-card {
+    min-height: auto !important;
+  }
+
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    min-height: 132px !important;
+    padding: 24px 28px !important;
+    border-radius: 28px 28px 0 0 !important;
+  }
+
+  .classe-card h3,
+  .card-classe h3,
+  .item-classe h3,
+  .classe-card-moderna h3,
+  .classe-destaque-card h3 {
+    font-size: clamp(34px, 3.6vw, 58px) !important;
+    line-height: 0.98 !important;
+    margin: 0 !important;
+  }
+
+  .classe-card .badge,
+  .classe-card-moderna .badge,
+  .classe-destaque-card .badge,
+  .classe-selo,
+  .selo-classe {
+    transform: scale(0.92);
+    transform-origin: left center;
+    margin-bottom: 10px !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    width: 104px !important;
+    height: 88px !important;
+    min-width: 104px !important;
+    min-height: 88px !important;
+    border-radius: 22px !important;
+    right: 24px !important;
+    top: 28px !important;
+  }
+
+  .classe-card .contador-alunos strong,
+  .classe-card-moderna .contador-alunos strong,
+  .classe-destaque-card .contador-alunos strong,
+  .classe-total-alunos strong,
+  .classe-bolha-alunos strong {
+    font-size: 36px !important;
+    line-height: 1 !important;
+  }
+
+  .classe-card .contador-alunos span,
+  .classe-card-moderna .contador-alunos span,
+  .classe-destaque-card .contador-alunos span,
+  .classe-total-alunos span,
+  .classe-bolha-alunos span {
+    font-size: 11px !important;
+  }
+
+  .classe-card .classe-corpo,
+  .classe-card-moderna .classe-corpo,
+  .classe-destaque-card .classe-corpo,
+  .classe-conteudo,
+  .classe-card-body {
+    padding: 18px 24px !important;
+    gap: 14px !important;
+  }
+
+  .classe-card .classe-info-grid,
+  .classe-card-moderna .classe-info-grid,
+  .classe-destaque-card .classe-info-grid,
+  .classe-resumo-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    gap: 12px !important;
+  }
+
+  .classe-card .classe-info,
+  .classe-card-moderna .classe-info,
+  .classe-destaque-card .classe-info,
+  .classe-info-box,
+  .classe-resumo-item {
+    min-height: 72px !important;
+    padding: 14px 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .classe-card .professores-lista,
+  .classe-card-moderna .professores-lista,
+  .classe-destaque-card .professores-lista,
+  .professor-classe-lista,
+  .professores-classe-lista {
+    padding: 12px !important;
+    border-radius: 20px !important;
+    gap: 8px !important;
+  }
+
+  .classe-card .professor-classe-linha,
+  .classe-card-moderna .professor-classe-linha,
+  .classe-destaque-card .professor-classe-linha,
+  .professor-classe-linha {
+    min-height: 50px !important;
+    padding: 10px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .classe-card .acoes-item,
+  .classe-card-moderna .acoes-item,
+  .classe-destaque-card .acoes-item,
+  .acoes-classe-card {
+    align-self: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    min-width: 170px !important;
+    padding: 0 !important;
+  }
+
+  .classe-card .acoes-item button,
+  .classe-card-moderna .acoes-item button,
+  .classe-destaque-card .acoes-item button,
+  .acoes-classe-card button {
+    min-height: 48px !important;
+    padding: 0 16px !important;
+    border-radius: 16px !important;
+    font-size: 15px !important;
+  }
+
+  .item-lista.item-com-acoes.classe-card,
+  .item-lista.item-com-acoes.classe-card-moderna,
+  .item-lista.item-com-acoes.classe-destaque-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 180px !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Compactação extra para qualquer card de classe com o visual atual */
+@media (min-width: 761px) {
+  .lista-classes .item-lista,
+  .classes-lista .item-lista {
+    margin-bottom: 18px !important;
+  }
+
+  .lista-classes .item-lista > div:first-child,
+  .classes-lista .item-lista > div:first-child {
+    min-width: 0;
+  }
+
+  .lista-classes .item-lista h3,
+  .classes-lista .item-lista h3 {
+    font-size: clamp(32px, 3.4vw, 56px) !important;
+  }
+
+  .lista-classes .item-lista .acoes-item,
+  .classes-lista .item-lista .acoes-item {
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    min-height: 116px !important;
+    padding: 22px !important;
+  }
+
+  .classe-card h3,
+  .card-classe h3,
+  .item-classe h3,
+  .classe-card-moderna h3,
+  .classe-destaque-card h3 {
+    font-size: clamp(38px, 12vw, 56px) !important;
+    line-height: 1 !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    width: 96px !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    border-radius: 22px !important;
+  }
+
+  .classe-card .classe-corpo,
+  .classe-card-moderna .classe-corpo,
+  .classe-destaque-card .classe-corpo,
+  .classe-conteudo,
+  .classe-card-body {
+    padding: 16px !important;
+  }
+
+  .classe-card .acoes-item button,
+  .classe-card-moderna .acoes-item button,
+  .classe-destaque-card .acoes-item button,
+  .acoes-classe-card button {
+    min-height: 50px !important;
+    border-radius: 16px !important;
+  }
+}
+
+
+/* Visual moderno e mais atraente para cards de classes */
+:root {
+  --classe-azul-profundo: #062b49;
+  --classe-azul-vivo: #0476d9;
+  --classe-ciano: #00b7e8;
+  --classe-verde: #00a651;
+  --classe-amarelo: #ffd43b;
+  --classe-laranja: #ff7a18;
+  --classe-vermelho: #ef4444;
+  --classe-roxo: #6d5dfc;
+  --classe-fundo-suave: #f3fbff;
+}
+
+/* Deixa a área de classes mais limpa */
+.conteudo:has(.lista-classes),
+.conteudo:has(.classes-lista) {
+  background:
+    radial-gradient(circle at 8% 4%, rgba(0, 183, 232, 0.14), transparent 28%),
+    radial-gradient(circle at 90% 12%, rgba(255, 212, 59, 0.16), transparent 30%),
+    linear-gradient(180deg, #f8fdff 0%, #eefaff 100%);
+}
+
+/* Cards principais */
+.lista-classes .item-lista,
+.classes-lista .item-lista,
+.item-lista.item-com-acoes.classe-card,
+.item-lista.item-com-acoes.classe-card-moderna,
+.item-lista.item-com-acoes.classe-destaque-card {
+  position: relative !important;
+  border: 1px solid rgba(0, 183, 232, 0.26) !important;
+  border-radius: 30px !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(246, 252, 255, 0.96)) !important;
+  box-shadow:
+    0 22px 55px rgba(6, 43, 73, 0.10),
+    0 0 0 1px rgba(255, 255, 255, 0.80) inset !important;
+  overflow: hidden !important;
+}
+
+/* Faixa lateral colorida */
+.lista-classes .item-lista::before,
+.classes-lista .item-lista::before,
+.item-lista.item-com-acoes.classe-card::before,
+.item-lista.item-com-acoes.classe-card-moderna::before,
+.item-lista.item-com-acoes.classe-destaque-card::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  width: 9px !important;
+  background: linear-gradient(180deg, var(--classe-ciano), var(--classe-verde), var(--classe-amarelo)) !important;
+  z-index: 4 !important;
+}
+
+/* Cabeçalho dos cards */
+.classe-card .classe-header,
+.classe-card-moderna .classe-header,
+.classe-destaque-card .classe-header,
+.classe-topo,
+.classe-hero,
+.classe-card-cabecalho {
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(255, 212, 59, 0.35), transparent 24%),
+    radial-gradient(circle at 20% 0%, rgba(0, 183, 232, 0.30), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #0567b1 42%, #00a651 100%) !important;
+  box-shadow: 0 18px 42px rgba(4, 118, 217, 0.18) !important;
+}
+
+.classe-card .classe-header::after,
+.classe-card-moderna .classe-header::after,
+.classe-destaque-card .classe-header::after,
+.classe-topo::after,
+.classe-hero::after,
+.classe-card-cabecalho::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -46px !important;
+  top: 34px !important;
+  width: 154px !important;
+  height: 154px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 212, 59, 0.30) !important;
+  filter: blur(0.2px) !important;
+}
+
+/* Título da classe */
+.classe-card h3,
+.card-classe h3,
+.item-classe h3,
+.classe-card-moderna h3,
+.classe-destaque-card h3,
+.lista-classes .item-lista h3,
+.classes-lista .item-lista h3 {
+  color: #ffffff !important;
+  text-shadow: 0 12px 34px rgba(0, 0, 0, 0.24) !important;
+  letter-spacing: -0.055em !important;
+}
+
+/* Selo CLASSE */
+.classe-card .badge,
+.classe-card-moderna .badge,
+.classe-destaque-card .badge,
+.classe-selo,
+.selo-classe {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Contador de alunos */
+.classe-card .contador-alunos,
+.classe-card-moderna .contador-alunos,
+.classe-destaque-card .contador-alunos,
+.classe-total-alunos,
+.classe-bolha-alunos {
+  background: linear-gradient(135deg, #ffd43b 0%, #7ed321 52%, #00a651 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 18px 38px rgba(0, 166, 81, 0.26),
+    0 0 0 8px rgba(255, 212, 59, 0.14) !important;
+}
+
+/* Caixas internas */
+.classe-card .classe-info,
+.classe-card-moderna .classe-info,
+.classe-destaque-card .classe-info,
+.classe-info-box,
+.classe-resumo-item,
+.dados-classe-card > div,
+.lista-classes .item-lista p,
+.classes-lista .item-lista p {
+  border-color: rgba(0, 183, 232, 0.20) !important;
+}
+
+.classe-card .classe-info,
+.classe-card-moderna .classe-info,
+.classe-destaque-card .classe-info,
+.classe-info-box,
+.classe-resumo-item {
+  background:
+    radial-gradient(circle at top right, rgba(255, 212, 59, 0.18), transparent 36%),
+    linear-gradient(135deg, #ffffff, #f4fbff) !important;
+  box-shadow: 0 14px 28px rgba(6, 43, 73, 0.06) !important;
+}
+
+/* Títulos internos */
+.classe-card strong,
+.classe-card-moderna strong,
+.classe-destaque-card strong,
+.classe-info-box strong,
+.classe-resumo-item strong {
+  color: var(--classe-azul-profundo) !important;
+}
+
+.classe-card span,
+.classe-card-moderna span,
+.classe-destaque-card span,
+.classe-info-box span,
+.classe-resumo-item span {
+  color: #0476d9;
+}
+
+/* Lista de professores */
+.classe-card .professores-lista,
+.classe-card-moderna .professores-lista,
+.classe-destaque-card .professores-lista,
+.professor-classe-lista,
+.professores-classe-lista {
+  background:
+    linear-gradient(135deg, rgba(0, 183, 232, 0.09), rgba(0, 166, 81, 0.06)) !important;
+  border: 1px solid rgba(0, 183, 232, 0.20) !important;
+}
+
+.classe-card .professor-classe-linha,
+.classe-card-moderna .professor-classe-linha,
+.classe-destaque-card .professor-classe-linha,
+.professor-classe-linha {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 183, 232, 0.16) !important;
+  box-shadow: 0 10px 24px rgba(6, 43, 73, 0.06) !important;
+}
+
+/* Botões dos cards */
+.acoes-classe-card .botao-principal,
+.classe-card .acoes-item .botao-principal,
+.classe-card-moderna .acoes-item .botao-principal,
+.classe-destaque-card .acoes-item .botao-principal {
+  background: linear-gradient(135deg, #062b49 0%, #00b7e8 58%, #00a651 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 16px 34px rgba(0, 183, 232, 0.25) !important;
+}
+
+.acoes-classe-card .botao-verde,
+.classe-card .acoes-item .botao-verde,
+.classe-card-moderna .acoes-item .botao-verde,
+.classe-destaque-card .acoes-item .botao-verde {
+  background: linear-gradient(135deg, #007a3d, #00a651) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 16px 32px rgba(0, 166, 81, 0.23) !important;
+}
+
+.acoes-classe-card .botao-editar,
+.classe-card .acoes-item .botao-editar,
+.classe-card-moderna .acoes-item .botao-editar,
+.classe-destaque-card .acoes-item .botao-editar {
+  background: #ffffff !important;
+  color: #062b49 !important;
+  border: 1px solid rgba(0, 183, 232, 0.42) !important;
+  box-shadow: 0 12px 26px rgba(6, 43, 73, 0.06) !important;
+}
+
+.acoes-classe-card .botao-excluir,
+.classe-card .acoes-item .botao-excluir,
+.classe-card-moderna .acoes-item .botao-excluir,
+.classe-destaque-card .acoes-item .botao-excluir {
+  background: #ffffff !important;
+  color: #d92d20 !important;
+  border: 1px solid rgba(239, 68, 68, 0.40) !important;
+  box-shadow: 0 12px 26px rgba(239, 68, 68, 0.05) !important;
+}
+
+.acoes-classe-card button:hover,
+.classe-card .acoes-item button:hover,
+.classe-card-moderna .acoes-item button:hover,
+.classe-destaque-card .acoes-item button:hover {
+  transform: translateY(-2px) !important;
+  filter: saturate(1.08) !important;
+}
+
+/* Alterna cores dos cards para ficar mais vivo */
+.lista-classes .item-lista:nth-child(2n) .classe-header,
+.classes-lista .item-lista:nth-child(2n) .classe-header,
+.lista-classes .item-lista:nth-child(2n) .classe-topo,
+.classes-lista .item-lista:nth-child(2n) .classe-topo,
+.lista-classes .item-lista:nth-child(2n) .classe-hero,
+.classes-lista .item-lista:nth-child(2n) .classe-hero {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
+    radial-gradient(circle at 18% 4%, rgba(109, 93, 252, 0.26), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #6d5dfc 48%, #00b7e8 100%) !important;
+}
+
+.lista-classes .item-lista:nth-child(3n) .classe-header,
+.classes-lista .item-lista:nth-child(3n) .classe-header,
+.lista-classes .item-lista:nth-child(3n) .classe-topo,
+.classes-lista .item-lista:nth-child(3n) .classe-topo,
+.lista-classes .item-lista:nth-child(3n) .classe-hero,
+.classes-lista .item-lista:nth-child(3n) .classe-hero {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(255, 212, 59, 0.34), transparent 24%),
+    radial-gradient(circle at 18% 4%, rgba(255, 122, 24, 0.24), transparent 28%),
+    linear-gradient(135deg, #062b49 0%, #0476d9 48%, #ff7a18 100%) !important;
+}
+
+/* Responsivo */
+@media (max-width: 760px) {
+  .lista-classes .item-lista,
+  .classes-lista .item-lista,
+  .item-lista.item-com-acoes.classe-card,
+  .item-lista.item-com-acoes.classe-card-moderna,
+  .item-lista.item-com-acoes.classe-destaque-card {
+    border-radius: 26px !important;
+  }
+
+  .classe-card .classe-header,
+  .classe-card-moderna .classe-header,
+  .classe-destaque-card .classe-header,
+  .classe-topo,
+  .classe-hero,
+  .classe-card-cabecalho {
+    border-radius: 26px 26px 0 0 !important;
+  }
+
+  .classe-card .contador-alunos,
+  .classe-card-moderna .contador-alunos,
+  .classe-destaque-card .contador-alunos,
+  .classe-total-alunos,
+  .classe-bolha-alunos {
+    box-shadow:
+      0 12px 28px rgba(0, 166, 81, 0.22),
+      0 0 0 6px rgba(255, 212, 59, 0.13) !important;
+  }
+}
+
+
+/* REFORCO FINAL - cards de classes realmente diferentes, menores e coloridos */
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.lista-classes-modernas .classe-card-moderno {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 164px !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+  border-radius: 26px !important;
+  border: 1px solid rgba(0, 174, 239, 0.24) !important;
+  background: #ffffff !important;
+  box-shadow: 0 18px 42px rgba(0, 59, 102, 0.10) !important;
+  overflow: hidden !important;
+}
+
+.lista-classes-modernas .classe-card-moderno::before {
+  display: none !important;
+}
+
+.lista-classes-modernas .classe-card-conteudo {
+  min-width: 0 !important;
+  padding: 0 !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 86px !important;
+  align-items: center !important;
+  min-height: 118px !important;
+  margin: 0 !important;
+  padding: 20px 24px !important;
+  border-radius: 26px 0 0 0 !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
+    linear-gradient(135deg, #003B66 0%, #0078d7 52%, #00A651 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
+    linear-gradient(135deg, #3b0764 0%, #2563eb 52%, #00AEEF 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
+    linear-gradient(135deg, #003B66 0%, #00AEEF 52%, #F0442E 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(255, 210, 0, 0.42), transparent 24%),
+    linear-gradient(135deg, #064e3b 0%, #008C44 48%, #006BB6 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  width: 8px !important;
+  background: linear-gradient(180deg, #FFD200, #00AEEF, #00A651) !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -34px !important;
+  bottom: -48px !important;
+  width: 150px !important;
+  height: 150px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 210, 0, 0.24) !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  position: relative !important;
+  z-index: 2 !important;
+  width: fit-content !important;
+  margin: 0 0 8px 0 !important;
+  padding: 5px 11px !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.20) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.06em !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho h3 {
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: clamp(36px, 3.7vw, 56px) !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.06em !important;
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.22) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  position: relative !important;
+  z-index: 2 !important;
+  display: grid !important;
+  place-items: center !important;
+  min-width: 78px !important;
+  min-height: 74px !important;
+  width: 78px !important;
+  height: 74px !important;
+  padding: 8px !important;
+  border-radius: 20px !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #FFD200 0%, #85D91E 45%, #00A651 100%) !important;
+  box-shadow: 0 12px 26px rgba(0, 166, 81, 0.26) !important;
+  font-size: 30px !important;
+  line-height: 1 !important;
+}
+
+.lista-classes-modernas .classe-card-matricula span {
+  display: block !important;
+  margin: 2px 0 0 !important;
+  color: #ffffff !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+.lista-classes-modernas .classe-card-info {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 190px !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 14px 18px 10px 18px !important;
+}
+
+.lista-classes-modernas .classe-card-info p {
+  min-height: 58px !important;
+  margin: 0 !important;
+  padding: 10px 13px !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 34%),
+    #f9fdff !important;
+  border: 1px solid rgba(0, 174, 239, 0.18) !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .classe-card-info strong {
+  color: #0078d7 !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.08em !important;
+}
+
+.lista-classes-modernas .classe-card-info span {
+  margin-top: 4px !important;
+  color: #101828 !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.lista-classes-modernas .professores-na-classe {
+  margin: 0 18px 14px 18px !important;
+  padding: 9px !important;
+  border-radius: 16px !important;
+  background: rgba(0, 174, 239, 0.08) !important;
+  border: 1px solid rgba(0, 174, 239, 0.16) !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  min-height: 42px !important;
+  padding: 7px 10px !important;
+  border-radius: 13px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 174, 239, 0.15) !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .professor-classe-linha span {
+  color: #101828 !important;
+  font-weight: 950 !important;
+}
+
+.lista-classes-modernas .professor-classe-linha .botao-pequeno {
+  min-height: 30px !important;
+  padding: 5px 10px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+}
+
+.lista-classes-modernas .acoes-classe-card {
+  width: auto !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  align-content: center !important;
+  gap: 8px !important;
+  padding: 14px 14px 14px 0 !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 251, 255, 0.96)) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card button {
+  min-height: 42px !important;
+  width: 100% !important;
+  padding: 0 12px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-principal {
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 100%) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-verde {
+  background: linear-gradient(135deg, #008C44 0%, #00A651 100%) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-editar {
+  background: #ffffff !important;
+  color: #003B66 !important;
+  border: 1px solid rgba(0, 174, 239, 0.42) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-excluir {
+  background: #fffafa !important;
+  color: #d92d20 !important;
+  border: 1px solid rgba(240, 68, 46, 0.42) !important;
+}
+
+/* celular */
+@media (max-width: 760px) {
+  .lista-classes-modernas .classe-card-moderno {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .lista-classes-modernas .classe-card-cabecalho {
+    grid-template-columns: minmax(0, 1fr) 76px !important;
+    min-height: 112px !important;
+    border-radius: 24px 24px 0 0 !important;
+    padding: 18px 18px !important;
+  }
+
+  .lista-classes-modernas .classe-card-cabecalho h3 {
+    font-size: clamp(34px, 12vw, 52px) !important;
+  }
+
+  .lista-classes-modernas .classe-card-matricula {
+    width: 72px !important;
+    height: 68px !important;
+    min-width: 72px !important;
+    min-height: 68px !important;
+    font-size: 27px !important;
+  }
+
+  .lista-classes-modernas .classe-card-info {
+    grid-template-columns: 1fr !important;
+    padding: 12px !important;
+  }
+
+  .lista-classes-modernas .professores-na-classe {
+    margin: 0 12px 12px !important;
+  }
+
+  .lista-classes-modernas .acoes-classe-card {
+    padding: 0 12px 12px !important;
+  }
+}
+
+
+/* Formulário claro para editar o nome da classe */
+.formulario-editar-classe {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px !important;
+  border: 1px solid rgba(0, 174, 239, 0.26) !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.18), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(0, 174, 239, 0.12), transparent 34%),
+    #ffffff !important;
+  box-shadow: 0 22px 54px rgba(0, 59, 102, 0.10) !important;
+}
+
+.formulario-editar-classe::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: linear-gradient(180deg, #00AEEF, #00A651, #FFD200);
+}
+
+.cabecalho-formulario-editar-classe {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 20px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.20), transparent 34%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 58%, #00A651 100%);
+  color: #ffffff;
+}
+
+.cabecalho-formulario-editar-classe span {
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cabecalho-formulario-editar-classe h3 {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cabecalho-formulario-editar-classe p {
+  max-width: 760px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.formulario-editar-classe label input {
+  min-height: 58px;
+  font-size: 17px;
+  font-weight: 850;
+}
+
+
+/* Modo suporte do administrador */
+.botao-acessar-igreja {
+  min-height: 48px;
+  border: none;
+  border-radius: 16px;
+  padding: 0 16px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 950;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%);
+  box-shadow: 0 16px 34px rgba(0, 174, 239, 0.25);
+}
+
+.botao-acessar-igreja:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08);
+}
+
+.banner-modo-suporte {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  border-radius: 28px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 92% 20%, rgba(255, 210, 0, 0.36), transparent 26%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 48%, #00A651 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 22px 52px rgba(0, 59, 102, 0.20);
+}
+
+.banner-modo-suporte span {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.banner-modo-suporte strong {
+  display: block;
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.1;
+}
+
+.banner-modo-suporte p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-weight: 750;
+}
+
+.botao-sair-suporte {
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  padding: 0 18px;
+  cursor: pointer;
+  color: #003B66;
+  background: #ffffff;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+/* Visual comercial impactante - página principal */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 7% 7%, rgba(255, 210, 0, 0.44), transparent 24%),
+    radial-gradient(circle at 92% 8%, rgba(0, 174, 239, 0.38), transparent 28%),
+    radial-gradient(circle at 16% 78%, rgba(0, 166, 81, 0.26), transparent 26%),
+    radial-gradient(circle at 88% 82%, rgba(240, 68, 46, 0.20), transparent 24%),
+    linear-gradient(180deg, #fff8d8 0%, #e8f8ff 34%, #ffffff 100%) !important;
+}
+
+.topo-publico {
+  max-width: min(1240px, calc(100% - 32px)) !important;
+  top: 14px !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(0, 174, 239, 0.22) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 50px rgba(0, 59, 102, 0.13) !important;
+}
+
+.hero-publico,
+.hero-ebd-oficial {
+  max-width: min(1240px, calc(100% - 32px)) !important;
+  min-height: 720px;
+  margin: 26px auto 30px !important;
+  border-radius: 42px !important;
+  padding: clamp(38px, 6vw, 78px) !important;
+  background:
+    radial-gradient(circle at 9% 10%, rgba(255, 210, 0, 0.42), transparent 24%),
+    radial-gradient(circle at 88% 18%, rgba(0, 174, 239, 0.42), transparent 28%),
+    radial-gradient(circle at 70% 88%, rgba(0, 166, 81, 0.25), transparent 26%),
+    linear-gradient(135deg, #ffffff 0%, #effaff 55%, #fff7d8 100%) !important;
+  border: 1px solid rgba(0, 174, 239, 0.22) !important;
+  box-shadow: 0 34px 90px rgba(0, 59, 102, 0.16) !important;
+  overflow: hidden;
+}
+
+.hero-publico h1,
+.hero-ebd-texto h1 {
+  max-width: 820px !important;
+  background: linear-gradient(135deg, #003B66 0%, #006BB6 34%, #00AEEF 52%, #00A651 76%, #F0442E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  font-size: clamp(48px, 7vw, 96px) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.075em !important;
+}
+
+.hero-publico p,
+.hero-ebd-texto p {
+  max-width: 720px !important;
+  color: #334155 !important;
+  font-size: clamp(18px, 2vw, 24px) !important;
+  line-height: 1.55 !important;
+  font-weight: 750 !important;
+}
+
+.selo-publico,
+.selo-ebd-oficial {
+  border: 1px solid rgba(0, 174, 239, 0.28) !important;
+  background:
+    radial-gradient(circle at top right, rgba(255, 210, 0, 0.32), transparent 38%),
+    rgba(255, 255, 255, 0.82) !important;
+  color: #003B66 !important;
+  box-shadow: 0 12px 26px rgba(0, 174, 239, 0.10) !important;
+}
+
+.acoes-publicas .botao-principal,
+.acoes-hero-oficial .botao-principal {
+  min-height: 58px !important;
+  border-radius: 19px !important;
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 55%, #00A651 100%) !important;
+  box-shadow: 0 22px 52px rgba(0, 174, 239, 0.32) !important;
+}
+
+.mockup-sistema-oficial {
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 210, 0, 0.25), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(235, 249, 255, 0.92)) !important;
+  border: 1px solid rgba(0, 174, 239, 0.25) !important;
+  box-shadow: 0 32px 86px rgba(0, 59, 102, 0.18) !important;
+}
+
+.mockup-grid-oficial article {
+  border-radius: 22px !important;
+  border: 1px solid rgba(0, 174, 239, 0.18) !important;
+  background: #ffffff !important;
+  box-shadow: 0 14px 32px rgba(0, 59, 102, 0.08) !important;
+}
+
+.mockup-grid-oficial article:nth-child(1) {
+  background: linear-gradient(135deg, #ffffff, #e8f8ff) !important;
+}
+
+.mockup-grid-oficial article:nth-child(2) {
+  background: linear-gradient(135deg, #ffffff, #e9fff4) !important;
+}
+
+.mockup-grid-oficial article:nth-child(3) {
+  background: linear-gradient(135deg, #ffffff, #fff8d8) !important;
+}
+
+.mockup-grid-oficial article:nth-child(4) {
+  background: linear-gradient(135deg, #ffffff, #fff0ec) !important;
+}
+
+.secao-publica {
+  max-width: min(1240px, calc(100% - 32px)) !important;
+  border-radius: 38px !important;
+  border: 1px solid rgba(0, 174, 239, 0.16) !important;
+  box-shadow: 0 24px 70px rgba(0, 59, 102, 0.08) !important;
+}
+
+.cta-final-oficial {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255, 210, 0, 0.30), transparent 25%),
+    linear-gradient(135deg, #003B66 0%, #006BB6 48%, #00A651 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Visual interno mais vivo e profissional */
+.app {
+  background:
+    radial-gradient(circle at 18% 6%, rgba(0, 174, 239, 0.16), transparent 25%),
+    radial-gradient(circle at 86% 10%, rgba(255, 210, 0, 0.18), transparent 24%),
+    linear-gradient(135deg, #eefaff 0%, #ffffff 44%, #fffbe8 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 210, 0, 0.18), transparent 28%),
+    radial-gradient(circle at 100% 16%, rgba(0, 174, 239, 0.24), transparent 34%),
+    linear-gradient(180deg, #00243d 0%, #003B66 46%, #001827 100%) !important;
+  box-shadow: 18px 0 60px rgba(0, 59, 102, 0.22) !important;
+}
+
+.menu-navegacao button {
+  border-radius: 18px !important;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.menu-navegacao button:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+.menu-navegacao button.ativo {
+  background: linear-gradient(135deg, #006BB6 0%, #00AEEF 48%, #00A651 100%) !important;
+  box-shadow: 0 18px 38px rgba(0, 174, 239, 0.28) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(255, 210, 0, 0.14), transparent 24%),
+    radial-gradient(circle at 10% 18%, rgba(0, 174, 239, 0.10), transparent 24%) !important;
+}
+
+.topo-pagina {
+  border-radius: 34px !important;
+  padding: clamp(24px, 4vw, 42px) !important;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 210, 0, 0.22), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f5fcff 100%) !important;
+  border: 1px solid rgba(0, 174, 239, 0.18) !important;
+  box-shadow: 0 22px 58px rgba(0, 59, 102, 0.09) !important;
+}
+
+.topo-pagina h2 {
+  color: #003B66 !important;
+  font-size: clamp(38px, 5vw, 72px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.065em !important;
+}
+
+.card,
+.item-lista,
+.formulario {
+  border-color: rgba(0, 174, 239, 0.18) !important;
+  box-shadow: 0 18px 48px rgba(0, 59, 102, 0.08) !important;
+}
+
+.botao-principal {
+  background: linear-gradient(135deg, #003B66 0%, #00AEEF 52%, #00A651 100%) !important;
+  box-shadow: 0 18px 42px rgba(0, 174, 239, 0.24) !important;
+}
+
+.botao-secundario {
+  border-color: rgba(0, 174, 239, 0.30) !important;
+  color: #003B66 !important;
+}
+
+@media (max-width: 900px) {
+  .banner-modo-suporte {
+    display: grid;
+  }
+
+  .botao-sair-suporte {
+    width: 100%;
+  }
+
+  .hero-publico,
+  .hero-ebd-oficial {
+    min-height: auto;
+  }
+}
+
+
+/* Botão Alterar nome da classe */
+.lista-classes-modernas .acoes-classe-card .botao-editar,
+.acoes-classe-card .botao-editar {
+  white-space: normal !important;
+  line-height: 1.15 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+
+/* =========================================================
+   MODELO COMERCIAL DOURADO - Inspirado no modelo enviado
+   Página inicial + parte interna
+   ========================================================= */
+
+:root {
+  --ebd-gold: #D4AF37;
+  --ebd-gold-light: #F5A623;
+  --ebd-gold-dark: #B8860B;
+  --ebd-cyan: #00BCD4;
+  --ebd-cyan-dark: #0097A7;
+  --ebd-red: #FF5722;
+  --ebd-red-dark: #E64A19;
+  --ebd-green: #4CAF50;
+  --ebd-green-dark: #2E7D32;
+  --ebd-dark: #1A1A1A;
+  --ebd-dark-2: #2D2D2D;
+  --ebd-gray: #4A4A4A;
+  --ebd-light: #F8F9FA;
+  --ebd-white: #FFFFFF;
+  --ebd-gradient-gold: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
+  --ebd-gradient-cyan: linear-gradient(135deg, #00BCD4, #0097A7);
+  --ebd-gradient-red: linear-gradient(135deg, #FF5722, #E64A19);
+  --ebd-gradient-green: linear-gradient(135deg, #4CAF50, #2E7D32);
+  --ebd-shadow-gold: 0 18px 42px rgba(212, 175, 55, 0.28);
+  --ebd-shadow-dark: 0 24px 70px rgba(26, 26, 26, 0.18);
+}
+
+/* PÁGINA PRINCIPAL */
+.pagina-publica {
+  background:
+    radial-gradient(circle at 8% 6%, rgba(212, 175, 55, 0.30), transparent 24%),
+    radial-gradient(circle at 92% 10%, rgba(0, 188, 212, 0.26), transparent 26%),
+    radial-gradient(circle at 14% 82%, rgba(76, 175, 80, 0.18), transparent 24%),
+    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.topo-publico {
+  position: sticky !important;
+  top: 12px !important;
+  z-index: 50 !important;
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  margin: 12px auto 0 !important;
+  padding: 12px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+  box-shadow: 0 8px 28px rgba(26, 26, 26, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.marca-publica strong,
+.marca-login h1,
+.marca-sidebar h1 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  letter-spacing: 0.02em !important;
+  background: var(--ebd-gradient-gold) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.logo-simbolo,
+.logo-publica,
+.logo-simbolo-sidebar {
+  background: var(--ebd-gradient-gold) !important;
+  border: 2px solid rgba(0, 188, 212, 0.35) !important;
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.32) !important;
+}
+
+.menu-publico a {
+  color: var(--ebd-gray) !important;
+  font-weight: 700 !important;
+}
+
+.menu-publico a:hover {
+  color: var(--ebd-gold-dark) !important;
+}
+
+.menu-publico button,
+.acoes-publicas .botao-principal,
+.acoes-hero-oficial .botao-principal,
+.botao-manual-oficial {
+  color: var(--ebd-dark) !important;
+  background: var(--ebd-gradient-gold) !important;
+  border: none !important;
+  box-shadow: var(--ebd-shadow-gold) !important;
+}
+
+.hero-publico,
+.hero-ebd-oficial {
+  position: relative !important;
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  min-height: 720px !important;
+  margin: 18px auto 34px !important;
+  padding: clamp(40px, 6vw, 84px) !important;
+  border-radius: 42px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 16% 42%, rgba(212, 175, 55, 0.14), transparent 36%),
+    radial-gradient(circle at 92% 18%, rgba(0, 188, 212, 0.13), transparent 26%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 52%, #1A1A1A 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.24) !important;
+  box-shadow: var(--ebd-shadow-dark) !important;
+}
+
+.hero-publico::after,
+.hero-ebd-oficial::after {
+  content: "✝" !important;
+  position: absolute !important;
+  right: 28px !important;
+  bottom: 12px !important;
+  color: var(--ebd-gold) !important;
+  opacity: 0.06 !important;
+  font-size: clamp(90px, 13vw, 190px) !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  line-height: 1 !important;
+}
+
+.hero-publico-texto,
+.hero-ebd-texto,
+.mockup-sistema-oficial {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.selo-publico,
+.selo-ebd-oficial,
+.selo-apresentacao {
+  color: var(--ebd-gold-light) !important;
+  background: rgba(212, 175, 55, 0.14) !important;
+  border: 1px solid rgba(212, 175, 55, 0.30) !important;
+  box-shadow: none !important;
+}
+
+.hero-publico h1,
+.hero-ebd-texto h1 {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  max-width: 850px !important;
+  font-size: clamp(40px, 6.2vw, 82px) !important;
+  line-height: 1.06 !important;
+  letter-spacing: -0.065em !important;
+}
+
+.hero-publico p,
+.hero-ebd-texto p {
+  max-width: 720px !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: clamp(17px, 1.6vw, 21px) !important;
+  line-height: 1.7 !important;
+}
+
+.aviso-teste-fechado,
+.selos-confianca-hero span,
+.barra-confianca-oficial span {
+  color: rgba(255, 255, 255, 0.78) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.26) !important;
+}
+
+.mockup-sistema-oficial {
+  background: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.34) !important;
+  overflow: hidden !important;
+}
+
+.mockup-sistema-topo {
+  background: var(--ebd-dark) !important;
+  color: #ffffff !important;
+  border-radius: 0 !important;
+}
+
+.mockup-grid-oficial article:nth-child(1) {
+  background: linear-gradient(135deg, #FFFFFF, #FFF8E1) !important;
+  border-bottom: 3px solid var(--ebd-gold) !important;
+}
+.mockup-grid-oficial article:nth-child(2) {
+  background: linear-gradient(135deg, #FFFFFF, #E0F7FA) !important;
+  border-bottom: 3px solid var(--ebd-cyan) !important;
+}
+.mockup-grid-oficial article:nth-child(3) {
+  background: linear-gradient(135deg, #FFFFFF, #FBE9E7) !important;
+  border-bottom: 3px solid var(--ebd-red) !important;
+}
+.mockup-grid-oficial article:nth-child(4) {
+  background: linear-gradient(135deg, #FFFFFF, #E8F5E9) !important;
+  border-bottom: 3px solid var(--ebd-green) !important;
+}
+
+.secao-publica {
+  max-width: min(1280px, calc(100% - 28px)) !important;
+  border-radius: 34px !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 18px 54px rgba(26, 26, 26, 0.08) !important;
+}
+
+.cabecalho-secao-publica h2 {
+  background: var(--ebd-gradient-gold) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  font-size: clamp(34px, 4.5vw, 62px) !important;
+  letter-spacing: -0.055em !important;
+}
+
+.grade-recursos-oficiais article,
+.grade-publico-oficial article,
+.cards-planos-oficiais article,
+.manual-interativo-oficial details,
+.faq-modelo-lista details {
+  background: #ffffff !important;
+  border-radius: 26px !important;
+  border: 1px solid rgba(212, 175, 55, 0.14) !important;
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.055) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.grade-recursos-oficiais article:hover,
+.grade-publico-oficial article:hover,
+.cards-planos-oficiais article:hover,
+.manual-interativo-oficial details:hover,
+.faq-modelo-lista details:hover {
+  transform: translateY(-7px) !important;
+  box-shadow: 0 22px 44px rgba(26, 26, 26, 0.10) !important;
+}
+
+.grade-recursos-oficiais article:nth-child(1),
+.grade-recursos-oficiais article:nth-child(5) { border-bottom: 4px solid var(--ebd-gold) !important; }
+.grade-recursos-oficiais article:nth-child(2),
+.grade-recursos-oficiais article:nth-child(6) { border-bottom: 4px solid var(--ebd-cyan) !important; }
+.grade-recursos-oficiais article:nth-child(3) { border-bottom: 4px solid var(--ebd-red) !important; }
+.grade-recursos-oficiais article:nth-child(4) { border-bottom: 4px solid var(--ebd-green) !important; }
+
+.antes-oficial {
+  background: linear-gradient(135deg, #FFF5F5, #FFE0E0) !important;
+  border-left: 5px solid var(--ebd-red) !important;
+}
+.depois-oficial {
+  background: linear-gradient(135deg, #F0FFF4, #E0FFE8) !important;
+  border-left: 5px solid var(--ebd-green) !important;
+}
+
+.cta-final-oficial,
+.rodape-publico {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(212, 175, 55, 0.12), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 54%, #1A1A1A 100%) !important;
+  color: #ffffff !important;
+}
+
+.cta-final-oficial h2 {
+  color: var(--ebd-gold) !important;
+}
+
+/* LOGIN / CADASTRO */
+.tela-login {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(212, 175, 55, 0.26), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(0, 188, 212, 0.18), transparent 30%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 48%, #F8F9FA 48%, #E8ECF1 100%) !important;
+}
+
+.painel-apresentacao {
+  background:
+    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.12), transparent 44%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+}
+
+.painel-apresentacao h2,
+.apresentacao-texto h2 { color: #ffffff !important; }
+
+.painel-apresentacao p,
+.apresentacao-texto p { color: rgba(255, 255, 255, 0.76) !important; }
+
+.cartao-login {
+  border-radius: 34px !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 0 28px 70px rgba(26, 26, 26, 0.16) !important;
+}
+
+.topo-cartao-icone {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.botao-cadastrar-igreja,
+.botao-principal,
+.cartao-login .botao-principal {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  box-shadow: var(--ebd-shadow-gold) !important;
+  border: none !important;
+}
+
+/* PARTE INTERNA */
+.app {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(212, 175, 55, 0.22), transparent 24%),
+    radial-gradient(circle at 92% 12%, rgba(0, 188, 212, 0.18), transparent 28%),
+    linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 20% 8%, rgba(212, 175, 55, 0.16), transparent 28%),
+    linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 55%, #111111 100%) !important;
+  border-right: 1px solid rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 18px 0 55px rgba(26, 26, 26, 0.18) !important;
+}
+
+.menu-navegacao button {
+  color: rgba(255, 255, 255, 0.78) !important;
+  border-radius: 18px !important;
+}
+
+.menu-navegacao button:hover {
+  color: #ffffff !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+  transform: translateX(5px) !important;
+}
+
+.menu-navegacao button.ativo {
+  color: var(--ebd-dark) !important;
+  background: var(--ebd-gradient-gold) !important;
+  box-shadow: 0 14px 34px rgba(212, 175, 55, 0.30) !important;
+}
+
+.icone-menu {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--ebd-gold) !important;
+}
+
+.menu-navegacao button.ativo .icone-menu {
+  background: rgba(26, 26, 26, 0.10) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+}
+
+.cartao-usuario-sidebar strong { color: #ffffff !important; }
+
+.selo-perfil-sidebar {
+  background: rgba(212, 175, 55, 0.14) !important;
+  color: var(--ebd-gold-light) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(212, 175, 55, 0.12), transparent 24%),
+    radial-gradient(circle at 6% 18%, rgba(0, 188, 212, 0.10), transparent 25%) !important;
+}
+
+.topo-pagina {
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(212, 175, 55, 0.18), transparent 28%),
+    #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.16) !important;
+  box-shadow: 0 16px 46px rgba(26, 26, 26, 0.08) !important;
+}
+
+.topo-pagina h2 {
+  color: var(--ebd-dark) !important;
+  font-size: clamp(34px, 4.5vw, 64px) !important;
+  letter-spacing: -0.055em !important;
+}
+
+.card,
+.item-lista,
+.formulario,
+.manual-card,
+.card-admin {
+  border-color: rgba(212, 175, 55, 0.16) !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 34px rgba(26, 26, 26, 0.07) !important;
+}
+
+.card-estatistica .card-icone,
+.card-icone {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.cards .card:nth-child(4n + 1),
+.cards-admin-sistema .card:nth-child(4n + 1) { border-bottom: 4px solid var(--ebd-gold) !important; }
+.cards .card:nth-child(4n + 2),
+.cards-admin-sistema .card:nth-child(4n + 2) { border-bottom: 4px solid var(--ebd-cyan) !important; }
+.cards .card:nth-child(4n + 3),
+.cards-admin-sistema .card:nth-child(4n + 3) { border-bottom: 4px solid var(--ebd-red) !important; }
+.cards .card:nth-child(4n + 4),
+.cards-admin-sistema .card:nth-child(4n + 4) { border-bottom: 4px solid var(--ebd-green) !important; }
+
+.lista-classes-modernas .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.34), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 56%, #B8860B 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #0097A7 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #FF5722 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212, 175, 55, 0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2E7D32 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-principal,
+.lista-classes-modernas .acoes-classe-card .botao-verde,
+.botao-acessar-igreja,
+.botao-aprovar-igreja {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  border: none !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-editar,
+.botao-editar {
+  background: #ffffff !important;
+  color: var(--ebd-gold-dark) !important;
+  border: 1px solid rgba(212, 175, 55, 0.38) !important;
+}
+
+.lista-classes-modernas .acoes-classe-card .botao-excluir,
+.botao-excluir {
+  background: #fff7f4 !important;
+  color: var(--ebd-red-dark) !important;
+  border: 1px solid rgba(255, 87, 34, 0.30) !important;
+}
+
+.banner-modo-suporte {
+  background:
+    radial-gradient(circle at 92% 20%, rgba(212, 175, 55, 0.24), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 58%, #B8860B 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.24) !important;
+}
+
+.botao-sair-suporte {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+  border: none !important;
+}
+
+.manual-hero,
+.manual-final {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(212, 175, 55, 0.22), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(212, 175, 55, 0.20) !important;
+}
+
+.manual-hero h2,
+.manual-final h3 { color: var(--ebd-gold) !important; }
+
+.manual-hero p,
+.manual-final p { color: rgba(255, 255, 255, 0.78) !important; }
+
+.manual-numero {
+  background: var(--ebd-gradient-gold) !important;
+  color: var(--ebd-dark) !important;
+}
+
+.manual-card::before {
+  background: linear-gradient(180deg, var(--ebd-gold), var(--ebd-cyan), var(--ebd-green)) !important;
+}
+
+@media (max-width: 900px) {
+  .topo-publico { border-radius: 24px !important; }
+  .hero-publico,
+  .hero-ebd-oficial {
+    min-height: auto !important;
+    border-radius: 30px !important;
+  }
+  .tela-login {
+    background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 45%, #F8F9FA 45%, #E8ECF1 100%) !important;
+  }
+}
+
+
+/* =========================================================
+   LANDING EXATAMENTE NO MODELO ENVIADO + INTERNO NO MESMO PADRAO
+   ========================================================= */
+
+.modelo-exato-ebd,
+.modelo-exato-ebd * {
+  box-sizing: border-box;
+}
+
+.modelo-exato-ebd {
+  --gold: #D4AF37;
+  --gold-light: #F5A623;
+  --gold-dark: #B8860B;
+  --cyan: #00BCD4;
+  --red: #FF5722;
+  --green: #4CAF50;
+  --dark: #1A1A1A;
+  --gray: #4A4A4A;
+  --light: #F8F9FA;
+  --white: #FFFFFF;
+  --gradient-gold: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B);
+  --gradient-cyan: linear-gradient(135deg, #00BCD4, #0097A7);
+  --gradient-red: linear-gradient(135deg, #FF5722, #E64A19);
+  --gradient-green: linear-gradient(135deg, #4CAF50, #2E7D32);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%);
+  color: #1A1A1A;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.modelo-exato-ebd button {
+  font: inherit;
+}
+
+.modelo-exato-ebd .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
+  padding: 0.8rem 0;
+}
+
+.modelo-exato-ebd .nav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modelo-exato-ebd .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1001;
+}
+
+.modelo-exato-ebd .logo-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.modelo-exato-ebd .logo-icon::before {
+  content: "✝";
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.modelo-exato-ebd .logo-icon::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 2px solid var(--cyan);
+  opacity: 0.5;
+}
+
+.modelo-exato-ebd .logo-text {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.modelo-exato-ebd .logo-text span {
+  color: var(--gold);
+  background: none;
+}
+
+.modelo-exato-ebd .logo-sub {
+  font-size: 0.7rem;
+  color: var(--gray);
+  letter-spacing: 1px;
+}
+
+.modelo-exato-ebd .nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.modelo-exato-ebd .nav-links a {
+  text-decoration: none;
+  color: var(--gray);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.modelo-exato-ebd .nav-links a:hover {
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .btn-nav {
+  background: var(--gradient-gold);
+  color: var(--dark) !important;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.modelo-exato-ebd .btn-nav:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+.modelo-exato-ebd .menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  z-index: 1001;
+}
+
+.modelo-exato-ebd .hamburger {
+  width: 24px;
+  height: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.modelo-exato-ebd .hamburger span {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  left: 0;
+  background: var(--dark);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.modelo-exato-ebd .hamburger span:nth-child(1) { top: 0; }
+.modelo-exato-ebd .hamburger span:nth-child(2) { top: 9px; }
+.modelo-exato-ebd .hamburger span:nth-child(3) { top: 18px; }
+
+.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 9px;
+  background: var(--gold);
+}
+
+.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(2) {
+  opacity: 0;
+}
+
+.modelo-exato-ebd .menu-toggle.active .hamburger span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 9px;
+  background: var(--gold);
+}
+
+.modelo-exato-ebd .mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 320px;
+  height: 100vh;
+  background: var(--white);
+  box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transition: right 0.3s ease;
+  padding: 5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modelo-exato-ebd .mobile-menu.active {
+  right: 0;
+}
+
+.modelo-exato-ebd .mobile-menu a,
+.modelo-exato-ebd .btn-nav-mobile {
+  text-decoration: none;
+  color: var(--dark);
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 0.75rem 0;
+  border: 0;
+  border-bottom: 1px solid #eee;
+  background: transparent;
+  text-align: left;
+}
+
+.modelo-exato-ebd .btn-nav-mobile {
+  background: var(--gradient-gold);
+  color: var(--dark);
+  text-align: center;
+  border-radius: 2rem;
+  margin-top: 1rem;
+  border-bottom: none;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.modelo-exato-ebd .menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  border: 0;
+}
+
+.modelo-exato-ebd .btn-primary {
+  background: var(--gradient-gold);
+  color: var(--dark);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 3rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.modelo-exato-ebd .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+}
+
+.modelo-exato-ebd .btn-outline {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--gold-dark);
+  padding: 0.8rem 1.8rem;
+  border-radius: 3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modelo-exato-ebd .btn-outline:hover {
+  background: var(--gold);
+  color: var(--dark);
+  transform: translateY(-2px);
+}
+
+.modelo-exato-ebd .hero {
+  padding: 7rem 1.5rem 4rem;
+  background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 50%, #1A1A1A 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.modelo-exato-ebd .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(212,175,55,0.1) 0%, transparent 50%);
+}
+
+.modelo-exato-ebd .hero::after {
+  content: "✝";
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 8rem;
+  opacity: 0.03;
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.modelo-exato-ebd .hero-badge {
+  display: inline-block;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold-light);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.modelo-exato-ebd .hero h1 {
+  font-size: clamp(2rem, 4.8vw, 3rem);
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.modelo-exato-ebd .hero h1 span {
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .hero p {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.modelo-exato-ebd .hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.modelo-exato-ebd .stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .stat-label {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.modelo-exato-ebd .hero-mockup {
+  background: var(--white);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+  border: 1px solid rgba(212,175,55,0.2);
+}
+
+.modelo-exato-ebd .mockup-header {
+  background: var(--dark);
+  padding: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modelo-exato-ebd .mockup-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.modelo-exato-ebd .mockup-red { background: var(--red); }
+.modelo-exato-ebd .mockup-gold { background: var(--gold); }
+.modelo-exato-ebd .mockup-green { background: var(--green); }
+
+.modelo-exato-ebd .mockup-body {
+  padding: 1.5rem;
+}
+
+.modelo-exato-ebd .mockup-check {
+  color: var(--green);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+.modelo-exato-ebd .mockup-body h3 {
+  color: var(--dark);
+  margin: 0 0 0.35rem;
+}
+
+.modelo-exato-ebd .mockup-body p {
+  color: var(--gray);
+  margin: 0;
+}
+
+.modelo-exato-ebd .mockup-body hr {
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.modelo-exato-ebd .mockup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.modelo-exato-ebd .section {
+  padding: 5rem 1.5rem;
+}
+
+.modelo-exato-ebd .section-soft,
+.modelo-exato-ebd .section-plans {
+  background: #F0F2F5;
+}
+
+.modelo-exato-ebd .container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.modelo-exato-ebd .section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.modelo-exato-ebd .section-subtitle {
+  text-align: center;
+  color: var(--gray);
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.modelo-exato-ebd .features-grid,
+.modelo-exato-ebd .personas-grid,
+.modelo-exato-ebd .plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.modelo-exato-ebd .feature-card {
+  background: var(--white);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  border-bottom: 3px solid transparent;
+}
+
+.modelo-exato-ebd .feature-card:nth-child(1) { border-bottom-color: var(--gold); }
+.modelo-exato-ebd .feature-card:nth-child(2) { border-bottom-color: var(--cyan); }
+.modelo-exato-ebd .feature-card:nth-child(3) { border-bottom-color: var(--red); }
+.modelo-exato-ebd .feature-card:nth-child(4) { border-bottom-color: var(--green); }
+.modelo-exato-ebd .feature-card:nth-child(5) { border-bottom-color: var(--gold); }
+.modelo-exato-ebd .feature-card:nth-child(6) { border-bottom-color: var(--cyan); }
+
+.modelo-exato-ebd .feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.modelo-exato-ebd .feature-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 2rem;
+}
+
+.modelo-exato-ebd .feature-card:nth-child(1) .feature-icon { background: var(--gradient-gold); }
+.modelo-exato-ebd .feature-card:nth-child(2) .feature-icon { background: var(--gradient-cyan); }
+.modelo-exato-ebd .feature-card:nth-child(3) .feature-icon { background: var(--gradient-red); }
+.modelo-exato-ebd .feature-card:nth-child(4) .feature-icon { background: var(--gradient-green); }
+.modelo-exato-ebd .feature-card:nth-child(5) .feature-icon { background: var(--gradient-gold); }
+.modelo-exato-ebd .feature-card:nth-child(6) .feature-icon { background: var(--gradient-cyan); }
+
+.modelo-exato-ebd .feature-card h3 {
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+
+.modelo-exato-ebd .feature-card p,
+.modelo-exato-ebd .persona-card p,
+.modelo-exato-ebd .plan-card p {
+  color: var(--gray);
+  line-height: 1.55;
+}
+
+.modelo-exato-ebd .comparison {
+  background: var(--white);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.modelo-exato-ebd .comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.modelo-exato-ebd .comparison-card {
+  padding: 2rem;
+  border-radius: 1.5rem;
+}
+
+.modelo-exato-ebd .comparison-card.before {
+  background: linear-gradient(135deg, #FFF5F5, #FFE0E0);
+  border-left: 4px solid var(--red);
+}
+
+.modelo-exato-ebd .comparison-card.after {
+  background: linear-gradient(135deg, #F0FFF4, #E0FFE8);
+  border-left: 4px solid var(--green);
+}
+
+.modelo-exato-ebd .comparison-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.modelo-exato-ebd .comparison-card ul {
+  margin-top: 1rem;
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.modelo-exato-ebd .persona-card,
+.modelo-exato-ebd .plan-card {
+  background: var(--white);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.modelo-exato-ebd .persona-card:hover,
+.modelo-exato-ebd .plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(212, 175, 55, 0.15);
+}
+
+.modelo-exato-ebd .persona-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 3rem;
+}
+
+.modelo-exato-ebd .persona-card:nth-child(1) .persona-avatar { background: var(--gradient-gold); }
+.modelo-exato-ebd .persona-card:nth-child(2) .persona-avatar { background: var(--gradient-cyan); }
+.modelo-exato-ebd .persona-card:nth-child(3) .persona-avatar { background: var(--gradient-red); }
+
+.modelo-exato-ebd .plan-card {
+  position: relative;
+}
+
+.modelo-exato-ebd .plan-card.featured {
+  transform: scale(1.02);
+  border: 2px solid var(--gold);
+  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+}
+
+.modelo-exato-ebd .plan-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--gradient-gold);
+  color: var(--dark);
+  padding: 0.3rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.modelo-exato-ebd .plan-price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold-dark);
+  margin: 1rem 0;
+}
+
+.modelo-exato-ebd .plan-card button {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.modelo-exato-ebd .plans-note {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--gray);
+}
+
+.modelo-exato-ebd .faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.modelo-exato-ebd .faq-item {
+  background: var(--white);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.modelo-exato-ebd .faq-item summary {
+  padding: 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--dark);
+  list-style: none;
+}
+
+.modelo-exato-ebd .faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.modelo-exato-ebd .faq-item summary::after {
+  content: "⌄";
+  float: right;
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .faq-item[open] summary::after {
+  content: "⌃";
+}
+
+.modelo-exato-ebd .faq-item p {
+  padding: 0 1.2rem 1.2rem;
+  color: var(--gray);
+}
+
+.modelo-exato-ebd .footer {
+  background: var(--dark);
+  color: white;
+  padding: 4rem 1.5rem 2rem;
+  margin-top: 3rem;
+}
+
+.modelo-exato-ebd .footer-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+}
+
+.modelo-exato-ebd .footer-logo {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.modelo-exato-ebd .footer p,
+.modelo-exato-ebd .footer span {
+  color: rgba(255,255,255,0.6);
+}
+
+.modelo-exato-ebd .footer-gold {
+  color: var(--gold) !important;
+  margin-top: 1rem;
+}
+
+.modelo-exato-ebd .footer-col h4 {
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.modelo-exato-ebd .footer-col a,
+.modelo-exato-ebd .footer-col span {
+  display: block;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  margin: 0.5rem 0;
+}
+
+.modelo-exato-ebd .footer-col a:hover {
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .footer-button {
+  margin-top: 1rem;
+  background: rgba(255,255,255,0.05);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.modelo-exato-ebd .footer-bottom {
+  text-align: center;
+  padding-top: 3rem;
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+}
+
+/* INTERNO ADAPTADO AO MESMO MODELO */
+.app {
+  background: linear-gradient(135deg, #F8F9FA 0%, #E8ECF1 100%) !important;
+}
+
+.menu-lateral {
+  background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 55%, #111111 100%) !important;
+  border-right: 1px solid rgba(212, 175, 55, 0.22) !important;
+  box-shadow: 18px 0 50px rgba(26,26,26,0.18) !important;
+}
+
+.menu-navegacao button {
+  color: rgba(255,255,255,0.76) !important;
+  border-radius: 18px !important;
+}
+
+.menu-navegacao button:hover {
+  color: #fff !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+}
+
+.menu-navegacao button.ativo {
+  color: #1A1A1A !important;
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
+  box-shadow: 0 14px 34px rgba(212, 175, 55, 0.30) !important;
+}
+
+.icone-menu {
+  color: #D4AF37 !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+.menu-navegacao button.ativo .icone-menu {
+  color: #1A1A1A !important;
+  background: rgba(26,26,26,0.10) !important;
+}
+
+.cartao-usuario-sidebar {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+}
+
+.cartao-usuario-sidebar strong {
+  color: #fff !important;
+}
+
+.selo-perfil-sidebar {
+  color: #F5A623 !important;
+  background: rgba(212, 175, 55, 0.14) !important;
+}
+
+.area-principal {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(212,175,55,0.12), transparent 24%),
+    radial-gradient(circle at 6% 18%, rgba(0,188,212,0.10), transparent 25%) !important;
+}
+
+.topo-pagina,
+.card,
+.item-lista,
+.formulario,
+.manual-card,
+.card-admin {
+  background: #fff !important;
+  border-color: rgba(212, 175, 55, 0.18) !important;
+  box-shadow: 0 12px 34px rgba(26,26,26,0.07) !important;
+}
+
+.topo-pagina h2,
+.card h3,
+.item-lista h3 {
+  color: #1A1A1A !important;
+}
+
+.botao-principal,
+.botao-cadastrar-igreja,
+.botao-acessar-igreja,
+.botao-aprovar-igreja,
+.botao-sair-suporte {
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
+  color: #1A1A1A !important;
+  border: none !important;
+  box-shadow: 0 12px 28px rgba(212,175,55,0.25) !important;
+}
+
+.botao-editar {
+  background: #fff !important;
+  color: #B8860B !important;
+  border: 1px solid rgba(212,175,55,0.38) !important;
+}
+
+.botao-excluir {
+  background: #fff7f4 !important;
+  color: #E64A19 !important;
+  border: 1px solid rgba(255,87,34,0.30) !important;
+}
+
+.card-estatistica .card-icone,
+.card-icone {
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
+  color: #1A1A1A !important;
+}
+
+.cards .card:nth-child(4n + 1),
+.cards-admin-sistema .card:nth-child(4n + 1) { border-bottom: 4px solid #D4AF37 !important; }
+.cards .card:nth-child(4n + 2),
+.cards-admin-sistema .card:nth-child(4n + 2) { border-bottom: 4px solid #00BCD4 !important; }
+.cards .card:nth-child(4n + 3),
+.cards-admin-sistema .card:nth-child(4n + 3) { border-bottom: 4px solid #FF5722 !important; }
+.cards .card:nth-child(4n + 4),
+.cards-admin-sistema .card:nth-child(4n + 4) { border-bottom: 4px solid #4CAF50 !important; }
+
+.lista-classes-modernas .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.34), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 56%, #B8860B 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #0097A7 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #FF5722 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 28%, rgba(212,175,55,0.30), transparent 24%),
+    linear-gradient(135deg, #1A1A1A 0%, #2E7D32 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  background: linear-gradient(135deg, #D4AF37, #F5A623, #B8860B) !important;
+  color: #1A1A1A !important;
+}
+
+.manual-hero,
+.manual-final,
+.banner-modo-suporte {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(212,175,55,0.22), transparent 28%),
+    linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%) !important;
+  color: #fff !important;
+  border: 1px solid rgba(212,175,55,0.20) !important;
+}
+
+.manual-hero h2,
+.manual-final h3 {
+  color: #D4AF37 !important;
+}
+
+@media (max-width: 768px) {
+  .modelo-exato-ebd .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modelo-exato-ebd .nav-links {
+    display: none;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .modelo-exato-ebd .section-title {
+    font-size: 1.6rem;
+  }
+
+  .modelo-exato-ebd .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modelo-exato-ebd .hero-stats {
+    justify-content: center;
+  }
+
+  .modelo-exato-ebd .btn-primary,
+  .modelo-exato-ebd .btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modelo-exato-ebd .plan-card.featured {
+    transform: scale(1);
+  }
+}
+
+
+/* Logo oficial no layout do modelo */
+.modelo-exato-ebd .logo-icon-oficial {
+  background: transparent !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.22) !important;
+}
+
+.modelo-exato-ebd .logo-icon-oficial::before,
+.modelo-exato-ebd .logo-icon-oficial::after {
+  display: none !important;
+  content: none !important;
+}
+
+.modelo-exato-ebd .logo-oficial-navbar {
+  width: 52px;
+  height: 52px;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 3px;
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+.modelo-exato-ebd .logo-com-imagem-oficial {
+  gap: 0.85rem;
+}
+
+/* Garante a logo oficial também nas telas internas e de login */
+.logo-simbolo img.logo-imagem,
+.logo-publica img.logo-imagem,
+.logo-simbolo-sidebar img.logo-imagem {
+  object-fit: contain !important;
+}
+
+
+/* Ajuste solicitado: fundo principal azul e textos claros em fundos escuros */
+:root {
+  --fundo-principal-ebd: #103058;
+  --fundo-principal-ebd-escuro: #173f66;
+  --texto-claro-ebd: #ffffff;
+  --texto-claro-suave-ebd: rgba(255, 255, 255, 0.86);
+}
+
+/* Hero/página principal com a cor do modelo enviado */
+.modelo-exato-ebd .hero {
+  background: var(--fundo-principal-ebd) !important;
+}
+
+.modelo-exato-ebd .hero::before {
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255, 255, 255, 0.06) 0%, transparent 42%),
+    radial-gradient(circle at 86% 22%, rgba(255, 255, 255, 0.04) 0%, transparent 34%) !important;
+}
+
+.modelo-exato-ebd .hero h1,
+.modelo-exato-ebd .hero h1 span,
+.modelo-exato-ebd .hero p,
+.modelo-exato-ebd .hero .stat-number,
+.modelo-exato-ebd .hero .stat-label {
+  color: var(--texto-claro-ebd) !important;
+}
+
+.modelo-exato-ebd .hero p,
+.modelo-exato-ebd .hero .stat-label {
+  color: var(--texto-claro-suave-ebd) !important;
+}
+
+/* Sempre que houver fundo escuro, texto claro */
+.modelo-exato-ebd .mockup-header,
+.modelo-exato-ebd .footer,
+.menu-lateral,
+.banner-modo-suporte,
+.manual-hero,
+.manual-final,
+.painel-apresentacao {
+  color: var(--texto-claro-ebd) !important;
+}
+
+.modelo-exato-ebd .mockup-header *,
+.modelo-exato-ebd .footer *,
+.menu-lateral *,
+.banner-modo-suporte *,
+.manual-hero *,
+.manual-final *,
+.painel-apresentacao * {
+  color: inherit;
+}
+
+.modelo-exato-ebd .footer a,
+.modelo-exato-ebd .footer-col a,
+.modelo-exato-ebd .footer-col span,
+.modelo-exato-ebd .footer p,
+.menu-lateral p,
+.menu-lateral span,
+.banner-modo-suporte p,
+.manual-hero p,
+.manual-final p,
+.painel-apresentacao p {
+  color: var(--texto-claro-suave-ebd) !important;
+}
+
+.modelo-exato-ebd .footer-logo,
+.modelo-exato-ebd .footer-col h4,
+.modelo-exato-ebd .footer-gold,
+.manual-hero h2,
+.manual-final h3 {
+  color: #D4AF37 !important;
+}
+
+/* Botões em áreas escuras com contraste */
+.modelo-exato-ebd .hero .btn-primary {
+  background: #14395e !important;
+  color: #ffffff !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14) !important;
+}
+
+.modelo-exato-ebd .hero .btn-primary:hover {
+  background: #0f3152 !important;
+}
+
+/* Parte interna: menu escuro sempre com textos claros */
+.menu-lateral .marca-sidebar h1,
+.menu-lateral .marca-sidebar p,
+.menu-lateral .menu-navegacao button,
+.menu-lateral .cartao-usuario-sidebar strong,
+.menu-lateral .titulo-usuario-sidebar,
+.menu-lateral .botao-sair-sidebar span {
+  color: #ffffff !important;
+}
+
+.menu-lateral .menu-navegacao button:not(.ativo) span {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo,
+.menu-lateral .menu-navegacao button.ativo span {
+  color: #ffffff !important;
+  background: var(--fundo-principal-ebd) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo .icone-menu {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* Cards de classe com fundos escuros/azuis e letras claras */
+.lista-classes-modernas .classe-card-cabecalho {
+  background: var(--fundo-principal-ebd) !important;
+}
+
+.lista-classes-modernas .classe-card-cabecalho *,
+.lista-classes-modernas .classe-card-selo,
+.lista-classes-modernas .classe-card-cabecalho h3 {
+  color: #ffffff !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+/* Login/apresentação com fundo escuro e letras claras */
+.painel-apresentacao h1,
+.painel-apresentacao h2,
+.painel-apresentacao h3,
+.painel-apresentacao strong,
+.painel-apresentacao span {
+  color: #ffffff !important;
+}
+
+.painel-apresentacao .selo-apresentacao {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+
+/* Correção definitiva: textos da página principal renderizados por Unicode escape */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar,
+.modelo-exato-ebd .comparison-icon {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-weight: 950 !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+}
+
+.modelo-exato-ebd .comparison-card li::before {
+  content: "" !important;
+}
+
+.modelo-exato-ebd .comparison-card li {
+  color: #1A1A1A !important;
+}
+
+.modelo-exato-ebd .plans-note {
+  font-weight: 700 !important;
+}
+
+
+/* Revisão visual segura dos símbolos */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar,
+.modelo-exato-ebd .comparison-icon {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-transform: none !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  font-size: 1.65rem !important;
+}
+
+.modelo-exato-ebd .comparison-card li::before {
+  content: "" !important;
+}
+
+.modelo-exato-ebd .comparison-card li {
+  color: #1A1A1A !important;
+}
+
+
+/* Remover selo de teste piloto da página inicial */
+.modelo-exato-ebd .hero-badge {
+  display: none !important;
+}
+
+
+/* Correcao emergencial de acentuacao e simbolos */
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar,
+.modelo-exato-ebd .comparison-icon {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-transform: none !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  font-size: 1.65rem !important;
+}
+
+.modelo-exato-ebd .comparison-card li::before {
+  content: "" !important;
+}
+
+
+/* Ações rápidas da chamada dos alunos */
+.acoes-chamada-rapida {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.botao-marcar-todos {
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-marcar-todos.presente {
+  background: #eafaf0;
+  color: #087b39;
+  border-color: rgba(8, 123, 57, 0.22);
+}
+
+.botao-marcar-todos.faltou {
+  background: #fff1f0;
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.22);
+}
+
+@media (max-width: 700px) {
+  .acoes-chamada-rapida {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Campo de data da aula/chamada */
+.formulario-data-chamada {
+  margin-bottom: 18px;
+}
+
+.texto-ajuda-campo {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cabecalho-relatorio p {
+  line-height: 1.35;
+}
+
+
+/* Respostas aos feedbacks do piloto */
+.feedback-admin-conteudo {
+  min-width: 0;
+}
+
+.acoes-feedback-admin {
+  display: grid;
+  gap: 8px;
+  align-self: start;
+  min-width: 170px;
+}
+
+.acoes-feedback-admin button {
+  width: 100%;
+}
+
+.feedback-responder-box {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.feedback-responder-box label {
+  display: grid;
+  gap: 8px;
+  color: #003B66;
+  font-weight: 900;
+}
+
+.feedback-responder-box textarea {
+  width: 100%;
+  min-height: 110px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 12px 14px;
+  resize: vertical;
+  font: inherit;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.feedback-responder-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.feedback-resposta-admin,
+.feedback-resposta-igreja {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #fffbe8;
+  border: 1px solid rgba(255, 210, 0, 0.35);
+}
+
+.feedback-resposta-admin strong,
+.feedback-resposta-igreja strong {
+  display: block;
+  color: #8a5b00;
+  margin-bottom: 4px;
+}
+
+.feedback-resposta-admin p,
+.feedback-resposta-igreja p {
+  margin: 4px 0;
+  color: #334155;
+}
+
+.feedback-com-resposta {
+  border-color: rgba(0, 140, 68, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(0, 140, 68, 0.10), transparent 34%),
+    #ffffff;
+}
+
+.feedback-aguardando-resposta {
+  display: inline-block;
+  margin-top: 8px;
+  color: #64748b;
+  font-weight: 800;
+}
+
+@media (max-width: 800px) {
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-feedback-admin {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+
+/* Contato/WhatsApp na administração */
+.contato-acesso-admin {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.16);
+}
+
+.contato-acesso-admin p {
+  margin: 3px 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lista-acessos-admin .acoes-acesso-admin {
+  align-self: stretch;
+}
+
+.lista-acessos-admin .acoes-acesso-admin button {
+  min-width: 150px;
+}
+
+.mockup-check {
+  font-weight: 950;
+  color: #10b981;
+}
+
+
+/* Cadastro: DDD separado e estado em lista suspensa */
+.campo-telefone-cadastro {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.campo-telefone-cadastro input {
+  width: 100%;
+}
+
+.formulario-cadastro-piloto select,
+.formulario select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #cfe3f2;
+  border-radius: 16px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .campo-telefone-cadastro {
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 10px;
+  }
+}
+
+
+/* Usuários vinculados dentro do card da igreja */
+.botao-usuarios-vinculados {
+  border-color: rgba(0, 174, 239, 0.35) !important;
+  color: #005f8c !important;
+  background: #f0fbff !important;
+}
+
+.usuarios-vinculados-igreja {
+  grid-column: 1 / -1;
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.10), transparent 38%),
+    #f8fcff;
+  border: 1px solid rgba(0, 174, 239, 0.22);
+}
+
+.usuarios-vinculados-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.usuarios-vinculados-topo strong {
+  display: block;
+  color: #003B66;
+  font-size: 16px;
+}
+
+.usuarios-vinculados-topo span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.usuario-vinculado-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(207, 227, 242, 0.9);
+}
+
+.acoes-usuario-vinculado {
+  display: grid;
+  gap: 8px;
+  min-width: 170px;
+}
+
+.acoes-usuario-vinculado button {
+  width: 100%;
+}
+
+.usuarios-vinculados-vazio {
+  margin: 0;
+}
+
+@media (max-width: 850px) {
+  .usuarios-vinculados-topo,
+  .usuario-vinculado-card {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .acoes-usuario-vinculado {
+    min-width: 0;
+  }
+}
+
+
+/* Botão WhatsApp mais discreto na Administração */
+.acoes-aprovacao-igreja .botao-whatsapp-admin,
+.igreja-admin-card .botao-whatsapp-admin {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 101, 52, 0.22) !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.acoes-aprovacao-igreja .botao-whatsapp-admin:hover,
+.igreja-admin-card .botao-whatsapp-admin:hover {
+  background: #dcfce7 !important;
+  transform: none !important;
+}
+
+/* =========================================================
+   CLASSES - CARDS COMPACTOS, COLORIDOS E OPERACIONAIS
+   ========================================================= */
+
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.lista-classes-modernas .classe-card-moderno {
+  position: relative !important;
+  display: block !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(18, 168, 224, 0.22) !important;
+  box-shadow: 0 16px 38px rgba(7, 59, 99, 0.09) !important;
+}
+
+.lista-classes-modernas .classe-card-moderno::before,
+.lista-classes-modernas .classe-card-moderno::after {
+  display: none !important;
+  content: none !important;
+}
+
+.classe-card-faixa {
+  position: relative;
+  min-height: 116px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: #ffffff;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255, 210, 0, 0.36), transparent 28%),
+    linear-gradient(135deg, #103058 0%, #173f66 56%, #1b7a99 100%);
+}
+
+.classe-card-faixa::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: linear-gradient(180deg, #f5a623, #00bcd4, #4caf50);
+}
+
+.classe-card-faixa::after {
+  content: "";
+  position: absolute;
+  right: -38px;
+  bottom: -58px;
+  width: 170px;
+  height: 170px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.classe-cor-1 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(245, 166, 35, 0.36), transparent 28%),
+    linear-gradient(135deg, #103058 0%, #173f66 56%, #1b7a99 100%);
+}
+
+.classe-cor-2 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(212, 175, 55, 0.32), transparent 28%),
+    linear-gradient(135deg, #10243f 0%, #0b7285 56%, #00bcd4 100%);
+}
+
+.classe-cor-3 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255, 210, 0, 0.30), transparent 28%),
+    linear-gradient(135deg, #3a1c0c 0%, #b45309 54%, #ff5722 100%);
+}
+
+.classe-cor-4 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255, 210, 0, 0.26), transparent 28%),
+    linear-gradient(135deg, #10351f 0%, #2e7d32 56%, #4caf50 100%);
+}
+
+.classe-cor-5 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255, 210, 0, 0.28), transparent 28%),
+    linear-gradient(135deg, #2d174d 0%, #4f46e5 54%, #00bcd4 100%);
+}
+
+.classe-card-titulo-bloco {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
+.classe-card-selo {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin: 0 0 8px !important;
+  padding: 5px 11px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.classe-card-faixa h3 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: clamp(28px, 3.1vw, 46px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.05em !important;
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+  word-break: normal;
+}
+
+.classe-card-matricula {
+  position: relative !important;
+  z-index: 2 !important;
+  flex-shrink: 0 !important;
+  width: 86px !important;
+  min-width: 86px !important;
+  height: 78px !important;
+  min-height: 78px !important;
+  padding: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-align: center !important;
+  border-radius: 22px !important;
+  background: linear-gradient(135deg, #d4af37, #f5a623, #b8860b) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18) !important;
+}
+
+.classe-card-matricula strong,
+.classe-card-matricula {
+  font-size: 30px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.classe-card-matricula span {
+  display: block !important;
+  margin-top: 3px !important;
+  color: #1a1a1a !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.classe-card-corpo {
+  padding: 16px 18px 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.classe-card-resumo {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(180px, 0.55fr) !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.classe-card-resumo-item {
+  min-height: 64px !important;
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 34%),
+    #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.18) !important;
+  box-shadow: 0 10px 22px rgba(7, 59, 99, 0.045) !important;
+}
+
+.classe-card-resumo-item strong,
+.classe-card-resumo-item span {
+  display: block !important;
+}
+
+.classe-card-resumo-item strong {
+  margin-bottom: 5px !important;
+  color: #0b4b78 !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.classe-card-resumo-item span {
+  color: #111827 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.professores-na-classe-compacto,
+.lista-classes-modernas .professores-na-classe {
+  margin: 0 !important;
+  padding: 10px !important;
+  min-height: auto !important;
+  border-radius: 16px !important;
+  background: #f8fcff !important;
+  border: 1px solid rgba(0, 188, 212, 0.16) !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  min-height: 44px !important;
+  padding: 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.12) !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .professor-classe-linha + .professor-classe-linha {
+  margin-top: 8px !important;
+}
+
+.professor-classe-nome,
+.lista-classes-modernas .professor-classe-linha span {
+  color: #111827 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+}
+
+.professor-classe-acoes,
+.lista-classes-modernas .professor-classe-linha > div {
+  display: flex !important;
+  gap: 7px !important;
+  flex-wrap: wrap !important;
+}
+
+.lista-classes-modernas .botao-pequeno {
+  min-height: 30px !important;
+  padding: 5px 10px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+}
+
+.texto-sem-professor {
+  margin: 0 !important;
+  padding: 8px 6px !important;
+  color: #64748b !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.classe-card-acoes {
+  display: flex !important;
+  gap: 9px !important;
+  flex-wrap: wrap !important;
+  padding-top: 2px !important;
+}
+
+.classe-card-acoes button {
+  width: auto !important;
+  min-width: 136px !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 0 14px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+}
+
+.classe-card-acoes .botao-principal {
+  background: linear-gradient(135deg, #103058, #00bcd4) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px rgba(0, 188, 212, 0.20) !important;
+}
+
+.classe-card-acoes .botao-verde {
+  background: linear-gradient(135deg, #2e7d32, #4caf50) !important;
+  color: #ffffff !important;
+}
+
+.classe-card-acoes .botao-editar {
+  background: #ffffff !important;
+  color: #8a5b00 !important;
+  border: 1px solid rgba(212, 175, 55, 0.38) !important;
+}
+
+.classe-card-acoes .botao-excluir {
+  background: #fff7f4 !important;
+  color: #e64a19 !important;
+  border: 1px solid rgba(255, 87, 34, 0.30) !important;
+}
+
+@media (max-width: 900px) {
+  .classe-card-faixa {
+    min-height: auto;
+    padding: 18px;
+    align-items: flex-start;
+  }
+
+  .classe-card-faixa h3 {
+    font-size: clamp(26px, 9vw, 40px) !important;
+  }
+
+  .classe-card-resumo {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .classe-card-faixa {
+    flex-direction: column;
+  }
+
+  .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 58px !important;
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+
+  .lista-classes-modernas .professor-classe-linha {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .professor-classe-acoes,
+  .lista-classes-modernas .professor-classe-linha > div,
+  .classe-card-acoes,
+  .classe-card-acoes button {
+    width: 100% !important;
+  }
+}
+
+/* =========================================================
+   RELATÓRIOS - AÇÕES DE PDF E MODELO EM BRANCO
+   ========================================================= */
+
+.grupo-botoes-relatorios {
+  align-items: center;
+}
+
+.grupo-botoes-relatorios button {
+  min-height: 48px;
+}
+
+.relatorio-folha-em-branco .tabela-ebd td {
+  height: 34px;
+}
+
+.area-observacoes-rascunho {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.area-observacoes-rascunho strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.area-observacoes-rascunho div {
+  height: 28px;
+  border-bottom: 1px solid #111827;
+}
+
+@media print {
+  .grupo-botoes-relatorios {
+    display: none !important;
+  }
+
+  .relatorio-folha-em-branco .tabela-ebd td {
+    height: 26px !important;
+  }
+}
+
+/* =========================================================
+   CORRECAO V3 - CLASSES COMPACTAS, COLORIDAS E SEM COLUNA LATERAL
+   Cole no final do App.css. Este bloco sobrescreve estilos antigos.
+   ========================================================= */
+
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.lista-classes-modernas .item-lista,
+.lista-classes-modernas .classe-card-moderno {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  grid-template-columns: none !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.20) !important;
+  box-shadow: 0 14px 34px rgba(7, 59, 99, 0.08) !important;
+}
+
+.lista-classes-modernas .item-lista::before,
+.lista-classes-modernas .item-lista::after,
+.lista-classes-modernas .classe-card-moderno::before,
+.lista-classes-modernas .classe-card-moderno::after {
+  display: none !important;
+  content: none !important;
+}
+
+.lista-classes-modernas .classe-card-conteudo,
+.lista-classes-modernas .classe-card-corpo {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 14px 16px 16px !important;
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.lista-classes-modernas .classe-card-faixa,
+.lista-classes-modernas .classe-card-cabecalho {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 94px !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 18px 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  overflow: hidden !important;
+  border-radius: 24px 24px 0 0 !important;
+  color: #ffffff !important;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(245, 166, 35, 0.34), transparent 28%),
+    linear-gradient(135deg, #103058 0%, #173f66 58%, #0b7d98 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-faixa::before,
+.lista-classes-modernas .classe-card-cabecalho::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  width: 7px !important;
+  background: linear-gradient(180deg, #d4af37, #00bcd4, #4caf50) !important;
+}
+
+.lista-classes-modernas .classe-card-faixa::after,
+.lista-classes-modernas .classe-card-cabecalho::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -42px !important;
+  bottom: -70px !important;
+  width: 160px !important;
+  height: 160px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+}
+
+.lista-classes-modernas .classe-cor-2 .classe-card-faixa,
+.lista-classes-modernas .classe-cor-2 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(212, 175, 55, 0.30), transparent 28%),
+    linear-gradient(135deg, #10243f 0%, #0b7285 58%, #00bcd4 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-3 .classe-card-faixa,
+.lista-classes-modernas .classe-cor-3 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 210, 0, 0.30), transparent 28%),
+    linear-gradient(135deg, #3a1c0c 0%, #b45309 54%, #ff5722 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-4 .classe-card-faixa,
+.lista-classes-modernas .classe-cor-4 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 210, 0, 0.26), transparent 28%),
+    linear-gradient(135deg, #10351f 0%, #2e7d32 58%, #4caf50 100%) !important;
+}
+
+.lista-classes-modernas .classe-cor-5 .classe-card-faixa,
+.lista-classes-modernas .classe-cor-5 .classe-card-cabecalho {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 210, 0, 0.28), transparent 28%),
+    linear-gradient(135deg, #2d174d 0%, #4f46e5 56%, #00bcd4 100%) !important;
+}
+
+.lista-classes-modernas .classe-card-titulo-bloco,
+.lista-classes-modernas .classe-card-cabecalho > div:first-child {
+  position: relative !important;
+  z-index: 2 !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin: 0 0 7px !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.lista-classes-modernas .classe-card-faixa h3,
+.lista-classes-modernas .classe-card-cabecalho h3,
+.lista-classes-modernas .classe-card-moderno h3 {
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  color: #ffffff !important;
+  font-size: clamp(24px, 2.4vw, 36px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.035em !important;
+  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.22) !important;
+  word-break: normal !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  position: relative !important;
+  z-index: 2 !important;
+  flex: 0 0 auto !important;
+  width: 74px !important;
+  min-width: 74px !important;
+  height: 66px !important;
+  min-height: 66px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-align: center !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #d4af37, #f5a623, #b8860b) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18) !important;
+}
+
+.lista-classes-modernas .classe-card-matricula,
+.lista-classes-modernas .classe-card-matricula strong {
+  font-size: 25px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+}
+
+.lista-classes-modernas .classe-card-matricula span {
+  display: block !important;
+  margin-top: 2px !important;
+  color: #1a1a1a !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.lista-classes-modernas .classe-card-info,
+.lista-classes-modernas .classe-card-resumo {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.4fr) minmax(160px, 0.55fr) !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.lista-classes-modernas .classe-card-info p,
+.lista-classes-modernas .classe-card-resumo-item {
+  min-height: 56px !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 14px !important;
+  background:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.10), transparent 34%),
+    #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.16) !important;
+  box-shadow: 0 8px 18px rgba(7, 59, 99, 0.04) !important;
+}
+
+.lista-classes-modernas .classe-card-info strong,
+.lista-classes-modernas .classe-card-resumo-item strong {
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: #0b4b78 !important;
+  font-size: 10px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.lista-classes-modernas .classe-card-info span,
+.lista-classes-modernas .classe-card-resumo-item span {
+  display: block !important;
+  color: #111827 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.lista-classes-modernas .professores-na-classe,
+.lista-classes-modernas .professores-na-classe-compacto {
+  margin: 0 !important;
+  padding: 9px !important;
+  min-height: 0 !important;
+  border-radius: 15px !important;
+  background: #f8fcff !important;
+  border: 1px solid rgba(0, 188, 212, 0.14) !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  min-height: 42px !important;
+  padding: 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 188, 212, 0.12) !important;
+  box-shadow: none !important;
+}
+
+.lista-classes-modernas .professor-classe-linha + .professor-classe-linha {
+  margin-top: 7px !important;
+}
+
+.lista-classes-modernas .professor-classe-nome,
+.lista-classes-modernas .professor-classe-linha > span {
+  color: #111827 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+}
+
+.lista-classes-modernas .professor-classe-acoes,
+.lista-classes-modernas .professor-classe-linha > div {
+  display: flex !important;
+  gap: 7px !important;
+  flex-wrap: wrap !important;
+}
+
+.lista-classes-modernas .botao-pequeno {
+  min-height: 28px !important;
+  padding: 5px 9px !important;
+  border-radius: 9px !important;
+  font-size: 11px !important;
+}
+
+.lista-classes-modernas .texto-sem-professor {
+  margin: 0 !important;
+  padding: 8px 6px !important;
+  color: #64748b !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card,
+.lista-classes-modernas .classe-card-acoes {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 9px !important;
+  flex-wrap: wrap !important;
+  background: transparent !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card button,
+.lista-classes-modernas .classe-card-acoes button {
+  width: auto !important;
+  min-width: 128px !important;
+  min-height: 40px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border-radius: 13px !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card .botao-principal,
+.lista-classes-modernas .classe-card-acoes .botao-principal {
+  background: linear-gradient(135deg, #103058, #00bcd4) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(0, 188, 212, 0.18) !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card .botao-verde,
+.lista-classes-modernas .classe-card-acoes .botao-verde {
+  background: linear-gradient(135deg, #2e7d32, #4caf50) !important;
+  color: #ffffff !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card .botao-editar,
+.lista-classes-modernas .classe-card-acoes .botao-editar {
+  background: #ffffff !important;
+  color: #8a5b00 !important;
+  border: 1px solid rgba(212, 175, 55, 0.38) !important;
+}
+
+.lista-classes-modernas .acoes-item.acoes-classe-card .botao-excluir,
+.lista-classes-modernas .classe-card-acoes .botao-excluir {
+  background: #fff7f4 !important;
+  color: #e64a19 !important;
+  border: 1px solid rgba(255, 87, 34, 0.30) !important;
+}
+
+@media (max-width: 900px) {
+  .lista-classes-modernas .classe-card-faixa,
+  .lista-classes-modernas .classe-card-cabecalho {
+    min-height: auto !important;
+    padding: 16px !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .classe-card-faixa h3,
+  .lista-classes-modernas .classe-card-cabecalho h3,
+  .lista-classes-modernas .classe-card-moderno h3 {
+    font-size: clamp(24px, 8vw, 36px) !important;
+  }
+
+  .lista-classes-modernas .classe-card-info,
+  .lista-classes-modernas .classe-card-resumo {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .lista-classes-modernas .classe-card-faixa,
+  .lista-classes-modernas .classe-card-cabecalho {
+    flex-direction: column !important;
+  }
+
+  .lista-classes-modernas .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 54px !important;
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+
+  .lista-classes-modernas .professor-classe-linha {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .professor-classe-acoes,
+  .lista-classes-modernas .professor-classe-linha > div,
+  .lista-classes-modernas .acoes-item.acoes-classe-card,
+  .lista-classes-modernas .classe-card-acoes,
+  .lista-classes-modernas .acoes-item.acoes-classe-card button,
+  .lista-classes-modernas .classe-card-acoes button {
+    width: 100% !important;
+  }
+}
+
+
+/* =========================================================
+   CORRECAO FINAL V4 - CLASSES COMPACTAS COLORIDAS
+   Objetivo: faixa colorida baixa, corpo abaixo, botoes no rodape.
+   ========================================================= */
+
+.lista-classes-modernas {
+  display: grid !important;
+  gap: 14px !important;
+}
+
+.lista-classes-modernas .classe-card-moderno,
+.lista-classes-modernas .item-lista.classe-card-moderno {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(14, 165, 233, 0.20) !important;
+  box-shadow: 0 10px 24px rgba(7, 59, 99, 0.07) !important;
+}
+
+.lista-classes-modernas .classe-card-faixa {
+  width: 100% !important;
+  min-height: 78px !important;
+  height: auto !important;
+  max-height: 120px !important;
+  margin: 0 !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  border-radius: 18px 18px 0 0 !important;
+  overflow: hidden !important;
+}
+
+.lista-classes-modernas .classe-card-faixa::after {
+  width: 92px !important;
+  height: 92px !important;
+  right: -24px !important;
+  bottom: -48px !important;
+}
+
+.lista-classes-modernas .classe-card-faixa h3,
+.lista-classes-modernas .classe-card-moderno h3 {
+  font-size: clamp(20px, 1.7vw, 27px) !important;
+  line-height: 1.08 !important;
+  color: #ffffff !important;
+  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.22) !important;
+  letter-spacing: -0.025em !important;
+}
+
+.lista-classes-modernas .classe-card-selo {
+  margin-bottom: 5px !important;
+  padding: 3px 8px !important;
+  font-size: 9px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula {
+  width: 58px !important;
+  min-width: 58px !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula strong {
+  font-size: 20px !important;
+}
+
+.lista-classes-modernas .classe-card-matricula span {
+  font-size: 8px !important;
+}
+
+.lista-classes-modernas .classe-card-corpo {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 12px 14px 14px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+  background: #ffffff !important;
+}
+
+.lista-classes-modernas .classe-card-resumo {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 150px !important;
+  gap: 10px !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item {
+  min-height: 48px !important;
+  padding: 9px 12px !important;
+  border-radius: 12px !important;
+  background: #f8fcff !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item strong {
+  font-size: 9px !important;
+  margin-bottom: 3px !important;
+}
+
+.lista-classes-modernas .classe-card-resumo-item span {
+  font-size: 13px !important;
+}
+
+.lista-classes-modernas .professores-na-classe,
+.lista-classes-modernas .professores-na-classe-compacto {
+  min-height: 0 !important;
+  padding: 8px !important;
+  background: #f9fdff !important;
+  border-radius: 13px !important;
+}
+
+.lista-classes-modernas .professor-classe-linha {
+  min-height: 38px !important;
+  padding: 7px 9px !important;
+}
+
+.lista-classes-modernas .classe-card-acoes {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding-top: 2px !important;
+  margin: 0 !important;
+}
+
+.lista-classes-modernas .classe-card-acoes button {
+  width: auto !important;
+  min-width: 118px !important;
+  min-height: 36px !important;
+  padding: 0 11px !important;
+  border-radius: 11px !important;
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+}
+
+/* Neutraliza estruturas antigas caso algum cache ainda use item-com-acoes. */
+.lista-classes-modernas .item-com-acoes,
+.lista-classes-modernas .classe-card-moderna,
+.lista-classes-modernas .classe-destaque-card {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: 1fr !important;
+}
+
+.lista-classes-modernas .acoes-item,
+.lista-classes-modernas .acoes-classe-card {
+  position: static !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  background: transparent !important;
+}
+
+.relatorio-orientacao {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.relatorio-acoes-rodape {
+  margin: 18px auto 0;
+  padding: 16px;
+  max-width: 1150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  box-shadow: 0 12px 28px rgba(7, 59, 99, 0.07);
+}
+
+.relatorio-acoes-rodape strong,
+.relatorio-acoes-rodape span {
+  display: block;
+}
+
+.relatorio-acoes-rodape strong {
+  color: var(--logo-azul-escuro);
+  font-size: 16px;
+}
+
+.relatorio-acoes-rodape span {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.relatorio-acoes-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .lista-classes-modernas .classe-card-resumo {
+    grid-template-columns: 1fr !important;
+  }
+
+  .relatorio-acoes-rodape {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .relatorio-acoes-botoes {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .lista-classes-modernas .classe-card-faixa {
+    min-height: 72px !important;
+    max-height: none !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .lista-classes-modernas .classe-card-matricula {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 44px !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .lista-classes-modernas .classe-card-acoes button,
+  .relatorio-acoes-botoes button {
+    width: 100% !important;
+  }
+}
+
+
+/* =========================================================
+   RELATÓRIOS - BOTÃO CHAMADA POR CLASSE
+   ========================================================= */
+.relatorio-acoes-botoes {
+  align-items: center;
+}
+
+.relatorio-acoes-botoes .botao-secundario {
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .relatorio-acoes-botoes .botao-secundario,
+  .relatorio-acoes-botoes .botao-principal {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   MANUAL - ORIENTAÇÕES PARA PROFESSOR E SECRETARIA
+   ========================================================= */
+
+.manual-secao-detalhada {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 252, 255, 0.96));
+  border: 1px solid rgba(18, 168, 224, 0.18);
+  box-shadow: 0 18px 40px rgba(7, 59, 99, 0.08);
+}
+
+.manual-secao-secretaria {
+  background:
+    radial-gradient(circle at top right, rgba(22, 163, 74, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(247, 254, 251, 0.96));
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.manual-secao-cabecalho {
+  margin-bottom: 18px;
+}
+
+.manual-secao-cabecalho h3 {
+  margin: 10px 0 8px;
+  color: var(--logo-azul-escuro);
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.manual-secao-cabecalho p {
+  margin: 0;
+  max-width: 820px;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.manual-lista-passos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.manual-lista-passos article {
+  padding: 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.manual-lista-passos article strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.manual-lista-passos article p {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.manual-observacao {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #7c2d12;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.manual-observacao strong {
+  color: #9a3412;
+}
+
+@media (max-width: 900px) {
+  .manual-lista-passos {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .manual-secao-detalhada {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .manual-secao-cabecalho h3 {
+    font-size: 24px;
+  }
+}
+
+
+/* =========================================================
+   ALERTAS DA EBD - PAINEL DA SECRETARIA
+   ========================================================= */
+
+.alertas-ebd-painel {
+  margin: 24px 0;
+  padding: 22px;
+  border-radius: 26px;
+  border: 1px solid rgba(18, 168, 224, 0.22);
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.20), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 251, 255, 0.94));
+  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.08);
+}
+
+.alertas-ebd-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.alertas-ebd-cabecalho h3 {
+  margin: 8px 0 6px;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: clamp(24px, 2.4vw, 34px);
+  letter-spacing: -0.03em;
+}
+
+.alertas-ebd-cabecalho p {
+  margin: 0;
+  color: #52627a;
+  font-weight: 700;
+}
+
+.alertas-ebd-grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.alerta-ebd-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: #ffffff;
+  color: inherit;
+  text-align: left;
+  box-shadow: 0 14px 28px rgba(7, 59, 99, 0.06);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.alerta-ebd-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(18, 168, 224, 0.35);
+  box-shadow: 0 18px 34px rgba(7, 59, 99, 0.10);
+}
+
+.alerta-ebd-icone {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  font-size: 24px;
+  box-shadow: inset 0 -10px 22px rgba(255, 255, 255, 0.22);
+}
+
+.alerta-ebd-icone-aniversario {
+  background: #fff7ed;
+}
+
+.alerta-ebd-icone-faltas {
+  background: #fff1f2;
+}
+
+.alerta-ebd-icone-destaque {
+  background: #fef9c3;
+}
+
+.alerta-ebd-card strong {
+  display: block;
+  color: #0f172a;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.alerta-ebd-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.alerta-ebd-card em {
+  min-width: 44px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  text-align: center;
+}
+
+.alerta-flutuante-secretaria {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px 18px 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(18, 168, 224, 0.25);
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.25), transparent 40%),
+    #ffffff;
+  box-shadow: 0 24px 60px rgba(7, 59, 99, 0.22);
+  color: #0f172a;
+}
+
+.alerta-flutuante-secretaria strong {
+  display: block;
+  margin: 0 34px 8px 0;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: 17px;
+}
+
+.alerta-flutuante-secretaria p {
+  margin: 6px 0;
+  color: #334155;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.alerta-flutuante-fechar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.alerta-flutuante-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.alerta-flutuante-acoes button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+@media (max-width: 980px) {
+  .alertas-ebd-cabecalho {
+    flex-direction: column;
+  }
+
+  .alertas-ebd-grade {
+    grid-template-columns: 1fr;
+  }
+
+  .alerta-flutuante-secretaria {
+    right: 16px;
+    left: 16px;
+    bottom: 16px;
+    width: auto;
+  }
+}
+
+@media print {
+  .alerta-flutuante-secretaria {
+    display: none !important;
+  }
+}
+
+
+
+/* Correção responsiva dos botões dos cards de igrejas no admin */
+.igreja-admin-card {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  align-items: stretch !important;
+  gap: 18px !important;
+}
+
+.igreja-admin-card > div:first-child {
+  min-width: 0;
+}
+
+.igreja-admin-card .acoes-aprovacao-igreja {
+  width: 100%;
+  min-width: 0;
+  display: grid !important;
+  grid-template-columns: 1fr;
+  align-content: start;
+  align-items: stretch;
+  gap: 10px !important;
+}
+
+.igreja-admin-card .acoes-aprovacao-igreja > button,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-aprovar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-nao-aprovar-igreja,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-whatsapp-admin,
+.igreja-admin-card .acoes-aprovacao-igreja .botao-copiar-admin {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-top: 0 !important;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+.igreja-admin-card .grupo-aviso-aprovacao,
+.igreja-admin-card .grupo-aprovacao-rapida {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.igreja-admin-card .dados-igreja-admin {
+  display: grid;
+  gap: 4px;
+}
+
+.igreja-admin-card .dados-igreja-admin p,
+.igreja-admin-card > div:first-child > p {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1100px) {
+  .igreja-admin-card {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 260px);
+  }
+}
+
+@media (max-width: 860px) {
+  .igreja-admin-card {
+    grid-template-columns: 1fr;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .igreja-admin-card .grupo-aviso-aprovacao,
+  .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .lista-admin-igrejas {
+    gap: 12px;
+  }
+
+  .igreja-admin-card {
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .linha-titulo-admin {
+    gap: 8px;
+  }
+
+  .linha-titulo-admin h3 {
+    width: 100%;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja {
+    grid-template-columns: 1fr;
+  }
+
+  .igreja-admin-card .acoes-aprovacao-igreja > button,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+  .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja {
+    min-height: 46px;
+    padding: 10px 12px !important;
+    font-size: 14px;
+  }
+
+  .filtros-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filtros-admin .botao-secundario {
+    width: 100%;
+  }
+}
+
+/* Usuários vinculados dentro das igrejas: botões responsivos */
+.usuario-vinculado-card {
+  gap: 14px;
+}
+
+.acoes-usuario-vinculado {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px !important;
+  width: 100%;
+}
+
+.acoes-usuario-vinculado button {
+  width: 100%;
+  margin-top: 0 !important;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+@media (max-width: 720px) {
+  .usuario-vinculado-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  .acoes-usuario-vinculado {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   FIX FINAL - Cards de igrejas/Admin responsivos
+   Colocado no final para sobrescrever regras anteriores.
+   ========================================================= */
+
+.lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 280px !important;
+  align-items: start !important;
+  gap: 18px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes > div:first-child {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 280px !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+  justify-items: stretch !important;
+  align-self: start !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja > *,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja button,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-aprovar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-nao-aprovar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-whatsapp-admin,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-copiar-admin {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  min-height: 46px !important;
+  padding: 10px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.15 !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card .grupo-aviso-aprovacao,
+.lista-admin-igrejas .igreja-admin-card .grupo-aprovacao-rapida {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding: 10px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card p,
+.lista-admin-igrejas .igreja-admin-card h3,
+.lista-admin-igrejas .igreja-admin-card strong {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+@media (max-width: 980px) {
+  .lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+    max-width: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card .grupo-aviso-aprovacao,
+  .lista-admin-igrejas .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .lista-admin-igrejas {
+    gap: 12px !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+    grid-template-columns: 1fr !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja button,
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+  .lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja {
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .lista-admin-igrejas .linha-titulo-admin h3 {
+    width: 100% !important;
+    font-size: 18px !important;
+    line-height: 1.2 !important;
+  }
+}
+
+
+/* Classes: evitar repetição de professores e permitir ver alunos da turma */
+.classe-card-resumo {
+  grid-template-columns: minmax(0, 220px) !important;
+}
+
+.alunos-da-classe {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fcff;
+  border: 1px solid rgba(18, 168, 224, 0.18);
+}
+
+.alunos-da-classe-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.alunos-da-classe-topo strong {
+  color: #003B66;
+  font-weight: 950;
+}
+
+.alunos-da-classe-topo span {
+  color: #475569;
+  font-weight: 800;
+}
+
+.alunos-da-classe-lista {
+  display: grid;
+  gap: 8px;
+}
+
+.aluno-classe-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+.aluno-classe-linha span {
+  min-width: 0;
+  color: #0f172a;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.aluno-classe-acoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 620px) {
+  .classe-card-acoes {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .classe-card-acoes button {
+    width: 100%;
+    margin-top: 0 !important;
+  }
+
+  .alunos-da-classe-topo,
+  .aluno-classe-linha {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aluno-classe-acoes {
+    justify-content: stretch;
+  }
+
+  .aluno-classe-acoes button {
+    flex: 1 1 120px;
+  }
+}
+
+
+/* Classes: destaque do rótulo Professor na linha */
+.professor-classe-nome {
+  overflow-wrap: anywhere;
+}
+
+.professor-classe-nome::first-letter {
+  text-transform: uppercase;
+}
+
+
+/* Melhorias v41 - Dashboard, histórico, financeiro, backup e WhatsApp de faltosos */
+.dashboard-v41-hero {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  color: #ffffff;
+  box-shadow: 0 24px 54px rgba(37, 99, 235, 0.18);
+}
+
+.dashboard-v41-hero h3 {
+  margin: 12px 0 8px;
+  font-size: 32px;
+}
+
+.dashboard-v41-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.6;
+}
+
+.dashboard-v41-circulo {
+  min-width: 148px;
+  min-height: 148px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.dashboard-v41-circulo strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.dashboard-v41-circulo span {
+  display: block;
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.dashboard-v41-grid,
+.backup-v41-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.dashboard-v41-bloco,
+.financeiro-v41-bloco,
+.backup-v41-card,
+.historico-v41 {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-suave);
+}
+
+.dashboard-v41-bloco {
+  margin-top: 0;
+}
+
+.dashboard-v41-bloco h3,
+.financeiro-v41-bloco h3,
+.backup-v41-card h3 {
+  margin: 0 0 14px;
+}
+
+.lista-graficos-v41,
+.lista-dashboard-v41 {
+  display: grid;
+  gap: 14px;
+}
+
+.linha-grafico-v41-topo,
+.item-dashboard-v41,
+.historico-v41-resumo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.linha-grafico-v41 p,
+.item-dashboard-v41 p,
+.backup-v41-card p {
+  margin: 4px 0 0;
+  color: var(--cor-texto-suave);
+  font-weight: 700;
+}
+
+.barra-grafico-v41 {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.barra-grafico-v41 span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #22c55e);
+}
+
+.item-dashboard-v41 {
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid var(--cor-borda);
+}
+
+.item-dashboard-alerta-v41 {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.filtros-historico-v41 {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+.historico-v41-numeros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.historico-v41-numeros div {
+  min-width: 108px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  text-align: center;
+}
+
+.historico-v41-numeros strong {
+  display: block;
+  font-size: 24px;
+}
+
+.historico-v41-numeros span {
+  display: block;
+  color: var(--cor-texto-suave);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.aviso-financeiro-v41 {
+  margin-top: 18px;
+}
+
+.backup-v41-card {
+  margin-top: 0;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.backup-v41-card .botao-principal,
+.backup-v41-card .botao-secundario {
+  margin-top: 0;
+  width: fit-content;
+}
+
+@media (max-width: 900px) {
+  .dashboard-v41-hero,
+  .historico-v41-resumo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-v41-grid,
+  .backup-v41-grid,
+  .filtros-historico-v41 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-v41-circulo {
+    width: 140px;
+    height: 140px;
+  }
+
+  .backup-v41-card .botao-principal,
+  .backup-v41-card .botao-secundario {
+    width: 100%;
+  }
+}
+
+/* v42 - Administração comercial mais organizada e botão Acessar igreja mais confiável */
+.conteudo .lista-admin-igrejas {
+  display: grid !important;
+  gap: 18px !important;
+}
+
+.conteudo .igreja-admin-card.item-lista.item-com-acoes {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 260px) !important;
+  align-items: start !important;
+  gap: 18px !important;
+  padding: 18px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(203, 213, 225, 0.9) !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.07) !important;
+}
+
+.conteudo .igreja-admin-card.item-lista.item-com-acoes > div:first-child {
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.conteudo .igreja-admin-card .linha-titulo-admin {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.conteudo .igreja-admin-card .linha-titulo-admin h3 {
+  margin: 0 !important;
+  color: #0f172a !important;
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.conteudo .igreja-admin-card .selo-status-piloto,
+.conteudo .igreja-admin-card [class*='selo'] {
+  white-space: nowrap !important;
+}
+
+.conteudo .igreja-admin-card .bloco-localizacao-admin,
+.conteudo .igreja-admin-card .dados-igreja-admin {
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+}
+
+.conteudo .igreja-admin-card p {
+  margin: 0 !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+.conteudo .igreja-admin-card strong,
+.conteudo .igreja-admin-card b {
+  color: #0f172a !important;
+}
+
+.conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+  width: 100% !important;
+  max-width: 260px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  align-self: start !important;
+  padding: 10px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja button,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.conteudo .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja {
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border-radius: 13px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.conteudo .igreja-admin-card .botao-acessar-igreja {
+  background: linear-gradient(135deg, #d89a00 0%, #f2b705 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 12px 22px rgba(216, 154, 0, 0.22) !important;
+}
+
+.conteudo .igreja-admin-card .botao-acessar-igreja:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.03) !important;
+}
+
+.conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+.conteudo .igreja-admin-card .grupo-aprovacao-rapida {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.filtros-admin {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 260px) !important;
+  align-items: end !important;
+  gap: 12px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+}
+
+.filtros-admin .botao-secundario {
+  margin-top: 0 !important;
+  min-height: 46px !important;
+}
+
+.banner-modo-suporte {
+  position: sticky !important;
+  top: 12px !important;
+  z-index: 20 !important;
+}
+
+@media (max-width: 980px) {
+  .conteudo .igreja-admin-card.item-lista.item-com-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+    max-width: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+  .conteudo .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .conteudo .igreja-admin-card.item-lista.item-com-acoes {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .conteudo .igreja-admin-card .acoes-item.acoes-aprovacao-igreja,
+  .conteudo .igreja-admin-card .grupo-aviso-aprovacao,
+  .conteudo .igreja-admin-card .grupo-aprovacao-rapida,
+  .filtros-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .conteudo .igreja-admin-card .linha-titulo-admin h3 {
+    font-size: 18px !important;
+  }
+}
+
+
+/* =========================================================
+   v43 - Administração comercial mais organizada e sem termos de teste
+   Mantém a estrutura existente, apenas melhora visual e usabilidade.
+   ========================================================= */
+
+.conteudo-admin-comercial {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 90% 8%, rgba(37, 99, 235, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.96));
+  border: 1px solid rgba(219, 226, 234, 0.92);
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+}
+
+.conteudo-admin-comercial .topo-admin-sistema {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 28px;
+  margin-bottom: 22px;
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(239, 246, 255, 0.84)),
+    radial-gradient(circle at right center, rgba(37, 99, 235, 0.15), transparent 32%);
+  border: 1px solid #dbeafe;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.conteudo-admin-comercial .topo-admin-sistema h2 {
+  margin: 8px 0 6px;
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  color: #0f172a;
+}
+
+.conteudo-admin-comercial .topo-admin-sistema p {
+  max-width: 760px;
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+}
+
+.conteudo-admin-comercial .selo-admin {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.conteudo-admin-comercial .topo-admin-sistema .botao-principal {
+  min-width: 150px;
+  margin-top: 0;
+  border-radius: 16px;
+  box-shadow: 0 16px 26px rgba(37, 99, 235, 0.18);
+}
+
+.cards-admin-sistema {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 22px;
+}
+
+.cards-admin-sistema .card-admin {
+  position: relative;
+  min-height: 122px;
+  padding: 20px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.055);
+}
+
+.cards-admin-sistema .card-admin::after {
+  content: '';
+  position: absolute;
+  right: -22px;
+  bottom: -28px;
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(250, 204, 21, .24), rgba(37, 99, 235, .10));
+}
+
+.cards-admin-sistema .card-admin span {
+  display: block;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.cards-admin-sistema .card-admin strong {
+  display: block;
+  margin: 8px 0 4px;
+  color: #1d4ed8;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.cards-admin-sistema .card-admin p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.admin-feedback-alertas,
+.bloco-cadastros-incompletos-admin,
+.admin-auditoria-card,
+.cadastros-incompletos-admin {
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.055) !important;
+}
+
+.admin-feedback-alertas {
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.admin-feedback-topo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.admin-feedback-topo h3 {
+  margin: 8px 0 4px;
+  color: #0f172a;
+  font-size: 28px;
+  letter-spacing: -0.035em;
+}
+
+.admin-feedback-topo p {
+  margin: 0;
+  color: #64748b;
+}
+
+.admin-feedback-topo > strong {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f59e0b, #fb923c);
+  color: #fff;
+  font-size: 24px;
+  box-shadow: 0 14px 28px rgba(245, 158, 11, .22);
+}
+
+.lista-feedbacks-admin {
+  display: grid;
+  gap: 14px;
+}
+
+.feedback-admin-item {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 168px;
+  gap: 18px;
+  padding: 18px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.feedback-resposta-admin {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.acoes-feedback-admin {
+  display: grid !important;
+  align-content: start;
+  gap: 8px;
+}
+
+.acoes-feedback-admin button,
+.acoes-aprovacao-igreja button {
+  min-height: 38px;
+  margin-top: 0 !important;
+  border-radius: 12px !important;
+  white-space: nowrap;
+}
+
+.conteudo-admin-comercial .filtros-admin {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) 180px;
+  gap: 12px;
+  align-items: end;
+  padding: 16px;
+  margin: 18px 0 0;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
+}
+
+.conteudo-admin-comercial .filtros-admin label {
+  color: #334155;
+  font-size: 13px;
+}
+
+.conteudo-admin-comercial .filtros-admin input {
+  min-height: 44px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.lista-admin-igrejas {
+  gap: 0 !important;
+  margin-top: 0 !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, .06);
+}
+
+.lista-admin-igrejas::before {
+  content: 'Igrejas cadastradas';
+  display: block;
+  padding: 20px 22px 8px;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.igreja-admin-card {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 18px !important;
+  align-items: stretch !important;
+  margin: 0 !important;
+  padding: 20px 22px !important;
+  border: 0 !important;
+  border-top: 1px solid #edf2f7 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #ffffff !important;
+}
+
+.igreja-admin-card:hover {
+  background: linear-gradient(90deg, #ffffff 0%, #f8fbff 100%) !important;
+}
+
+.igreja-admin-card > div:first-child {
+  min-width: 0;
+}
+
+.linha-titulo-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.linha-titulo-admin h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.status-piloto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border: 1px solid transparent;
+}
+
+.status-teste,
+.status-ativa {
+  color: #047857 !important;
+  background: #dcfce7 !important;
+  border-color: #bbf7d0 !important;
+}
+
+.status-pendente {
+  color: #b45309 !important;
+  background: #fef3c7 !important;
+  border-color: #fde68a !important;
+}
+
+.status-pausada {
+  color: #334155 !important;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.status-cancelada {
+  color: #b91c1c !important;
+  background: #fee2e2 !important;
+  border-color: #fecaca !important;
+}
+
+.dados-igreja-admin {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.dados-igreja-admin p,
+.igreja-admin-card p {
+  margin: 2px 0;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.dados-igreja-admin p strong {
+  color: #0f172a;
+}
+
+.acoes-aprovacao-igreja {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px !important;
+  align-content: start;
+  align-self: stretch;
+  padding-left: 18px;
+  border-left: 1px solid #e2e8f0;
+}
+
+.acoes-aprovacao-igreja .grupo-aviso-aprovacao,
+.acoes-aprovacao-igreja .grupo-aprovacao-rapida {
+  display: contents;
+}
+
+.botao-whatsapp-admin {
+  background: #16a34a !important;
+  color: #fff !important;
+  border: 1px solid #16a34a !important;
+}
+
+.botao-copiar-admin,
+.botao-usuarios-vinculados {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+.botao-acessar-igreja {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto !important;
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  box-shadow: 0 10px 22px rgba(217, 119, 6, .18);
+}
+
+.acoes-aprovacao-igreja .botao-principal {
+  background: linear-gradient(135deg, #0369a1, #0284c7) !important;
+  box-shadow: 0 10px 22px rgba(2, 132, 199, .18) !important;
+}
+
+.acoes-aprovacao-igreja .botao-editar {
+  background: #ffffff !important;
+  border-color: #fed7aa !important;
+  color: #b45309 !important;
+}
+
+.acoes-aprovacao-igreja .botao-excluir {
+  background: #fff7f7 !important;
+}
+
+.usuarios-vinculados-igreja {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+}
+
+@media (min-width: 1101px) {
+  .admin-feedback-alertas {
+    width: calc(62% - 9px);
+    display: inline-block;
+    vertical-align: top;
+    min-height: 300px;
+  }
+
+  .admin-feedback-alertas + .bloco-cadastros-incompletos-admin,
+  .admin-feedback-alertas + .cadastros-incompletos-admin,
+  .admin-feedback-alertas + .admin-auditoria-card {
+    width: calc(38% - 9px);
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 18px;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .cards-admin-sistema {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .igreja-admin-card {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-aprovacao-igreja {
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: 0;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+@media (max-width: 780px) {
+  .conteudo-admin-comercial {
+    padding: 18px;
+  }
+
+  .conteudo-admin-comercial .topo-admin-sistema,
+  .conteudo-admin-comercial .filtros-admin,
+  .feedback-admin-item {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-admin-sistema,
+  .dados-igreja-admin,
+  .acoes-aprovacao-igreja {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-aprovacao-igreja button {
+    width: 100%;
+  }
+}
+
+
+/* Proteção visual v51: logo sempre com fundo branco */
+.logo-simbolo,
+.logo-simbolo-sidebar,
+.logo-publica,
+.marca-login .logo-simbolo,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar,
+.marca-publica .logo-publica,
+.topo-publico .logo-publica {
+  background: #ffffff !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14) !important;
+  overflow: hidden !important;
+}
+
+.logo-imagem,
+.logo-simbolo img,
+.logo-simbolo-sidebar img,
+.logo-publica img,
+.marca-login img,
+.marca-sidebar img,
+.marca-publica img {
+  background: #ffffff !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+  border-radius: 12px !important;
+}
+
+
+/* v59 - Visualização segura de relatórios antes de baixar/imprimir */
+.visualizacao-relatorio-extra {
+  margin-top: 24px;
+  background: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--sombra-suave);
+}
+
+.visualizacao-relatorio-extra-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.visualizacao-relatorio-extra-topo h3 {
+  margin: 10px 0 6px;
+  font-size: 24px;
+  color: var(--cor-texto);
+}
+
+.visualizacao-relatorio-extra-topo p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+}
+
+.visualizacao-relatorio-extra-topo small {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.visualizacao-relatorio-extra-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.visualizacao-relatorio-extra-acoes .botao-principal,
+.visualizacao-relatorio-extra-acoes .botao-secundario {
+  margin-top: 0;
+}
+
+.visualizacao-relatorio-extra-corpo {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.visualizacao-relatorio-extra-corpo table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.visualizacao-relatorio-extra-corpo th,
+.visualizacao-relatorio-extra-corpo td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 14px;
+}
+
+.visualizacao-relatorio-extra-corpo th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 800;
+}
+
+.visualizacao-relatorio-extra-corpo .numero,
+.visualizacao-relatorio-extra-corpo .texto-centro {
+  text-align: center;
+}
+
+.visualizacao-relatorio-extra-corpo .vazio {
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: var(--cor-texto-suave);
+}
+
+.visualizacao-relatorio-extra-corpo .cartoes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario {
+  border: 1px solid #fde68a;
+  border-radius: 18px;
+  padding: 20px;
+  background: linear-gradient(180deg, #fffdf5 0%, #fff7ed 100%);
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario h3 {
+  margin: 0 0 10px;
+  color: #92400e;
+}
+
+.visualizacao-relatorio-extra-corpo .cartao-aniversario strong {
+  display: block;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+@media (max-width: 800px) {
+  .visualizacao-relatorio-extra-topo {
+    flex-direction: column;
+  }
+
+  .visualizacao-relatorio-extra-acoes,
+  .visualizacao-relatorio-extra-acoes .botao-principal,
+  .visualizacao-relatorio-extra-acoes .botao-secundario {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   V62 - Painel: ações rápidas, aniversariantes e sugestões
+   ========================================================= */
+
+.acoes-rapidas-painel {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 26px;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.10), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.96));
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+}
+
+.acoes-rapidas-painel h3 {
+  margin: 8px 0 0;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: clamp(22px, 2.1vw, 30px);
+  letter-spacing: -0.03em;
+}
+
+.acoes-rapidas-grade {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.acoes-rapidas-grade button {
+  min-height: 104px;
+  padding: 18px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 22px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.acoes-rapidas-grade button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.32);
+  box-shadow: 0 20px 38px rgba(15, 23, 42, 0.10);
+}
+
+.acoes-rapidas-grade strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: 16px;
+}
+
+.acoes-rapidas-grade span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.painel-aniversariantes-resumo {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.18), transparent 34%),
+    linear-gradient(135deg, #ffffff, #f8fbff);
+  border: 1px solid rgba(18, 168, 224, 0.20);
+  box-shadow: 0 18px 42px rgba(7, 59, 99, 0.07);
+}
+
+.painel-aniversariantes-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.painel-aniversariantes-topo h3 {
+  margin: 8px 0 4px;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: clamp(22px, 2.1vw, 30px);
+  letter-spacing: -0.03em;
+}
+
+.painel-aniversariantes-topo p {
+  margin: 0;
+  color: #64748b;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.painel-aniversariantes-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.painel-aniversariante-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.painel-aniversariante-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(18, 168, 224, 0.35);
+  box-shadow: 0 14px 26px rgba(7, 59, 99, 0.08);
+}
+
+.painel-aniversariante-item strong {
+  display: block;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.painel-aniversariante-item p {
+  margin: 0;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.painel-aniversariante-item span {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.janela-aniversariantes-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.54);
+  backdrop-filter: blur(8px);
+}
+
+.janela-aniversariantes-conteudo {
+  position: relative;
+  width: min(1080px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  border-radius: 30px;
+  background: #ffffff;
+  box-shadow: 0 34px 90px rgba(15, 23, 42, 0.34);
+}
+
+.janela-aniversariantes-fechar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.janela-aniversariantes-papel {
+  padding: clamp(22px, 3vw, 34px);
+  background:
+    radial-gradient(circle at top right, rgba(255, 203, 5, 0.20), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(18, 168, 224, 0.14), transparent 34%),
+    #ffffff;
+}
+
+.janela-aniversariantes-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-right: 42px;
+}
+
+.janela-aniversariantes-topo h3 {
+  margin: 10px 0 8px;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: clamp(30px, 3.4vw, 46px);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.janela-aniversariantes-topo p {
+  max-width: 680px;
+  margin: 0;
+  color: #475569;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.janela-aniversariantes-selo {
+  min-width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: #fff7ed;
+  font-size: 38px;
+  box-shadow: inset 0 -14px 28px rgba(255, 255, 255, 0.30), 0 16px 34px rgba(7, 59, 99, 0.10);
+}
+
+.janela-aniversariantes-resumo {
+  margin: 24px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.janela-aniversariantes-resumo div {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(18, 168, 224, 0.18);
+  box-shadow: 0 12px 26px rgba(7, 59, 99, 0.06);
+}
+
+.janela-aniversariantes-resumo strong {
+  display: block;
+  color: var(--logo-azul-escuro, #0b3a5b);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.janela-aniversariantes-resumo span {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.janela-aniversariantes-lista {
+  display: grid;
+  gap: 12px;
+}
+
+.janela-aniversariante-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+}
+
+.janela-aniversariante-icone {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #fff7ed;
+  font-size: 22px;
+}
+
+.janela-aniversariante-item strong {
+  display: block;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.janela-aniversariante-item p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.janela-aniversariante-item span {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.janela-aniversariante-item em {
+  min-width: 88px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.janela-aniversariantes-vazio {
+  padding: 22px;
+  border-radius: 20px;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 800;
+  text-align: center;
+}
+
+.janela-aniversariantes-rodape {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 203, 5, 0.30);
+  background: #fffbeb;
+}
+
+.janela-aniversariantes-rodape strong {
+  display: block;
+  color: #92400e;
+  margin-bottom: 6px;
+}
+
+.janela-aniversariantes-rodape p {
+  margin: 0;
+  color: #78350f;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.janela-aniversariantes-acoes {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px clamp(22px, 3vw, 34px);
+  background: rgba(255, 255, 255, 0.96);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+
+.janela-aniversariante-item.ativo {
+  border-color: rgba(37, 99, 235, 0.38);
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.12);
+}
+
+.botao-mini-cartao {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: #0b4ea2;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.botao-mini-cartao:hover {
+  background: #083b7a;
+}
+
+.cartao-aniversario-area {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(320px, 1fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.cartao-aniversario-info {
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+}
+
+.cartao-aniversario-info h4 {
+  margin: 10px 0 8px;
+  color: #0b3a5b;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cartao-aniversario-info p {
+  margin: 0;
+  color: #475569;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.cartao-aniversario-visualizacao {
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 203, 5, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(18, 168, 224, 0.16), transparent 36%),
+    #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cartao-aniversario-oficial {
+  width: min(100%, 440px);
+  aspect-ratio: 4 / 5;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 78% 8%, rgba(219, 234, 254, 0.95), transparent 22%),
+    radial-gradient(circle at 14% 16%, rgba(255, 255, 255, 0.98), transparent 26%),
+    linear-gradient(145deg, #fffefa 0%, #f7fbff 44%, #eaf5ff 100%);
+  padding: 11px;
+  color: #0b2e5c;
+  box-shadow: 0 28px 64px rgba(15, 23, 42, 0.22);
+  overflow: hidden;
+}
+
+.cartao-aniversario-moldura {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(191, 145, 45, 0.70);
+  border-radius: 26px;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.92), rgba(239,246,255,0.70)),
+    radial-gradient(circle at 8% 55%, rgba(37, 99, 235, 0.13), transparent 32%),
+    radial-gradient(circle at 95% 70%, rgba(191, 145, 45, 0.13), transparent 30%);
+}
+
+.cartao-aniversario-livro {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 70px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.30));
+  color: #0b4ea2;
+  font-size: 30px;
+}
+
+.cartao-aniversario-livro::before {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  width: 92px;
+  height: 42px;
+  transform: translateX(-50%);
+  background: repeating-conic-gradient(from 0deg, rgba(191, 145, 45, 0.72) 0deg 5deg, transparent 5deg 14deg);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  opacity: 0.75;
+}
+
+.cartao-aniversario-pomba {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  font-size: 40px;
+  filter: drop-shadow(0 10px 18px rgba(37, 99, 235, 0.15));
+  opacity: 0.92;
+}
+
+.cartao-aniversario-flores {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 34%;
+  pointer-events: none;
+}
+
+.cartao-aniversario-flores span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #cfe3ff 38%, #2f69b7 100%);
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.34), 0 14px 24px rgba(15, 23, 42, 0.10);
+}
+
+.cartao-aniversario-flores span:nth-child(1) { width: 76px; height: 76px; left: -20px; top: 92px; }
+.cartao-aniversario-flores span:nth-child(2) { width: 112px; height: 112px; left: -35px; bottom: 110px; }
+.cartao-aniversario-flores span:nth-child(3) { width: 58px; height: 58px; left: 58px; bottom: 52px; background: radial-gradient(circle at 35% 35%, #fff 0%, #f7f3df 48%, #d8c69b 100%); }
+.cartao-aniversario-flores span:nth-child(4) { width: 44px; height: 44px; left: 38px; top: 206px; background: radial-gradient(circle at 35% 35%, #fff 0%, #dbeafe 50%, #60a5fa 100%); }
+
+.cartao-aniversario-presente {
+  position: absolute;
+  right: 18px;
+  bottom: 52px;
+  width: 96px;
+  height: 92px;
+  z-index: 1;
+}
+
+.presente-caixa {
+  position: absolute;
+  inset: 24px 4px 0;
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, transparent 43%, #0b4ea2 43%, #0b4ea2 57%, transparent 57%),
+    linear-gradient(#fffdf7, #f0e8d8);
+  border: 2px solid rgba(191, 145, 45, 0.42);
+  box-shadow: 0 18px 24px rgba(15, 23, 42, 0.14);
+}
+
+.presente-laco {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 62px;
+  height: 42px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at center, #1d4ed8 0%, #082f66 72%);
+  border-radius: 50% 50% 46% 46%;
+  box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.16);
+}
+
+.cartao-aniversario-bolo {
+  position: absolute;
+  right: 16px;
+  top: 220px;
+  width: 116px;
+  height: 126px;
+  z-index: 1;
+}
+
+.bolo-camada {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 18px 18px 10px 10px;
+  background:
+    radial-gradient(circle at 30% 45%, rgba(37, 99, 235, 0.42) 0 10px, transparent 11px),
+    radial-gradient(circle at 70% 54%, rgba(255,255,255,0.92) 0 11px, transparent 12px),
+    linear-gradient(180deg, #fffdf8 0%, #f4fbff 46%, #badcff 100%);
+  border: 2px solid rgba(191, 145, 45, 0.42);
+  box-shadow: 0 16px 24px rgba(15, 23, 42, 0.12);
+}
+
+.bolo-camada-superior { top: 4px; width: 82px; height: 46px; }
+.bolo-camada-inferior { top: 48px; width: 112px; height: 58px; }
+
+.bolo-base {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 124px;
+  height: 12px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e7d8b1, #ffffff, #b98a30);
+}
+
+.cartao-aniversario-texto {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  height: 100%;
+  padding: 70px 26px 22px;
+  text-align: center;
+}
+
+.cartao-aniversario-texto h4 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  line-height: 0.92;
+}
+
+.cartao-aniversario-texto h4 span {
+  color: #092b5f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(42px, 7vw, 56px);
+  font-weight: 700;
+}
+
+.cartao-aniversario-texto h4 em {
+  color: #b98a30;
+  font-family: 'Brush Script MT', 'Segoe Script', cursive;
+  font-size: clamp(40px, 6.8vw, 54px);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.cartao-aniversario-texto h4 strong {
+  max-width: 100%;
+  color: #0b4ea2;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(46px, 8vw, 62px);
+  line-height: 0.98;
+  word-break: break-word;
+}
+
+.cartao-aniversario-divisor {
+  margin: 10px 0 8px;
+  color: #b98a30;
+  font-size: 16px;
+}
+
+.cartao-aniversario-divisor::before,
+.cartao-aniversario-divisor::after {
+  content: '';
+  display: inline-block;
+  width: 62px;
+  height: 1px;
+  margin: 0 10px 5px;
+  background: rgba(185, 138, 48, 0.72);
+}
+
+.cartao-aniversario-mensagem {
+  max-width: 68%;
+  margin: 0 0 12px;
+  color: #092b5f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.36;
+}
+
+.cartao-aniversario-versiculo {
+  width: min(86%, 330px);
+  margin-top: auto;
+  padding: 22px 20px 18px;
+  border: 1.5px solid rgba(191, 145, 45, 0.55);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.10);
+}
+
+.cartao-aniversario-versiculo > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: -42px auto 12px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: #0b4ea2;
+  color: #fff7cc;
+  border: 1.5px solid #b98a30;
+  font-weight: 900;
+}
+
+.cartao-aniversario-versiculo p {
+  margin: 0 0 10px;
+  color: #092b5f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.cartao-aniversario-versiculo strong {
+  color: #0b4ea2;
+  font-size: 15px;
+}
+
+.cartao-aniversario-texto footer {
+  display: grid;
+  gap: 2px;
+  margin-top: 12px;
+  color: #092b5f;
+}
+
+.cartao-aniversario-texto footer em {
+  font-family: 'Brush Script MT', 'Segoe Script', cursive;
+  font-size: 24px;
+  font-style: normal;
+}
+
+.cartao-aniversario-texto footer strong {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+
+/* Ajuste v64: cartão completo na visualização, sem corte */
+.cartao-aniversario-area {
+  align-items: start;
+}
+
+.cartao-aniversario-visualizacao {
+  align-items: start;
+  overflow: visible;
+}
+
+.cartao-aniversario-oficial {
+  width: min(100%, 420px);
+}
+
+.cartao-aniversario-texto {
+  padding: 56px 22px 16px;
+}
+
+.cartao-aniversario-livro {
+  top: 10px;
+  width: 62px;
+  height: 46px;
+  font-size: 26px;
+}
+
+.cartao-aniversario-livro::before {
+  top: -14px;
+  width: 82px;
+  height: 34px;
+}
+
+.cartao-aniversario-pomba {
+  top: 22px;
+  right: 24px;
+  font-size: 30px;
+}
+
+.cartao-aniversario-texto h4 span {
+  font-size: clamp(34px, 5.6vw, 44px);
+}
+
+.cartao-aniversario-texto h4 em {
+  font-size: clamp(32px, 5.4vw, 43px);
+}
+
+.cartao-aniversario-texto h4 strong {
+  font-size: clamp(40px, 6.7vw, 54px);
+}
+
+.cartao-aniversario-divisor {
+  margin: 7px 0 6px;
+  font-size: 14px;
+}
+
+.cartao-aniversario-divisor::before,
+.cartao-aniversario-divisor::after {
+  width: 48px;
+  margin-bottom: 4px;
+}
+
+.cartao-aniversario-mensagem {
+  max-width: 72%;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.26;
+}
+
+.cartao-aniversario-versiculo {
+  width: min(84%, 310px);
+  padding: 18px 16px 13px;
+  border-radius: 20px;
+}
+
+.cartao-aniversario-versiculo > span {
+  margin: -36px auto 8px;
+  padding: 7px 15px;
+  font-size: 13px;
+}
+
+.cartao-aniversario-versiculo p {
+  margin-bottom: 7px;
+  font-size: 15px;
+  line-height: 1.22;
+}
+
+.cartao-aniversario-versiculo strong {
+  font-size: 13px;
+}
+
+.cartao-aniversario-texto footer {
+  margin-top: 8px;
+}
+
+.cartao-aniversario-texto footer em {
+  font-size: 20px;
+}
+
+.cartao-aniversario-texto footer strong {
+  font-size: 18px;
+}
+
+.cartao-aniversario-bolo {
+  top: 245px;
+  right: 10px;
+  width: 82px;
+  height: 94px;
+  opacity: 0.45;
+}
+
+.bolo-camada-superior { top: 4px; width: 60px; height: 34px; }
+.bolo-camada-inferior { top: 38px; width: 82px; height: 42px; }
+.bolo-base { bottom: 4px; width: 88px; height: 9px; }
+
+.cartao-aniversario-presente {
+  right: 10px;
+  bottom: 38px;
+  width: 72px;
+  height: 70px;
+  opacity: 0.70;
+}
+
+.presente-caixa {
+  inset: 18px 4px 0;
+}
+
+.presente-laco {
+  width: 48px;
+  height: 32px;
+}
+
+.cartao-aniversario-flores span:nth-child(1) { width: 58px; height: 58px; left: -18px; top: 96px; }
+.cartao-aniversario-flores span:nth-child(2) { width: 88px; height: 88px; left: -30px; bottom: 96px; }
+.cartao-aniversario-flores span:nth-child(3) { width: 46px; height: 46px; left: 48px; bottom: 48px; }
+.cartao-aniversario-flores span:nth-child(4) { width: 36px; height: 36px; left: 34px; top: 190px; }
+
+.janela-aniversariantes-acoes-completas {
+  flex-wrap: wrap;
+}
+
+.feedback-piloto-card-compacto {
+  padding: 20px 22px !important;
+  border-radius: 26px !important;
+}
+
+.feedback-piloto-card-compacto::before {
+  width: 5px !important;
+}
+
+.feedback-piloto-topo-compacto {
+  margin-bottom: 0 !important;
+  align-items: center !important;
+}
+
+.feedback-piloto-topo-compacto h3 {
+  max-width: 760px;
+  margin-top: 8px !important;
+  font-size: clamp(22px, 2.1vw, 30px) !important;
+  letter-spacing: -0.03em !important;
+}
+
+.feedback-piloto-topo-compacto p {
+  max-width: 820px;
+  font-size: 14px !important;
+}
+
+.feedback-piloto-card-aberto {
+  padding: clamp(22px, 3vw, 34px) !important;
+  border-radius: 34px !important;
+}
+
+.feedback-piloto-card-aberto .feedback-piloto-topo-compacto {
+  margin-bottom: 22px !important;
+}
+
+.feedbacks-recentes-igreja-compacto {
+  margin-top: 16px !important;
+  padding-top: 16px !important;
+}
+
+@media (max-width: 1180px) {
+  .acoes-rapidas-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .acoes-rapidas-grade,
+  .janela-aniversariantes-resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .painel-aniversariantes-topo,
+  .janela-aniversariantes-topo,
+  .feedback-piloto-topo-compacto {
+    display: grid !important;
+  }
+
+  .janela-aniversariantes-fundo {
+    padding: 12px;
+  }
+
+  .janela-aniversariantes-conteudo {
+    max-height: calc(100vh - 24px);
+    border-radius: 22px;
+  }
+
+  .cartao-aniversario-area {
+    grid-template-columns: 1fr;
+  }
+
+  .janela-aniversariante-item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .janela-aniversariante-item span,
+  .janela-aniversariante-item em,
+  .botao-mini-cartao {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .cartao-aniversario-oficial {
+    width: min(100%, 360px);
+  }
+
+  .cartao-aniversario-mensagem {
+    max-width: 78%;
+    font-size: 14px;
+  }
+
+  .cartao-aniversario-bolo,
+  .cartao-aniversario-presente {
+    transform: scale(0.82);
+    transform-origin: bottom right;
+  }
+
+  .janela-aniversariantes-acoes {
+    display: grid;
+  }
+
+  .janela-aniversariantes-acoes button,
+  .painel-aniversariantes-topo button,
+  .feedback-piloto-topo-compacto button {
+    width: 100%;
+  }
+}
+
+@media print {
+  .janela-aniversariantes-fundo,
+  .acoes-rapidas-painel,
+  .painel-aniversariantes-resumo {
+    display: none !important;
+  }
+}
+
+/* Mensagens flutuantes da chamada */
+.mensagem-chamada {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 1200;
+  width: min(430px, calc(100vw - 36px));
+  margin-top: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+  animation: surgirMensagemChamada 0.22s ease-out;
+}
+
+@keyframes surgirMensagemChamada {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mensagem-chamada p {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.mensagem-chamada button {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--cor-texto);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mensagem-chamada.sucesso {
+  background: linear-gradient(135deg, #ecfdf5 0%, #dcfce7 100%);
+  border-color: #86efac;
+  color: #166534;
+}
+
+.mensagem-chamada.aviso {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.mensagem-chamada.erro {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+
+@media (max-width: 640px) {
+  .mensagem-chamada {
+    right: 14px;
+    bottom: 14px;
+    width: calc(100vw - 28px);
+  }
+}
+
+
+/* =========================================================
+   v70 - Refinamento visual da página pública e login
+   Base segura: mantém as funções internas e melhora apenas apresentação/login.
+   ========================================================= */
+
+.modelo-exato-ebd {
+  --gold: #d7aa35;
+  --gold-light: #f2c767;
+  --gold-dark: #9a6a09;
+  --cyan: #15b8d4;
+  --red: #e85d4a;
+  --green: #1f9d5a;
+  --dark: #0b1d35;
+  --gray: #536174;
+  --light: #f5f8fc;
+  --white: #ffffff;
+  --gradient-gold: linear-gradient(135deg, #f1d073 0%, #d7aa35 48%, #ad760e 100%);
+  --gradient-cyan: linear-gradient(135deg, #e6fbff 0%, #15b8d4 100%);
+  --gradient-green: linear-gradient(135deg, #e8fff2 0%, #1f9d5a 100%);
+  --gradient-red: linear-gradient(135deg, #fff0ec 0%, #e85d4a 100%);
+  background:
+    radial-gradient(circle at 12% 14%, rgba(21, 184, 212, 0.10), transparent 32%),
+    radial-gradient(circle at 90% 28%, rgba(215, 170, 53, 0.12), transparent 34%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4f9 100%) !important;
+}
+
+.modelo-exato-ebd .navbar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-bottom: 1px solid rgba(15, 45, 77, 0.08) !important;
+  box-shadow: 0 14px 34px rgba(10, 31, 58, 0.07) !important;
+  padding: 0.95rem 0 !important;
+}
+
+.modelo-exato-ebd .nav-container {
+  max-width: 1320px !important;
+}
+
+.modelo-exato-ebd .logo-oficial-navbar {
+  width: 58px !important;
+  height: 58px !important;
+  border-color: rgba(215, 170, 53, 0.46) !important;
+  box-shadow: 0 8px 20px rgba(10, 31, 58, 0.12) !important;
+}
+
+.modelo-exato-ebd .logo-text {
+  font-size: 1.62rem !important;
+}
+
+.modelo-exato-ebd .logo-sub {
+  color: #64748b !important;
+  font-weight: 800 !important;
+}
+
+.modelo-exato-ebd .nav-links {
+  gap: 2.2rem !important;
+}
+
+.modelo-exato-ebd .nav-links a {
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+.modelo-exato-ebd .btn-nav,
+.modelo-exato-ebd .btn-nav-mobile {
+  background: var(--gradient-gold) !important;
+  color: #08213d !important;
+  min-height: 42px !important;
+  padding: 0.72rem 1.35rem !important;
+  border-radius: 999px !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 26px rgba(215, 170, 53, 0.26) !important;
+}
+
+.modelo-exato-ebd .hero {
+  min-height: 660px !important;
+  display: grid !important;
+  align-items: center !important;
+  padding: 8.8rem 1.5rem 5.6rem !important;
+  background:
+    radial-gradient(circle at 90% 76%, rgba(21, 184, 212, 0.22), transparent 32%),
+    radial-gradient(circle at 16% 28%, rgba(215, 170, 53, 0.16), transparent 28%),
+    linear-gradient(135deg, #071a31 0%, #103058 54%, #16436e 100%) !important;
+}
+
+.modelo-exato-ebd .hero::before {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px) !important;
+  background-size: 56px 56px !important;
+  opacity: 0.36 !important;
+}
+
+.modelo-exato-ebd .hero::after {
+  content: "" !important;
+  width: 420px !important;
+  height: 420px !important;
+  right: -120px !important;
+  bottom: -150px !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(21, 184, 212, 0.20), transparent 65%) !important;
+  opacity: 1 !important;
+}
+
+.modelo-exato-ebd .hero-content {
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 540px) !important;
+  gap: 5rem !important;
+  max-width: 1320px !important;
+}
+
+.modelo-exato-ebd .hero h1 {
+  font-size: clamp(2.35rem, 5vw, 4.45rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.055em !important;
+  max-width: 760px !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.modelo-exato-ebd .hero h1 span {
+  color: #f3cc66 !important;
+}
+
+.modelo-exato-ebd .hero p {
+  max-width: 660px !important;
+  font-size: clamp(1.05rem, 1.6vw, 1.24rem) !important;
+  color: rgba(255, 255, 255, 0.90) !important;
+}
+
+.modelo-exato-ebd .btn-hero-login-v70 {
+  background: #ffffff !important;
+  color: #0b2b4c !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  min-height: 54px !important;
+  padding: 0 1.7rem !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18) !important;
+}
+
+.modelo-exato-ebd .btn-hero-login-v70:hover {
+  background: #f8fbff !important;
+  color: #0b2b4c !important;
+}
+
+.modelo-exato-ebd .hero-stats {
+  gap: 1rem !important;
+  flex-wrap: wrap !important;
+}
+
+.modelo-exato-ebd .stat {
+  min-width: 130px !important;
+  padding: 0.9rem 1rem !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.modelo-exato-ebd .stat-number {
+  color: #f3cc66 !important;
+  font-size: 1.5rem !important;
+}
+
+.modelo-exato-ebd .stat-label {
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-weight: 800 !important;
+}
+
+.modelo-exato-ebd .hero-mockup {
+  border-radius: 30px !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  box-shadow: 0 34px 70px rgba(0,0,0,0.34) !important;
+  overflow: hidden !important;
+  transform: translateY(6px) !important;
+}
+
+.modelo-exato-ebd .mockup-header {
+  background: #071a31 !important;
+  padding: 1rem 1.25rem !important;
+}
+
+.modelo-exato-ebd .mockup-body {
+  padding: 2rem !important;
+  background:
+    radial-gradient(circle at 86% 16%, rgba(215, 170, 53, 0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%) !important;
+}
+
+.modelo-exato-ebd .mockup-check {
+  width: 48px !important;
+  height: 48px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 16px !important;
+  color: #0f7b45 !important;
+  background: #e9fff3 !important;
+  font-size: 1.6rem !important;
+  font-weight: 950 !important;
+}
+
+.modelo-exato-ebd .mockup-body h3 {
+  color: #0b2b4c !important;
+  font-size: 1.65rem !important;
+  margin-top: 0.3rem !important;
+}
+
+.modelo-exato-ebd .mockup-body p {
+  color: #526277 !important;
+  font-weight: 700 !important;
+}
+
+.modelo-exato-ebd .mockup-metricas-v70 {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.modelo-exato-ebd .mockup-metricas-v70 div {
+  padding: 1rem 0.75rem;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 45, 77, 0.08);
+  box-shadow: 0 12px 24px rgba(10, 31, 58, 0.06);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.modelo-exato-ebd .mockup-metricas-v70 strong {
+  color: #0b2b4c;
+  font-size: 1.28rem;
+}
+
+.modelo-exato-ebd .mockup-metricas-v70 span,
+.modelo-exato-ebd .mockup-lista-v70 span {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.modelo-exato-ebd .mockup-lista-v70 {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.modelo-exato-ebd .mockup-lista-v70 span {
+  padding: 0.8rem 1rem;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f8fbff 0%, #eef8fb 100%);
+  border: 1px solid rgba(21, 184, 212, 0.14);
+}
+
+.modelo-exato-ebd .section {
+  padding: 5.6rem 1.5rem !important;
+}
+
+.modelo-exato-ebd .section-soft,
+.modelo-exato-ebd .section-plans {
+  background:
+    radial-gradient(circle at 6% 16%, rgba(21, 184, 212, 0.08), transparent 28%),
+    linear-gradient(180deg, #f5f8fc 0%, #eef3f8 100%) !important;
+}
+
+.modelo-exato-ebd .section-title {
+  color: #0b2b4c !important;
+  background: none !important;
+  letter-spacing: -0.035em !important;
+}
+
+.modelo-exato-ebd .section-title::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 4px;
+  margin: 0.85rem auto 0;
+  border-radius: 999px;
+  background: var(--gradient-gold);
+}
+
+.modelo-exato-ebd .section-subtitle {
+  color: #64748b !important;
+  font-weight: 700 !important;
+}
+
+.modelo-exato-ebd .feature-card,
+.modelo-exato-ebd .persona-card,
+.modelo-exato-ebd .plan-card,
+.modelo-exato-ebd .comparison,
+.modelo-exato-ebd .faq-item {
+  border: 1px solid rgba(15, 45, 77, 0.08) !important;
+  box-shadow: 0 18px 44px rgba(10, 31, 58, 0.07) !important;
+}
+
+.modelo-exato-ebd .feature-card {
+  min-height: 238px !important;
+  border-bottom-color: rgba(215, 170, 53, 0.42) !important;
+}
+
+.modelo-exato-ebd .feature-card h3,
+.modelo-exato-ebd .persona-card h3,
+.modelo-exato-ebd .plan-card h3,
+.modelo-exato-ebd .comparison-card h3 {
+  color: #0b2b4c !important;
+}
+
+.modelo-exato-ebd .feature-card p,
+.modelo-exato-ebd .persona-card p,
+.modelo-exato-ebd .plan-card p,
+.modelo-exato-ebd .faq-item p {
+  color: #536174 !important;
+  font-weight: 650 !important;
+}
+
+.modelo-exato-ebd .feature-icon,
+.modelo-exato-ebd .persona-avatar {
+  border-radius: 20px !important;
+  background: linear-gradient(135deg, #0b2b4c 0%, #16436e 100%) !important;
+  box-shadow: 0 14px 30px rgba(11, 43, 76, 0.16) !important;
+}
+
+.modelo-exato-ebd .persona-avatar {
+  width: 76px !important;
+  height: 76px !important;
+}
+
+.modelo-exato-ebd .comparison {
+  max-width: 900px !important;
+  margin: 2rem auto 0 !important;
+  padding: 1.2rem !important;
+}
+
+.modelo-exato-ebd .comparison-card {
+  border-radius: 24px !important;
+}
+
+.modelo-exato-ebd .comparison-card.before {
+  background: #fff4f1 !important;
+  border-left-color: #e85d4a !important;
+}
+
+.modelo-exato-ebd .comparison-card.after {
+  background: #effff6 !important;
+  border-left-color: #1f9d5a !important;
+}
+
+.modelo-exato-ebd .plan-card.featured {
+  border-color: rgba(215, 170, 53, 0.70) !important;
+}
+
+.modelo-exato-ebd .plan-badge {
+  color: #08213d !important;
+  font-weight: 950 !important;
+}
+
+.modelo-exato-ebd .plan-price {
+  color: #0b2b4c !important;
+}
+
+.modelo-exato-ebd .faq-list {
+  max-width: 900px !important;
+}
+
+.modelo-exato-ebd .faq-item summary {
+  color: #0b2b4c !important;
+  font-weight: 900 !important;
+  font-size: 1.02rem !important;
+}
+
+.modelo-exato-ebd .footer {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(215, 170, 53, 0.11), transparent 28%),
+    linear-gradient(135deg, #071a31 0%, #0b1d35 100%) !important;
+  border-top: 1px solid rgba(215, 170, 53, 0.14) !important;
+}
+
+/* Login v70 */
+.tela-login-v70 {
+  grid-template-columns: minmax(420px, 1.08fr) minmax(390px, 0.72fr) !important;
+  background:
+    radial-gradient(circle at 84% 18%, rgba(215, 170, 53, 0.12), transparent 24%),
+    linear-gradient(135deg, #f6f9fd 0%, #eef4fb 100%) !important;
+}
+
+.painel-login-v70 {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(215, 170, 53, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 82%, rgba(21, 184, 212, 0.18), transparent 30%),
+    linear-gradient(145deg, #071a31 0%, #103058 56%, #16436e 100%) !important;
+}
+
+.painel-login-v70::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  bottom: -120px;
+  width: 330px;
+  height: 330px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 66%);
+}
+
+.apresentacao-login-v70 {
+  max-width: 760px !important;
+}
+
+.tela-login-v70 .apresentacao-login-v70 h2 {
+  font-size: clamp(2.45rem, 5vw, 4.65rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.055em !important;
+}
+
+.tela-login-v70 .apresentacao-login-v70 p {
+  max-width: 700px !important;
+  font-size: 1.12rem !important;
+}
+
+.preview-login-v70 {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(170px, 0.6fr));
+  gap: 14px;
+  max-width: 820px;
+}
+
+.preview-login-card {
+  min-height: 120px;
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
+}
+
+.preview-login-card-maior {
+  min-height: 150px;
+}
+
+.preview-login-card span {
+  color: #f3cc66 !important;
+  font-weight: 950;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.preview-login-card strong {
+  color: #ffffff !important;
+  font-size: 1.35rem;
+}
+
+.preview-login-card small {
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-weight: 700;
+}
+
+.beneficios-login-v70 {
+  position: relative;
+  z-index: 1;
+}
+
+.tela-login-v70 .beneficio-item {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.cartao-login-v70 {
+  padding: clamp(32px, 5vw, 58px) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(215, 170, 53, 0.10), transparent 30%),
+    rgba(255, 255, 255, 0.94) !important;
+  justify-content: center !important;
+}
+
+.cartao-login-v70 .botao-voltar-publico {
+  width: fit-content;
+  margin-bottom: 20px;
+  color: #0b2b4c !important;
+  font-weight: 900 !important;
+}
+
+.cartao-login-v70 .topo-cartao-login h2 {
+  color: #0b2b4c !important;
+  font-size: 2.15rem !important;
+  letter-spacing: -0.035em !important;
+}
+
+.cartao-login-v70 .topo-cartao-login p {
+  color: #536174 !important;
+  font-weight: 700 !important;
+}
+
+.cartao-login-v70 .topo-cartao-icone {
+  background: #ecf8ff !important;
+  color: #0f6fa7 !important;
+}
+
+.aviso-login-v70 {
+  border-radius: 18px !important;
+  background: #fff8df !important;
+  border: 1px solid rgba(215, 170, 53, 0.28) !important;
+  color: #744d05 !important;
+  font-weight: 900 !important;
+  padding: 14px 16px !important;
+}
+
+.cartao-login-v70 .formulario-login {
+  border-radius: 24px !important;
+  padding: 26px !important;
+  box-shadow: 0 18px 44px rgba(10, 31, 58, 0.08) !important;
+}
+
+.cartao-login-v70 .formulario label {
+  color: #0b2b4c !important;
+}
+
+.cartao-login-v70 .formulario input {
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  border-color: #d9e5f0 !important;
+  background: #f8fbff !important;
+}
+
+.cartao-login-v70 .botao-principal,
+.cartao-login-v70 .botao-cadastrar-igreja {
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  font-weight: 950 !important;
+}
+
+.bloco-cadastro-v70 {
+  margin-top: 20px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(21, 184, 212, 0.22) !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(215, 170, 53, 0.14), transparent 30%),
+    linear-gradient(135deg, #f4fbff 0%, #eaf8fb 100%) !important;
+  box-shadow: 0 18px 44px rgba(10, 31, 58, 0.07) !important;
+}
+
+.bloco-cadastro-v70 h3 {
+  color: #0b2b4c !important;
+}
+
+.bloco-cadastro-v70 p {
+  color: #536174 !important;
+  font-weight: 750 !important;
+}
+
+@media (max-width: 1020px) {
+  .tela-login-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .preview-login-v70 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .modelo-exato-ebd .navbar {
+    padding: 0.65rem 0 !important;
+  }
+
+  .modelo-exato-ebd .logo-oficial-navbar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    min-height: auto !important;
+    padding: 7.4rem 1.15rem 4.2rem !important;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    gap: 2rem !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(2.05rem, 11vw, 3rem) !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 1rem !important;
+  }
+
+  .modelo-exato-ebd .hero-stats {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .modelo-exato-ebd .stat {
+    width: 100% !important;
+  }
+
+  .modelo-exato-ebd .mockup-metricas-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 4.2rem 1.1rem !important;
+  }
+
+  .cartao-login-v70 {
+    padding: 28px 20px !important;
+  }
+
+  .tela-login-v70 .apresentacao-login-v70 h2 {
+    font-size: clamp(2rem, 11vw, 3.1rem) !important;
+  }
+}
+
+/* =========================================================
+   V71 - Painel administrativo moderno
+   Ajustes visuais do painel sem alterar regras de negócio
+   ========================================================= */
+
+:root {
+  --painel-marinho: #06162d;
+  --painel-marinho-2: #0a2544;
+  --painel-marinho-3: #12385f;
+  --painel-dourado: #d6a82f;
+  --painel-dourado-claro: #fff5cf;
+  --painel-ciano: #13b8d6;
+  --painel-fundo: #f3f7fb;
+  --painel-card: #ffffff;
+  --painel-borda: rgba(15, 23, 42, 0.08);
+  --painel-texto: #0f172a;
+  --painel-texto-suave: #64748b;
+  --painel-sombra: 0 18px 45px rgba(15, 23, 42, 0.08);
+  --painel-sombra-suave: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.app {
+  background:
+    radial-gradient(circle at 85% 8%, rgba(214, 168, 47, 0.10), transparent 24%),
+    radial-gradient(circle at 4% 16%, rgba(19, 184, 214, 0.09), transparent 26%),
+    linear-gradient(135deg, #f7fbff 0%, #eef4f8 100%) !important;
+}
+
+.menu-lateral {
+  width: 268px !important;
+  padding: 24px 18px !important;
+  gap: 22px !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(19, 184, 214, 0.16), transparent 28%),
+    linear-gradient(180deg, var(--painel-marinho) 0%, var(--painel-marinho-2) 56%, #041020 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 18px 0 48px rgba(2, 6, 23, 0.18) !important;
+}
+
+.marca-sidebar,
+.menu-lateral .marca-sidebar {
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 6px 4px 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.marca-sidebar .logo-simbolo-sidebar,
+.menu-lateral .logo-simbolo-sidebar {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 26px rgba(2, 6, 23, 0.24) !important;
+}
+
+.marca-sidebar h1,
+.menu-lateral .marca-sidebar h1 {
+  color: #ffffff !important;
+  font-size: 22px !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+}
+
+.marca-sidebar p,
+.menu-lateral .marca-sidebar p {
+  color: rgba(226, 232, 240, 0.76) !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+}
+
+.menu-navegacao,
+.menu-lateral nav {
+  gap: 7px !important;
+}
+
+.menu-lateral .menu-navegacao button,
+.menu-lateral nav button {
+  min-height: 46px !important;
+  padding: 10px 12px !important;
+  border-radius: 15px !important;
+  color: rgba(226, 232, 240, 0.82) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.menu-lateral .menu-navegacao button:hover,
+.menu-lateral nav button:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(2px) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo,
+.menu-lateral nav button.ativo {
+  color: #ffffff !important;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(19, 184, 214, 0.88)) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 12px 28px rgba(19, 184, 214, 0.22) !important;
+}
+
+.icone-menu,
+.menu-lateral .icone-menu {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 11px !important;
+  color: #b9eaff !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo .icone-menu,
+.menu-lateral nav button.ativo .icone-menu {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.cartao-usuario-sidebar {
+  margin-top: auto !important;
+  padding: 14px !important;
+  gap: 7px !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.titulo-usuario-sidebar {
+  color: rgba(226, 232, 240, 0.58) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.09em !important;
+}
+
+.cartao-usuario-sidebar strong {
+  max-width: 100% !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.selo-perfil-sidebar {
+  width: fit-content !important;
+  padding: 5px 9px !important;
+  border-radius: 999px !important;
+  background: rgba(214, 168, 47, 0.15) !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(214, 168, 47, 0.18) !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.botao-sair-sidebar {
+  margin-top: 8px !important;
+  padding: 10px 12px !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #e2e8f0 !important;
+}
+
+.botao-sair-sidebar:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: #ffffff !important;
+}
+
+.area-principal {
+  padding: 24px !important;
+  background:
+    radial-gradient(circle at 92% 6%, rgba(214, 168, 47, 0.10), transparent 20%),
+    radial-gradient(circle at 5% 26%, rgba(19, 184, 214, 0.08), transparent 25%) !important;
+}
+
+.conteudo {
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  padding: 24px !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(255, 255, 255, 0.86) !important;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.11) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.hero-painel {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.42fr) minmax(260px, 340px) !important;
+  gap: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.hero-painel-conteudo,
+.hero-painel-destaque {
+  border-radius: 22px !important;
+  padding: 22px !important;
+}
+
+.hero-painel-conteudo {
+  min-height: 0 !important;
+  background:
+    radial-gradient(circle at 94% 10%, rgba(255, 255, 255, 0.18), transparent 26%),
+    linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 62%, #0f2c60 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 18px 40px rgba(29, 78, 216, 0.18) !important;
+}
+
+.linha-tags-painel {
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.hero-painel-conteudo .hero-tag,
+.hero-tag {
+  padding: 7px 11px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+}
+
+.hero-painel-conteudo h2 {
+  margin: 10px 0 6px !important;
+  color: #ffffff !important;
+  font-size: clamp(25px, 3.1vw, 38px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.hero-painel-conteudo p {
+  max-width: 680px !important;
+  color: rgba(255, 255, 255, 0.84) !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.hero-painel-metricas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.hero-painel-metricas span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero-painel-metricas strong {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.hero-acoes {
+  gap: 8px !important;
+  margin-top: 16px !important;
+}
+
+.hero-acoes .botao-principal,
+.hero-acoes .botao-secundario {
+  min-height: 38px !important;
+  margin-top: 0 !important;
+  padding: 10px 13px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  box-shadow: none !important;
+}
+
+.hero-acoes .botao-principal {
+  background: linear-gradient(135deg, #0f766e, #10b981) !important;
+  color: #ffffff !important;
+}
+
+.hero-acoes .botao-secundario {
+  border-color: rgba(255, 255, 255, 0.30) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #0f2c60 !important;
+}
+
+.hero-painel-destaque {
+  align-self: stretch !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%) !important;
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+}
+
+.hero-painel-destaque .hero-icone-area {
+  width: 48px !important;
+  height: 48px !important;
+  margin-bottom: 12px !important;
+  border-radius: 16px !important;
+  background: #eaf4ff !important;
+  color: #1d4ed8 !important;
+}
+
+.hero-painel-destaque h3 {
+  margin: 0 0 4px !important;
+  color: var(--painel-texto) !important;
+  font-size: 18px !important;
+  letter-spacing: -0.02em !important;
+}
+
+.hero-painel-destaque p {
+  margin-bottom: 12px !important;
+  color: var(--painel-texto-suave) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
+.hero-painel-destaque ul {
+  padding-left: 0 !important;
+  list-style: none !important;
+  gap: 7px !important;
+  font-size: 13px !important;
+  color: #334155 !important;
+}
+
+.hero-painel-destaque li {
+  position: relative;
+  padding-left: 16px;
+  line-height: 1.3;
+}
+
+.hero-painel-destaque li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--painel-dourado);
+}
+
+.cards.cards-estatisticas,
+.cards-estatisticas {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin-top: 14px !important;
+}
+
+.card.card-estatistica,
+.card-estatistica {
+  min-height: 126px !important;
+  padding: 16px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--painel-borda) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+  overflow: hidden !important;
+}
+
+.card-estatistica::after {
+  opacity: 0.35 !important;
+}
+
+.card-estatistica .card-icone {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 15px !important;
+  background: #fff6da !important;
+  color: #a16207 !important;
+  box-shadow: none !important;
+}
+
+.card-estatistica.destaque,
+.card.destaque {
+  background: #ffffff !important;
+  border-color: rgba(214, 168, 47, 0.28) !important;
+}
+
+.card-estatistica.destaque .card-icone {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+}
+
+.card-estatistica .card-conteudo {
+  gap: 2px !important;
+}
+
+.card-titulo {
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.card-valor {
+  color: var(--painel-texto) !important;
+  font-size: clamp(27px, 2.4vw, 34px) !important;
+  line-height: 1 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.card-estatistica p {
+  margin: 3px 0 0 !important;
+  color: #64748b !important;
+  font-size: 12px !important;
+  line-height: 1.32 !important;
+}
+
+.acoes-rapidas-painel {
+  margin-top: 18px !important;
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%) !important;
+  border: 1px solid rgba(37, 99, 235, 0.10) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+}
+
+.acoes-rapidas-painel h3 {
+  margin: 7px 0 0 !important;
+  color: var(--painel-texto) !important;
+  font-size: clamp(22px, 2.3vw, 30px) !important;
+}
+
+.acoes-rapidas-grade {
+  grid-template-columns: 1.35fr repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-top: 16px !important;
+}
+
+.acoes-rapidas-grade button {
+  min-height: 96px !important;
+  padding: 17px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
+}
+
+.acoes-rapidas-grade button::before {
+  content: '';
+  display: block;
+  width: 34px;
+  height: 5px;
+  margin-bottom: 13px;
+  border-radius: 999px;
+  background: #dbeafe;
+}
+
+.acoes-rapidas-grade .acao-rapida-principal {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.24), transparent 28%),
+    linear-gradient(135deg, #0f2c60 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(29, 78, 216, 0.22) !important;
+  box-shadow: 0 18px 38px rgba(29, 78, 216, 0.18) !important;
+}
+
+.acoes-rapidas-grade .acao-rapida-principal::before {
+  background: linear-gradient(90deg, var(--painel-dourado), #fde68a) !important;
+}
+
+.acoes-rapidas-grade .acao-rapida-principal strong,
+.acoes-rapidas-grade .acao-rapida-principal span {
+  color: #ffffff !important;
+}
+
+.acoes-rapidas-grade strong {
+  color: var(--painel-texto) !important;
+  font-size: 15px !important;
+}
+
+.acoes-rapidas-grade span {
+  color: var(--painel-texto-suave) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.alertas-ebd-painel {
+  margin: 18px 0 !important;
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 78%, #fff9df 100%) !important;
+  border: 1px solid rgba(214, 168, 47, 0.16) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+}
+
+.alertas-ebd-cabecalho {
+  align-items: center !important;
+  margin-bottom: 14px !important;
+}
+
+.alertas-ebd-cabecalho h3 {
+  margin: 7px 0 4px !important;
+  color: var(--painel-texto) !important;
+  font-size: clamp(22px, 2.3vw, 30px) !important;
+}
+
+.alertas-ebd-cabecalho p {
+  color: #64748b !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.alertas-ebd-grade {
+  gap: 12px !important;
+}
+
+.alerta-ebd-card {
+  padding: 14px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
+}
+
+.alerta-ebd-icone {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 14px !important;
+  font-size: 19px !important;
+}
+
+.alerta-ebd-card strong {
+  color: var(--painel-texto) !important;
+  font-size: 14px !important;
+}
+
+.alerta-ebd-card p {
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.alerta-ebd-card em {
+  min-width: 38px !important;
+  padding: 7px 9px !important;
+  background: #eaf4ff !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+}
+
+.painel-aniversariantes-resumo {
+  margin-top: 18px !important;
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+}
+
+.painel-aniversariantes-topo {
+  align-items: center !important;
+  margin-bottom: 14px !important;
+}
+
+.painel-aniversariantes-topo h3 {
+  margin: 7px 0 4px !important;
+  color: var(--painel-texto) !important;
+  font-size: clamp(22px, 2.2vw, 30px) !important;
+}
+
+.painel-aniversariantes-topo p {
+  color: #64748b !important;
+  font-size: 13px !important;
+}
+
+.painel-aniversariantes-lista {
+  gap: 9px !important;
+}
+
+.painel-aniversariante-item {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background: #fbfdff !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+}
+
+.avatar-aniversariante-painel {
+  width: 40px !important;
+  height: 40px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #e0f2fe, #fff6da) !important;
+  color: #0f2c60 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05) !important;
+}
+
+.painel-aniversariante-dados strong {
+  color: var(--painel-texto) !important;
+  font-size: 14px !important;
+}
+
+.painel-aniversariante-dados p {
+  color: #64748b !important;
+  font-size: 12px !important;
+}
+
+.tag-prazo-aniversario,
+.painel-aniversariante-item > span:last-child {
+  padding: 7px 10px !important;
+  border-radius: 999px !important;
+  background: #eaf4ff !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+}
+
+.feedback-piloto-card.feedback-piloto-card-compacto {
+  margin-top: 18px !important;
+  padding: 18px 20px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 70%, #fff6da 100%) !important;
+  border: 1px solid rgba(214, 168, 47, 0.16) !important;
+  box-shadow: var(--painel-sombra-suave) !important;
+}
+
+.feedback-piloto-card-compacto .feedback-piloto-topo,
+.feedback-piloto-topo-compacto {
+  align-items: center !important;
+  gap: 18px !important;
+}
+
+.feedback-piloto-card-compacto h3 {
+  margin: 7px 0 4px !important;
+  font-size: clamp(21px, 2.2vw, 28px) !important;
+  color: var(--painel-texto) !important;
+}
+
+.feedback-piloto-card-compacto p {
+  max-width: 760px !important;
+  color: #64748b !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+.feedback-piloto-card-compacto:not(.feedback-piloto-card-aberto) .feedbacks-recentes-igreja {
+  display: none !important;
+}
+
+.grade-resumos-comerciais.grade-configuracoes-rapidas {
+  display: grid !important;
+  grid-template-columns: minmax(0, 420px) !important;
+  margin-top: 18px !important;
+}
+
+.card-configuracao-rapida {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
+}
+
+.card-configuracao-rapida:hover {
+  transform: translateY(-1px) !important;
+  border-color: rgba(37, 99, 235, 0.18) !important;
+}
+
+.icone-configuracao-rapida {
+  width: 38px !important;
+  height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 13px !important;
+  background: #eef6ff !important;
+  color: #1d4ed8 !important;
+  flex-shrink: 0 !important;
+}
+
+.card-configuracao-rapida h3 {
+  margin: 0 0 4px !important;
+  color: var(--painel-texto) !important;
+  font-size: 15px !important;
+}
+
+.card-configuracao-rapida p {
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 1180px) {
+  .hero-painel {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cards.cards-estatisticas,
+  .cards-estatisticas {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .acoes-rapidas-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .acoes-rapidas-grade .acao-rapida-principal {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .menu-lateral {
+    width: 100% !important;
+    padding: 18px !important;
+  }
+
+  .area-principal {
+    padding: 16px !important;
+  }
+
+  .conteudo {
+    padding: 18px !important;
+    border-radius: 24px !important;
+  }
+
+  .cards.cards-estatisticas,
+  .cards-estatisticas,
+  .alertas-ebd-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-acoes,
+  .alertas-ebd-cabecalho,
+  .painel-aniversariantes-topo,
+  .feedback-piloto-topo-compacto {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .hero-acoes .botao-principal,
+  .hero-acoes .botao-secundario,
+  .alertas-ebd-cabecalho .botao-secundario,
+  .painel-aniversariantes-topo .botao-secundario,
+  .feedback-piloto-topo-compacto .botao-secundario {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero-painel-conteudo,
+  .hero-painel-destaque,
+  .acoes-rapidas-painel,
+  .alertas-ebd-painel,
+  .painel-aniversariantes-resumo,
+  .feedback-piloto-card.feedback-piloto-card-compacto {
+    padding: 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .acoes-rapidas-grade {
+    grid-template-columns: 1fr !important;
+  }
+
+  .acoes-rapidas-grade .acao-rapida-principal {
+    grid-column: auto !important;
+  }
+
+  .painel-aniversariante-item {
+    grid-template-columns: auto 1fr !important;
+  }
+
+  .tag-prazo-aniversario,
+  .painel-aniversariante-item > span:last-child {
+    grid-column: 2 !important;
+    width: fit-content !important;
+  }
+
+  .grade-resumos-comerciais.grade-configuracoes-rapidas {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media print {
+  .hero-painel-metricas,
+  .acoes-rapidas-painel,
+  .feedback-piloto-card,
+  .grade-configuracoes-rapidas {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   v72 - Padronização visual das páginas internas
+   Painel, Classes, Alunos, Professores, Chamada e Relatórios
+   ========================================================= */
+:root {
+  --ui-marinho: #0b1831;
+  --ui-marinho-2: #102a56;
+  --ui-azul: #1d4ed8;
+  --ui-ciano: #06b6d4;
+  --ui-dourado: #d6a82f;
+  --ui-verde: #16a34a;
+  --ui-vermelho: #dc2626;
+  --ui-fundo: #f3f7fb;
+  --ui-card: #ffffff;
+  --ui-borda: rgba(15, 23, 42, 0.08);
+  --ui-borda-forte: rgba(15, 23, 42, 0.14);
+  --ui-texto: #0f172a;
+  --ui-suave: #64748b;
+  --ui-sombra: 0 18px 40px rgba(15, 23, 42, 0.07);
+  --ui-sombra-suave: 0 10px 24px rgba(15, 23, 42, 0.05);
+  --ui-raio: 24px;
+  --ui-raio-menor: 16px;
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(6, 182, 212, 0.09), transparent 26%),
+    radial-gradient(circle at 90% 0%, rgba(214, 168, 47, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #edf3f8 100%) !important;
+}
+
+.app {
+  background: transparent !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(6, 182, 212, 0.18), transparent 24%),
+    linear-gradient(180deg, #07142b 0%, #0b1831 48%, #081326 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 22px 0 55px rgba(15, 23, 42, 0.12) !important;
+}
+
+.marca-sidebar {
+  padding: 2px 4px 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.logo-simbolo-sidebar {
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.22) !important;
+}
+
+.marca-sidebar h1 {
+  letter-spacing: -0.03em !important;
+}
+
+.menu-lateral button {
+  min-height: 46px !important;
+  padding: 11px 13px !important;
+  border-radius: 15px !important;
+  color: rgba(226, 232, 240, 0.82) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.menu-lateral button .icone-menu {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(226, 232, 240, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.menu-lateral button:hover {
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: #ffffff !important;
+}
+
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.98), rgba(6, 182, 212, 0.72)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 30px rgba(6, 182, 212, 0.18) !important;
+}
+
+.menu-lateral button.ativo .icone-menu {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+
+.cartao-usuario-sidebar {
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.cartao-usuario-sidebar strong {
+  font-size: 13px !important;
+}
+
+.area-principal {
+  padding: 30px !important;
+}
+
+.conteudo,
+.conteudo.pagina-interna {
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+  padding: 24px !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(255, 255, 255, 0.86) !important;
+  box-shadow: var(--ui-sombra) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.topo-pagina,
+.topo-pagina-interna {
+  min-height: 112px !important;
+  padding: 24px 28px !important;
+  margin-bottom: 18px !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 96% 6%, rgba(214, 168, 47, 0.10), transparent 26%),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid rgba(15, 23, 42, 0.065) !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.045) !important;
+}
+
+.subtitulo-pagina-interna {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin-bottom: 7px !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: #eef6ff !important;
+  color: #1d4ed8 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.topo-pagina h2,
+.topo-pagina-interna h2 {
+  margin: 0 0 7px !important;
+  color: var(--ui-texto) !important;
+  font-size: clamp(31px, 4vw, 46px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.055em !important;
+}
+
+.topo-pagina p,
+.topo-pagina-interna p {
+  margin: 0 !important;
+  max-width: 760px !important;
+  color: var(--ui-suave) !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.botao-principal,
+.botao-secundario,
+.botao-editar,
+.botao-excluir,
+.botao-presenca,
+.botao-falta {
+  min-height: 40px !important;
+  border-radius: 13px !important;
+  padding: 10px 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.01em !important;
+  box-shadow: none !important;
+}
+
+.botao-principal {
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  background: linear-gradient(135deg, #0b72b9 0%, #00a693 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px rgba(6, 182, 212, 0.16) !important;
+}
+
+.botao-principal:hover {
+  filter: brightness(0.98) !important;
+  box-shadow: 0 16px 30px rgba(6, 182, 212, 0.20) !important;
+}
+
+.botao-secundario {
+  border: 1px solid rgba(37, 99, 235, 0.16) !important;
+  background: #ffffff !important;
+  color: #0f2c60 !important;
+}
+
+.botao-editar {
+  border: 1px solid rgba(214, 168, 47, 0.28) !important;
+  background: #fffaf0 !important;
+  color: #9a6b00 !important;
+}
+
+.botao-excluir {
+  border: 1px solid rgba(220, 38, 38, 0.18) !important;
+  background: #fff5f5 !important;
+  color: #dc2626 !important;
+}
+
+.formulario,
+.filtros {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea,
+.filtros input,
+.filtros select {
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  background: #ffffff !important;
+  color: var(--ui-texto) !important;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.015) !important;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus,
+.filtros input:focus,
+.filtros select:focus {
+  border-color: rgba(37, 99, 235, 0.52) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10) !important;
+}
+
+.filtros {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr) auto !important;
+  align-items: end !important;
+  gap: 14px !important;
+  padding: 16px !important;
+}
+
+.contador-resultados {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  margin: 16px 0 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 999px !important;
+  background: #eef6ff !important;
+  color: #1e3a8a !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.lista {
+  gap: 12px !important;
+}
+
+.item-lista {
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.045) !important;
+}
+
+.item-lista:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.07) !important;
+}
+
+/* Classes */
+.pagina-classes .aviso-classes-moderno {
+  margin-top: 6px !important;
+  margin-bottom: 16px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #eff9ff 0%, #fff8df 100%) !important;
+  border: 1px solid rgba(214, 168, 47, 0.16) !important;
+  color: #0f2c60 !important;
+}
+
+.lista-classes-modernas {
+  gap: 16px !important;
+}
+
+.classe-card-moderno {
+  overflow: hidden !important;
+  padding: 0 !important;
+  border-radius: 24px !important;
+}
+
+.classe-card-moderno::before {
+  display: none !important;
+}
+
+.classe-card-faixa {
+  min-height: 78px !important;
+  padding: 18px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #123a6f 58%, rgba(6, 182, 212, 0.72) 100%) !important;
+  color: #ffffff !important;
+}
+
+.classe-cor-3 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #16406d 60%, #d6a82f 150%) !important;
+}
+
+.classe-cor-4 .classe-card-faixa {
+  background:
+    radial-gradient(circle at 98% 8%, rgba(214, 168, 47, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f2c60 0%, #14532d 150%) !important;
+}
+
+.classe-card-selo {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e0f2fe !important;
+}
+
+.classe-card-titulo-bloco h3,
+.classe-card-faixa h3 {
+  margin: 6px 0 0 !important;
+  color: #ffffff !important;
+  font-size: clamp(22px, 3vw, 31px) !important;
+  letter-spacing: -0.04em !important;
+}
+
+.classe-card-matricula {
+  width: 68px !important;
+  height: 58px !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0 !important;
+  background: #f7b51f !important;
+  color: #0f172a !important;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.14) !important;
+}
+
+.classe-card-matricula strong {
+  line-height: 1 !important;
+  font-size: 24px !important;
+}
+
+.classe-card-matricula span {
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.classe-card-corpo {
+  padding: 18px 20px 20px !important;
+}
+
+.classe-card-resumo-item,
+.professor-classe-linha,
+.aluno-classe-linha {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  background: #fbfdff !important;
+}
+
+.professor-classe-linha,
+.aluno-classe-linha {
+  padding: 12px 14px !important;
+}
+
+.professor-classe-nome {
+  color: var(--ui-texto) !important;
+  font-weight: 900 !important;
+}
+
+.classe-card-acoes,
+.aluno-classe-acoes,
+.professor-classe-acoes {
+  gap: 8px !important;
+}
+
+.classe-card-acoes button {
+  min-height: 35px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+/* Alunos e Professores */
+.lista-cadastros-moderna {
+  margin-top: 14px !important;
+}
+
+.cadastro-card-moderno {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  padding: 16px !important;
+}
+
+.cadastro-card-identidade {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+}
+
+.cadastro-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  flex-shrink: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #e0f2fe, #fff3c4) !important;
+  color: #0f2c60 !important;
+  font-weight: 950 !important;
+  font-size: 18px !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05) !important;
+}
+
+.cadastro-card-textos h3 {
+  margin: 0 0 8px !important;
+  color: var(--ui-texto) !important;
+  font-size: 17px !important;
+  letter-spacing: -0.025em !important;
+}
+
+.cadastro-metadados {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+}
+
+.cadastro-metadados span {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 6px 9px !important;
+  border-radius: 999px !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.pagina-professors .cadastro-avatar,
+.pagina-professores .cadastro-avatar {
+  background: linear-gradient(135deg, #ecfeff, #fff7dd) !important;
+}
+
+.acoes-cadastro,
+.acoes-item {
+  align-items: center !important;
+}
+
+.acoes-cadastro button,
+.acoes-item button {
+  min-height: 34px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+}
+
+/* Chamada */
+.pagina-chamada .abas-chamada {
+  display: inline-flex !important;
+  width: fit-content !important;
+  padding: 5px !important;
+  margin: 2px 0 16px !important;
+  border-radius: 999px !important;
+  background: #eef4fb !important;
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.pagina-chamada .abas-chamada button {
+  min-height: 38px !important;
+  padding: 9px 16px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-weight: 900 !important;
+}
+
+.pagina-chamada .abas-chamada button.ativo {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #0b72b9, #00a693) !important;
+  box-shadow: 0 10px 20px rgba(6, 182, 212, 0.18) !important;
+}
+
+.pagina-chamada > .formulario,
+.pagina-chamada .formulario {
+  padding: 18px !important;
+  margin-top: 0 !important;
+}
+
+.pagina-chamada .item-chamada {
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+.pagina-chamada .acoes-chamada {
+  gap: 8px !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente,
+.ativo-presente {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.pagina-chamada .botao-falta.ativo-falta,
+.ativo-falta {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.mensagem-chamada {
+  border-radius: 18px !important;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Relatórios */
+.pagina-relatorios .relatorios-dashboard {
+  display: grid !important;
+  gap: 16px !important;
+}
+
+.relatorios-hero {
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 96% 18%, rgba(255, 255, 255, 0.16), transparent 25%),
+    linear-gradient(135deg, #123a6f 0%, #1d4ed8 62%, #00a693 130%) !important;
+  box-shadow: 0 18px 36px rgba(29, 78, 216, 0.15) !important;
+}
+
+.relatorios-percentual {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.17) !important;
+}
+
+.relatorios-cards .card,
+.relatorios-professores-card,
+.relatorio-acoes {
+  border-radius: 22px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045) !important;
+}
+
+.professores-resumo-grid {
+  gap: 12px !important;
+}
+
+.professor-resumo-item,
+.professor-status-linha {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  background: #fbfdff !important;
+}
+
+.professor-status-linha {
+  padding: 12px 14px !important;
+}
+
+.professor-status-linha .status-presente,
+.status-presente {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 101, 52, 0.10) !important;
+}
+
+.relatorio-folha {
+  border-radius: 18px !important;
+  border-color: rgba(15, 23, 42, 0.35) !important;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06) !important;
+  overflow: hidden !important;
+}
+
+.relatorio-acoes {
+  padding: 18px !important;
+  align-items: center !important;
+}
+
+.relatorio-acoes-botoes,
+.relatorio-acoes .grupo-botoes {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  justify-content: flex-end !important;
+}
+
+.relatorio-acoes .botao-principal,
+.relatorio-acoes .botao-secundario {
+  margin-top: 0 !important;
+}
+
+.tabela-container {
+  border-radius: 16px !important;
+}
+
+.tabela:not(.tabela-ebd) {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(15, 23, 42, 0.075) !important;
+}
+
+.tabela:not(.tabela-ebd) th {
+  background: #f8fafc !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+}
+
+.tabela:not(.tabela-ebd) td {
+  color: #334155 !important;
+  font-size: 13px !important;
+}
+
+@media (max-width: 1180px) {
+  .conteudo,
+  .conteudo.pagina-interna {
+    max-width: 100% !important;
+  }
+
+  .filtros {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .filtros .botao-secundario {
+    grid-column: 1 / -1 !important;
+    width: fit-content !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .app {
+    flex-direction: column !important;
+  }
+
+  .menu-lateral {
+    width: 100% !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .menu-navegacao,
+  .menu-lateral nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .cartao-usuario-sidebar {
+    margin-top: 4px !important;
+  }
+
+  .topo-pagina,
+  .topo-pagina-interna {
+    align-items: stretch !important;
+    min-height: auto !important;
+    padding: 20px !important;
+  }
+
+  .topo-pagina .botao-principal,
+  .topo-pagina-interna .botao-principal {
+    width: 100% !important;
+  }
+
+  .filtros {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filtros .botao-secundario {
+    width: 100% !important;
+  }
+
+  .cadastro-card-moderno,
+  .item-com-acoes {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .acoes-cadastro,
+  .acoes-item {
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  .acoes-cadastro button,
+  .acoes-item button {
+    flex: 1 !important;
+  }
+
+  .classe-card-faixa {
+    align-items: flex-start !important;
+  }
+
+  .classe-card-acoes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .classe-card-acoes button {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .area-principal {
+    padding: 14px !important;
+  }
+
+  .conteudo,
+  .conteudo.pagina-interna {
+    padding: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .menu-navegacao,
+  .menu-lateral nav {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topo-pagina h2,
+  .topo-pagina-interna h2 {
+    font-size: 34px !important;
+  }
+
+  .classe-card-faixa,
+  .classe-card-corpo {
+    padding: 16px !important;
+  }
+
+  .classe-card-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .abas-chamada {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    border-radius: 18px !important;
+  }
+
+  .pagina-chamada .abas-chamada button {
+    width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .cadastro-card-identidade {
+    align-items: flex-start !important;
+  }
+
+  .relatorio-acoes-botoes,
+  .relatorio-acoes .grupo-botoes {
+    justify-content: stretch !important;
+  }
+
+  .relatorio-acoes .botao-principal,
+  .relatorio-acoes .botao-secundario {
+    width: 100% !important;
+  }
+}
+
+@media print {
+  .conteudo,
+  .conteudo.pagina-interna {
+    box-shadow: none !important;
+    border: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .relatorio-folha {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* v73 - Relatório PDF com visual institucional */
+.pagina-relatorios .relatorio-folha {
+  margin-top: 28px !important;
+  padding: 22px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08) !important;
+  overflow: hidden !important;
+  color: #172033 !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-oficial {
+  display: grid !important;
+  grid-template-columns: minmax(240px, 1.1fr) minmax(300px, 1.35fr) minmax(160px, 190px) !important;
+  gap: 18px !important;
+  align-items: center !important;
+  text-align: left !important;
+  margin-bottom: 18px !important;
+  padding-bottom: 16px !important;
+  border-bottom: 1px solid #d8e0eb !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-marca {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-oficial .logo-relatorio {
+  width: 64px !important;
+  height: 64px !important;
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-titulos {
+  min-width: 0 !important;
+}
+
+.pagina-relatorios .relatorio-selo-institucional {
+  display: inline-flex !important;
+  width: fit-content !important;
+  margin-bottom: 5px !important;
+  color: #b7791f !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-oficial h3 {
+  margin: 0 0 4px !important;
+  color: #0f2a44 !important;
+  font-size: 20px !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  text-transform: uppercase !important;
+}
+
+.pagina-relatorios .cabecalho-relatorio-oficial p,
+.pagina-relatorios .relatorio-info-igreja p {
+  margin: 0 0 4px !important;
+  color: #526173 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+}
+
+.pagina-relatorios .relatorio-info-igreja strong {
+  color: #0f2a44 !important;
+  font-weight: 900 !important;
+}
+
+.pagina-relatorios .relatorio-data-selo {
+  align-self: stretch !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 14px 12px !important;
+  border: 1px solid #d8c48e !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, #fffdf5 0%, #fff8df 100%) !important;
+  text-align: center !important;
+}
+
+.pagina-relatorios .relatorio-data-selo span,
+.pagina-relatorios .relatorio-data-selo small {
+  display: block !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+}
+
+.pagina-relatorios .relatorio-data-selo strong {
+  display: block !important;
+  margin: 2px 0 !important;
+  color: #0f2a44 !important;
+  font-size: 20px !important;
+  line-height: 1.1 !important;
+  font-weight: 950 !important;
+}
+
+.pagina-relatorios .tabela-ebd {
+  width: 100% !important;
+  border: 1px solid #cbd5e1 !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  font-size: 12px !important;
+  color: #1f2937 !important;
+  background: #ffffff !important;
+}
+
+.pagina-relatorios .tabela-ebd th,
+.pagina-relatorios .tabela-ebd td {
+  border: 0 !important;
+  border-right: 1px solid #d6dee9 !important;
+  border-bottom: 1px solid #d6dee9 !important;
+  padding: 10px 8px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.pagina-relatorios .tabela-ebd th:last-child,
+.pagina-relatorios .tabela-ebd td:last-child {
+  border-right: 0 !important;
+}
+
+.pagina-relatorios .tabela-ebd tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+.pagina-relatorios .tabela-ebd th {
+  background: #123c63 !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.pagina-relatorios .tabela-ebd td:nth-child(2),
+.pagina-relatorios .tabela-ebd th:nth-child(2) {
+  min-width: 180px !important;
+  text-align: left !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.pagina-relatorios .linha-total td {
+  background: #eef6ff !important;
+  color: #0f2a44 !important;
+  border-top: 2px solid #8aa4bf !important;
+  font-weight: 950 !important;
+}
+
+.pagina-relatorios .linha-domingo-anterior td {
+  background: #fffaf0 !important;
+  color: #5f4b16 !important;
+  text-align: left !important;
+  font-weight: 800 !important;
+  padding: 9px 12px !important;
+}
+
+.pagina-relatorios .linha-domingo-anterior span {
+  display: inline-flex !important;
+  margin-right: 10px !important;
+  color: #0f2a44 !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pagina-relatorios .linha-domingo-anterior small {
+  color: #6b5b26 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+.pagina-relatorios .linha-professores-titulo td {
+  background: #123c63 !important;
+  color: #ffffff !important;
+  padding: 11px 10px !important;
+  border-right: 0 !important;
+  border-bottom-color: #123c63 !important;
+}
+
+.pagina-relatorios .relatorio-professores-titulo-conteudo {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.pagina-relatorios .relatorio-professores-titulo-conteudo strong {
+  margin-right: 4px !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pagina-relatorios .relatorio-professores-titulo-conteudo span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 22px !important;
+  padding: 3px 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+}
+
+.pagina-relatorios .linha-professores-cabecalho td {
+  background: #f7eec7 !important;
+  color: #0f2a44 !important;
+  font-weight: 950 !important;
+  text-align: center !important;
+}
+
+.pagina-relatorios .linha-professor-tabela-relatorio td {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+  border-color: #d6dee9 !important;
+}
+
+.pagina-relatorios .status-relatorio-professor {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 76px !important;
+  border-radius: 999px !important;
+  padding: 4px 10px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+.pagina-relatorios .status-relatorio-professor.status-presente {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+.pagina-relatorios .status-relatorio-professor.status-falta,
+.pagina-relatorios .status-relatorio-professor.status-faltou {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+.pagina-relatorios .status-relatorio-professor.status-justificado,
+.pagina-relatorios .status-relatorio-professor.status-justificou {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.pagina-relatorios .rodape-relatorio-oficial {
+  margin-top: 14px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid #e2e8f0 !important;
+  color: #64748b !important;
+  text-align: center !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 1020px) {
+  .pagina-relatorios .cabecalho-relatorio-oficial {
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-marca {
+    justify-content: center !important;
+  }
+
+  .pagina-relatorios .relatorio-info-igreja {
+    text-align: center !important;
+  }
+
+  .pagina-relatorios .relatorio-data-selo {
+    width: min(100%, 280px) !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media print {
+  .pagina-relatorios .relatorio-folha,
+  .relatorio-folha {
+    box-shadow: none !important;
+    border-radius: 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 16px !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-oficial,
+  .cabecalho-relatorio-oficial {
+    display: grid !important;
+    grid-template-columns: 1.2fr 1.4fr 170px !important;
+    gap: 12px !important;
+    align-items: center !important;
+    text-align: left !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #d8e0eb !important;
+  }
+
+  .pagina-relatorios .logo-relatorio,
+  .logo-relatorio {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-oficial h3,
+  .cabecalho-relatorio-oficial h3 {
+    font-size: 16px !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-oficial p,
+  .cabecalho-relatorio-oficial p,
+  .relatorio-info-igreja p {
+    font-size: 9.5px !important;
+  }
+
+  .pagina-relatorios .relatorio-data-selo strong,
+  .relatorio-data-selo strong {
+    font-size: 14px !important;
+  }
+
+  .pagina-relatorios .tabela-ebd,
+  .tabela-ebd {
+    font-size: 9.5px !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .pagina-relatorios .tabela-ebd th,
+  .pagina-relatorios .tabela-ebd td,
+  .tabela-ebd th,
+  .tabela-ebd td {
+    padding: 5px 4px !important;
+  }
+
+  .pagina-relatorios .rodape-relatorio-oficial,
+  .rodape-relatorio-oficial {
+    font-size: 8.5px !important;
+    margin-top: 8px !important;
+    padding-top: 6px !important;
+  }
+}
+
+/* =========================================================
+   v74 - Responsividade completa
+   Ajustes de layout para celular, tablet e desktop sem alterar regras de negócio
+   ========================================================= */
+
+@media screen {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  img,
+  svg,
+  canvas,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  .topo-mobile-interno {
+    display: none;
+  }
+
+  .fechar-menu-interno {
+    display: none;
+  }
+
+  .overlay-menu-interno {
+    display: none;
+  }
+
+  .tabela-container,
+  .relatorio-preview-wrapper,
+  .relatorio-folha-container,
+  .pre-visualizacao-relatorio,
+  .area-preview-relatorio,
+  .cartao-preview-relatorio {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabela,
+  .tabela-ebd {
+    max-width: 100%;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea,
+  .filtros input,
+  .filtros select,
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 1180px) {
+  .conteudo,
+  .painel-admin-moderno,
+  .pagina-relatorios,
+  .pagina-interna,
+  .secao-painel,
+  .cartao-pagina,
+  .relatorios-container {
+    max-width: 100%;
+  }
+
+  .cards,
+  .cards-estatisticas,
+  .grade-campos,
+  .grade-campos-configuracoes,
+  .grade-resumos-comerciais,
+  .acoes-rapidas-grid,
+  .acoes-rapidas-painel-grid,
+  .painel-alertas-grid,
+  .resumo-rapido-grid,
+  .relatorios-cards,
+  .cards-relatorios,
+  .grade-indicadores,
+  .indicadores-relatorio {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .modelo-exato-ebd .nav-container {
+    padding-inline: 18px !important;
+  }
+
+  .modelo-exato-ebd .nav-links {
+    display: none !important;
+  }
+
+  .modelo-exato-ebd .menu-toggle {
+    display: inline-flex !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    min-height: auto !important;
+    padding: 7.5rem 1.25rem 4rem !important;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 2.25rem !important;
+    align-items: start !important;
+  }
+
+  .modelo-exato-ebd .hero-copy {
+    max-width: 760px !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    position: relative !important;
+    z-index: 1 !important;
+    width: min(100%, 560px) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  .tela-login,
+  .tela-login-v70,
+  .tela-mensagem {
+    grid-template-columns: 1fr !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70 {
+    min-height: auto !important;
+  }
+
+  .preview-login-v70,
+  .beneficios-login,
+  .beneficios-login-v70 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .area-principal {
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .app {
+    display: block !important;
+    min-height: 100vh;
+  }
+
+  .topo-mobile-interno {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 1500;
+    min-height: 68px;
+    padding: 10px 14px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(248, 251, 255, 0.94);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.10);
+    backdrop-filter: blur(16px);
+  }
+
+  .marca-mobile-interna {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 46px !important;
+    height: 46px !important;
+    flex: 0 0 46px;
+  }
+
+  .marca-mobile-interna strong,
+  .marca-mobile-interna span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .marca-mobile-interna strong {
+    color: #08213d;
+    font-size: 17px;
+    line-height: 1.1;
+    font-weight: 950;
+  }
+
+  .marca-mobile-interna span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .botao-menu-interno {
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    border-radius: 16px;
+    background: #ffffff;
+    color: #0f2d4d;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .botao-menu-interno span {
+    width: 21px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+
+  .botao-menu-interno.ativo span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .botao-menu-interno.ativo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .botao-menu-interno.ativo span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .overlay-menu-interno {
+    position: fixed;
+    inset: 0;
+    z-index: 1390;
+    display: block !important;
+    border: 0;
+    background: rgba(2, 6, 23, 0.48);
+    backdrop-filter: blur(3px);
+  }
+
+  .menu-lateral {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1400;
+    width: min(86vw, 320px) !important;
+    max-width: 320px;
+    height: 100dvh;
+    padding: 22px 16px !important;
+    overflow-y: auto;
+    transform: translateX(-106%);
+    transition: transform 0.24s ease, box-shadow 0.24s ease;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none;
+  }
+
+  .menu-lateral.menu-lateral-aberto {
+    transform: translateX(0);
+    box-shadow: 30px 0 70px rgba(2, 6, 23, 0.28);
+  }
+
+  .menu-lateral .marca-sidebar {
+    padding-right: 42px;
+    position: relative;
+  }
+
+  .fechar-menu-interno {
+    display: inline-flex !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .menu-lateral nav,
+  .menu-navegacao {
+    gap: 8px !important;
+  }
+
+  .menu-lateral button {
+    min-height: 46px;
+  }
+
+  .area-principal {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 86px 14px 22px !important;
+  }
+
+  .conteudo,
+  .pagina-relatorios .conteudo,
+  .pagina-admin,
+  .pagina-interna,
+  .cartao-pagina,
+  .secao-painel,
+  .painel-admin-moderno {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .topo-pagina,
+  .cabecalho-pagina,
+  .cabecalho-interno,
+  .page-header,
+  .cabecalho-relatorios,
+  .topo-painel-admin {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .topo-pagina h2,
+  .conteudo h2,
+  .cabecalho-pagina h2,
+  .page-header h1,
+  .pagina-relatorios h2 {
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  .hero-painel,
+  .painel-topo-grid,
+  .painel-resumo-topo,
+  .relatorios-hero,
+  .relatorio-topo-grid,
+  .dashboard-grid,
+  .grid-duas-colunas,
+  .grade-campos,
+  .grade-campos-configuracoes,
+  .filtros,
+  .filtros-modernizados,
+  .filtros-listagem,
+  .busca-filtros,
+  .formulario-grid,
+  .cards,
+  .cards-estatisticas,
+  .cards-resumo,
+  .grade-resumos-comerciais,
+  .acoes-rapidas-grid,
+  .acoes-rapidas-painel-grid,
+  .painel-alertas-grid,
+  .resumo-rapido-grid,
+  .relatorios-cards,
+  .cards-relatorios,
+  .grade-indicadores,
+  .indicadores-relatorio,
+  .lista-professores-resumo,
+  .estatisticas-professores,
+  .admin-grid,
+  .financeiro-grid,
+  .configuracoes-grid,
+  .manual-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topo-pagina .botao-principal,
+  .topo-pagina .botao-secundario,
+  .cabecalho-pagina .botao-principal,
+  .cabecalho-pagina .botao-secundario,
+  .page-header .botao-principal,
+  .page-header .botao-secundario {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .item-com-acoes,
+  .item-chamada,
+  .linha-listagem,
+  .card-listagem,
+  .aluno-card,
+  .professor-card,
+  .classe-card-conteudo,
+  .classe-card-rodape,
+  .aniversariante-linha,
+  .acao-relatorio-linha {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .acoes-item,
+  .acoes-chamada,
+  .acoes-card,
+  .botoes-card-classe,
+  .botoes-classe,
+  .acoes-relatorio,
+  .acoes-relatorios,
+  .grupo-botoes,
+  .hero-acoes,
+  .janela-aniversariantes-acoes,
+  .painel-aniversariantes-topo,
+  .feedback-piloto-topo-compacto,
+  .relatorio-acoes-botoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .acoes-item > *,
+  .acoes-chamada > *,
+  .acoes-card > *,
+  .botoes-card-classe > *,
+  .botoes-classe > *,
+  .grupo-botoes > *,
+  .relatorio-acoes-botoes > * {
+    flex: 1 1 150px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .modelo-exato-ebd .navbar {
+    position: sticky !important;
+    top: 0 !important;
+    padding: 0.55rem 0 !important;
+  }
+
+  .modelo-exato-ebd .nav-container {
+    min-height: 58px !important;
+    padding-inline: 14px !important;
+  }
+
+  .modelo-exato-ebd .logo,
+  .modelo-exato-ebd .logo-com-imagem-oficial {
+    min-width: 0 !important;
+    gap: 10px !important;
+  }
+
+  .modelo-exato-ebd .logo-oficial-navbar {
+    width: 48px !important;
+    height: 48px !important;
+    flex: 0 0 48px !important;
+  }
+
+  .modelo-exato-ebd .logo-text {
+    font-size: clamp(1.35rem, 7vw, 1.9rem) !important;
+    line-height: 1 !important;
+  }
+
+  .modelo-exato-ebd .logo-sub {
+    font-size: clamp(0.56rem, 2.6vw, 0.72rem) !important;
+    letter-spacing: 0.14em !important;
+    white-space: normal !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    padding: 2.8rem 1rem 3rem !important;
+    overflow: hidden !important;
+  }
+
+  .modelo-exato-ebd .hero::after {
+    width: 260px !important;
+    height: 260px !important;
+    right: -120px !important;
+    bottom: auto !important;
+    top: 54% !important;
+  }
+
+  .modelo-exato-ebd .hero-content {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.6rem !important;
+  }
+
+  .modelo-exato-ebd .hero-copy,
+  .modelo-exato-ebd .hero h1,
+  .modelo-exato-ebd .hero p {
+    max-width: 100% !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(2rem, 10.8vw, 3.1rem) !important;
+    line-height: 1.05 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .modelo-exato-ebd .btn-hero-login-v70,
+  .modelo-exato-ebd .hero .btn-primary,
+  .modelo-exato-ebd .btn-nav-mobile {
+    width: 100% !important;
+    min-height: 50px !important;
+    justify-content: center !important;
+  }
+
+  .modelo-exato-ebd .hero-stats,
+  .modelo-exato-ebd .features-grid,
+  .modelo-exato-ebd .comparison-grid,
+  .modelo-exato-ebd .personas-grid,
+  .modelo-exato-ebd .plans-grid,
+  .modelo-exato-ebd .footer-content,
+  .modelo-exato-ebd .mockup-metricas-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    width: 100% !important;
+    max-width: 430px !important;
+    border-radius: 24px !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-body {
+    padding: 1.25rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-body h3 {
+    font-size: 1.35rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-lista-v70 span,
+  .modelo-exato-ebd .mockup-metricas-v70 div {
+    min-height: auto !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 3.2rem 1rem !important;
+  }
+
+  .modelo-exato-ebd .section-title {
+    font-size: clamp(1.65rem, 8vw, 2.15rem) !important;
+  }
+
+  .modelo-exato-ebd .mobile-menu.active {
+    max-height: calc(100dvh - 68px) !important;
+    overflow-y: auto !important;
+  }
+
+  .tela-login,
+  .tela-login-v70 {
+    min-height: 100dvh !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70 {
+    padding: 28px 20px !important;
+  }
+
+  .tela-login .marca-login,
+  .tela-login-v70 .marca-login {
+    align-items: flex-start !important;
+  }
+
+  .tela-login .marca-login .logo-simbolo,
+  .tela-login-v70 .marca-login .logo-simbolo {
+    width: 58px !important;
+    height: 58px !important;
+    flex: 0 0 58px !important;
+  }
+
+  .tela-login .marca-login h1,
+  .tela-login-v70 .marca-login h1 {
+    font-size: 1.55rem !important;
+  }
+
+  .tela-login .marca-login p,
+  .tela-login-v70 .marca-login p {
+    font-size: 0.92rem !important;
+  }
+
+  .tela-login .apresentacao-texto h2,
+  .tela-login-v70 .apresentacao-login-v70 h2 {
+    font-size: clamp(1.9rem, 9vw, 2.65rem) !important;
+    line-height: 1.08 !important;
+  }
+
+  .preview-login-v70,
+  .beneficios-login,
+  .beneficios-login-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cartao-login,
+  .cartao-login-v70,
+  .cartao-mensagem {
+    padding: 24px 16px !important;
+  }
+
+  .topo-cartao-login {
+    align-items: flex-start !important;
+  }
+
+  .topo-cartao-login h2,
+  .cartao-login-v70 .topo-cartao-login h2 {
+    font-size: clamp(1.65rem, 8vw, 2rem) !important;
+  }
+
+  .formulario,
+  .formulario-login,
+  .cartao-login-v70 .formulario-login,
+  .filtros,
+  .filtros-modernizados,
+  .busca-filtros {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea,
+  .filtros input,
+  .filtros select,
+  .cartao-login-v70 .formulario input,
+  input,
+  select,
+  textarea {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+
+  .botao-principal,
+  .botao-secundario,
+  .botao-editar,
+  .botao-excluir,
+  .botao-presenca,
+  .botao-falta,
+  .botao-cadastrar-igreja {
+    min-height: 46px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-painel-conteudo,
+  .hero-painel-destaque,
+  .painel-hero-principal,
+  .painel-resumo-rapido,
+  .relatorios-hero,
+  .card,
+  .item-lista,
+  .classe-card,
+  .card-classe,
+  .cartao-classe,
+  .aluno-card,
+  .professor-card,
+  .card-listagem,
+  .cartao-listagem,
+  .relatorio-card,
+  .feedback-piloto-compacto,
+  .personalizacao-card,
+  .configuracao-rapida-card {
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+
+  .hero-painel-conteudo h2,
+  .painel-hero-principal h2 {
+    font-size: clamp(1.7rem, 8vw, 2.2rem) !important;
+  }
+
+  .card-estatistica,
+  .card-resumo,
+  .indicador-card,
+  .relatorio-indicador {
+    align-items: center !important;
+  }
+
+  .card-valor,
+  .indicador-valor,
+  .relatorio-indicador strong {
+    font-size: clamp(1.65rem, 8vw, 2.1rem) !important;
+  }
+
+  .card-estatistica .card-icone,
+  .card-icone,
+  .icone-resumo,
+  .avatar-listagem,
+  .avatar-aniversariante {
+    flex: 0 0 auto !important;
+  }
+
+  .card-classe-cabecalho,
+  .classe-cabecalho,
+  .classe-topo,
+  .cabecalho-classe {
+    min-height: auto !important;
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+
+  .card-classe-cabecalho h3,
+  .classe-cabecalho h3,
+  .classe-topo h3,
+  .cabecalho-classe h3 {
+    font-size: clamp(1.25rem, 7vw, 1.7rem) !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .badge,
+  .selo,
+  .selo-status,
+  .selo-card,
+  .selo-perfil-sidebar,
+  .tag,
+  .tag-prazo {
+    max-width: 100%;
+    white-space: normal !important;
+  }
+
+  .lista,
+  .lista-alunos,
+  .lista-professores,
+  .lista-classes,
+  .lista-chamada,
+  .lista-relatorios {
+    gap: 12px !important;
+  }
+
+  .item-lista,
+  .card-listagem,
+  .aluno-card,
+  .professor-card {
+    min-width: 0 !important;
+  }
+
+  .item-lista h3,
+  .card-listagem h3,
+  .aluno-card h3,
+  .professor-card h3 {
+    overflow-wrap: anywhere !important;
+  }
+
+  .abas-chamada,
+  .tabs-chamada,
+  .chamada-abas,
+  .abas-relatorios {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .abas-chamada button,
+  .tabs-chamada button,
+  .chamada-abas button,
+  .abas-relatorios button {
+    width: 100% !important;
+  }
+
+  .resumo-chamada {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .tabela-container {
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  .tabela,
+  .tabela-ebd {
+    min-width: 720px;
+  }
+
+  .relatorio-folha {
+    min-width: 760px;
+    transform-origin: top left;
+  }
+
+  .pagina-relatorios .relatorio-folha,
+  .relatorio-folha {
+    padding: 14px !important;
+  }
+
+  .acoes-relatorio,
+  .acoes-relatorios,
+  .relatorio-acoes-botoes {
+    justify-content: stretch !important;
+  }
+
+  .acoes-relatorio button,
+  .acoes-relatorios button,
+  .relatorio-acoes-botoes button,
+  .janela-aniversariantes-acoes button {
+    flex: 1 1 100% !important;
+  }
+
+  .janela-aniversariantes,
+  .modal,
+  .modal-conteudo,
+  .cartao-modal,
+  .modal-card {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    overflow-y: auto !important;
+    border-radius: 22px !important;
+  }
+
+  .cartao-aniversario-preview,
+  .cartao-aniversario,
+  .cartao-aniversario-area {
+    max-width: 100% !important;
+  }
+
+  .mensagem-chamada,
+  .alerta-flutuante-secretaria {
+    right: 12px !important;
+    left: 12px !important;
+    bottom: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .topo-mobile-interno {
+    min-height: 64px;
+    padding: 9px 12px;
+  }
+
+  .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 42px !important;
+    height: 42px !important;
+    flex-basis: 42px !important;
+  }
+
+  .marca-mobile-interna strong {
+    font-size: 16px;
+  }
+
+  .marca-mobile-interna span {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .botao-menu-interno {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .area-principal {
+    padding: 78px 10px 18px !important;
+  }
+
+  .conteudo,
+  .pagina-relatorios .conteudo,
+  .pagina-admin,
+  .pagina-interna,
+  .cartao-pagina,
+  .secao-painel,
+  .painel-admin-moderno {
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    padding: 2.25rem 0.85rem 2.5rem !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(1.86rem, 11vw, 2.65rem) !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 0.96rem !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    border-radius: 20px !important;
+  }
+
+  .modelo-exato-ebd .mockup-body {
+    padding: 1rem !important;
+  }
+
+  .modelo-exato-ebd .mockup-check {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 14px !important;
+  }
+
+  .modelo-exato-ebd .mockup-body h3 {
+    font-size: 1.18rem !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 2.8rem 0.85rem !important;
+  }
+
+  .painel-apresentacao,
+  .painel-login-v70,
+  .cartao-login,
+  .cartao-login-v70,
+  .cartao-mensagem {
+    padding-inline: 14px !important;
+  }
+
+  .topo-cartao-login {
+    gap: 12px !important;
+  }
+
+  .topo-cartao-icone,
+  .mensagem-status-icone {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+  }
+
+  .formulario,
+  .formulario-login,
+  .filtros,
+  .filtros-modernizados,
+  .busca-filtros {
+    padding: 14px !important;
+  }
+
+  .botao-principal,
+  .botao-secundario,
+  .botao-editar,
+  .botao-excluir,
+  .botao-presenca,
+  .botao-falta,
+  .botao-cadastrar-igreja,
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
+  .acoes-item > *,
+  .acoes-chamada > *,
+  .acoes-card > *,
+  .botoes-card-classe > *,
+  .botoes-classe > *,
+  .grupo-botoes > * {
+    flex-basis: 100% !important;
+  }
+
+  .item-lista,
+  .card-listagem,
+  .aluno-card,
+  .professor-card,
+  .classe-card,
+  .card-classe,
+  .cartao-classe,
+  .card {
+    padding: 14px !important;
+  }
+
+  .card-estatistica,
+  .card-resumo,
+  .indicador-card {
+    gap: 12px !important;
+  }
+
+  .tabela,
+  .tabela-ebd {
+    min-width: 680px;
+    font-size: 12px !important;
+  }
+
+  .tabela th,
+  .tabela td,
+  .tabela-ebd th,
+  .tabela-ebd td {
+    padding: 9px 8px !important;
+  }
+
+  .relatorio-folha {
+    min-width: 720px;
+  }
+}
+
+/* =========================================================
+   v75 - Ajuste compacto dos cards de chamada no celular/tablet
+   Corrige botões Presente/Faltou grandes demais e reduz rolagem.
+   ========================================================= */
+.pagina-chamada .lista {
+  gap: 10px !important;
+}
+
+.pagina-chamada .item-chamada {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 310px) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 18px !important;
+  overflow: visible !important;
+}
+
+.pagina-chamada .item-chamada > div:first-child {
+  min-width: 0 !important;
+}
+
+.pagina-chamada .item-chamada h3 {
+  margin: 0 0 4px !important;
+  font-size: clamp(17px, 2.4vw, 20px) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.pagina-chamada .item-chamada p {
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+.pagina-chamada .acoes-chamada {
+  width: 100% !important;
+  max-width: 310px !important;
+  margin-left: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.pagina-chamada .acoes-chamada-professores {
+  max-width: 430px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.pagina-chamada .acoes-chamada > *,
+.pagina-chamada .botao-presenca,
+.pagina-chamada .botao-falta,
+.pagina-chamada .botao-justificou {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  flex-basis: auto !important;
+}
+
+.pagina-chamada .botao-presenca,
+.pagina-chamada .botao-falta,
+.pagina-chamada .botao-justificou {
+  min-height: 46px !important;
+  height: 46px !important;
+  padding: 0 12px !important;
+  border-radius: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  box-shadow: none !important;
+}
+
+.pagina-chamada .botao-presenca:not(.ativo-presente) {
+  background: #f3fff7 !important;
+  border: 1px solid rgba(22, 163, 74, 0.28) !important;
+  color: #166534 !important;
+}
+
+.pagina-chamada .botao-falta:not(.ativo-falta) {
+  background: #fff7f7 !important;
+  border: 1px solid rgba(220, 38, 38, 0.22) !important;
+  color: #b91c1c !important;
+}
+
+.pagina-chamada .botao-justificou:not(.ativo-justificou) {
+  background: #fffaf0 !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  color: #92400e !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente,
+.pagina-chamada .botao-falta.ativo-falta,
+.pagina-chamada .botao-justificou.ativo-justificou {
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10) !important;
+}
+
+.pagina-chamada .botao-presenca.ativo-presente {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.pagina-chamada .botao-falta.ativo-falta {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.pagina-chamada .botao-justificou.ativo-justificou {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+.pagina-chamada .acoes-chamada-rapida {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin: 14px 0 14px !important;
+}
+
+.pagina-chamada .botao-marcar-todos {
+  min-height: 46px !important;
+  height: auto !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  line-height: 1.18 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.pagina-chamada .resumo-chamada {
+  padding: 14px 16px !important;
+  border-radius: 16px !important;
+  gap: 14px !important;
+}
+
+@media screen and (max-width: 1024px) {
+  .pagina-chamada .item-chamada {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding: 14px !important;
+  }
+
+  .pagina-chamada .acoes-chamada {
+    max-width: none !important;
+    margin-left: 0 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .pagina-chamada .acoes-chamada-professores {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .pagina-chamada .item-chamada {
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .pagina-chamada .item-chamada h3 {
+    font-size: 18px !important;
+  }
+
+  .pagina-chamada .item-chamada p {
+    font-size: 13px !important;
+  }
+
+  .pagina-chamada .botao-presenca,
+  .pagina-chamada .botao-falta,
+  .pagina-chamada .botao-justificou,
+  .pagina-chamada .botao-marcar-todos {
+    min-height: 44px !important;
+    height: 44px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .pagina-chamada .acoes-chamada {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .acoes-chamada-professores {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-chamada .acoes-chamada-rapida {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* v76 - ajustes de navegação, sair e estabilidade visual */
+.botao-sair-sidebar,
+.cartao-usuario-sidebar .botao-sair-sidebar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  margin-top: 10px !important;
+  border: 1px solid rgba(56, 189, 248, 0.22) !important;
+  background: rgba(8, 47, 73, 0.36) !important;
+  color: #e0f2fe !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+
+.botao-sair-sidebar .icone-svg,
+.cartao-usuario-sidebar .botao-sair-sidebar .icone-svg,
+.botao-sair-sidebar svg,
+.cartao-usuario-sidebar .botao-sair-sidebar svg {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  color: #38bdf8 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  stroke: currentColor !important;
+}
+
+.botao-sair-sidebar span,
+.cartao-usuario-sidebar .botao-sair-sidebar span {
+  display: inline !important;
+  color: inherit !important;
+  font-weight: 900 !important;
+}
+
+.botao-sair-sidebar:hover,
+.cartao-usuario-sidebar .botao-sair-sidebar:hover {
+  background: rgba(14, 116, 144, 0.34) !important;
+  border-color: rgba(56, 189, 248, 0.38) !important;
+  color: #ffffff !important;
+}
+
+.botao-inicio-interno {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .topo-mobile-interno {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .botao-inicio-interno {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    min-height: 42px !important;
+    padding: 0 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(14, 116, 144, 0.16) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #eefbff 100%) !important;
+    color: #0f3a5f !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08) !important;
+    font-size: 12px !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+  }
+
+  .botao-inicio-interno .icone-svg {
+    width: 17px !important;
+    height: 17px !important;
+    color: #0ea5e9 !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .botao-inicio-interno {
+    width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+  }
+
+  .botao-inicio-interno span {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+}
+
+
+/* v77 - Atalho principal de chamada no topo do painel */
+.atalho-chamada-topo {
+  margin-top: 16px;
+  width: min(100%, 420px);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(219, 234, 254, 0.94));
+  color: #082f49;
+  border-radius: 18px;
+  padding: 12px 16px;
+  cursor: pointer;
+  box-shadow: 0 18px 34px rgba(2, 132, 199, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  text-align: left;
+}
+
+.atalho-chamada-topo:hover {
+  transform: translateY(-1px);
+  border-color: rgba(250, 204, 21, 0.78);
+  box-shadow: 0 22px 40px rgba(2, 132, 199, 0.23);
+}
+
+.atalho-chamada-topo:focus-visible {
+  outline: 3px solid rgba(250, 204, 21, 0.48);
+  outline-offset: 3px;
+}
+
+.atalho-chamada-topo-icone {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0ea5e9, #0f766e);
+  box-shadow: 0 12px 22px rgba(14, 165, 233, 0.24);
+}
+
+.atalho-chamada-topo-icone .icone-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.atalho-chamada-topo-texto {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.atalho-chamada-topo-texto strong {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.atalho-chamada-topo-texto small {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+@media (max-width: 768px) {
+  .atalho-chamada-topo {
+    width: 100%;
+    margin-top: 14px;
+    padding: 11px 13px;
+    border-radius: 16px;
+  }
+
+  .atalho-chamada-topo-icone {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  .atalho-chamada-topo-texto strong {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 430px) {
+  .atalho-chamada-topo {
+    gap: 10px;
+  }
+
+  .atalho-chamada-topo-texto small {
+    font-size: 11px;
+  }
+}
+
+
+/* Diagnóstico de carregamento de dados */
+.diagnostico-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.botao-diagnostico {
+  margin-top: 0;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.diagnostico-carregamento-card {
+  margin: 18px 0 22px;
+  padding: 20px;
+  border: 1px solid #bfdbfe;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: var(--sombra-suave);
+}
+
+.diagnostico-carregamento-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.diagnostico-carregamento-cabecalho h3 {
+  margin: 8px 0 6px;
+  font-size: 22px;
+}
+
+.diagnostico-carregamento-cabecalho p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.5;
+}
+
+.diagnostico-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.diagnostico-grid > div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.diagnostico-grid strong,
+.diagnostico-grid span {
+  display: block;
+}
+
+.diagnostico-grid strong {
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.diagnostico-grid span {
+  color: #0f172a;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.diagnostico-detalhes {
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.diagnostico-detalhes summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.diagnostico-detalhes pre {
+  max-height: 320px;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  border-top: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 1024px) {
+  .diagnostico-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .diagnostico-carregamento-cabecalho {
+    flex-direction: column;
+  }
+
+  .diagnostico-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diagnostico-acoes,
+  .diagnostico-acoes .botao-secundario {
+    width: 100%;
+  }
+}
+
+
+.diagnostico-admin-card {
+  margin-top: 18px;
+}
+
+.diagnostico-botoes-final {
+  margin-top: 14px;
+}
+
+.diagnostico-admin-aviso {
+  margin-top: 14px;
+}
+
+/* =========================================================
+   v92 - Histórico de chamadas e confirmação do diagnóstico
+   ========================================================= */
+.historico-chamadas-relatorio {
+  margin-top: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid var(--cor-borda);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--sombra-suave);
+}
+
+.historico-chamadas-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.historico-chamadas-topo h3 {
+  margin: 8px 0 6px;
+  font-size: 22px;
+  color: var(--cor-texto);
+}
+
+.historico-chamadas-topo p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+.lista-historico-chamadas {
+  display: grid;
+  gap: 12px;
+}
+
+.card-historico-chamada {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.historico-chamada-data {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #1e3a8a;
+  text-align: center;
+}
+
+.historico-chamada-data strong {
+  font-size: 16px;
+}
+
+.historico-chamada-data span {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.historico-chamada-conteudo h4 {
+  margin: 0 0 4px;
+  color: var(--cor-texto);
+  font-size: 17px;
+}
+
+.historico-chamada-conteudo p {
+  margin: 0 0 10px;
+  color: var(--cor-texto-suave);
+}
+
+.historico-chamada-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.historico-chamada-resumo span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.botao-excluir-chamada {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.aviso-historico-chamadas,
+.mensagem-diagnostico-admin {
+  margin: 14px 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--cor-borda);
+}
+
+.aviso-historico-chamadas p,
+.mensagem-diagnostico-admin p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.aviso-historico-chamadas button,
+.mensagem-diagnostico-admin button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: inherit;
+  cursor: pointer;
+  font-size: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.aviso-historico-chamadas.sucesso,
+.mensagem-diagnostico-admin.sucesso {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.aviso-historico-chamadas.erro,
+.mensagem-diagnostico-admin.erro {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.aviso-historico-chamadas.aviso,
+.mensagem-diagnostico-admin.aviso {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.aviso-historico-vazio {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .historico-chamadas-topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .historico-chamadas-topo .botao-secundario {
+    width: 100%;
+  }
+
+  .card-historico-chamada {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .historico-chamada-data {
+    text-align: left;
+  }
+
+  .botao-excluir-chamada {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .historico-chamadas-relatorio {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .historico-chamada-resumo {
+    gap: 6px;
+  }
+
+  .historico-chamada-resumo span {
+    width: 100%;
+    justify-content: center;
+  }
+}
