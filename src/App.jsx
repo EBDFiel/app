@@ -833,7 +833,11 @@ function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // Importante: o callback do Supabase Auth não deve aguardar consultas ao Supabase.
+      // Depois do F5, chamadas assíncronas com await dentro deste callback podem prender
+      // a restauração da sessão e deixar o app com dados zerados. Por isso, quando
+      // precisamos carregar dados, agendamos para depois do callback terminar.
       if (typeof window !== 'undefined' && window.__ebdFielSaindoDoSistema) {
         setCarregando(false)
         setVerificandoSessao(false)
@@ -899,20 +903,33 @@ function App() {
         return
       }
 
-      if (
-        event === 'INITIAL_SESSION' ||
-        event === 'SIGNED_IN' ||
-        event === 'USER_UPDATED'
-      ) {
-        try {
-          await carregarDadosOnline(session, igrejaSuporteSalva)
-        } catch (erroCarregamentoSessao) {
-          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-          setErroSistema(
-            erroCarregamentoSessao?.message ||
-              'Não foi possível validar sua sessão.'
-          )
-        }
+      // A sessão inicial após F5 é carregada por iniciarAutenticacao().
+      // Não carregamos dados aqui para evitar corrida/lock com getSession().
+      if (event === 'INITIAL_SESSION') {
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
+
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        setCarregando(true)
+
+        window.setTimeout(() => {
+          carregarDadosOnline(session, igrejaSuporteSalva)
+            .catch((erroCarregamentoSessao) => {
+              console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+              setErroSistema(
+                erroCarregamentoSessao?.message ||
+                  'Não foi possível validar sua sessão.'
+              )
+            })
+            .finally(() => {
+              setCarregando(false)
+              setVerificandoSessao(false)
+            })
+        }, 0)
+
+        return
       }
 
       setCarregando(false)
@@ -8864,6 +8881,24 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
     }
 
+    const comTempoLimite = (promessa, nome, ms = 8000) =>
+      Promise.race([
+        promessa,
+        new Promise((resolve) => {
+          window.setTimeout(() => {
+            resolve({
+              data: null,
+              error: {
+                message: `Tempo esgotado ao consultar ${nome}.`,
+                details: 'A consulta não respondeu dentro do tempo esperado.',
+                code: 'TIMEOUT_DIAGNOSTICO',
+              },
+              count: null,
+            })
+          }, ms)
+        }),
+      ])
+
     const resultado = {
       momento: new Date().toLocaleString('pt-BR'),
       url: typeof window !== 'undefined' ? window.location.href : '',
@@ -8889,7 +8924,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     try {
-      const { data: sessaoData, error: erroSessao } = await supabase.auth.getSession()
+      const { data: sessaoData, error: erroSessao } = await comTempoLimite(supabase.auth.getSession(), 'getSession')
       resultado.erros.getSession = montarErro(erroSessao)
       const sessaoAtual = sessaoData?.session || sessaoRef.current || null
 
@@ -8902,7 +8937,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           }
         : { existe: false }
 
-      const { data: usuarioData, error: erroUsuario } = await supabase.auth.getUser()
+      const { data: usuarioData, error: erroUsuario } = await comTempoLimite(supabase.auth.getUser(), 'getUser')
       resultado.erros.getUser = montarErro(erroUsuario)
       resultado.usuario = usuarioData?.user
         ? {
@@ -8915,20 +8950,26 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       const email = String(sessaoAtual?.user?.email || usuarioData?.user?.email || '').toLowerCase()
 
       if (userId) {
-        const { data, error } = await supabase
-          .from('perfis_usuarios')
-          .select('*')
-          .eq('user_id', userId)
+        const { data, error } = await comTempoLimite(
+          supabase
+            .from('perfis_usuarios')
+            .select('*')
+            .eq('user_id', userId),
+          'perfilPorUserId'
+        )
 
         resultado.perfilPorUserId = data || []
         resultado.erros.perfilPorUserId = montarErro(error)
       }
 
       if (email) {
-        const { data, error } = await supabase
-          .from('perfis_usuarios')
-          .select('*')
-          .ilike('email', email)
+        const { data, error } = await comTempoLimite(
+          supabase
+            .from('perfis_usuarios')
+            .select('*')
+            .ilike('email', email),
+          'perfilPorEmail'
+        )
 
         resultado.perfilPorEmail = data || []
         resultado.erros.perfilPorEmail = montarErro(error)
@@ -8955,17 +8996,20 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         ]
 
         for (const [nome, consulta] of consultas) {
-          const { data, error, count } = await consulta
+          const { data, error, count } = await comTempoLimite(consulta, nome)
           resultado.contagens[nome] = typeof count === 'number' ? count : Array.isArray(data) ? data.length : 0
           resultado.amostras[nome] = data || []
           resultado.erros[nome] = montarErro(error)
         }
 
-        const { data: igrejaData, error: erroIgreja } = await supabase
-          .from('igrejas')
-          .select('*')
-          .eq('id', igrejaAtualId)
-          .maybeSingle()
+        const { data: igrejaData, error: erroIgreja } = await comTempoLimite(
+          supabase
+            .from('igrejas')
+            .select('*')
+            .eq('id', igrejaAtualId)
+            .maybeSingle(),
+          'igreja'
+        )
 
         resultado.igreja = igrejaData || null
         resultado.erros.igreja = montarErro(erroIgreja)
