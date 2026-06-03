@@ -18851,3 +18851,5 @@ body {
     width: 100%;
   }
 }
+
+/* v82: correção de refresh de sessão/autenticação antes de buscar dados após F5. */
