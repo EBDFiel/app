@@ -9156,56 +9156,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <li>{chamadasSalvas.length} chamadas registradas</li>
               <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
-            <div className="diagnostico-acoes">
-              <button
-                className="botao-secundario botao-diagnostico"
-                type="button"
-                onClick={executarDiagnosticoCarregamento}
-                disabled={carregandoDiagnostico}
-              >
-                {carregandoDiagnostico ? 'Verificando...' : 'Diagnóstico'}
-              </button>
-              <button
-                className="botao-secundario botao-diagnostico"
-                type="button"
-                onClick={() => carregarDadosOnline(sessaoRef.current, recuperarContextoSuporteAdminAtual())}
-              >
-                Recarregar dados
-              </button>
-            </div>
           </div>
         </div>
-
-        {diagnosticoCarregamento && (
-          <div className="diagnostico-carregamento-card">
-            <div className="diagnostico-carregamento-cabecalho">
-              <div>
-                <span className="hero-tag">Diagnóstico técnico</span>
-                <h3>Resultado do carregamento</h3>
-                <p>Use este quadro para identificar se o problema está na sessão, perfil, igreja_id, RLS ou consultas do Supabase.</p>
-              </div>
-              <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
-                Copiar diagnóstico
-              </button>
-            </div>
-
-            <div className="diagnostico-grid">
-              <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessão'}</span></div>
-              <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'não encontrado'}</span></div>
-              <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'não encontrado'}</span></div>
-              <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'não encontrado'}</span></div>
-              <div><strong>Classes Supabase</strong><span>{diagnosticoCarregamento.contagens?.classes ?? 'sem consulta'}</span></div>
-              <div><strong>Alunos Supabase</strong><span>{diagnosticoCarregamento.contagens?.alunos ?? 'sem consulta'}</span></div>
-              <div><strong>Chamadas Supabase</strong><span>{diagnosticoCarregamento.contagens?.chamadas ?? 'sem consulta'}</span></div>
-              <div><strong>Classes na tela</strong><span>{diagnosticoCarregamento.estadoTela?.classesNaTela ?? classes.length}</span></div>
-            </div>
-
-            <details className="diagnostico-detalhes">
-              <summary>Ver diagnóstico completo</summary>
-              <pre>{JSON.stringify(diagnosticoCarregamento, null, 2)}</pre>
-            </details>
-          </div>
-        )}
 
         <div className="cards cards-estatisticas">
           <CardResumo
@@ -11833,6 +11785,68 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <strong>{igrejasPausadas}</strong>
             <p>aguardando retorno</p>
           </div>
+        </div>
+
+
+        <div className="diagnostico-carregamento-card diagnostico-admin-card">
+          <div className="diagnostico-carregamento-cabecalho">
+            <div>
+              <span className="hero-tag">Suporte técnico</span>
+              <h3>Diagnóstico do carregamento</h3>
+              <p>
+                Ferramenta exclusiva do administrador para conferir sessão, perfil,
+                igreja vinculada e retorno das consultas do Supabase quando alguma igreja relatar dados zerados.
+              </p>
+            </div>
+            <div className="diagnostico-acoes">
+              <button
+                className="botao-secundario botao-diagnostico"
+                type="button"
+                onClick={executarDiagnosticoCarregamento}
+                disabled={carregandoDiagnostico}
+              >
+                {carregandoDiagnostico ? 'Verificando...' : 'Executar diagnóstico'}
+              </button>
+
+              <button
+                className="botao-secundario botao-diagnostico"
+                type="button"
+                onClick={() => carregarDadosOnline(sessaoRef.current, recuperarContextoSuporteAdminAtual())}
+              >
+                Recarregar dados atuais
+              </button>
+            </div>
+          </div>
+
+          {diagnosticoCarregamento ? (
+            <>
+              <div className="diagnostico-grid">
+                <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessão'}</span></div>
+                <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'não encontrado'}</span></div>
+                <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'não encontrado'}</span></div>
+                <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'não encontrado'}</span></div>
+                <div><strong>Classes Supabase</strong><span>{diagnosticoCarregamento.contagens?.classes ?? 'sem consulta'}</span></div>
+                <div><strong>Alunos Supabase</strong><span>{diagnosticoCarregamento.contagens?.alunos ?? 'sem consulta'}</span></div>
+                <div><strong>Chamadas Supabase</strong><span>{diagnosticoCarregamento.contagens?.chamadas ?? 'sem consulta'}</span></div>
+                <div><strong>Classes na tela</strong><span>{diagnosticoCarregamento.estadoTela?.classesNaTela ?? classes.length}</span></div>
+              </div>
+
+              <div className="grupo-botoes diagnostico-botoes-final">
+                <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
+                  Copiar diagnóstico
+                </button>
+              </div>
+
+              <details className="diagnostico-detalhes">
+                <summary>Ver diagnóstico completo</summary>
+                <pre>{JSON.stringify(diagnosticoCarregamento, null, 2)}</pre>
+              </details>
+            </>
+          ) : (
+            <div className="aviso diagnostico-admin-aviso">
+              <p>Execute o diagnóstico quando precisar conferir carregamento de sessão, perfil, igreja e dados retornados.</p>
+            </div>
+          )}
         </div>
 
         {renderizarAlertasFeedbackAdmin()}
