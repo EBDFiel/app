@@ -18880,3 +18880,209 @@ body {
 .diagnostico-admin-aviso {
   margin-top: 14px;
 }
+
+/* =========================================================
+   v92 - Histórico de chamadas e confirmação do diagnóstico
+   ========================================================= */
+.historico-chamadas-relatorio {
+  margin-top: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid var(--cor-borda);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--sombra-suave);
+}
+
+.historico-chamadas-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.historico-chamadas-topo h3 {
+  margin: 8px 0 6px;
+  font-size: 22px;
+  color: var(--cor-texto);
+}
+
+.historico-chamadas-topo p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+.lista-historico-chamadas {
+  display: grid;
+  gap: 12px;
+}
+
+.card-historico-chamada {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.historico-chamada-data {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #1e3a8a;
+  text-align: center;
+}
+
+.historico-chamada-data strong {
+  font-size: 16px;
+}
+
+.historico-chamada-data span {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.historico-chamada-conteudo h4 {
+  margin: 0 0 4px;
+  color: var(--cor-texto);
+  font-size: 17px;
+}
+
+.historico-chamada-conteudo p {
+  margin: 0 0 10px;
+  color: var(--cor-texto-suave);
+}
+
+.historico-chamada-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.historico-chamada-resumo span {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.botao-excluir-chamada {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.aviso-historico-chamadas,
+.mensagem-diagnostico-admin {
+  margin: 14px 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--cor-borda);
+}
+
+.aviso-historico-chamadas p,
+.mensagem-diagnostico-admin p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.aviso-historico-chamadas button,
+.mensagem-diagnostico-admin button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: inherit;
+  cursor: pointer;
+  font-size: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.aviso-historico-chamadas.sucesso,
+.mensagem-diagnostico-admin.sucesso {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.aviso-historico-chamadas.erro,
+.mensagem-diagnostico-admin.erro {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.aviso-historico-chamadas.aviso,
+.mensagem-diagnostico-admin.aviso {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.aviso-historico-vazio {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .historico-chamadas-topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .historico-chamadas-topo .botao-secundario {
+    width: 100%;
+  }
+
+  .card-historico-chamada {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .historico-chamada-data {
+    text-align: left;
+  }
+
+  .botao-excluir-chamada {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .historico-chamadas-relatorio {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .historico-chamada-resumo {
+    gap: 6px;
+  }
+
+  .historico-chamada-resumo span {
+    width: 100%;
+    justify-content: center;
+  }
+}
