@@ -411,6 +411,8 @@ function App() {
 
   const [sessao, setSessao] = useState(null)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
+  const [diagnosticoCarregamento, setDiagnosticoCarregamento] = useState(null)
+  const [carregandoDiagnostico, setCarregandoDiagnostico] = useState(false)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
   const [emailRecuperacao, setEmailRecuperacao] = useState('')
@@ -8848,6 +8850,149 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+
+  async function executarDiagnosticoCarregamento() {
+    setCarregandoDiagnostico(true)
+
+    const montarErro = (erro) => {
+      if (!erro) return null
+      return {
+        message: erro.message || '',
+        details: erro.details || '',
+        hint: erro.hint || '',
+        code: erro.code || '',
+      }
+    }
+
+    const resultado = {
+      momento: new Date().toLocaleString('pt-BR'),
+      url: typeof window !== 'undefined' ? window.location.href : '',
+      navegador: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      sessao: null,
+      usuario: null,
+      perfilPorUserId: null,
+      perfilPorEmail: null,
+      perfilUsado: null,
+      igreja: null,
+      contagens: {},
+      amostras: {},
+      erros: {},
+      estadoTela: {
+        paginaAtual: paginaAtualRef.current,
+        igrejaIdEstado: igrejaId,
+        perfilEstado: perfilUsuarioRef.current,
+        classesNaTela: classes.length,
+        alunosNaTela: alunos.length,
+        professoresNaTela: professoresSomente().length,
+        chamadasNaTela: chamadasSalvas.length,
+      },
+    }
+
+    try {
+      const { data: sessaoData, error: erroSessao } = await supabase.auth.getSession()
+      resultado.erros.getSession = montarErro(erroSessao)
+      const sessaoAtual = sessaoData?.session || sessaoRef.current || null
+
+      resultado.sessao = sessaoAtual
+        ? {
+            existe: true,
+            email: sessaoAtual.user?.email || '',
+            userId: sessaoAtual.user?.id || '',
+            expiraEm: sessaoAtual.expires_at || null,
+          }
+        : { existe: false }
+
+      const { data: usuarioData, error: erroUsuario } = await supabase.auth.getUser()
+      resultado.erros.getUser = montarErro(erroUsuario)
+      resultado.usuario = usuarioData?.user
+        ? {
+            email: usuarioData.user.email || '',
+            userId: usuarioData.user.id || '',
+          }
+        : null
+
+      const userId = sessaoAtual?.user?.id || usuarioData?.user?.id || ''
+      const email = String(sessaoAtual?.user?.email || usuarioData?.user?.email || '').toLowerCase()
+
+      if (userId) {
+        const { data, error } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .eq('user_id', userId)
+
+        resultado.perfilPorUserId = data || []
+        resultado.erros.perfilPorUserId = montarErro(error)
+      }
+
+      if (email) {
+        const { data, error } = await supabase
+          .from('perfis_usuarios')
+          .select('*')
+          .ilike('email', email)
+
+        resultado.perfilPorEmail = data || []
+        resultado.erros.perfilPorEmail = montarErro(error)
+      }
+
+      const perfilUsado =
+        (Array.isArray(resultado.perfilPorUserId) && resultado.perfilPorUserId[0]) ||
+        (Array.isArray(resultado.perfilPorEmail) && resultado.perfilPorEmail[0]) ||
+        perfilUsuarioRef.current ||
+        null
+
+      resultado.perfilUsado = perfilUsado
+
+      const igrejaAtualId = Number(perfilUsado?.igreja_id || igrejaId || 0)
+
+      if (igrejaAtualId) {
+        const consultas = [
+          ['classes', supabase.from('classes').select('id,nome,igreja_id', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+          ['alunos', supabase.from('alunos').select('id,nome,igreja_id,classe_id,tipo_pessoa', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+          ['chamadas', supabase.from('chamadas').select('id,igreja_id,classe_id,data', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+          ['chamadas_professores', supabase.from('chamadas_professores').select('id,igreja_id,data', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+          ['classes_professores', supabase.from('classes_professores').select('id,igreja_id,classe_id,perfil_usuario_id,ativo', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+          ['configuracoes_igreja', supabase.from('configuracoes_igreja').select('id,igreja_id,nome_igreja', { count: 'exact' }).eq('igreja_id', igrejaAtualId).limit(5)],
+        ]
+
+        for (const [nome, consulta] of consultas) {
+          const { data, error, count } = await consulta
+          resultado.contagens[nome] = typeof count === 'number' ? count : Array.isArray(data) ? data.length : 0
+          resultado.amostras[nome] = data || []
+          resultado.erros[nome] = montarErro(error)
+        }
+
+        const { data: igrejaData, error: erroIgreja } = await supabase
+          .from('igrejas')
+          .select('*')
+          .eq('id', igrejaAtualId)
+          .maybeSingle()
+
+        resultado.igreja = igrejaData || null
+        resultado.erros.igreja = montarErro(erroIgreja)
+      } else {
+        resultado.erros.igrejaId = { message: 'Nenhum igreja_id foi encontrado no perfil carregado.' }
+      }
+    } catch (error) {
+      resultado.erros.geral = montarErro(error) || { message: String(error) }
+    }
+
+    console.log('Diagnóstico EBD Fiel:', resultado)
+    setDiagnosticoCarregamento(resultado)
+    setCarregandoDiagnostico(false)
+  }
+
+  async function copiarDiagnosticoCarregamento() {
+    if (!diagnosticoCarregamento || typeof navigator === 'undefined') return
+
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(diagnosticoCarregamento, null, 2))
+      setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+    } catch (error) {
+      console.error('Erro ao copiar diagnóstico:', error)
+      setMensagemChamada({ tipo: 'erro', texto: 'Não foi possível copiar o diagnóstico.' })
+    }
+  }
+
   function renderizarBackupAuditoria() {
     return (
       <section className="conteudo">
@@ -8967,8 +9112,56 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <li>{chamadasSalvas.length} chamadas registradas</li>
               <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
+            <div className="diagnostico-acoes">
+              <button
+                className="botao-secundario botao-diagnostico"
+                type="button"
+                onClick={executarDiagnosticoCarregamento}
+                disabled={carregandoDiagnostico}
+              >
+                {carregandoDiagnostico ? 'Verificando...' : 'Diagnóstico'}
+              </button>
+              <button
+                className="botao-secundario botao-diagnostico"
+                type="button"
+                onClick={() => carregarDadosOnline(sessaoRef.current, recuperarContextoSuporteAdminAtual())}
+              >
+                Recarregar dados
+              </button>
+            </div>
           </div>
         </div>
+
+        {diagnosticoCarregamento && (
+          <div className="diagnostico-carregamento-card">
+            <div className="diagnostico-carregamento-cabecalho">
+              <div>
+                <span className="hero-tag">Diagnóstico técnico</span>
+                <h3>Resultado do carregamento</h3>
+                <p>Use este quadro para identificar se o problema está na sessão, perfil, igreja_id, RLS ou consultas do Supabase.</p>
+              </div>
+              <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
+                Copiar diagnóstico
+              </button>
+            </div>
+
+            <div className="diagnostico-grid">
+              <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessão'}</span></div>
+              <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'não encontrado'}</span></div>
+              <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'não encontrado'}</span></div>
+              <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'não encontrado'}</span></div>
+              <div><strong>Classes Supabase</strong><span>{diagnosticoCarregamento.contagens?.classes ?? 'sem consulta'}</span></div>
+              <div><strong>Alunos Supabase</strong><span>{diagnosticoCarregamento.contagens?.alunos ?? 'sem consulta'}</span></div>
+              <div><strong>Chamadas Supabase</strong><span>{diagnosticoCarregamento.contagens?.chamadas ?? 'sem consulta'}</span></div>
+              <div><strong>Classes na tela</strong><span>{diagnosticoCarregamento.estadoTela?.classesNaTela ?? classes.length}</span></div>
+            </div>
+
+            <details className="diagnostico-detalhes">
+              <summary>Ver diagnóstico completo</summary>
+              <pre>{JSON.stringify(diagnosticoCarregamento, null, 2)}</pre>
+            </details>
+          </div>
+        )}
 
         <div className="cards cards-estatisticas">
           <CardResumo
