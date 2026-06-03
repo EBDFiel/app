@@ -413,6 +413,9 @@ function App() {
   const [verificandoSessao, setVerificandoSessao] = useState(true)
   const [diagnosticoCarregamento, setDiagnosticoCarregamento] = useState(null)
   const [carregandoDiagnostico, setCarregandoDiagnostico] = useState(false)
+  const [mensagemDiagnosticoAdmin, setMensagemDiagnosticoAdmin] = useState(null)
+  const [mensagemHistoricoChamadas, setMensagemHistoricoChamadas] = useState(null)
+  const [excluindoChamadaId, setExcluindoChamadaId] = useState(null)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
   const [emailRecuperacao, setEmailRecuperacao] = useState('')
@@ -762,6 +765,30 @@ function App() {
 
     return () => window.clearTimeout(temporizadorMensagemChamada)
   }, [mensagemChamada])
+
+  useEffect(() => {
+    if (!mensagemDiagnosticoAdmin || mensagemDiagnosticoAdmin.tipo !== 'sucesso') {
+      return undefined
+    }
+
+    const temporizadorMensagemDiagnostico = window.setTimeout(() => {
+      setMensagemDiagnosticoAdmin(null)
+    }, 4800)
+
+    return () => window.clearTimeout(temporizadorMensagemDiagnostico)
+  }, [mensagemDiagnosticoAdmin])
+
+  useEffect(() => {
+    if (!mensagemHistoricoChamadas || mensagemHistoricoChamadas.tipo !== 'sucesso') {
+      return undefined
+    }
+
+    const temporizadorMensagemHistorico = window.setTimeout(() => {
+      setMensagemHistoricoChamadas(null)
+    }, 5200)
+
+    return () => window.clearTimeout(temporizadorMensagemHistorico)
+  }, [mensagemHistoricoChamadas])
 
   const menu = [
     { id: 'painel', nome: 'Painel', icone: 'painel' },
@@ -9064,7 +9091,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     event?.stopPropagation?.()
 
     if (!diagnosticoCarregamento || typeof document === 'undefined') {
-      setMensagemChamada({ tipo: 'erro', texto: 'Execute o diagnóstico antes de baixar.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de baixar.' })
       return
     }
 
@@ -9078,7 +9105,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico baixado.' })
+    setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico baixado com sucesso.' })
   }
 
   async function copiarDiagnosticoCarregamento(event) {
@@ -9086,7 +9113,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     event?.stopPropagation?.()
 
     if (!diagnosticoCarregamento) {
-      setMensagemChamada({ tipo: 'erro', texto: 'Execute o diagnóstico antes de copiar.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de copiar.' })
       return
     }
 
@@ -9095,29 +9122,29 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(texto)
-        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       const copiado = copiarTextoComFallback(texto)
       if (copiado) {
-        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       baixarDiagnosticoCarregamento(event)
-      setMensagemChamada({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     } catch (error) {
       console.error('Erro ao copiar diagnóstico:', error)
       const copiado = copiarTextoComFallback(texto)
 
       if (copiado) {
-        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       baixarDiagnosticoCarregamento(event)
-      setMensagemChamada({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     }
   }
 
@@ -10668,6 +10695,234 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+  function obterTempoOrdenacaoChamada(dataTexto, id = 0) {
+    const texto = String(dataTexto || '').trim()
+
+    if (!texto) {
+      return Number(id) || 0
+    }
+
+    const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/)
+
+    if (iso) {
+      const dataIso = new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]))
+      return Number.isNaN(dataIso.getTime()) ? Number(id) || 0 : dataIso.getTime()
+    }
+
+    const br = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
+
+    if (br) {
+      const dataBr = new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1]))
+      return Number.isNaN(dataBr.getTime()) ? Number(id) || 0 : dataBr.getTime()
+    }
+
+    const dataLivre = new Date(texto)
+    return Number.isNaN(dataLivre.getTime()) ? Number(id) || 0 : dataLivre.getTime()
+  }
+
+  function montarHistoricoChamadasRecentes() {
+    const historicoAlunos = chamadasSalvas.map((chamada) => {
+      const classe = classes.find((item) => Number(item.id) === Number(chamada.classeId))
+
+      return {
+        id: chamada.id,
+        chave: `alunos-${chamada.id}`,
+        tipo: 'alunos',
+        titulo: `Chamada dos alunos${classe?.nome ? ` — ${classe.nome}` : ''}`,
+        classe: classe?.nome || 'Classe não encontrada',
+        data: chamada.data,
+        resumo: [
+          `Presentes: ${converterNumero(chamada.totalPresentes)}`,
+          `Faltas: ${converterNumero(chamada.totalFaltas)}`,
+          `Visitantes: ${converterNumero(chamada.visitantes)}`,
+          `Total: ${converterNumero(chamada.totalGeralClasse)}`,
+        ],
+      }
+    })
+
+    const historicoProfessores = chamadasProfessores.map((chamada) => ({
+      id: chamada.id,
+      chave: `professores-${chamada.id}`,
+      tipo: 'professores',
+      titulo: 'Chamada dos professores',
+      classe: 'Professores da igreja',
+      data: chamada.data,
+      resumo: [
+        `Presentes: ${converterNumero(chamada.totalPresentes)}`,
+        `Faltaram: ${converterNumero(chamada.totalFaltas)}`,
+        `Justificaram: ${converterNumero(chamada.totalJustificadas)}`,
+        `Total: ${converterNumero(chamada.totalProfessores)}`,
+      ],
+    }))
+
+    return [...historicoAlunos, ...historicoProfessores]
+      .sort((a, b) => {
+        const tempoA = obterTempoOrdenacaoChamada(a.data, a.id)
+        const tempoB = obterTempoOrdenacaoChamada(b.data, b.id)
+
+        if (tempoA !== tempoB) {
+          return tempoB - tempoA
+        }
+
+        return Number(b.id || 0) - Number(a.id || 0)
+      })
+      .slice(0, 24)
+  }
+
+  async function excluirChamadaHistorico(item, event) {
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
+
+    if (!item?.id) {
+      setMensagemHistoricoChamadas({
+        tipo: 'erro',
+        texto: 'Não encontrei o identificador dessa chamada.',
+      })
+      return
+    }
+
+    const igrejaAtualId = buscarIgrejaIdAtual()
+
+    if (!igrejaAtualId) {
+      setMensagemHistoricoChamadas({
+        tipo: 'erro',
+        texto: 'Não foi possível confirmar a igreja atual. Atualize os dados e tente novamente.',
+      })
+      return
+    }
+
+    const dataFormatada = formatarDataCurtaRelatorio(item.data)
+    const confirmou = window.confirm(
+      `Deseja realmente excluir esta chamada?\n\n${item.titulo}\nData: ${dataFormatada}\n\nEssa ação remove apenas o registro da chamada. Alunos, classes e professores não serão apagados.`
+    )
+
+    if (!confirmou) {
+      return
+    }
+
+    setExcluindoChamadaId(item.chave)
+    setMensagemHistoricoChamadas(null)
+
+    try {
+      const tabela = item.tipo === 'professores' ? 'chamadas_professores' : 'chamadas'
+      const { error } = await supabase
+        .from(tabela)
+        .delete()
+        .eq('id', item.id)
+        .eq('igreja_id', igrejaAtualId)
+
+      if (error) {
+        throw error
+      }
+
+      if (item.tipo === 'professores') {
+        setChamadasProfessores((atuais) => atuais.filter((chamada) => Number(chamada.id) !== Number(item.id)))
+      } else {
+        setChamadasSalvas((atuais) => atuais.filter((chamada) => Number(chamada.id) !== Number(item.id)))
+      }
+
+      setMensagemHistoricoChamadas({
+        tipo: 'sucesso',
+        texto: 'Chamada excluída com sucesso. Os cadastros da igreja não foram alterados.',
+      })
+    } catch (error) {
+      console.error('Erro ao excluir chamada:', error)
+      setMensagemHistoricoChamadas({
+        tipo: 'erro',
+        texto: 'Não foi possível excluir a chamada. Verifique sua permissão e tente novamente.',
+      })
+    } finally {
+      setExcluindoChamadaId(null)
+    }
+  }
+
+  function renderizarHistoricoChamadasRelatorio() {
+    if (!usuarioEhSecretaria()) {
+      return null
+    }
+
+    const historicoChamadas = montarHistoricoChamadasRecentes()
+
+    return (
+      <div className="historico-chamadas-relatorio no-print">
+        <div className="historico-chamadas-topo">
+          <div>
+            <span className="selo-publico">Histórico</span>
+            <h3>Histórico de chamadas</h3>
+            <p>
+              Encontre chamadas lançadas por engano e exclua apenas o registro da chamada, sem apagar alunos, classes ou professores.
+            </p>
+          </div>
+
+          <button
+            className="botao-secundario"
+            type="button"
+            onClick={() =>
+              buscarTodosOsDados().catch((error) => {
+                console.error('Erro ao atualizar histórico de chamadas:', error)
+                setMensagemHistoricoChamadas({
+                  tipo: 'erro',
+                  texto: 'Não foi possível atualizar o histórico agora. Tente novamente.',
+                })
+              })
+            }
+          >
+            Atualizar histórico
+          </button>
+        </div>
+
+        {mensagemHistoricoChamadas && (
+          <div className={`aviso-historico-chamadas ${mensagemHistoricoChamadas.tipo}`}>
+            <p>{mensagemHistoricoChamadas.texto}</p>
+            <button
+              type="button"
+              onClick={() => setMensagemHistoricoChamadas(null)}
+              aria-label="Fechar mensagem do histórico de chamadas"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        {historicoChamadas.length > 0 ? (
+          <div className="lista-historico-chamadas">
+            {historicoChamadas.map((item) => (
+              <article className="card-historico-chamada" key={item.chave}>
+                <div className="historico-chamada-data">
+                  <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
+                  <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
+                </div>
+
+                <div className="historico-chamada-conteudo">
+                  <h4>{item.titulo}</h4>
+                  <p>{item.classe}</p>
+                  <div className="historico-chamada-resumo">
+                    {item.resumo.map((linha) => (
+                      <span key={linha}>{linha}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  className="botao-excluir botao-excluir-chamada"
+                  type="button"
+                  onClick={(event) => excluirChamadaHistorico(item, event)}
+                  disabled={excluindoChamadaId === item.chave}
+                >
+                  {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
+                </button>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="aviso aviso-historico-vazio">
+            <p>Nenhuma chamada registrada até o momento.</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   function renderizarRelatorios() {
     const linhasRelatorio = montarRelatorioPorClasse()
     const totaisRelatorio = calcularTotaisRelatorio()
@@ -10949,6 +11204,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             Relatório gerado pelo EBD Fiel — Gestão inteligente para Escola Bíblica Dominical • Gerado em {buscarDataAtual()}
           </div>
         </div>
+
+        {renderizarHistoricoChamadasRelatorio()}
 
         <div className="relatorio-acoes-rodape no-print">
           <div>
@@ -11923,6 +12180,19 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                   Baixar diagnóstico
                 </button>
               </div>
+
+              {mensagemDiagnosticoAdmin && (
+                <div className={`mensagem-diagnostico-admin ${mensagemDiagnosticoAdmin.tipo}`} role="status" aria-live="polite">
+                  <p>{mensagemDiagnosticoAdmin.texto}</p>
+                  <button
+                    type="button"
+                    onClick={() => setMensagemDiagnosticoAdmin(null)}
+                    aria-label="Fechar mensagem do diagnóstico"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
 
               <details className="diagnostico-detalhes">
                 <summary>Ver diagnóstico completo</summary>
