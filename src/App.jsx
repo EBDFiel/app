@@ -1886,6 +1886,346 @@ function App() {
     }
   }
 
+  function montarFiltrosDeAcessoDaIgreja(perfilAtual, vinculosBanco = []) {
+    const idsClassesPermitidas =
+      perfilAtual?.perfil === 'professor'
+        ? [
+            ...new Set(
+              (vinculosBanco || [])
+                .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilAtual.id))
+                .map((vinculo) => Number(vinculo.classe_id))
+                .filter(Boolean)
+            ),
+          ]
+        : []
+
+    if (
+      perfilAtual?.perfil === 'professor' &&
+      idsClassesPermitidas.length === 0 &&
+      perfilAtual?.classe_id
+    ) {
+      idsClassesPermitidas.push(Number(perfilAtual.classe_id))
+    }
+
+    return {
+      idsClassesPermitidas,
+      classePermitidaId:
+        perfilAtual?.perfil === 'professor'
+          ? idsClassesPermitidas[0] || null
+          : null,
+    }
+  }
+
+  async function carregarDadosDiretosDaIgreja(perfilBase, sessaoAtual = sessaoRef.current) {
+    if (!sessaoAtual?.user?.id) {
+      throw new Error('Sessão não confirmada para carregar os dados da igreja.')
+    }
+
+    const igrejaAtualId = Number(perfilBase?.igreja_id || 0)
+
+    if (!igrejaAtualId) {
+      throw new Error('Perfil sem igreja vinculada para carregar os dados.')
+    }
+
+    const perfilAtual = {
+      ...perfilBase,
+      igreja_id: igrejaAtualId,
+    }
+
+    definirPerfilUsuario(perfilAtual)
+    setIgrejaId(igrejaAtualId)
+    definirDadosIgrejaSincronizados(false)
+
+    const cacheDadosIgreja = lerCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id)
+
+    if (cacheDadosIgreja && pacoteTemDadosOperacionais(cacheDadosIgreja)) {
+      aplicarCacheDadosIgreja(cacheDadosIgreja)
+    }
+
+    async function executarConsultasDiretas(tentativa = 1) {
+      const { data: vinculosBanco, error: erroVinculos } = await supabase
+        .from('classes_professores')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .eq('ativo', true)
+
+      if (erroVinculos) {
+        throw erroVinculos
+      }
+
+      const { idsClassesPermitidas, classePermitidaId } = montarFiltrosDeAcessoDaIgreja(
+        perfilAtual,
+        vinculosBanco || []
+      )
+
+      let consultaClasses = supabase
+        .from('classes')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        consultaClasses =
+          idsClassesPermitidas.length > 0
+            ? consultaClasses.in('id', idsClassesPermitidas)
+            : consultaClasses.eq('id', -1)
+      }
+
+      let consultaAlunos = supabase
+        .from('alunos')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        consultaAlunos =
+          idsClassesPermitidas.length > 0
+            ? consultaAlunos.in('classe_id', idsClassesPermitidas)
+            : consultaAlunos.eq('classe_id', -1)
+      }
+
+      let consultaChamadas = supabase
+        .from('chamadas')
+        .select('*')
+        .eq('igreja_id', igrejaAtualId)
+        .order('id', { ascending: true })
+
+      if (perfilAtual.perfil === 'professor') {
+        consultaChamadas =
+          idsClassesPermitidas.length > 0
+            ? consultaChamadas.in('classe_id', idsClassesPermitidas)
+            : consultaChamadas.eq('classe_id', -1)
+      }
+
+      const [
+        resultadoClasses,
+        resultadoAlunos,
+        resultadoChamadas,
+        resultadoChamadasProfessores,
+        resultadoPerfis,
+        resultadoConfiguracoes,
+        resultadoIgreja,
+      ] = await Promise.all([
+        consultaClasses,
+        consultaAlunos,
+        consultaChamadas,
+        perfilAtual.perfil === 'secretaria' || perfilAtual?.modo_suporte_admin
+          ? supabase
+              .from('chamadas_professores')
+              .select('*')
+              .eq('igreja_id', igrejaAtualId)
+              .order('id', { ascending: true })
+          : Promise.resolve({ data: [], error: null }),
+        perfilAtual.perfil === 'secretaria' || perfilAtual?.modo_suporte_admin
+          ? supabase
+              .from('perfis_usuarios')
+              .select('*')
+              .eq('igreja_id', igrejaAtualId)
+              .order('nome', { ascending: true })
+          : Promise.resolve({ data: [perfilAtual], error: null }),
+        supabase
+          .from('configuracoes_igreja')
+          .select('*')
+          .eq('igreja_id', igrejaAtualId)
+          .order('created_at', { ascending: true }),
+        supabase
+          .from('igrejas')
+          .select('*')
+          .eq('id', igrejaAtualId)
+          .maybeSingle(),
+      ])
+
+      if (resultadoClasses.error) throw resultadoClasses.error
+      if (resultadoAlunos.error) throw resultadoAlunos.error
+      if (resultadoChamadas.error) throw resultadoChamadas.error
+      if (resultadoChamadasProfessores.error) throw resultadoChamadasProfessores.error
+      if (resultadoPerfis.error) throw resultadoPerfis.error
+      if (resultadoConfiguracoes.error) throw resultadoConfiguracoes.error
+      if (resultadoIgreja.error) throw resultadoIgreja.error
+
+      return {
+        classesBanco: resultadoClasses.data || [],
+        alunosBanco: resultadoAlunos.data || [],
+        chamadasBanco: resultadoChamadas.data || [],
+        chamadasProfessoresBanco: resultadoChamadasProfessores.data || [],
+        perfisBanco: resultadoPerfis.data || [],
+        vinculosBanco: vinculosBanco || [],
+        configuracoesBanco: resultadoConfiguracoes.data || [],
+        igrejaPilotoBanco: resultadoIgreja.data || null,
+        classePermitidaId,
+        tentativa,
+      }
+    }
+
+    let dadosBanco = await executarConsultasDiretas(1)
+
+    const respostaVeioVazia = () =>
+      (dadosBanco.classesBanco || []).length === 0 &&
+      (dadosBanco.alunosBanco || []).length === 0 &&
+      (dadosBanco.chamadasBanco || []).length === 0 &&
+      (dadosBanco.chamadasProfessoresBanco || []).length === 0
+
+    if (respostaVeioVazia()) {
+      const atrasos = [450, 900, 1500]
+
+      for (let indiceTentativa = 0; indiceTentativa < atrasos.length; indiceTentativa += 1) {
+        await esperar(atrasos[indiceTentativa])
+
+        const sessaoValidada = await obterSessaoAutenticada(sessaoRef.current || sessaoAtual)
+
+        if (sessaoValidada?.user?.id) {
+          definirSessao(sessaoValidada)
+        }
+
+        dadosBanco = await executarConsultasDiretas(indiceTentativa + 2)
+
+        if (!respostaVeioVazia()) {
+          break
+        }
+      }
+    }
+
+    const {
+      classesBanco,
+      alunosBanco,
+      chamadasBanco,
+      chamadasProfessoresBanco,
+      perfisBanco,
+      vinculosBanco,
+      configuracoesBanco,
+      igrejaPilotoBanco,
+      classePermitidaId,
+    } = dadosBanco
+
+    const statusPilotoAtual = String(igrejaPilotoBanco?.status_piloto || '').toLowerCase()
+    const igrejaLiberadaParaAcesso = [
+      'teste',
+      'ativa',
+      'ativo',
+      'aprovada',
+      'aprovado',
+      'liberada',
+      'liberado',
+    ].includes(statusPilotoAtual)
+
+    if (
+      !perfilAtual?.modo_suporte_admin &&
+      perfilAtual?.perfil !== 'admin_sistema' &&
+      !igrejaLiberadaParaAcesso
+    ) {
+      throw new Error(
+        statusPilotoAtual === 'pendente'
+          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
+          : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
+      )
+    }
+
+    const classesNormalizadas = (classesBanco || []).map((classe) => ({
+      id: Number(classe.id),
+      nome: classe.nome,
+      professor: classe.professor,
+    }))
+
+    const alunosNormalizados = (alunosBanco || []).map((aluno) => ({
+      id: Number(aluno.id),
+      nome: aluno.nome,
+      classeId: Number(aluno.classe_id),
+      telefone: aluno.telefone || '',
+      dataNascimento: aluno.data_nascimento || '',
+      tipoPessoa: aluno.tipo_pessoa || 'aluno',
+    }))
+
+    const chamadasNormalizadas = (chamadasBanco || []).map((chamada) => ({
+      id: Number(chamada.id),
+      data: chamada.data,
+      classeId: Number(chamada.classe_id),
+      matricula: Number(chamada.matricula || 0),
+      totalPresentes: Number(chamada.total_presentes || 0),
+      totalFaltas: Number(chamada.total_faltas || 0),
+      visitantes: Number(chamada.visitantes || 0),
+      biblias: Number(chamada.biblias || 0),
+      revistas: Number(chamada.revistas || 0),
+      ofertas: Number(chamada.ofertas || 0),
+      totalGeralClasse: Number(chamada.total_geral_classe || 0),
+      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+    }))
+
+    const chamadasProfessoresNormalizadas = (chamadasProfessoresBanco || []).map((chamada) => ({
+      id: Number(chamada.id),
+      data: chamada.data,
+      totalProfessores: Number(chamada.total_professores || 0),
+      totalPresentes: Number(chamada.total_presentes || 0),
+      totalFaltas: Number(chamada.total_faltas || 0),
+      totalJustificadas: Number(chamada.total_justificadas || 0),
+      observacoes: chamada.observacoes || '',
+      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+    }))
+
+    const configuracaoAtual = configuracoesBanco?.[0]
+
+    const configuracaoNormalizada = {
+      id: configuracaoAtual?.id || null,
+      nome_igreja:
+        configuracaoAtual?.nome_igreja ||
+        igrejaPilotoBanco?.nome_igreja ||
+        igrejaPilotoBanco?.nome ||
+        '',
+      congregacao: configuracaoAtual?.congregacao || igrejaPilotoBanco?.congregacao || '',
+      pastor_dirigente:
+        configuracaoAtual?.pastor_dirigente || igrejaPilotoBanco?.pastor_dirigente || '',
+      superintendente_ebd:
+        configuracaoAtual?.superintendente_ebd || igrejaPilotoBanco?.superintendente_ebd || '',
+      cidade: configuracaoAtual?.cidade || igrejaPilotoBanco?.cidade || '',
+      estado: configuracaoAtual?.estado || igrejaPilotoBanco?.estado || '',
+      bairro: configuracaoAtual?.bairro || igrejaPilotoBanco?.bairro || '',
+      endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
+      telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
+      email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
+    }
+
+    setClasses(classesNormalizadas)
+    setAlunos(alunosNormalizados)
+    setChamadasSalvas(chamadasNormalizadas)
+    setChamadasProfessores(chamadasProfessoresNormalizadas)
+    setPerfisIgreja(perfisBanco || [])
+    setVinculosProfessores(vinculosBanco || [])
+    setIgrejaAtualPiloto(igrejaPilotoBanco || null)
+    setConfiguracaoIgreja(configuracaoNormalizada)
+    definirDadosIgrejaSincronizados(true)
+    definirDadosIgrejaCarregados(true)
+
+    if (classePermitidaId) {
+      setClasseChamadaId(String(classePermitidaId))
+    }
+
+    if (igrejaPilotoBanco?.status_piloto === 'teste') {
+      await carregarFeedbacksDaIgreja(igrejaAtualId)
+    } else {
+      setFeedbacksIgreja([])
+    }
+
+    const podeSalvarCacheOperacional =
+      classesNormalizadas.length > 0 ||
+      alunosNormalizados.length > 0 ||
+      chamadasNormalizadas.length > 0 ||
+      chamadasProfessoresNormalizadas.length > 0
+
+    if (podeSalvarCacheOperacional) {
+      salvarCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id, {
+        classes: classesNormalizadas,
+        alunos: alunosNormalizados,
+        chamadasSalvas: chamadasNormalizadas,
+        chamadasProfessores: chamadasProfessoresNormalizadas,
+        perfisIgreja: perfisBanco || [],
+        vinculosProfessores: vinculosBanco || [],
+        igrejaAtualPiloto: igrejaPilotoBanco || null,
+        configuracaoIgreja: configuracaoNormalizada,
+      })
+    }
+
+    return true
+  }
+
   async function carregarDadosIgrejaComPerfilValidado(
     sessaoAtual = sessaoRef.current,
     igrejaSuporteForcada = null
@@ -1900,29 +2240,50 @@ function App() {
 
     const emailSessaoAtual = String(sessaoParaUsar?.user?.email || '').toLowerCase()
     const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
-    const ehAdminEmSuporte = Boolean(
-      igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
-    )
-    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+    const perfilBanco = await buscarPerfilUsuarioSeguro(sessaoParaUsar)
+    const ehAdminSessaoAtual =
+      emailsAdminSistema.includes(emailSessaoAtual) || perfilBanco?.perfil === 'admin_sistema'
 
-    if (!ehAdminEmSuporte && !emailsAdminSistema.includes(emailSessaoAtual) && !perfilAtual?.igreja_id) {
-      const perfilRecarregado = await buscarPerfilUsuarioSeguro(sessaoParaUsar)
-
-      if (perfilRecarregado?.igreja_id) {
-        definirPerfilUsuario(perfilRecarregado)
-        setIgrejaId(Number(perfilRecarregado.igreja_id))
-        setPerfilCarregado(true)
-      } else {
-        throw new Error('Perfil não encontrado ou sem igreja vinculada.')
-      }
+    if (ehAdminSessaoAtual && !igrejaSuporteSelecionada?.id) {
+      await buscarTodosOsDados(sessaoParaUsar, null)
+      definirDadosIgrejaCarregados(true)
+      setCarregamentoInicialCompleto(true)
+      return true
     }
 
-    await buscarTodosOsDados(sessaoParaUsar, igrejaSuporteSelecionada)
-    definirDadosIgrejaCarregados(true)
+    let perfilParaCarregar = perfilBanco
+
+    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
+      const igrejaSuporteNormalizada = manterContextoSuporteAdmin(
+        igrejaSuporteSelecionada,
+        sessaoParaUsar,
+        {
+          forcarPainel: paginaAtualRef.current === 'administracao',
+        }
+      )
+
+      perfilParaCarregar = montarPerfilSuporteAdmin(igrejaSuporteNormalizada, sessaoParaUsar)
+    }
+
+    if (!perfilParaCarregar?.igreja_id) {
+      definirPerfilUsuario(null)
+      setIgrejaId(null)
+      setTelaPublica('login')
+      throw new Error('Perfil não encontrado ou sem igreja vinculada.')
+    }
+
+    definirPerfilUsuario(perfilParaCarregar)
+    setIgrejaId(Number(perfilParaCarregar.igreja_id))
+    setPerfilCarregado(true)
+
+    await carregarDadosDiretosDaIgreja(perfilParaCarregar, sessaoParaUsar)
+
     setCarregamentoInicialCompleto(true)
+    usuarioCarregadoRef.current = sessaoParaUsar.user.id
 
     return true
   }
+
 
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
