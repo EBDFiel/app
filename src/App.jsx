@@ -539,6 +539,9 @@ function App() {
 
   const [sessao, setSessao] = useState(null)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
+  const [sessaoRestaurada, setSessaoRestaurada] = useState(false)
+  const [perfilCarregado, setPerfilCarregado] = useState(false)
+  const [carregamentoInicialCompleto, setCarregamentoInicialCompleto] = useState(false)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
   const [emailRecuperacao, setEmailRecuperacao] = useState('')
@@ -626,6 +629,14 @@ function App() {
   const suporteAdminEmTransicaoRef = useRef(false)
   const dadosIgrejaSincronizadosRef = useRef(false)
   const saindoSistemaEmAndamentoRef = useRef(false)
+  const carregamentoInicialEmAndamentoRef = useRef(false)
+
+  function resetarControleInicial() {
+    setSessaoRestaurada(false)
+    setPerfilCarregado(false)
+    setCarregamentoInicialCompleto(false)
+    carregamentoInicialEmAndamentoRef.current = false
+  }
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -988,15 +999,102 @@ function App() {
     salvarPaginaAtualSalva(paginaAtual)
   }, [paginaAtual])
 
+  async function inicializarSistema(opcoes = {}) {
+    const {
+      forcar = false,
+      sessaoForcada = null,
+      igrejaSuporteForcada = null,
+    } = opcoes || {}
+
+    if (carregamentoInicialEmAndamentoRef.current && !forcar) {
+      return
+    }
+
+    carregamentoInicialEmAndamentoRef.current = true
+    setCarregando(true)
+    setVerificandoSessao(true)
+    setErroSistema('')
+
+    const igrejaSuporteSalva = igrejaSuporteForcada || lerIgrejaSuporteAdminSalva()
+
+    if (igrejaSuporteSalva?.id) {
+      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
+    }
+
+    try {
+      let sessaoAtual = sessaoForcada || sessaoRef.current || null
+
+      if (!sessaoAtual?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoAtual = data?.session || null
+      }
+
+      if (!sessaoAtual?.user?.id) {
+        definirSessao(null)
+        setSessaoRestaurada(false)
+        setPerfilCarregado(false)
+        setCarregamentoInicialCompleto(false)
+        limparDadosDoSistema()
+        setVerificandoSessao(false)
+        setCarregando(false)
+        return
+      }
+
+      definirSessao(sessaoAtual)
+      setSessaoRestaurada(true)
+      setVerificandoSessao(false)
+
+      const perfilEncontrado = await buscarPerfilUsuarioSeguro(sessaoAtual)
+      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+      const usuarioAdminSemPerfil = emailsAdminSistema.includes(emailSessaoAtual)
+
+      if (perfilEncontrado) {
+        definirPerfilUsuario(perfilEncontrado)
+
+        if (perfilEncontrado?.igreja_id) {
+          setIgrejaId(Number(perfilEncontrado.igreja_id))
+        }
+      } else if (!usuarioAdminSemPerfil) {
+        definirPerfilUsuario(null)
+        setIgrejaId(null)
+        setTelaPublica('login')
+        throw new Error(
+          'Perfil de usuário não encontrado. Entre em contato com a administração.'
+        )
+      }
+
+      setPerfilCarregado(true)
+
+      await carregarDadosOnline(sessaoAtual, igrejaSuporteSalva)
+      setCarregamentoInicialCompleto(true)
+    } catch (error) {
+      console.error('Erro ao inicializar sistema:', error)
+      setErroSistema(
+        error?.message || 'Não foi possível carregar os dados iniciais do sistema.'
+      )
+    } finally {
+      carregamentoInicialEmAndamentoRef.current = false
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }
+  }
+
   useEffect(() => {
     iniciarCorrecaoGlobalDeAcentos()
 
-    iniciarAutenticacao()
+    inicializarSistema()
 
     const destravarVerificacaoInicial = window.setTimeout(() => {
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }, 6000)
+      if (!carregamentoInicialEmAndamentoRef.current) {
+        setVerificandoSessao(false)
+        setCarregando(false)
+      }
+    }, 12000)
 
     function restaurarSuporteAoVoltarParaAba() {
       const sessaoAtual = sessaoRef.current
@@ -1037,6 +1135,7 @@ function App() {
 
       if (event === 'SIGNED_OUT') {
         usuarioCarregadoRef.current = null
+        resetarControleInicial()
         definirSessao(null)
         limparDadosDoSistema()
         setCarregando(false)
@@ -1044,29 +1143,16 @@ function App() {
         return
       }
 
-      if (!session) {
+      if (!session?.user?.id) {
         setCarregando(false)
         setVerificandoSessao(false)
         return
       }
 
-      const deveManterEstadoAtual = eventoAuthMesmaSessaoJaCarregada(event, session)
       const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
-
       definirSessao(session)
+      setSessaoRestaurada(true)
       setVerificandoSessao(false)
-
-      if (deveManterEstadoAtual) {
-        if (igrejaSuporteSalva?.id) {
-          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
-            forcarPainel: paginaAtualRef.current === 'administracao',
-          })
-        }
-
-        setCarregando(false)
-        setVerificandoSessao(false)
-        return
-      }
 
       if (event === 'TOKEN_REFRESHED') {
         if (igrejaSuporteSalva?.id) {
@@ -1076,28 +1162,24 @@ function App() {
         }
 
         setCarregando(false)
-        setVerificandoSessao(false)
         return
       }
 
-      if (
-        event === 'INITIAL_SESSION' ||
-        event === 'SIGNED_IN' ||
-        event === 'USER_UPDATED'
-      ) {
-        try {
-          await carregarDadosOnline(session, igrejaSuporteSalva)
-        } catch (erroCarregamentoSessao) {
-          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
-          setErroSistema(
-            erroCarregamentoSessao?.message ||
-              'Não foi possível validar sua sessão.'
-          )
-        }
+      if (event === 'INITIAL_SESSION') {
+        setCarregando(false)
+        return
       }
 
-      setCarregando(false)
-      setVerificandoSessao(false)
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        setPerfilCarregado(false)
+        setCarregamentoInicialCompleto(false)
+
+        await inicializarSistema({
+          forcar: true,
+          sessaoForcada: session,
+          igrejaSuporteForcada: igrejaSuporteSalva,
+        })
+      }
     })
 
     const restaurarAoFocar = () => restaurarSuporteAoVoltarParaAba()
@@ -1135,49 +1217,11 @@ function App() {
   }, [paginaAtual, perfilUsuario?.perfil, sessao?.user?.email])
 
   async function iniciarAutenticacao() {
-    setVerificandoSessao(true)
-    setCarregando(true)
-
-    const igrejaSuporteSalva = lerIgrejaSuporteAdminSalva()
-
-    if (igrejaSuporteSalva?.id) {
-      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
-    }
-
-    try {
-      const { data, error } = await supabase.auth.getSession()
-
-      if (error) {
-        throw error
-      }
-
-      const sessaoAtual = data.session || null
-      definirSessao(sessaoAtual)
-
-      setVerificandoSessao(false)
-
-      if (sessaoAtual) {
-        carregarDadosOnline(sessaoAtual, igrejaSuporteSalva).catch((erroCarregamentoInicial) => {
-          console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
-          setErroSistema(
-            erroCarregamentoInicial?.message ||
-              'Não foi possível carregar os dados iniciais.'
-          )
-          setCarregando(false)
-        })
-      } else {
-        limparDadosDoSistema()
-        setCarregando(false)
-      }
-    } catch (error) {
-      console.error('Erro ao verificar sessão:', error)
-      setErroSistema('Erro ao verificar login.')
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }
+    await inicializarSistema({ forcar: true })
   }
 
   function limparDadosDoSistema() {
+    resetarControleInicial()
     // v78: no logout, os dados visuais da igreja são limpos da tela,
     // mas o cache local permanece salvo por usuário/igreja. Isso evita que,
     // após novo login, atualização ou rede lenta no celular, o painel apareça
@@ -1625,10 +1669,16 @@ function App() {
       }
 
       definirSessao(data.session)
+      setSessaoRestaurada(true)
+      setPerfilCarregado(false)
+      setCarregamentoInicialCompleto(false)
       setEmailLogin('')
       setSenhaLogin('')
 
-      await carregarDadosOnline(data.session)
+      await inicializarSistema({
+        forcar: true,
+        sessaoForcada: data.session,
+      })
     } catch (error) {
       console.error('Erro ao entrar:', error)
       setErroLogin('E-mail ou senha inválidos.')
@@ -3993,6 +4043,13 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }, 1200)
 
       return
+    }
+
+    if (respostaOnlineVazia && !ehAdminSessaoAtual && !perfilAtual?.modo_suporte_admin) {
+      definirDadosIgrejaSincronizados(false)
+      throw new Error(
+        'O Supabase não retornou os dados da igreja após atualizar a página. Tente sair e entrar novamente ou verifique as permissões do perfil.'
+      )
     }
 
     setClasses(classesNormalizadas)
