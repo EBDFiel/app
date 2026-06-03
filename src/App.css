@@ -18867,3 +18867,16 @@ body {
     width: 100%;
   }
 }
+
+
+.diagnostico-admin-card {
+  margin-top: 18px;
+}
+
+.diagnostico-botoes-final {
+  margin-top: 14px;
+}
+
+.diagnostico-admin-aviso {
+  margin-top: 14px;
+}
