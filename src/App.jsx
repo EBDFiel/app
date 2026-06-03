@@ -309,7 +309,7 @@ iniciarCorrecaoGlobalDeAcentos()
 
 const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
 const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
-const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v81'
+const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v82'
 
 const PAGINAS_SISTEMA = [
   'painel',
@@ -1738,6 +1738,66 @@ function App() {
     }
   }
 
+  async function obterSessaoAutenticada(sessaoAtual = sessaoRef.current) {
+    let sessaoParaUsar = sessaoAtual || null
+
+    try {
+      if (!sessaoParaUsar?.user?.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoParaUsar = data?.session || null
+      }
+
+      if (!sessaoParaUsar?.user?.id) {
+        return null
+      }
+
+      const segundosParaExpirar = Number(sessaoParaUsar.expires_at || 0) - Math.floor(Date.now() / 1000)
+
+      if (segundosParaExpirar > 0 && segundosParaExpirar < 180) {
+        const { data: dadosAtualizados, error: erroRefresh } = await supabase.auth.refreshSession()
+
+        if (!erroRefresh && dadosAtualizados?.session?.user?.id) {
+          sessaoParaUsar = dadosAtualizados.session
+          definirSessao(sessaoParaUsar)
+        }
+      }
+
+      const { data: dadosUsuario, error: erroUsuario } = await supabase.auth.getUser()
+
+      if (erroUsuario || !dadosUsuario?.user?.id) {
+        const { data: dadosAtualizados, error: erroRefresh } = await supabase.auth.refreshSession()
+
+        if (erroRefresh) {
+          throw erroRefresh
+        }
+
+        if (dadosAtualizados?.session?.user?.id) {
+          sessaoParaUsar = dadosAtualizados.session
+          definirSessao(sessaoParaUsar)
+        }
+      } else if (dadosUsuario.user.id !== sessaoParaUsar.user.id) {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoParaUsar = data?.session || sessaoParaUsar
+        definirSessao(sessaoParaUsar)
+      }
+
+      return sessaoParaUsar
+    } catch (error) {
+      console.error('Erro ao validar sessão autenticada:', error)
+      throw error
+    }
+  }
+
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
 
@@ -1754,21 +1814,13 @@ function App() {
     setErroSistema('')
 
     try {
-      let sessaoParaUsar = sessaoAtual
+      const sessaoParaUsar = await obterSessaoAutenticada(sessaoAtual)
 
       if (!sessaoParaUsar?.user?.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoParaUsar = data?.session || null
-
-        if (sessaoParaUsar) {
-          definirSessao(sessaoParaUsar)
-        }
+        throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
       }
+
+      definirSessao(sessaoParaUsar)
 
       await buscarTodosOsDados(sessaoParaUsar, suporteParaPreservar)
 
@@ -3297,6 +3349,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
 
+    sessaoAtual = (await obterSessaoAutenticada(sessaoAtual)) || sessaoAtual
+
+    if (!sessaoAtual?.user?.id) {
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+    }
+
     const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
     const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
     const suporteAdminDeveSerPreservado = Boolean(
@@ -3750,14 +3808,26 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       for (let indiceTentativa = 0; indiceTentativa < atrasos.length; indiceTentativa += 1) {
         await esperar(atrasos[indiceTentativa])
 
-        const { data: sessaoAtualizada } = await supabase.auth.getSession()
+        try {
+          const { data: sessaoRenovada, error: erroRenovarSessao } = await supabase.auth.refreshSession()
 
-        if (sessaoAtualizada?.session?.user?.id !== sessaoAtual.user.id) {
+          if (!erroRenovarSessao && sessaoRenovada?.session?.user?.id) {
+            definirSessao(sessaoRenovada.session)
+            sessaoAtual = sessaoRenovada.session
+          }
+        } catch (erroRenovarSessao) {
+          console.warn('Não foi possível renovar a sessão antes de recarregar dados:', erroRenovarSessao)
+        }
+
+        const sessaoAtualizada = await obterSessaoAutenticada(sessaoAtual)
+
+        if (sessaoAtualizada?.user?.id !== sessaoAtual.user.id) {
           break
         }
 
-        if (sessaoAtualizada?.session) {
-          definirSessao(sessaoAtualizada.session)
+        if (sessaoAtualizada) {
+          definirSessao(sessaoAtualizada)
+          sessaoAtual = sessaoAtualizada
         }
 
         try {
@@ -3914,9 +3984,11 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
       window.setTimeout(() => {
         if (sessaoRef.current?.user?.id === sessaoAtual.user.id) {
-          carregarDadosOnline(sessaoRef.current).catch((erroRecarregamento) => {
-            console.error('Erro ao tentar recarregar dados da igreja:', erroRecarregamento)
-          })
+          obterSessaoAutenticada(sessaoRef.current)
+            .then((sessaoValidada) => carregarDadosOnline(sessaoValidada || sessaoRef.current))
+            .catch((erroRecarregamento) => {
+              console.error('Erro ao tentar recarregar dados da igreja:', erroRecarregamento)
+            })
         }
       }, 1200)
 
