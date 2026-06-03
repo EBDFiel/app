@@ -9025,15 +9025,99 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     setCarregandoDiagnostico(false)
   }
 
-  async function copiarDiagnosticoCarregamento() {
-    if (!diagnosticoCarregamento || typeof navigator === 'undefined') return
+  function textoDiagnosticoCarregamento() {
+    return JSON.stringify(diagnosticoCarregamento || {}, null, 2)
+  }
+
+  function copiarTextoComFallback(texto) {
+    if (typeof document === 'undefined') {
+      return false
+    }
+
+    const textarea = document.createElement('textarea')
+    textarea.value = texto
+    textarea.setAttribute('readonly', '')
+    textarea.style.position = 'fixed'
+    textarea.style.top = '-9999px'
+    textarea.style.left = '-9999px'
+    textarea.style.opacity = '0'
+    document.body.appendChild(textarea)
+    textarea.focus()
+    textarea.select()
+    textarea.setSelectionRange(0, texto.length)
+
+    let copiado = false
 
     try {
-      await navigator.clipboard.writeText(JSON.stringify(diagnosticoCarregamento, null, 2))
-      setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+      copiado = document.execCommand('copy')
+    } catch (error) {
+      console.error('Fallback de cópia falhou:', error)
+      copiado = false
+    }
+
+    document.body.removeChild(textarea)
+    return copiado
+  }
+
+  function baixarDiagnosticoCarregamento(event) {
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
+
+    if (!diagnosticoCarregamento || typeof document === 'undefined') {
+      setMensagemChamada({ tipo: 'erro', texto: 'Execute o diagnóstico antes de baixar.' })
+      return
+    }
+
+    const texto = textoDiagnosticoCarregamento()
+    const blob = new Blob([texto], { type: 'application/json;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `diagnostico-ebd-fiel-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico baixado.' })
+  }
+
+  async function copiarDiagnosticoCarregamento(event) {
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
+
+    if (!diagnosticoCarregamento) {
+      setMensagemChamada({ tipo: 'erro', texto: 'Execute o diagnóstico antes de copiar.' })
+      return
+    }
+
+    const texto = textoDiagnosticoCarregamento()
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(texto)
+        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        return
+      }
+
+      const copiado = copiarTextoComFallback(texto)
+      if (copiado) {
+        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        return
+      }
+
+      baixarDiagnosticoCarregamento(event)
+      setMensagemChamada({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     } catch (error) {
       console.error('Erro ao copiar diagnóstico:', error)
-      setMensagemChamada({ tipo: 'erro', texto: 'Não foi possível copiar o diagnóstico.' })
+      const copiado = copiarTextoComFallback(texto)
+
+      if (copiado) {
+        setMensagemChamada({ tipo: 'sucesso', texto: 'Diagnóstico copiado.' })
+        return
+      }
+
+      baixarDiagnosticoCarregamento(event)
+      setMensagemChamada({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     }
   }
 
@@ -11834,6 +11918,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
               <div className="grupo-botoes diagnostico-botoes-final">
                 <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
                   Copiar diagnóstico
+                </button>
+                <button className="botao-secundario" type="button" onClick={baixarDiagnosticoCarregamento}>
+                  Baixar diagnóstico
                 </button>
               </div>
 
