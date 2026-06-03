@@ -309,7 +309,7 @@ iniciarCorrecaoGlobalDeAcentos()
 
 const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
 const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
-const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v78'
+const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v81'
 
 const PAGINAS_SISTEMA = [
   'painel',
@@ -463,6 +463,13 @@ function salvarCacheDadosIgreja(igrejaAtualId, userId = '', dados = {}) {
   const chaveCache = montarChaveCacheDadosIgreja(igrejaAtualId, userId)
 
   if (!chaveCache) {
+    return
+  }
+
+  // v81: não salvar cache operacional vazio.
+  // Um cache contendo apenas configuração da igreja, mas sem classes/alunos/chamadas,
+  // fazia o painel voltar com "..." ou 0 após F5 em alguns celulares.
+  if (!pacoteTemDadosOperacionais(dados)) {
     return
   }
 
@@ -664,11 +671,7 @@ function App() {
       return false
     }
 
-    const temDadosOperacionais =
-      Array.isArray(cache.classes) ||
-      Array.isArray(cache.alunos) ||
-      Array.isArray(cache.chamadasSalvas) ||
-      Array.isArray(cache.chamadasProfessores)
+    const temDadosOperacionais = pacoteTemDadosOperacionais(cache)
 
     if (!temDadosOperacionais) {
       return false
@@ -3184,6 +3187,111 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     return true
   }
 
+  function escolherMelhorPerfilUsuario(perfisEncontrados = [], sessaoAtual = sessaoRef.current) {
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+    const userIdSessaoAtual = String(sessaoAtual?.user?.id || '')
+
+    const perfisValidos = Array.isArray(perfisEncontrados)
+      ? perfisEncontrados.filter(Boolean)
+      : []
+
+    if (perfisValidos.length === 0) {
+      return null
+    }
+
+    const pontuarPerfil = (perfil) => {
+      let pontos = 0
+      const emailPerfil = String(perfil?.email || '').toLowerCase()
+      const userIdPerfil = String(perfil?.user_id || '')
+      const igrejaPerfilId = Number(perfil?.igreja_id || 0)
+      const tipoPerfil = String(perfil?.perfil || '').toLowerCase()
+
+      if (userIdSessaoAtual && userIdPerfil === userIdSessaoAtual) {
+        pontos += 60
+      }
+
+      if (emailSessaoAtual && emailPerfil === emailSessaoAtual) {
+        pontos += 60
+      }
+
+      if (igrejaPerfilId > 0) {
+        pontos += 100
+      }
+
+      if (emailsAdminSistema.includes(emailSessaoAtual)) {
+        if (tipoPerfil === 'admin_sistema') {
+          pontos += 120
+        }
+      } else if (tipoPerfil !== 'admin_sistema') {
+        pontos += 40
+      }
+
+      if (['secretaria', 'professor', 'admin_local'].includes(tipoPerfil)) {
+        pontos += 25
+      }
+
+      return pontos
+    }
+
+    return [...perfisValidos].sort((perfilA, perfilB) => {
+      const diferencaPontos = pontuarPerfil(perfilB) - pontuarPerfil(perfilA)
+
+      if (diferencaPontos !== 0) {
+        return diferencaPontos
+      }
+
+      return Number(perfilB?.id || 0) - Number(perfilA?.id || 0)
+    })[0]
+  }
+
+  async function buscarPerfilUsuarioSeguro(sessaoAtual = sessaoRef.current) {
+    const userIdSessaoAtual = sessaoAtual?.user?.id
+    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
+    const perfisEncontrados = []
+    const idsAdicionados = new Set()
+
+    function adicionarPerfis(lista) {
+      ;(Array.isArray(lista) ? lista : []).forEach((perfil) => {
+        const chave = perfil?.id ? `id:${perfil.id}` : `${perfil?.user_id || ''}:${perfil?.email || ''}`
+
+        if (!idsAdicionados.has(chave)) {
+          idsAdicionados.add(chave)
+          perfisEncontrados.push(perfil)
+        }
+      })
+    }
+
+    if (userIdSessaoAtual) {
+      const { data, error } = await supabase
+        .from('perfis_usuarios')
+        .select('*')
+        .eq('user_id', userIdSessaoAtual)
+        .order('id', { ascending: true })
+
+      if (error) {
+        throw error
+      }
+
+      adicionarPerfis(data || [])
+    }
+
+    if (emailSessaoAtual) {
+      const { data, error } = await supabase
+        .from('perfis_usuarios')
+        .select('*')
+        .eq('email', emailSessaoAtual)
+        .order('id', { ascending: true })
+
+      if (!error) {
+        adicionarPerfis(data || [])
+      } else {
+        console.warn('Não foi possível buscar perfil por e-mail:', error)
+      }
+    }
+
+    return escolherMelhorPerfilUsuario(perfisEncontrados, sessaoAtual)
+  }
+
   async function buscarTodosOsDados(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     if (!sessaoAtual?.user?.id) {
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
@@ -3200,49 +3308,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
     // permanecem visíveis até os dados atualizados chegarem com sucesso.
 
-    let { data: perfilBanco, error: erroPerfil } = await supabase
-      .from('perfis_usuarios')
-      .select('*')
-      .eq('user_id', sessaoAtual.user.id)
-      .maybeSingle()
-
-    if (erroPerfil) {
-      const mensagemPerfil = String(erroPerfil?.message || '').toLowerCase()
-
-      if (mensagemPerfil.includes('multiple') || mensagemPerfil.includes('rows')) {
-        const { data: perfisEncontrados, error: erroPerfisEncontrados } = await supabase
-          .from('perfis_usuarios')
-          .select('*')
-          .eq('user_id', sessaoAtual.user.id)
-          .order('id', { ascending: true })
-          .limit(1)
-
-        if (erroPerfisEncontrados) {
-          throw erroPerfisEncontrados
-        }
-
-        perfilBanco = Array.isArray(perfisEncontrados) ? perfisEncontrados[0] : null
-      } else {
-        throw erroPerfil
-      }
-    }
-
-    if (!perfilBanco && emailSessaoAtual) {
-      try {
-        const { data: perfisPorEmail, error: erroPerfilEmail } = await supabase
-          .from('perfis_usuarios')
-          .select('*')
-          .eq('email', emailSessaoAtual)
-          .order('id', { ascending: true })
-          .limit(1)
-
-        if (!erroPerfilEmail && Array.isArray(perfisPorEmail) && perfisPorEmail[0]) {
-          perfilBanco = perfisPorEmail[0]
-        }
-      } catch (erroPerfilEmailInesperado) {
-        console.warn('Não foi possível tentar localizar o perfil por e-mail:', erroPerfilEmailInesperado)
-      }
-    }
+    const perfilBanco = await buscarPerfilUsuarioSeguro(sessaoAtual)
 
     let perfilAtual = perfilBanco
     const ehAdminSessaoAtual =
@@ -3897,8 +3963,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       classesNormalizadas.length > 0 ||
       alunosNormalizados.length > 0 ||
       chamadasNormalizadas.length > 0 ||
-      chamadasProfessoresNormalizadas.length > 0 ||
-      Boolean(configuracaoNormalizada.nome_igreja)
+      chamadasProfessoresNormalizadas.length > 0
 
     if (podeSalvarCacheOperacional) {
       salvarCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id, {
@@ -9441,7 +9506,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             <h3>Resumo rápido</h3>
             <p>Dados sincronizados automaticamente no Supabase.</p>
             {!dadosIgrejaSincronizados && (
-              <p className="aviso-sincronizacao-dados">Sincronizando dados da igreja...</p>
+              <div className="aviso-sincronizacao-dados">
+                <span>Sincronizando dados da igreja...</span>
+                <button type="button" onClick={() => carregarDadosOnline(sessaoRef.current)}>
+                  Atualizar agora
+                </button>
+              </div>
             )}
             <ul>
               <li>{numeroOuReticencias(classes.length, dadosIgrejaSincronizados)} classes ativas</li>
