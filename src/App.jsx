@@ -541,6 +541,7 @@ function App() {
   const [verificandoSessao, setVerificandoSessao] = useState(true)
   const [sessaoRestaurada, setSessaoRestaurada] = useState(false)
   const [perfilCarregado, setPerfilCarregado] = useState(false)
+  const [dadosIgrejaCarregados, setDadosIgrejaCarregados] = useState(false)
   const [carregamentoInicialCompleto, setCarregamentoInicialCompleto] = useState(false)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
@@ -628,12 +629,14 @@ function App() {
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
   const dadosIgrejaSincronizadosRef = useRef(false)
+  const dadosIgrejaCarregadosRef = useRef(false)
   const saindoSistemaEmAndamentoRef = useRef(false)
   const carregamentoInicialEmAndamentoRef = useRef(false)
 
   function resetarControleInicial() {
     setSessaoRestaurada(false)
     setPerfilCarregado(false)
+    definirDadosIgrejaCarregados(false)
     setCarregamentoInicialCompleto(false)
     carregamentoInicialEmAndamentoRef.current = false
   }
@@ -675,6 +678,11 @@ function App() {
   function definirDadosIgrejaSincronizados(valor) {
     dadosIgrejaSincronizadosRef.current = Boolean(valor)
     setDadosIgrejaSincronizados(Boolean(valor))
+  }
+
+  function definirDadosIgrejaCarregados(valor) {
+    dadosIgrejaCarregadosRef.current = Boolean(valor)
+    setDadosIgrejaCarregados(Boolean(valor))
   }
 
   function aplicarCacheDadosIgreja(cache) {
@@ -1022,8 +1030,9 @@ function App() {
     }
 
     try {
-      let sessaoAtual = sessaoForcada || sessaoRef.current || null
+      let sessaoAtual = sessaoForcada || null
 
+      // Etapa 1: restaurar e validar a sessão antes de consultar qualquer dado da igreja.
       if (!sessaoAtual?.user?.id) {
         const { data, error } = await supabase.auth.getSession()
 
@@ -1036,19 +1045,24 @@ function App() {
 
       if (!sessaoAtual?.user?.id) {
         definirSessao(null)
-        setSessaoRestaurada(false)
-        setPerfilCarregado(false)
-        setCarregamentoInicialCompleto(false)
+        resetarControleInicial()
         limparDadosDoSistema()
         setVerificandoSessao(false)
         setCarregando(false)
         return
       }
 
+      sessaoAtual = (await obterSessaoAutenticada(sessaoAtual)) || sessaoAtual
+
+      if (!sessaoAtual?.user?.id) {
+        throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+      }
+
       definirSessao(sessaoAtual)
       setSessaoRestaurada(true)
       setVerificandoSessao(false)
 
+      // Etapa 2: carregar o perfil e gravar imediatamente no ref antes de carregar dados.
       const perfilEncontrado = await buscarPerfilUsuarioSeguro(sessaoAtual)
       const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
       const usuarioAdminSemPerfil = emailsAdminSistema.includes(emailSessaoAtual)
@@ -1070,10 +1084,23 @@ function App() {
 
       setPerfilCarregado(true)
 
-      await carregarDadosOnline(sessaoAtual, igrejaSuporteSalva)
-      setCarregamentoInicialCompleto(true)
+      // Etapa 3: só carregar dados depois de sessão e perfil/contexto estarem válidos.
+      const dadosCarregados = await carregarDadosIgrejaComPerfilValidado(
+        sessaoAtual,
+        igrejaSuporteSalva
+      )
+
+      if (dadosCarregados) {
+        definirDadosIgrejaCarregados(true)
+        setCarregamentoInicialCompleto(true)
+
+        if (sessaoAtual?.user?.id) {
+          usuarioCarregadoRef.current = sessaoAtual.user.id
+        }
+      }
     } catch (error) {
       console.error('Erro ao inicializar sistema:', error)
+      definirDadosIgrejaCarregados(false)
       setErroSistema(
         error?.message || 'Não foi possível carregar os dados iniciais do sistema.'
       )
@@ -1166,14 +1193,25 @@ function App() {
       }
 
       if (event === 'INITIAL_SESSION') {
-        setCarregando(false)
+        if (!dadosIgrejaCarregadosRef.current && !carregamentoInicialEmAndamentoRef.current) {
+          await inicializarSistema({
+            forcar: true,
+            sessaoForcada: session,
+            igrejaSuporteForcada: igrejaSuporteSalva,
+          })
+        } else {
+          setCarregando(false)
+        }
+
         return
       }
 
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         setPerfilCarregado(false)
+        definirDadosIgrejaCarregados(false)
         setCarregamentoInicialCompleto(false)
 
+        carregamentoInicialEmAndamentoRef.current = false
         await inicializarSistema({
           forcar: true,
           sessaoForcada: session,
@@ -1848,6 +1886,44 @@ function App() {
     }
   }
 
+  async function carregarDadosIgrejaComPerfilValidado(
+    sessaoAtual = sessaoRef.current,
+    igrejaSuporteForcada = null
+  ) {
+    const sessaoParaUsar = await obterSessaoAutenticada(sessaoAtual)
+
+    if (!sessaoParaUsar?.user?.id) {
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+    }
+
+    definirSessao(sessaoParaUsar)
+
+    const emailSessaoAtual = String(sessaoParaUsar?.user?.email || '').toLowerCase()
+    const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
+    const ehAdminEmSuporte = Boolean(
+      igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
+    )
+    const perfilAtual = perfilUsuarioRef.current || perfilUsuario
+
+    if (!ehAdminEmSuporte && !emailsAdminSistema.includes(emailSessaoAtual) && !perfilAtual?.igreja_id) {
+      const perfilRecarregado = await buscarPerfilUsuarioSeguro(sessaoParaUsar)
+
+      if (perfilRecarregado?.igreja_id) {
+        definirPerfilUsuario(perfilRecarregado)
+        setIgrejaId(Number(perfilRecarregado.igreja_id))
+        setPerfilCarregado(true)
+      } else {
+        throw new Error('Perfil não encontrado ou sem igreja vinculada.')
+      }
+    }
+
+    await buscarTodosOsDados(sessaoParaUsar, igrejaSuporteSelecionada)
+    definirDadosIgrejaCarregados(true)
+    setCarregamentoInicialCompleto(true)
+
+    return true
+  }
+
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
 
@@ -1872,13 +1948,14 @@ function App() {
 
       definirSessao(sessaoParaUsar)
 
-      await buscarTodosOsDados(sessaoParaUsar, suporteParaPreservar)
+      await carregarDadosIgrejaComPerfilValidado(sessaoParaUsar, suporteParaPreservar)
 
       if (sessaoParaUsar?.user?.id) {
         usuarioCarregadoRef.current = sessaoParaUsar.user.id
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
+      definirDadosIgrejaCarregados(false)
 
       const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
       setErroSistema(mensagemErro)
@@ -4059,6 +4136,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     setChamadasProfessores(chamadasProfessoresNormalizadas)
     setChamadasSalvas(chamadasNormalizadas)
     definirDadosIgrejaSincronizados(true)
+    definirDadosIgrejaCarregados(true)
 
     if (classePermitidaId) {
       setClasseChamadaId(String(classePermitidaId))
