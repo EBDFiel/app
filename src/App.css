@@ -18743,3 +18743,127 @@ body {
     font-size: 11px;
   }
 }
+
+
+/* Diagnóstico de carregamento de dados */
+.diagnostico-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.botao-diagnostico {
+  margin-top: 0;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.diagnostico-carregamento-card {
+  margin: 18px 0 22px;
+  padding: 20px;
+  border: 1px solid #bfdbfe;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: var(--sombra-suave);
+}
+
+.diagnostico-carregamento-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.diagnostico-carregamento-cabecalho h3 {
+  margin: 8px 0 6px;
+  font-size: 22px;
+}
+
+.diagnostico-carregamento-cabecalho p {
+  margin: 0;
+  color: var(--cor-texto-suave);
+  line-height: 1.5;
+}
+
+.diagnostico-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.diagnostico-grid > div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.diagnostico-grid strong,
+.diagnostico-grid span {
+  display: block;
+}
+
+.diagnostico-grid strong {
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.diagnostico-grid span {
+  color: #0f172a;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.diagnostico-detalhes {
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.diagnostico-detalhes summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.diagnostico-detalhes pre {
+  max-height: 320px;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  border-top: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 1024px) {
+  .diagnostico-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .diagnostico-carregamento-cabecalho {
+    flex-direction: column;
+  }
+
+  .diagnostico-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diagnostico-acoes,
+  .diagnostico-acoes .botao-secundario {
+    width: 100%;
+  }
+}
