@@ -309,7 +309,6 @@ iniciarCorrecaoGlobalDeAcentos()
 
 const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
 const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
-const CHAVE_CACHE_DADOS_IGREJA = 'ebdfiel_cache_dados_igreja_v82'
 
 const PAGINAS_SISTEMA = [
   'painel',
@@ -403,133 +402,6 @@ function removerIgrejaSuporteAdminSalva() {
   window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
 }
 
-function lerMapaCacheDadosIgreja() {
-  if (typeof window === 'undefined') {
-    return {}
-  }
-
-  try {
-    const cache = JSON.parse(window.localStorage.getItem(CHAVE_CACHE_DADOS_IGREJA) || '{}')
-    return cache && typeof cache === 'object' ? cache : {}
-  } catch (error) {
-    console.error('Erro ao recuperar cache de dados da igreja:', error)
-    return {}
-  }
-}
-
-function montarChaveCacheDadosIgreja(igrejaAtualId, userId = '') {
-  const igrejaIdNormalizada = Number(igrejaAtualId || 0)
-
-  if (!igrejaIdNormalizada) {
-    return ''
-  }
-
-  return `${igrejaIdNormalizada}:${userId || 'usuario'}`
-}
-
-function lerCacheDadosIgreja(igrejaAtualId, userId = '') {
-  if (typeof window === 'undefined') {
-    return null
-  }
-
-  const chaveCache = montarChaveCacheDadosIgreja(igrejaAtualId, userId)
-
-  if (!chaveCache) {
-    return null
-  }
-
-  const mapaCache = lerMapaCacheDadosIgreja()
-  const cache = mapaCache[chaveCache]
-
-  if (!cache || typeof cache !== 'object') {
-    return null
-  }
-
-  const criadoEm = Number(cache.criadoEm || 0)
-  const seteDias = 7 * 24 * 60 * 60 * 1000
-
-  if (criadoEm && Date.now() - criadoEm > seteDias) {
-    return null
-  }
-
-  return cache
-}
-
-function salvarCacheDadosIgreja(igrejaAtualId, userId = '', dados = {}) {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  const chaveCache = montarChaveCacheDadosIgreja(igrejaAtualId, userId)
-
-  if (!chaveCache) {
-    return
-  }
-
-  // v81: não salvar cache operacional vazio.
-  // Um cache contendo apenas configuração da igreja, mas sem classes/alunos/chamadas,
-  // fazia o painel voltar com "..." ou 0 após F5 em alguns celulares.
-  if (!pacoteTemDadosOperacionais(dados)) {
-    return
-  }
-
-  try {
-    const mapaCache = lerMapaCacheDadosIgreja()
-    mapaCache[chaveCache] = {
-      ...dados,
-      igrejaId: Number(igrejaAtualId),
-      userId: userId || '',
-      criadoEm: Date.now(),
-    }
-
-    window.localStorage.setItem(CHAVE_CACHE_DADOS_IGREJA, JSON.stringify(mapaCache))
-  } catch (error) {
-    console.error('Erro ao salvar cache de dados da igreja:', error)
-  }
-}
-
-function limparCacheDadosIgrejaUsuario(userId = '') {
-  if (typeof window === 'undefined' || !userId) {
-    return
-  }
-
-  try {
-    const mapaCache = lerMapaCacheDadosIgreja()
-    Object.keys(mapaCache).forEach((chave) => {
-      if (String(mapaCache[chave]?.userId || '') === String(userId)) {
-        delete mapaCache[chave]
-      }
-    })
-    window.localStorage.setItem(CHAVE_CACHE_DADOS_IGREJA, JSON.stringify(mapaCache))
-  } catch (error) {
-    console.error('Erro ao limpar cache de dados da igreja:', error)
-  }
-}
-
-
-function esperar(ms = 500) {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, ms)
-  })
-}
-
-function pacoteTemDadosOperacionais(pacote = {}) {
-  return (
-    (Array.isArray(pacote.classes) && pacote.classes.length > 0) ||
-    (Array.isArray(pacote.alunos) && pacote.alunos.length > 0) ||
-    (Array.isArray(pacote.chamadasSalvas) && pacote.chamadasSalvas.length > 0) ||
-    (Array.isArray(pacote.chamadasProfessores) && pacote.chamadasProfessores.length > 0)
-  )
-}
-
-function numeroOuReticencias(valor, sincronizado = true) {
-  if (!sincronizado && Number(valor || 0) === 0) {
-    return '…'
-  }
-
-  return valor
-}
-
 function App() {
   const [paginaAtual, setPaginaAtual] = useState(() => lerPaginaAtualSalva())
   const [carregando, setCarregando] = useState(true)
@@ -539,10 +411,6 @@ function App() {
 
   const [sessao, setSessao] = useState(null)
   const [verificandoSessao, setVerificandoSessao] = useState(true)
-  const [sessaoRestaurada, setSessaoRestaurada] = useState(false)
-  const [perfilCarregado, setPerfilCarregado] = useState(false)
-  const [dadosIgrejaCarregados, setDadosIgrejaCarregados] = useState(false)
-  const [carregamentoInicialCompleto, setCarregamentoInicialCompleto] = useState(false)
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
   const [emailRecuperacao, setEmailRecuperacao] = useState('')
@@ -599,7 +467,6 @@ function App() {
   const [alunos, setAlunos] = useState([])
   const [chamadasSalvas, setChamadasSalvas] = useState([])
   const [chamadasProfessores, setChamadasProfessores] = useState([])
-  const [dadosIgrejaSincronizados, setDadosIgrejaSincronizados] = useState(false)
   const [igrejaAtualPiloto, setIgrejaAtualPiloto] = useState(null)
   const [feedbackPiloto, setFeedbackPiloto] = useState({
     tipo: 'sugestao',
@@ -628,18 +495,6 @@ function App() {
   const usuarioCarregadoRef = useRef(null)
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
-  const dadosIgrejaSincronizadosRef = useRef(false)
-  const dadosIgrejaCarregadosRef = useRef(false)
-  const saindoSistemaEmAndamentoRef = useRef(false)
-  const carregamentoInicialEmAndamentoRef = useRef(false)
-
-  function resetarControleInicial() {
-    setSessaoRestaurada(false)
-    setPerfilCarregado(false)
-    definirDadosIgrejaCarregados(false)
-    setCarregamentoInicialCompleto(false)
-    carregamentoInicialEmAndamentoRef.current = false
-  }
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -673,63 +528,6 @@ function App() {
     paginaAtualRef.current = paginaSegura
     setPaginaAtual(paginaSegura)
     salvarPaginaAtualSalva(paginaSegura)
-  }
-
-  function definirDadosIgrejaSincronizados(valor) {
-    dadosIgrejaSincronizadosRef.current = Boolean(valor)
-    setDadosIgrejaSincronizados(Boolean(valor))
-  }
-
-  function definirDadosIgrejaCarregados(valor) {
-    dadosIgrejaCarregadosRef.current = Boolean(valor)
-    setDadosIgrejaCarregados(Boolean(valor))
-  }
-
-  function aplicarCacheDadosIgreja(cache) {
-    if (!cache || typeof cache !== 'object') {
-      return false
-    }
-
-    const temDadosOperacionais = pacoteTemDadosOperacionais(cache)
-
-    if (!temDadosOperacionais) {
-      return false
-    }
-
-    if (Array.isArray(cache.classes)) {
-      setClasses(cache.classes)
-    }
-
-    if (Array.isArray(cache.alunos)) {
-      setAlunos(cache.alunos)
-    }
-
-    if (Array.isArray(cache.chamadasSalvas)) {
-      setChamadasSalvas(cache.chamadasSalvas)
-    }
-
-    if (Array.isArray(cache.chamadasProfessores)) {
-      setChamadasProfessores(cache.chamadasProfessores)
-    }
-
-    if (Array.isArray(cache.perfisIgreja)) {
-      setPerfisIgreja(cache.perfisIgreja)
-    }
-
-    if (Array.isArray(cache.vinculosProfessores)) {
-      setVinculosProfessores(cache.vinculosProfessores)
-    }
-
-    if (cache.igrejaAtualPiloto) {
-      setIgrejaAtualPiloto(cache.igrejaAtualPiloto)
-    }
-
-    if (cache.configuracaoIgreja) {
-      setConfiguracaoIgreja(cache.configuracaoIgreja)
-    }
-
-    definirDadosIgrejaSincronizados(false)
-    return true
   }
 
   function normalizarIgrejaSuporteAdmin(igreja) {
@@ -1007,121 +805,15 @@ function App() {
     salvarPaginaAtualSalva(paginaAtual)
   }, [paginaAtual])
 
-  async function inicializarSistema(opcoes = {}) {
-    const {
-      forcar = false,
-      sessaoForcada = null,
-      igrejaSuporteForcada = null,
-    } = opcoes || {}
-
-    if (carregamentoInicialEmAndamentoRef.current && !forcar) {
-      return
-    }
-
-    carregamentoInicialEmAndamentoRef.current = true
-    setCarregando(true)
-    setVerificandoSessao(true)
-    setErroSistema('')
-
-    const igrejaSuporteSalva = igrejaSuporteForcada || lerIgrejaSuporteAdminSalva()
-
-    if (igrejaSuporteSalva?.id) {
-      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
-    }
-
-    try {
-      let sessaoAtual = sessaoForcada || null
-
-      // Etapa 1: restaurar e validar a sessão antes de consultar qualquer dado da igreja.
-      if (!sessaoAtual?.user?.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoAtual = data?.session || null
-      }
-
-      if (!sessaoAtual?.user?.id) {
-        definirSessao(null)
-        resetarControleInicial()
-        limparDadosDoSistema()
-        setVerificandoSessao(false)
-        setCarregando(false)
-        return
-      }
-
-      sessaoAtual = (await obterSessaoAutenticada(sessaoAtual)) || sessaoAtual
-
-      if (!sessaoAtual?.user?.id) {
-        throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
-      }
-
-      definirSessao(sessaoAtual)
-      setSessaoRestaurada(true)
-      setVerificandoSessao(false)
-
-      // Etapa 2: carregar o perfil e gravar imediatamente no ref antes de carregar dados.
-      const perfilEncontrado = await buscarPerfilUsuarioSeguro(sessaoAtual)
-      const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-      const usuarioAdminSemPerfil = emailsAdminSistema.includes(emailSessaoAtual)
-
-      if (perfilEncontrado) {
-        definirPerfilUsuario(perfilEncontrado)
-
-        if (perfilEncontrado?.igreja_id) {
-          setIgrejaId(Number(perfilEncontrado.igreja_id))
-        }
-      } else if (!usuarioAdminSemPerfil) {
-        definirPerfilUsuario(null)
-        setIgrejaId(null)
-        setTelaPublica('login')
-        throw new Error(
-          'Perfil de usuário não encontrado. Entre em contato com a administração.'
-        )
-      }
-
-      setPerfilCarregado(true)
-
-      // Etapa 3: só carregar dados depois de sessão e perfil/contexto estarem válidos.
-      const dadosCarregados = await carregarDadosIgrejaComPerfilValidado(
-        sessaoAtual,
-        igrejaSuporteSalva
-      )
-
-      if (dadosCarregados) {
-        definirDadosIgrejaCarregados(true)
-        setCarregamentoInicialCompleto(true)
-
-        if (sessaoAtual?.user?.id) {
-          usuarioCarregadoRef.current = sessaoAtual.user.id
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao inicializar sistema:', error)
-      definirDadosIgrejaCarregados(false)
-      setErroSistema(
-        error?.message || 'Não foi possível carregar os dados iniciais do sistema.'
-      )
-    } finally {
-      carregamentoInicialEmAndamentoRef.current = false
-      setVerificandoSessao(false)
-      setCarregando(false)
-    }
-  }
-
   useEffect(() => {
     iniciarCorrecaoGlobalDeAcentos()
 
-    inicializarSistema()
+    iniciarAutenticacao()
 
     const destravarVerificacaoInicial = window.setTimeout(() => {
-      if (!carregamentoInicialEmAndamentoRef.current) {
-        setVerificandoSessao(false)
-        setCarregando(false)
-      }
-    }, 12000)
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }, 6000)
 
     function restaurarSuporteAoVoltarParaAba() {
       const sessaoAtual = sessaoRef.current
@@ -1162,7 +854,6 @@ function App() {
 
       if (event === 'SIGNED_OUT') {
         usuarioCarregadoRef.current = null
-        resetarControleInicial()
         definirSessao(null)
         limparDadosDoSistema()
         setCarregando(false)
@@ -1170,16 +861,29 @@ function App() {
         return
       }
 
-      if (!session?.user?.id) {
+      if (!session) {
         setCarregando(false)
         setVerificandoSessao(false)
         return
       }
 
+      const deveManterEstadoAtual = eventoAuthMesmaSessaoJaCarregada(event, session)
       const igrejaSuporteSalva = recuperarContextoSuporteAdminAtual()
+
       definirSessao(session)
-      setSessaoRestaurada(true)
       setVerificandoSessao(false)
+
+      if (deveManterEstadoAtual) {
+        if (igrejaSuporteSalva?.id) {
+          manterContextoSuporteAdmin(igrejaSuporteSalva, session, {
+            forcarPainel: paginaAtualRef.current === 'administracao',
+          })
+        }
+
+        setCarregando(false)
+        setVerificandoSessao(false)
+        return
+      }
 
       if (event === 'TOKEN_REFRESHED') {
         if (igrejaSuporteSalva?.id) {
@@ -1189,35 +893,28 @@ function App() {
         }
 
         setCarregando(false)
+        setVerificandoSessao(false)
         return
       }
 
-      if (event === 'INITIAL_SESSION') {
-        if (!dadosIgrejaCarregadosRef.current && !carregamentoInicialEmAndamentoRef.current) {
-          await inicializarSistema({
-            forcar: true,
-            sessaoForcada: session,
-            igrejaSuporteForcada: igrejaSuporteSalva,
-          })
-        } else {
-          setCarregando(false)
+      if (
+        event === 'INITIAL_SESSION' ||
+        event === 'SIGNED_IN' ||
+        event === 'USER_UPDATED'
+      ) {
+        try {
+          await carregarDadosOnline(session, igrejaSuporteSalva)
+        } catch (erroCarregamentoSessao) {
+          console.error('Erro ao validar sessão:', erroCarregamentoSessao)
+          setErroSistema(
+            erroCarregamentoSessao?.message ||
+              'Não foi possível validar sua sessão.'
+          )
         }
-
-        return
       }
 
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        setPerfilCarregado(false)
-        definirDadosIgrejaCarregados(false)
-        setCarregamentoInicialCompleto(false)
-
-        carregamentoInicialEmAndamentoRef.current = false
-        await inicializarSistema({
-          forcar: true,
-          sessaoForcada: session,
-          igrejaSuporteForcada: igrejaSuporteSalva,
-        })
-      }
+      setCarregando(false)
+      setVerificandoSessao(false)
     })
 
     const restaurarAoFocar = () => restaurarSuporteAoVoltarParaAba()
@@ -1255,16 +952,49 @@ function App() {
   }, [paginaAtual, perfilUsuario?.perfil, sessao?.user?.email])
 
   async function iniciarAutenticacao() {
-    await inicializarSistema({ forcar: true })
+    setVerificandoSessao(true)
+    setCarregando(true)
+
+    const igrejaSuporteSalva = lerIgrejaSuporteAdminSalva()
+
+    if (igrejaSuporteSalva?.id) {
+      definirIgrejaSuporteAdmin(igrejaSuporteSalva)
+    }
+
+    try {
+      const { data, error } = await supabase.auth.getSession()
+
+      if (error) {
+        throw error
+      }
+
+      const sessaoAtual = data.session || null
+      definirSessao(sessaoAtual)
+
+      setVerificandoSessao(false)
+
+      if (sessaoAtual) {
+        carregarDadosOnline(sessaoAtual, igrejaSuporteSalva).catch((erroCarregamentoInicial) => {
+          console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
+          setErroSistema(
+            erroCarregamentoInicial?.message ||
+              'Não foi possível carregar os dados iniciais.'
+          )
+          setCarregando(false)
+        })
+      } else {
+        limparDadosDoSistema()
+        setCarregando(false)
+      }
+    } catch (error) {
+      console.error('Erro ao verificar sessão:', error)
+      setErroSistema('Erro ao verificar login.')
+      setVerificandoSessao(false)
+      setCarregando(false)
+    }
   }
 
   function limparDadosDoSistema() {
-    resetarControleInicial()
-    // v78: no logout, os dados visuais da igreja são limpos da tela,
-    // mas o cache local permanece salvo por usuário/igreja. Isso evita que,
-    // após novo login, atualização ou rede lenta no celular, o painel apareça
-    // zerado antes da sincronização real com o Supabase.
-    definirDadosIgrejaSincronizados(false)
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
@@ -1707,16 +1437,10 @@ function App() {
       }
 
       definirSessao(data.session)
-      setSessaoRestaurada(true)
-      setPerfilCarregado(false)
-      setCarregamentoInicialCompleto(false)
       setEmailLogin('')
       setSenhaLogin('')
 
-      await inicializarSistema({
-        forcar: true,
-        sessaoForcada: data.session,
-      })
+      await carregarDadosOnline(data.session)
     } catch (error) {
       console.error('Erro ao entrar:', error)
       setErroLogin('E-mail ou senha inválidos.')
@@ -1725,72 +1449,24 @@ function App() {
     }
   }
 
-  function limparSessaoLocalDoSupabase() {
-    if (typeof window === 'undefined') {
+  async function sairDoSistema() {
+    const confirmar = window.confirm('Deseja sair do sistema?')
+
+    if (!confirmar) {
       return
     }
-
-    try {
-      const chavesParaRemover = ['ebdfiel-auth-token', 'supabase.auth.token']
-
-      chavesParaRemover.forEach((chave) => {
-        window.localStorage.removeItem(chave)
-        window.sessionStorage.removeItem(chave)
-      })
-
-      for (let indice = window.localStorage.length - 1; indice >= 0; indice -= 1) {
-        const chave = window.localStorage.key(indice)
-
-        if (chave && chave.startsWith('sb-') && chave.includes('-auth-token')) {
-          window.localStorage.removeItem(chave)
-        }
-      }
-
-      for (let indice = window.sessionStorage.length - 1; indice >= 0; indice -= 1) {
-        const chave = window.sessionStorage.key(indice)
-
-        if (chave && chave.startsWith('sb-') && chave.includes('-auth-token')) {
-          window.sessionStorage.removeItem(chave)
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao limpar sessão local do Supabase:', error)
-    }
-  }
-
-  async function sairDoSistema(event) {
-    event?.preventDefault?.()
-    event?.stopPropagation?.()
-
-    if (saindoSistemaEmAndamentoRef.current) {
-      return
-    }
-
-    saindoSistemaEmAndamentoRef.current = true
 
     if (typeof window !== 'undefined') {
       window.__ebdFielSaindoDoSistema = true
     }
 
-    setMenuInternoAberto(false)
-    setMenuPublicoAberto(false)
-    setErroLogin('')
     setCarregando(false)
     setVerificandoSessao(false)
 
     try {
-      const promessaSaida = supabase.auth.signOut().catch((error) => {
-        console.error('Erro ao sair do Supabase:', error)
-      })
-
-      await Promise.race([
-        promessaSaida,
-        new Promise((resolve) => {
-          window.setTimeout(resolve, 1200)
-        }),
-      ])
+      await supabase.auth.signOut({ scope: 'local' })
     } catch (error) {
-      console.error('Erro inesperado ao sair:', error)
+      console.error('Erro ao sair do Supabase:', error)
     }
 
     try {
@@ -1798,492 +1474,22 @@ function App() {
         window.localStorage.removeItem(CHAVE_SUPORTE_ADMIN)
         window.localStorage.removeItem(CHAVE_PAGINA_ATUAL)
         window.localStorage.removeItem('ebdfiel_igrejas_admin_cache')
-        limparSessaoLocalDoSupabase()
       }
     } catch (error) {
       console.error('Erro ao limpar dados locais do EBD Fiel:', error)
     }
 
     usuarioCarregadoRef.current = null
-    suporteAdminEmTransicaoRef.current = false
     definirSessao(null)
     limparDadosDoSistema()
     setTelaPublica('login')
 
     if (typeof window !== 'undefined') {
-      try {
-        window.history.replaceState({}, '', `/?v=logout-${Date.now()}`)
-      } catch (error) {
-        console.error('Erro ao atualizar endereço após sair:', error)
-      }
-
       window.setTimeout(() => {
         window.__ebdFielSaindoDoSistema = false
-        saindoSistemaEmAndamentoRef.current = false
-      }, 900)
-    } else {
-      saindoSistemaEmAndamentoRef.current = false
+      }, 600)
     }
   }
-
-  async function obterSessaoAutenticada(sessaoAtual = sessaoRef.current) {
-    let sessaoParaUsar = sessaoAtual || null
-
-    try {
-      if (!sessaoParaUsar?.user?.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoParaUsar = data?.session || null
-      }
-
-      if (!sessaoParaUsar?.user?.id) {
-        return null
-      }
-
-      const segundosParaExpirar = Number(sessaoParaUsar.expires_at || 0) - Math.floor(Date.now() / 1000)
-
-      if (segundosParaExpirar > 0 && segundosParaExpirar < 180) {
-        const { data: dadosAtualizados, error: erroRefresh } = await supabase.auth.refreshSession()
-
-        if (!erroRefresh && dadosAtualizados?.session?.user?.id) {
-          sessaoParaUsar = dadosAtualizados.session
-          definirSessao(sessaoParaUsar)
-        }
-      }
-
-      const { data: dadosUsuario, error: erroUsuario } = await supabase.auth.getUser()
-
-      if (erroUsuario || !dadosUsuario?.user?.id) {
-        const { data: dadosAtualizados, error: erroRefresh } = await supabase.auth.refreshSession()
-
-        if (erroRefresh) {
-          throw erroRefresh
-        }
-
-        if (dadosAtualizados?.session?.user?.id) {
-          sessaoParaUsar = dadosAtualizados.session
-          definirSessao(sessaoParaUsar)
-        }
-      } else if (dadosUsuario.user.id !== sessaoParaUsar.user.id) {
-        const { data, error } = await supabase.auth.getSession()
-
-        if (error) {
-          throw error
-        }
-
-        sessaoParaUsar = data?.session || sessaoParaUsar
-        definirSessao(sessaoParaUsar)
-      }
-
-      return sessaoParaUsar
-    } catch (error) {
-      console.error('Erro ao validar sessão autenticada:', error)
-      throw error
-    }
-  }
-
-  function montarFiltrosDeAcessoDaIgreja(perfilAtual, vinculosBanco = []) {
-    const idsClassesPermitidas =
-      perfilAtual?.perfil === 'professor'
-        ? [
-            ...new Set(
-              (vinculosBanco || [])
-                .filter((vinculo) => Number(vinculo.perfil_usuario_id) === Number(perfilAtual.id))
-                .map((vinculo) => Number(vinculo.classe_id))
-                .filter(Boolean)
-            ),
-          ]
-        : []
-
-    if (
-      perfilAtual?.perfil === 'professor' &&
-      idsClassesPermitidas.length === 0 &&
-      perfilAtual?.classe_id
-    ) {
-      idsClassesPermitidas.push(Number(perfilAtual.classe_id))
-    }
-
-    return {
-      idsClassesPermitidas,
-      classePermitidaId:
-        perfilAtual?.perfil === 'professor'
-          ? idsClassesPermitidas[0] || null
-          : null,
-    }
-  }
-
-  async function carregarDadosDiretosDaIgreja(perfilBase, sessaoAtual = sessaoRef.current) {
-    if (!sessaoAtual?.user?.id) {
-      throw new Error('Sessão não confirmada para carregar os dados da igreja.')
-    }
-
-    const igrejaAtualId = Number(perfilBase?.igreja_id || 0)
-
-    if (!igrejaAtualId) {
-      throw new Error('Perfil sem igreja vinculada para carregar os dados.')
-    }
-
-    const perfilAtual = {
-      ...perfilBase,
-      igreja_id: igrejaAtualId,
-    }
-
-    definirPerfilUsuario(perfilAtual)
-    setIgrejaId(igrejaAtualId)
-    definirDadosIgrejaSincronizados(false)
-
-    const cacheDadosIgreja = lerCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id)
-
-    if (cacheDadosIgreja && pacoteTemDadosOperacionais(cacheDadosIgreja)) {
-      aplicarCacheDadosIgreja(cacheDadosIgreja)
-    }
-
-    async function executarConsultasDiretas(tentativa = 1) {
-      const { data: vinculosBanco, error: erroVinculos } = await supabase
-        .from('classes_professores')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .eq('ativo', true)
-
-      if (erroVinculos) {
-        throw erroVinculos
-      }
-
-      const { idsClassesPermitidas, classePermitidaId } = montarFiltrosDeAcessoDaIgreja(
-        perfilAtual,
-        vinculosBanco || []
-      )
-
-      let consultaClasses = supabase
-        .from('classes')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        consultaClasses =
-          idsClassesPermitidas.length > 0
-            ? consultaClasses.in('id', idsClassesPermitidas)
-            : consultaClasses.eq('id', -1)
-      }
-
-      let consultaAlunos = supabase
-        .from('alunos')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        consultaAlunos =
-          idsClassesPermitidas.length > 0
-            ? consultaAlunos.in('classe_id', idsClassesPermitidas)
-            : consultaAlunos.eq('classe_id', -1)
-      }
-
-      let consultaChamadas = supabase
-        .from('chamadas')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        consultaChamadas =
-          idsClassesPermitidas.length > 0
-            ? consultaChamadas.in('classe_id', idsClassesPermitidas)
-            : consultaChamadas.eq('classe_id', -1)
-      }
-
-      const [
-        resultadoClasses,
-        resultadoAlunos,
-        resultadoChamadas,
-        resultadoChamadasProfessores,
-        resultadoPerfis,
-        resultadoConfiguracoes,
-        resultadoIgreja,
-      ] = await Promise.all([
-        consultaClasses,
-        consultaAlunos,
-        consultaChamadas,
-        perfilAtual.perfil === 'secretaria' || perfilAtual?.modo_suporte_admin
-          ? supabase
-              .from('chamadas_professores')
-              .select('*')
-              .eq('igreja_id', igrejaAtualId)
-              .order('id', { ascending: true })
-          : Promise.resolve({ data: [], error: null }),
-        perfilAtual.perfil === 'secretaria' || perfilAtual?.modo_suporte_admin
-          ? supabase
-              .from('perfis_usuarios')
-              .select('*')
-              .eq('igreja_id', igrejaAtualId)
-              .order('nome', { ascending: true })
-          : Promise.resolve({ data: [perfilAtual], error: null }),
-        supabase
-          .from('configuracoes_igreja')
-          .select('*')
-          .eq('igreja_id', igrejaAtualId)
-          .order('created_at', { ascending: true }),
-        supabase
-          .from('igrejas')
-          .select('*')
-          .eq('id', igrejaAtualId)
-          .maybeSingle(),
-      ])
-
-      if (resultadoClasses.error) throw resultadoClasses.error
-      if (resultadoAlunos.error) throw resultadoAlunos.error
-      if (resultadoChamadas.error) throw resultadoChamadas.error
-      if (resultadoChamadasProfessores.error) throw resultadoChamadasProfessores.error
-      if (resultadoPerfis.error) throw resultadoPerfis.error
-      if (resultadoConfiguracoes.error) throw resultadoConfiguracoes.error
-      if (resultadoIgreja.error) throw resultadoIgreja.error
-
-      return {
-        classesBanco: resultadoClasses.data || [],
-        alunosBanco: resultadoAlunos.data || [],
-        chamadasBanco: resultadoChamadas.data || [],
-        chamadasProfessoresBanco: resultadoChamadasProfessores.data || [],
-        perfisBanco: resultadoPerfis.data || [],
-        vinculosBanco: vinculosBanco || [],
-        configuracoesBanco: resultadoConfiguracoes.data || [],
-        igrejaPilotoBanco: resultadoIgreja.data || null,
-        classePermitidaId,
-        tentativa,
-      }
-    }
-
-    let dadosBanco = await executarConsultasDiretas(1)
-
-    const respostaVeioVazia = () =>
-      (dadosBanco.classesBanco || []).length === 0 &&
-      (dadosBanco.alunosBanco || []).length === 0 &&
-      (dadosBanco.chamadasBanco || []).length === 0 &&
-      (dadosBanco.chamadasProfessoresBanco || []).length === 0
-
-    if (respostaVeioVazia()) {
-      const atrasos = [450, 900, 1500]
-
-      for (let indiceTentativa = 0; indiceTentativa < atrasos.length; indiceTentativa += 1) {
-        await esperar(atrasos[indiceTentativa])
-
-        const sessaoValidada = await obterSessaoAutenticada(sessaoRef.current || sessaoAtual)
-
-        if (sessaoValidada?.user?.id) {
-          definirSessao(sessaoValidada)
-        }
-
-        dadosBanco = await executarConsultasDiretas(indiceTentativa + 2)
-
-        if (!respostaVeioVazia()) {
-          break
-        }
-      }
-    }
-
-    const {
-      classesBanco,
-      alunosBanco,
-      chamadasBanco,
-      chamadasProfessoresBanco,
-      perfisBanco,
-      vinculosBanco,
-      configuracoesBanco,
-      igrejaPilotoBanco,
-      classePermitidaId,
-    } = dadosBanco
-
-    const statusPilotoAtual = String(igrejaPilotoBanco?.status_piloto || '').toLowerCase()
-    const igrejaLiberadaParaAcesso = [
-      'teste',
-      'ativa',
-      'ativo',
-      'aprovada',
-      'aprovado',
-      'liberada',
-      'liberado',
-    ].includes(statusPilotoAtual)
-
-    if (
-      !perfilAtual?.modo_suporte_admin &&
-      perfilAtual?.perfil !== 'admin_sistema' &&
-      !igrejaLiberadaParaAcesso
-    ) {
-      throw new Error(
-        statusPilotoAtual === 'pendente'
-          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
-          : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
-      )
-    }
-
-    const classesNormalizadas = (classesBanco || []).map((classe) => ({
-      id: Number(classe.id),
-      nome: classe.nome,
-      professor: classe.professor,
-    }))
-
-    const alunosNormalizados = (alunosBanco || []).map((aluno) => ({
-      id: Number(aluno.id),
-      nome: aluno.nome,
-      classeId: Number(aluno.classe_id),
-      telefone: aluno.telefone || '',
-      dataNascimento: aluno.data_nascimento || '',
-      tipoPessoa: aluno.tipo_pessoa || 'aluno',
-    }))
-
-    const chamadasNormalizadas = (chamadasBanco || []).map((chamada) => ({
-      id: Number(chamada.id),
-      data: chamada.data,
-      classeId: Number(chamada.classe_id),
-      matricula: Number(chamada.matricula || 0),
-      totalPresentes: Number(chamada.total_presentes || 0),
-      totalFaltas: Number(chamada.total_faltas || 0),
-      visitantes: Number(chamada.visitantes || 0),
-      biblias: Number(chamada.biblias || 0),
-      revistas: Number(chamada.revistas || 0),
-      ofertas: Number(chamada.ofertas || 0),
-      totalGeralClasse: Number(chamada.total_geral_classe || 0),
-      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-    }))
-
-    const chamadasProfessoresNormalizadas = (chamadasProfessoresBanco || []).map((chamada) => ({
-      id: Number(chamada.id),
-      data: chamada.data,
-      totalProfessores: Number(chamada.total_professores || 0),
-      totalPresentes: Number(chamada.total_presentes || 0),
-      totalFaltas: Number(chamada.total_faltas || 0),
-      totalJustificadas: Number(chamada.total_justificadas || 0),
-      observacoes: chamada.observacoes || '',
-      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-    }))
-
-    const configuracaoAtual = configuracoesBanco?.[0]
-
-    const configuracaoNormalizada = {
-      id: configuracaoAtual?.id || null,
-      nome_igreja:
-        configuracaoAtual?.nome_igreja ||
-        igrejaPilotoBanco?.nome_igreja ||
-        igrejaPilotoBanco?.nome ||
-        '',
-      congregacao: configuracaoAtual?.congregacao || igrejaPilotoBanco?.congregacao || '',
-      pastor_dirigente:
-        configuracaoAtual?.pastor_dirigente || igrejaPilotoBanco?.pastor_dirigente || '',
-      superintendente_ebd:
-        configuracaoAtual?.superintendente_ebd || igrejaPilotoBanco?.superintendente_ebd || '',
-      cidade: configuracaoAtual?.cidade || igrejaPilotoBanco?.cidade || '',
-      estado: configuracaoAtual?.estado || igrejaPilotoBanco?.estado || '',
-      bairro: configuracaoAtual?.bairro || igrejaPilotoBanco?.bairro || '',
-      endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
-      telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
-      email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
-    }
-
-    setClasses(classesNormalizadas)
-    setAlunos(alunosNormalizados)
-    setChamadasSalvas(chamadasNormalizadas)
-    setChamadasProfessores(chamadasProfessoresNormalizadas)
-    setPerfisIgreja(perfisBanco || [])
-    setVinculosProfessores(vinculosBanco || [])
-    setIgrejaAtualPiloto(igrejaPilotoBanco || null)
-    setConfiguracaoIgreja(configuracaoNormalizada)
-    definirDadosIgrejaSincronizados(true)
-    definirDadosIgrejaCarregados(true)
-
-    if (classePermitidaId) {
-      setClasseChamadaId(String(classePermitidaId))
-    }
-
-    if (igrejaPilotoBanco?.status_piloto === 'teste') {
-      await carregarFeedbacksDaIgreja(igrejaAtualId)
-    } else {
-      setFeedbacksIgreja([])
-    }
-
-    const podeSalvarCacheOperacional =
-      classesNormalizadas.length > 0 ||
-      alunosNormalizados.length > 0 ||
-      chamadasNormalizadas.length > 0 ||
-      chamadasProfessoresNormalizadas.length > 0
-
-    if (podeSalvarCacheOperacional) {
-      salvarCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id, {
-        classes: classesNormalizadas,
-        alunos: alunosNormalizados,
-        chamadasSalvas: chamadasNormalizadas,
-        chamadasProfessores: chamadasProfessoresNormalizadas,
-        perfisIgreja: perfisBanco || [],
-        vinculosProfessores: vinculosBanco || [],
-        igrejaAtualPiloto: igrejaPilotoBanco || null,
-        configuracaoIgreja: configuracaoNormalizada,
-      })
-    }
-
-    return true
-  }
-
-  async function carregarDadosIgrejaComPerfilValidado(
-    sessaoAtual = sessaoRef.current,
-    igrejaSuporteForcada = null
-  ) {
-    const sessaoParaUsar = await obterSessaoAutenticada(sessaoAtual)
-
-    if (!sessaoParaUsar?.user?.id) {
-      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
-    }
-
-    definirSessao(sessaoParaUsar)
-
-    const emailSessaoAtual = String(sessaoParaUsar?.user?.email || '').toLowerCase()
-    const igrejaSuporteSelecionada = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
-    const perfilBanco = await buscarPerfilUsuarioSeguro(sessaoParaUsar)
-    const ehAdminSessaoAtual =
-      emailsAdminSistema.includes(emailSessaoAtual) || perfilBanco?.perfil === 'admin_sistema'
-
-    if (ehAdminSessaoAtual && !igrejaSuporteSelecionada?.id) {
-      await buscarTodosOsDados(sessaoParaUsar, null)
-      definirDadosIgrejaCarregados(true)
-      setCarregamentoInicialCompleto(true)
-      return true
-    }
-
-    let perfilParaCarregar = perfilBanco
-
-    if (ehAdminSessaoAtual && igrejaSuporteSelecionada?.id) {
-      const igrejaSuporteNormalizada = manterContextoSuporteAdmin(
-        igrejaSuporteSelecionada,
-        sessaoParaUsar,
-        {
-          forcarPainel: paginaAtualRef.current === 'administracao',
-        }
-      )
-
-      perfilParaCarregar = montarPerfilSuporteAdmin(igrejaSuporteNormalizada, sessaoParaUsar)
-    }
-
-    if (!perfilParaCarregar?.igreja_id) {
-      definirPerfilUsuario(null)
-      setIgrejaId(null)
-      setTelaPublica('login')
-      throw new Error('Perfil não encontrado ou sem igreja vinculada.')
-    }
-
-    definirPerfilUsuario(perfilParaCarregar)
-    setIgrejaId(Number(perfilParaCarregar.igreja_id))
-    setPerfilCarregado(true)
-
-    await carregarDadosDiretosDaIgreja(perfilParaCarregar, sessaoParaUsar)
-
-    setCarregamentoInicialCompleto(true)
-    usuarioCarregadoRef.current = sessaoParaUsar.user.id
-
-    return true
-  }
-
 
   async function carregarDadosOnline(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     const suporteParaPreservar = igrejaSuporteForcada || recuperarContextoSuporteAdminAtual()
@@ -2301,22 +1507,29 @@ function App() {
     setErroSistema('')
 
     try {
-      const sessaoParaUsar = await obterSessaoAutenticada(sessaoAtual)
+      let sessaoParaUsar = sessaoAtual
 
       if (!sessaoParaUsar?.user?.id) {
-        throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          throw error
+        }
+
+        sessaoParaUsar = data?.session || null
+
+        if (sessaoParaUsar) {
+          definirSessao(sessaoParaUsar)
+        }
       }
 
-      definirSessao(sessaoParaUsar)
-
-      await carregarDadosIgrejaComPerfilValidado(sessaoParaUsar, suporteParaPreservar)
+      await buscarTodosOsDados(sessaoParaUsar, suporteParaPreservar)
 
       if (sessaoParaUsar?.user?.id) {
         usuarioCarregadoRef.current = sessaoParaUsar.user.id
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
-      definirDadosIgrejaCarregados(false)
 
       const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
       setErroSistema(mensagemErro)
@@ -2347,7 +1560,6 @@ function App() {
   function limparDadosOperacionaisSemTrocarTela(opcoes = {}) {
     const preservarContextoSuporte = Boolean(opcoes?.preservarContextoSuporte)
 
-    definirDadosIgrejaSincronizados(false)
     setClasses([])
     setAlunos([])
     setChamadasSalvas([])
@@ -3727,118 +2939,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     return true
   }
 
-  function escolherMelhorPerfilUsuario(perfisEncontrados = [], sessaoAtual = sessaoRef.current) {
-    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-    const userIdSessaoAtual = String(sessaoAtual?.user?.id || '')
-
-    const perfisValidos = Array.isArray(perfisEncontrados)
-      ? perfisEncontrados.filter(Boolean)
-      : []
-
-    if (perfisValidos.length === 0) {
-      return null
-    }
-
-    const pontuarPerfil = (perfil) => {
-      let pontos = 0
-      const emailPerfil = String(perfil?.email || '').toLowerCase()
-      const userIdPerfil = String(perfil?.user_id || '')
-      const igrejaPerfilId = Number(perfil?.igreja_id || 0)
-      const tipoPerfil = String(perfil?.perfil || '').toLowerCase()
-
-      if (userIdSessaoAtual && userIdPerfil === userIdSessaoAtual) {
-        pontos += 60
-      }
-
-      if (emailSessaoAtual && emailPerfil === emailSessaoAtual) {
-        pontos += 60
-      }
-
-      if (igrejaPerfilId > 0) {
-        pontos += 100
-      }
-
-      if (emailsAdminSistema.includes(emailSessaoAtual)) {
-        if (tipoPerfil === 'admin_sistema') {
-          pontos += 120
-        }
-      } else if (tipoPerfil !== 'admin_sistema') {
-        pontos += 40
-      }
-
-      if (['secretaria', 'professor', 'admin_local'].includes(tipoPerfil)) {
-        pontos += 25
-      }
-
-      return pontos
-    }
-
-    return [...perfisValidos].sort((perfilA, perfilB) => {
-      const diferencaPontos = pontuarPerfil(perfilB) - pontuarPerfil(perfilA)
-
-      if (diferencaPontos !== 0) {
-        return diferencaPontos
-      }
-
-      return Number(perfilB?.id || 0) - Number(perfilA?.id || 0)
-    })[0]
-  }
-
-  async function buscarPerfilUsuarioSeguro(sessaoAtual = sessaoRef.current) {
-    const userIdSessaoAtual = sessaoAtual?.user?.id
-    const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
-    const perfisEncontrados = []
-    const idsAdicionados = new Set()
-
-    function adicionarPerfis(lista) {
-      ;(Array.isArray(lista) ? lista : []).forEach((perfil) => {
-        const chave = perfil?.id ? `id:${perfil.id}` : `${perfil?.user_id || ''}:${perfil?.email || ''}`
-
-        if (!idsAdicionados.has(chave)) {
-          idsAdicionados.add(chave)
-          perfisEncontrados.push(perfil)
-        }
-      })
-    }
-
-    if (userIdSessaoAtual) {
-      const { data, error } = await supabase
-        .from('perfis_usuarios')
-        .select('*')
-        .eq('user_id', userIdSessaoAtual)
-        .order('id', { ascending: true })
-
-      if (error) {
-        throw error
-      }
-
-      adicionarPerfis(data || [])
-    }
-
-    if (emailSessaoAtual) {
-      const { data, error } = await supabase
-        .from('perfis_usuarios')
-        .select('*')
-        .eq('email', emailSessaoAtual)
-        .order('id', { ascending: true })
-
-      if (!error) {
-        adicionarPerfis(data || [])
-      } else {
-        console.warn('Não foi possível buscar perfil por e-mail:', error)
-      }
-    }
-
-    return escolherMelhorPerfilUsuario(perfisEncontrados, sessaoAtual)
-  }
-
   async function buscarTodosOsDados(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
-    if (!sessaoAtual?.user?.id) {
-      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
-    }
-
-    sessaoAtual = (await obterSessaoAutenticada(sessaoAtual)) || sessaoAtual
-
     if (!sessaoAtual?.user?.id) {
       throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
@@ -3854,7 +2955,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
     // permanecem visíveis até os dados atualizados chegarem com sucesso.
 
-    const perfilBanco = await buscarPerfilUsuarioSeguro(sessaoAtual)
+    const { data: perfilBanco, error: erroPerfil } = await supabase
+      .from('perfis_usuarios')
+      .select('*')
+      .eq('user_id', sessaoAtual.user.id)
+      .maybeSingle()
+
+    if (erroPerfil) {
+      throw erroPerfil
+    }
 
     let perfilAtual = perfilBanco
     const ehAdminSessaoAtual =
@@ -4006,14 +3115,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     const igrejaAtualId = Number(perfilAtual.igreja_id)
-    const cacheDadosIgreja = lerCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id)
 
     definirPerfilUsuario(perfilAtual)
     setIgrejaId(igrejaAtualId)
-
-    if (cacheDadosIgreja && !dadosIgrejaSincronizadosRef.current) {
-      aplicarCacheDadosIgreja(cacheDadosIgreja)
-    }
 
     const { data: vinculosBanco, error: erroVinculos } = await supabase
       .from('classes_professores')
@@ -4150,7 +3254,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
     }
 
-    let { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
+    const { data: chamadasBanco, error: erroChamadas } = await consultaChamadas
 
     if (erroChamadas) {
       throw erroChamadas
@@ -4171,168 +3275,6 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       }
 
       chamadasProfessoresBanco = chamadasProfessoresEncontradas || []
-    }
-
-    async function recarregarDadosOperacionaisDaIgreja(tentativa = 1) {
-      let novaConsultaClasses = supabase
-        .from('classes')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        if (idsClassesPermitidas.length > 0) {
-          novaConsultaClasses = novaConsultaClasses.in('id', idsClassesPermitidas)
-        } else {
-          novaConsultaClasses = novaConsultaClasses.eq('id', -1)
-        }
-      }
-
-      const { data: classesRecarregadas, error: erroClassesRecarregadas } =
-        await novaConsultaClasses
-
-      if (erroClassesRecarregadas) {
-        throw erroClassesRecarregadas
-      }
-
-      let novaConsultaAlunos = supabase
-        .from('alunos')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        if (idsClassesPermitidas.length > 0) {
-          novaConsultaAlunos = novaConsultaAlunos.in('classe_id', idsClassesPermitidas)
-        } else {
-          novaConsultaAlunos = novaConsultaAlunos.eq('classe_id', -1)
-        }
-      }
-
-      const { data: alunosRecarregados, error: erroAlunosRecarregados } =
-        await novaConsultaAlunos
-
-      if (erroAlunosRecarregados) {
-        throw erroAlunosRecarregados
-      }
-
-      let novaConsultaChamadas = supabase
-        .from('chamadas')
-        .select('*')
-        .eq('igreja_id', igrejaAtualId)
-        .order('id', { ascending: true })
-
-      if (perfilAtual.perfil === 'professor') {
-        if (idsClassesPermitidas.length > 0) {
-          novaConsultaChamadas = novaConsultaChamadas.in('classe_id', idsClassesPermitidas)
-        } else {
-          novaConsultaChamadas = novaConsultaChamadas.eq('classe_id', -1)
-        }
-      }
-
-      const { data: chamadasRecarregadas, error: erroChamadasRecarregadas } =
-        await novaConsultaChamadas
-
-      if (erroChamadasRecarregadas) {
-        throw erroChamadasRecarregadas
-      }
-
-      let chamadasProfessoresRecarregadas = []
-
-      if (perfilAtual.perfil === 'secretaria') {
-        const { data: chamadasProfessoresEncontradas, error: erroChamadasProfessoresRecarregadas } =
-          await supabase
-            .from('chamadas_professores')
-            .select('*')
-            .eq('igreja_id', igrejaAtualId)
-            .order('id', { ascending: true })
-
-        if (erroChamadasProfessoresRecarregadas) {
-          throw erroChamadasProfessoresRecarregadas
-        }
-
-        chamadasProfessoresRecarregadas = chamadasProfessoresEncontradas || []
-      }
-
-      console.info('Recarregamento operacional da igreja concluído', {
-        tentativa,
-        igrejaAtualId,
-        classes: classesRecarregadas?.length || 0,
-        alunos: alunosRecarregados?.length || 0,
-        chamadas: chamadasRecarregadas?.length || 0,
-        chamadasProfessores: chamadasProfessoresRecarregadas?.length || 0,
-      })
-
-      return {
-        classesBanco: classesRecarregadas || [],
-        alunosBanco: alunosRecarregados || [],
-        chamadasBanco: chamadasRecarregadas || [],
-        chamadasProfessoresBanco: chamadasProfessoresRecarregadas || [],
-      }
-    }
-
-    const dadosOperacionaisVieramVazios = () =>
-      (classesBanco || []).length === 0 &&
-      (alunosBanco || []).length === 0 &&
-      (chamadasBanco || []).length === 0 &&
-      (chamadasProfessoresBanco || []).length === 0
-
-    if (dadosOperacionaisVieramVazios()) {
-      definirDadosIgrejaSincronizados(false)
-
-      const cacheTemDadosAntesDoRetry = pacoteTemDadosOperacionais({
-        classes: cacheDadosIgreja?.classes || [],
-        alunos: cacheDadosIgreja?.alunos || [],
-        chamadasSalvas: cacheDadosIgreja?.chamadasSalvas || [],
-        chamadasProfessores: cacheDadosIgreja?.chamadasProfessores || [],
-      })
-
-      if (cacheTemDadosAntesDoRetry) {
-        aplicarCacheDadosIgreja(cacheDadosIgreja)
-      }
-
-      const atrasos = [450, 900, 1600]
-
-      for (let indiceTentativa = 0; indiceTentativa < atrasos.length; indiceTentativa += 1) {
-        await esperar(atrasos[indiceTentativa])
-
-        try {
-          const { data: sessaoRenovada, error: erroRenovarSessao } = await supabase.auth.refreshSession()
-
-          if (!erroRenovarSessao && sessaoRenovada?.session?.user?.id) {
-            definirSessao(sessaoRenovada.session)
-            sessaoAtual = sessaoRenovada.session
-          }
-        } catch (erroRenovarSessao) {
-          console.warn('Não foi possível renovar a sessão antes de recarregar dados:', erroRenovarSessao)
-        }
-
-        const sessaoAtualizada = await obterSessaoAutenticada(sessaoAtual)
-
-        if (sessaoAtualizada?.user?.id !== sessaoAtual.user.id) {
-          break
-        }
-
-        if (sessaoAtualizada) {
-          definirSessao(sessaoAtualizada)
-          sessaoAtual = sessaoAtualizada
-        }
-
-        try {
-          const dadosRecarregados = await recarregarDadosOperacionaisDaIgreja(indiceTentativa + 1)
-
-          classesBanco = dadosRecarregados.classesBanco
-          alunosBanco = dadosRecarregados.alunosBanco
-          chamadasBanco = dadosRecarregados.chamadasBanco
-          chamadasProfessoresBanco = dadosRecarregados.chamadasProfessoresBanco
-
-          if (!dadosOperacionaisVieramVazios()) {
-            break
-          }
-        } catch (erroRecarregamentoOperacional) {
-          console.error('Erro ao recarregar dados operacionais da igreja:', erroRecarregamentoOperacional)
-        }
-      }
     }
 
     let perfisBanco = []
@@ -4413,91 +3355,57 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setFeedbacksIgreja([])
     }
 
-    const classesNormalizadas = (classesBanco || []).map((classe) => ({
-      id: Number(classe.id),
-      nome: classe.nome,
-      professor: classe.professor,
-    }))
+    setClasses(
+      (classesBanco || []).map((classe) => ({
+        id: Number(classe.id),
+        nome: classe.nome,
+        professor: classe.professor,
+      }))
+    )
 
-    const alunosNormalizados = (alunosBanco || []).map((aluno) => ({
-      id: Number(aluno.id),
-      nome: aluno.nome,
-      classeId: Number(aluno.classe_id),
-      telefone: aluno.telefone || '',
-      dataNascimento: aluno.data_nascimento || '',
-      tipoPessoa: aluno.tipo_pessoa || 'aluno',
-    }))
+    setAlunos(
+      (alunosBanco || []).map((aluno) => ({
+        id: Number(aluno.id),
+        nome: aluno.nome,
+        classeId: Number(aluno.classe_id),
+        telefone: aluno.telefone || '',
+        dataNascimento: aluno.data_nascimento || '',
+        tipoPessoa: aluno.tipo_pessoa || 'aluno',
+      }))
+    )
 
-    const chamadasProfessoresNormalizadas = (chamadasProfessoresBanco || []).map((chamada) => ({
-      id: Number(chamada.id),
-      data: chamada.data,
-      totalProfessores: Number(chamada.total_professores || 0),
-      totalPresentes: Number(chamada.total_presentes || 0),
-      totalFaltas: Number(chamada.total_faltas || 0),
-      totalJustificadas: Number(chamada.total_justificadas || 0),
-      observacoes: chamada.observacoes || '',
-      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-    }))
-
-    const chamadasNormalizadas = (chamadasBanco || []).map((chamada) => ({
-      id: Number(chamada.id),
-      data: chamada.data,
-      classeId: Number(chamada.classe_id),
-      matricula: Number(chamada.matricula || 0),
-      totalPresentes: Number(chamada.total_presentes || 0),
-      totalFaltas: Number(chamada.total_faltas || 0),
-      visitantes: Number(chamada.visitantes || 0),
-      biblias: Number(chamada.biblias || 0),
-      revistas: Number(chamada.revistas || 0),
-      ofertas: Number(chamada.ofertas || 0),
-      totalGeralClasse: Number(chamada.total_geral_classe || 0),
-      registros: Array.isArray(chamada.registros) ? chamada.registros : [],
-    }))
-
-    const respostaOnlineVazia =
-      classesNormalizadas.length === 0 &&
-      alunosNormalizados.length === 0 &&
-      chamadasNormalizadas.length === 0 &&
-      chamadasProfessoresNormalizadas.length === 0
-
-    const cacheTemDadosOperacionais =
-      (cacheDadosIgreja?.classes || []).length > 0 ||
-      (cacheDadosIgreja?.alunos || []).length > 0 ||
-      (cacheDadosIgreja?.chamadasSalvas || []).length > 0 ||
-      (cacheDadosIgreja?.chamadasProfessores || []).length > 0
-
-    if (respostaOnlineVazia && cacheTemDadosOperacionais) {
-      aplicarCacheDadosIgreja(cacheDadosIgreja)
-      definirDadosIgrejaSincronizados(false)
-
-      window.setTimeout(() => {
-        if (sessaoRef.current?.user?.id === sessaoAtual.user.id) {
-          obterSessaoAutenticada(sessaoRef.current)
-            .then((sessaoValidada) => carregarDadosOnline(sessaoValidada || sessaoRef.current))
-            .catch((erroRecarregamento) => {
-              console.error('Erro ao tentar recarregar dados da igreja:', erroRecarregamento)
-            })
-        }
-      }, 1200)
-
-      return
-    }
-
-    if (respostaOnlineVazia && !ehAdminSessaoAtual && !perfilAtual?.modo_suporte_admin) {
-      definirDadosIgrejaSincronizados(false)
-      throw new Error(
-        'O Supabase não retornou os dados da igreja após atualizar a página. Tente sair e entrar novamente ou verifique as permissões do perfil.'
-      )
-    }
-
-    setClasses(classesNormalizadas)
-    setAlunos(alunosNormalizados)
     setPerfisIgreja(perfisBanco)
     setVinculosProfessores(vinculosBanco || [])
-    setChamadasProfessores(chamadasProfessoresNormalizadas)
-    setChamadasSalvas(chamadasNormalizadas)
-    definirDadosIgrejaSincronizados(true)
-    definirDadosIgrejaCarregados(true)
+
+    setChamadasProfessores(
+      (chamadasProfessoresBanco || []).map((chamada) => ({
+        id: Number(chamada.id),
+        data: chamada.data,
+        totalProfessores: Number(chamada.total_professores || 0),
+        totalPresentes: Number(chamada.total_presentes || 0),
+        totalFaltas: Number(chamada.total_faltas || 0),
+        totalJustificadas: Number(chamada.total_justificadas || 0),
+        observacoes: chamada.observacoes || '',
+        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+      }))
+    )
+
+    setChamadasSalvas(
+      (chamadasBanco || []).map((chamada) => ({
+        id: Number(chamada.id),
+        data: chamada.data,
+        classeId: Number(chamada.classe_id),
+        matricula: Number(chamada.matricula || 0),
+        totalPresentes: Number(chamada.total_presentes || 0),
+        totalFaltas: Number(chamada.total_faltas || 0),
+        visitantes: Number(chamada.visitantes || 0),
+        biblias: Number(chamada.biblias || 0),
+        revistas: Number(chamada.revistas || 0),
+        ofertas: Number(chamada.ofertas || 0),
+        totalGeralClasse: Number(chamada.total_geral_classe || 0),
+        registros: Array.isArray(chamada.registros) ? chamada.registros : [],
+      }))
+    )
 
     if (classePermitidaId) {
       setClasseChamadaId(String(classePermitidaId))
@@ -4505,7 +3413,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
 
     const configuracaoAtual = configuracoesBanco?.[0]
 
-    const configuracaoNormalizada = {
+    setConfiguracaoIgreja({
       id: configuracaoAtual?.id || null,
       nome_igreja:
         configuracaoAtual?.nome_igreja ||
@@ -4523,28 +3431,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       endereco: configuracaoAtual?.endereco || igrejaPilotoBanco?.endereco || '',
       telefone: configuracaoAtual?.telefone || igrejaPilotoBanco?.telefone || '',
       email: configuracaoAtual?.email || igrejaPilotoBanco?.email || '',
-    }
-
-    setConfiguracaoIgreja(configuracaoNormalizada)
-
-    const podeSalvarCacheOperacional =
-      classesNormalizadas.length > 0 ||
-      alunosNormalizados.length > 0 ||
-      chamadasNormalizadas.length > 0 ||
-      chamadasProfessoresNormalizadas.length > 0
-
-    if (podeSalvarCacheOperacional) {
-      salvarCacheDadosIgreja(igrejaAtualId, sessaoAtual.user.id, {
-        classes: classesNormalizadas,
-        alunos: alunosNormalizados,
-        chamadasSalvas: chamadasNormalizadas,
-        chamadasProfessores: chamadasProfessoresNormalizadas,
-        perfisIgreja: perfisBanco || [],
-        vinculosProfessores: vinculosBanco || [],
-        igrejaAtualPiloto: igrejaPilotoBanco || null,
-        configuracaoIgreja: configuracaoNormalizada,
-      })
-    }
+    })
   }
 
   function converterNumero(valor) {
@@ -8823,7 +7710,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
             a validação.
           </p>
-          <button className="botao-secundario" onClick={(event) => sairDoSistema(event)}>
+          <button className="botao-secundario" onClick={sairDoSistema}>
             Sair
           </button>
         </section>
@@ -10024,10 +8911,10 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </p>
 
             <div className="hero-painel-metricas" aria-label="Resumo da igreja">
-              <span><strong>{numeroOuReticencias(classes.length, dadosIgrejaSincronizados)}</strong> classes</span>
-              <span><strong>{numeroOuReticencias(alunosSomente().length, dadosIgrejaSincronizados)}</strong> alunos</span>
-              <span><strong>{numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)}</strong> professores</span>
-              <span><strong>{dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'}</strong> frequência</span>
+              <span><strong>{classes.length}</strong> classes</span>
+              <span><strong>{alunosSomente().length}</strong> alunos</span>
+              <span><strong>{professoresSomente().length}</strong> professores</span>
+              <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
             </div>
 
             {(usuarioEhSecretaria() || usuarioEhProfessor()) && (
@@ -10073,20 +8960,12 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             </div>
             <h3>Resumo rápido</h3>
             <p>Dados sincronizados automaticamente no Supabase.</p>
-            {!dadosIgrejaSincronizados && (
-              <div className="aviso-sincronizacao-dados">
-                <span>Sincronizando dados da igreja...</span>
-                <button type="button" onClick={() => carregarDadosOnline(sessaoRef.current)}>
-                  Atualizar agora
-                </button>
-              </div>
-            )}
             <ul>
-              <li>{numeroOuReticencias(classes.length, dadosIgrejaSincronizados)} classes ativas</li>
-              <li>{numeroOuReticencias(alunosSomente().length, dadosIgrejaSincronizados)} alunos cadastrados</li>
-              <li>{numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)} professores cadastrados</li>
-              <li>{numeroOuReticencias(chamadasSalvas.length, dadosIgrejaSincronizados)} chamadas registradas</li>
-              <li>{dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'} de frequência geral</li>
+              <li>{classes.length} classes ativas</li>
+              <li>{alunosSomente().length} alunos cadastrados</li>
+              <li>{professoresSomente().length} professores cadastrados</li>
+              <li>{chamadasSalvas.length} chamadas registradas</li>
+              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
           </div>
         </div>
@@ -10095,32 +8974,32 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           <CardResumo
             icone="classes"
             titulo="Classes"
-            valor={numeroOuReticencias(classes.length, dadosIgrejaSincronizados)}
+            valor={classes.length}
             descricao="Turmas organizadas para a EBD."
           />
           <CardResumo
             icone="alunos"
             titulo="Alunos"
-            valor={numeroOuReticencias(alunos.length, dadosIgrejaSincronizados)}
+            valor={alunos.length}
             descricao="Participantes cadastrados no sistema."
           />
           <CardResumo
             icone="usuarios"
             titulo="Professores"
-            valor={numeroOuReticencias(professoresSomente().length, dadosIgrejaSincronizados)}
+            valor={professoresSomente().length}
             descricao="Participantes da chamada dos professores."
           />
 
           <CardResumo
             icone="chamada"
             titulo="Chamadas"
-            valor={numeroOuReticencias(chamadasSalvas.length, dadosIgrejaSincronizados)}
+            valor={chamadasSalvas.length}
             descricao="Registros salvos de presença."
           />
           <CardResumo
             icone="check"
             titulo="Frequência geral"
-            valor={dadosIgrejaSincronizados ? `${calcularFrequenciaGeral()}%` : '…'}
+            valor={`${calcularFrequenciaGeral()}%`}
             descricao="Média de presença nas chamadas lançadas."
             destaque
           />
@@ -13690,7 +12569,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
             {modoSuporteAdminAtivo() ? 'Suporte admin' : usuarioEhAdminSistema() ? 'Administrador' : usuarioEhProfessor() ? 'Professor' : 'Secretaria'}
           </span>
 
-          <button type="button" className="botao-secundario botao-sair-sidebar" aria-label="Sair do sistema" onClick={(event) => sairDoSistema(event)}>
+          <button type="button" className="botao-secundario botao-sair-sidebar" onClick={sairDoSistema}>
             <Icone nome="sair" className="icone-svg" />
             <span>Sair</span>
           </button>
