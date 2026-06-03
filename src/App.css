@@ -19711,3 +19711,606 @@ textarea {
     overflow: visible !important;
   }
 }
+
+/* ==========================================================
+   v95 - Correção mobile dos relatórios/PDF
+   Mantém a tabela oficial como tabela real e coloca a rolagem
+   horizontal apenas dentro do bloco do relatório, evitando
+   texto quebrado na vertical e estouro da página.
+   ========================================================== */
+
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.relatorio-folha,
+.relatorio-folha-em-branco,
+.area-relatorio,
+.relatorio,
+.relatorio-ebd {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.relatorio-folha .tabela-container,
+.relatorio-folha .tabela-relatorio-wrapper,
+.relatorio-ebd .tabela-container,
+.relatorio-ebd .tabela-relatorio-wrapper,
+.area-relatorio .tabela-container,
+.area-relatorio .tabela-relatorio-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  border-radius: 16px;
+}
+
+.relatorio-folha .tabela-container::after,
+.relatorio-ebd .tabela-container::after,
+.area-relatorio .tabela-container::after {
+  content: 'Deslize a tabela para ver todas as colunas';
+  display: none;
+  margin: 8px 2px 0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .relatorio-folha,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow: hidden !important;
+    border-radius: 18px !important;
+  }
+
+  .cabecalho-relatorio-oficial,
+  .cabecalho-relatorio {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    text-align: center !important;
+  }
+
+  .cabecalho-relatorio-marca {
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .logo-relatorio {
+    width: 46px !important;
+    height: auto !important;
+  }
+
+  .cabecalho-relatorio h2,
+  .cabecalho-relatorio h3,
+  .cabecalho-relatorio-oficial h2,
+  .cabecalho-relatorio-oficial h3 {
+    font-size: clamp(16px, 5vw, 20px) !important;
+    line-height: 1.15 !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .relatorio-info-igreja p,
+  .cabecalho-relatorio p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  .relatorio-data-selo {
+    justify-self: center !important;
+    width: min(100%, 220px) !important;
+  }
+
+  .relatorio-folha .tabela-container,
+  .relatorio-ebd .tabela-container,
+  .area-relatorio .tabela-container,
+  .relatorio-folha .tabela-relatorio-wrapper,
+  .relatorio-ebd .tabela-relatorio-wrapper,
+  .area-relatorio .tabela-relatorio-wrapper {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-bottom: 8px;
+  }
+
+  .relatorio-folha .tabela-container::after,
+  .relatorio-ebd .tabela-container::after,
+  .area-relatorio .tabela-container::after {
+    display: block;
+  }
+
+  /* Desfaz a transformação antiga de tabela em cards no relatório oficial. */
+  .relatorio-folha .tabela-ebd,
+  .relatorio-folha .tabela,
+  .relatorio-ebd .tabela-ebd,
+  .relatorio-ebd .tabela,
+  .area-relatorio .tabela-ebd,
+  .area-relatorio .tabela {
+    display: table !important;
+    width: max-content !important;
+    min-width: 900px !important;
+    max-width: none !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    font-size: 11px !important;
+  }
+
+  .relatorio-folha .tabela-ebd thead,
+  .relatorio-folha .tabela thead,
+  .relatorio-ebd .tabela-ebd thead,
+  .relatorio-ebd .tabela thead,
+  .area-relatorio .tabela-ebd thead,
+  .area-relatorio .tabela thead {
+    display: table-header-group !important;
+  }
+
+  .relatorio-folha .tabela-ebd tbody,
+  .relatorio-folha .tabela tbody,
+  .relatorio-ebd .tabela-ebd tbody,
+  .relatorio-ebd .tabela tbody,
+  .area-relatorio .tabela-ebd tbody,
+  .area-relatorio .tabela tbody {
+    display: table-row-group !important;
+  }
+
+  .relatorio-folha .tabela-ebd tr,
+  .relatorio-folha .tabela tr,
+  .relatorio-ebd .tabela-ebd tr,
+  .relatorio-ebd .tabela tr,
+  .area-relatorio .tabela-ebd tr,
+  .area-relatorio .tabela tr,
+  .tabela-ebd .linha-professores-titulo,
+  .tabela-ebd .linha-professores-cabecalho,
+  .tabela-ebd .linha-professor-tabela-relatorio {
+    display: table-row !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .relatorio-folha .tabela-ebd th,
+  .relatorio-folha .tabela-ebd td,
+  .relatorio-folha .tabela th,
+  .relatorio-folha .tabela td,
+  .relatorio-ebd .tabela-ebd th,
+  .relatorio-ebd .tabela-ebd td,
+  .relatorio-ebd .tabela th,
+  .relatorio-ebd .tabela td,
+  .area-relatorio .tabela-ebd th,
+  .area-relatorio .tabela-ebd td,
+  .area-relatorio .tabela th,
+  .area-relatorio .tabela td,
+  .tabela-ebd .linha-professores-titulo td,
+  .tabela-ebd .linha-professores-cabecalho td,
+  .tabela-ebd .linha-professor-tabela-relatorio td {
+    display: table-cell !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 8px 6px !important;
+    border: 1px solid #d4dee8 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+    vertical-align: middle !important;
+  }
+
+  .relatorio-folha .tabela-ebd td::before,
+  .relatorio-folha .tabela td::before,
+  .relatorio-ebd .tabela-ebd td::before,
+  .relatorio-ebd .tabela td::before,
+  .area-relatorio .tabela-ebd td::before,
+  .area-relatorio .tabela td::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .relatorio-folha .tabela-ebd th:nth-child(1),
+  .relatorio-folha .tabela-ebd td:nth-child(1) {
+    width: 42px !important;
+  }
+
+  .relatorio-folha .tabela-ebd th:nth-child(2),
+  .relatorio-folha .tabela-ebd td:nth-child(2) {
+    width: 170px !important;
+    text-align: left !important;
+  }
+
+  .relatorio-folha .tabela-ebd th:nth-child(n+3),
+  .relatorio-folha .tabela-ebd td:nth-child(n+3) {
+    width: 78px !important;
+  }
+
+  .linha-domingo-anterior td,
+  .linha-professores-titulo td {
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .relatorio-professores-titulo-conteudo {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  .relatorio-professores-titulo-conteudo strong {
+    flex-basis: 100%;
+    font-size: 12px !important;
+  }
+
+  .relatorio-professores-titulo-conteudo span {
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    font-size: 10px !important;
+    padding: 4px 6px !important;
+    border-radius: 999px !important;
+  }
+
+  .status-relatorio-professor {
+    display: inline-flex !important;
+    white-space: nowrap !important;
+    font-size: 10px !important;
+    padding: 4px 7px !important;
+  }
+
+  .rodape-relatorio-oficial {
+    font-size: 11px !important;
+    text-align: center !important;
+    line-height: 1.45 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .relatorio-folha,
+  .relatorio-ebd,
+  .area-relatorio {
+    padding: 10px !important;
+  }
+
+  .relatorio-folha .tabela-ebd,
+  .relatorio-folha .tabela,
+  .relatorio-ebd .tabela-ebd,
+  .relatorio-ebd .tabela,
+  .area-relatorio .tabela-ebd,
+  .area-relatorio .tabela {
+    min-width: 840px !important;
+    font-size: 10px !important;
+  }
+
+  .relatorio-folha .tabela-ebd th,
+  .relatorio-folha .tabela-ebd td,
+  .relatorio-folha .tabela th,
+  .relatorio-folha .tabela td {
+    padding: 7px 5px !important;
+  }
+}
+
+
+/* v96 - Refinamento mobile da página inicial e destaque correto da marca */
+/* Ícone da página inicial passa a ser tratado visualmente como casa/início. */
+.menu-lateral .menu-navegacao button .icone-menu,
+.menu-lateral nav button .icone-menu {
+  flex: 0 0 34px !important;
+}
+
+/* Marca da lateral: evita logo espremida e dá mais presença à identidade. */
+.menu-lateral .marca-sidebar,
+.marca-sidebar {
+  display: grid !important;
+  grid-template-columns: 58px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  column-gap: 13px !important;
+  min-height: 78px !important;
+}
+
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+.marca-sidebar .logo-simbolo-sidebar {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  flex: 0 0 58px !important;
+  border-radius: 18px !important;
+  padding: 4px !important;
+  background: #ffffff !important;
+}
+
+.menu-lateral .marca-sidebar .logo-imagem,
+.marca-sidebar .logo-imagem,
+.logo-simbolo-sidebar img.logo-imagem {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.menu-lateral .marca-sidebar div:not(.logo-simbolo):not(.logo-simbolo-sidebar),
+.marca-sidebar div:not(.logo-simbolo):not(.logo-simbolo-sidebar) {
+  min-width: 0 !important;
+}
+
+.menu-lateral .marca-sidebar h1,
+.marca-sidebar h1 {
+  font-size: 24px !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.035em !important;
+  margin: 0 !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.menu-lateral .marca-sidebar p,
+.marca-sidebar p {
+  margin: 4px 0 0 !important;
+  max-width: 130px !important;
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+/* Página inicial em telas pequenas: deixa de parecer desktop espremido. */
+@media (max-width: 768px) {
+  .conteudo {
+    padding: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .hero-painel {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-painel-conteudo {
+    padding: 18px !important;
+    border-radius: 22px !important;
+    min-height: 0 !important;
+  }
+
+  .linha-tags-painel {
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-painel-conteudo .hero-tag,
+  .hero-tag {
+    padding: 6px 9px !important;
+    font-size: 10px !important;
+  }
+
+  .hero-painel-conteudo h2 {
+    margin: 8px 0 8px !important;
+    font-size: clamp(27px, 8.5vw, 36px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .hero-painel-conteudo p {
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+  }
+
+  .hero-painel-metricas {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+  }
+
+  .hero-painel-metricas span {
+    justify-content: center !important;
+    min-height: 38px !important;
+    padding: 8px 9px !important;
+    font-size: 12px !important;
+    border-radius: 14px !important;
+  }
+
+  .hero-painel-metricas strong {
+    font-size: 15px !important;
+  }
+
+  .atalho-chamada-topo {
+    margin-top: 14px !important;
+    width: 100% !important;
+    min-height: 64px !important;
+    padding: 10px 12px !important;
+    border-radius: 18px !important;
+    gap: 12px !important;
+    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.15) !important;
+  }
+
+  .atalho-chamada-topo-icone {
+    width: 44px !important;
+    height: 44px !important;
+    flex-basis: 44px !important;
+    border-radius: 15px !important;
+  }
+
+  .atalho-chamada-topo-texto strong {
+    font-size: 17px !important;
+  }
+
+  .atalho-chamada-topo-texto small {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero-acoes {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+    margin-top: 12px !important;
+  }
+
+  .hero-acoes .botao-principal,
+  .hero-acoes .botao-secundario {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 10px 8px !important;
+    border-radius: 14px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .hero-acoes .botao-principal {
+    grid-column: 1 / -1 !important;
+    min-height: 46px !important;
+  }
+
+  .hero-painel-destaque {
+    padding: 16px !important;
+    border-radius: 20px !important;
+  }
+
+  .hero-painel-destaque .hero-icone-area {
+    width: 42px !important;
+    height: 42px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-painel-destaque h3 {
+    font-size: 22px !important;
+  }
+
+  .hero-painel-destaque p {
+    font-size: 13px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-painel-destaque ul {
+    display: grid !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+  }
+
+  .cards.cards-estatisticas,
+  .cards-estatisticas {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .area-principal {
+    padding: 14px 10px 22px !important;
+  }
+
+  .conteudo {
+    padding: 10px !important;
+    border-radius: 20px !important;
+  }
+
+  .hero-painel-conteudo {
+    padding: 16px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .hero-painel-conteudo h2 {
+    font-size: clamp(25px, 8vw, 32px) !important;
+  }
+
+  .hero-painel-conteudo p {
+    font-size: 13px !important;
+    line-height: 1.42 !important;
+  }
+
+  .hero-painel-metricas {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .hero-painel-metricas span {
+    min-height: 34px !important;
+    padding: 7px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .hero-painel-metricas strong {
+    font-size: 14px !important;
+  }
+
+  .hero-acoes {
+    gap: 8px !important;
+  }
+
+  .hero-acoes .botao-principal,
+  .hero-acoes .botao-secundario {
+    min-height: 40px !important;
+    font-size: 11px !important;
+    padding: 9px 7px !important;
+  }
+
+  .hero-painel-destaque {
+    padding: 14px !important;
+  }
+
+  .marca-mobile-interna {
+    gap: 9px !important;
+  }
+
+  .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 50px !important;
+    height: 50px !important;
+    flex-basis: 50px !important;
+    padding: 4px !important;
+    background: #ffffff !important;
+  }
+
+  .marca-mobile-interna strong {
+    font-size: 18px !important;
+  }
+
+  .marca-mobile-interna span {
+    font-size: 10px !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .menu-lateral .marca-sidebar,
+  .marca-sidebar {
+    grid-template-columns: 62px minmax(0, 1fr) auto !important;
+    min-height: 84px !important;
+  }
+
+  .menu-lateral .marca-sidebar .logo-simbolo-sidebar,
+  .marca-sidebar .logo-simbolo-sidebar {
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+  }
+
+  .menu-lateral .marca-sidebar h1,
+  .marca-sidebar h1 {
+    font-size: 25px !important;
+  }
+
+  .menu-lateral .marca-sidebar p,
+  .marca-sidebar p {
+    font-size: 11px !important;
+    max-width: 118px !important;
+  }
+}
