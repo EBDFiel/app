@@ -20752,3 +20752,507 @@ body,
     overflow-wrap: anywhere !important;
   }
 }
+
+/* =========================================================
+   v98 - Correção de cabeçalho mobile, Relatórios mobile e home mobile
+   - Impede o topo fixo de cobrir o conteúdo
+   - Compacta o bloco azul dos relatórios no celular
+   - Reforça histórico/relatórios sem texto vertical ou corte lateral
+   - Reaplica o visual mobile mais compacto da página inicial
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+  html,
+  body,
+  #root,
+  .app {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .topo-mobile-interno {
+    min-height: 78px !important;
+    height: 78px !important;
+    padding: 10px 14px !important;
+  }
+
+  .area-principal {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-top: 104px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 24px !important;
+    overflow-x: hidden !important;
+  }
+
+  .conteudo,
+  .conteudo.pagina-interna,
+  .pagina-relatorios,
+  .pagina-interna,
+  main.conteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+  }
+
+  .topo-pagina,
+  .topo-pagina-interna {
+    min-height: auto !important;
+    padding: 18px 18px !important;
+    margin-top: 0 !important;
+    margin-bottom: 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .topo-pagina h2,
+  .topo-pagina-interna h2,
+  .pagina-relatorios .topo-pagina h2 {
+    font-size: clamp(28px, 8vw, 38px) !important;
+    line-height: 1.04 !important;
+  }
+
+  .topo-pagina p,
+  .topo-pagina-interna p,
+  .pagina-relatorios .topo-pagina p {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+  }
+
+  .relatorio-orientacao {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Página inicial mobile: compacta o painel para não parecer desktop espremido */
+@media screen and (max-width: 768px) {
+  .conteudo:not(.pagina-relatorios) .hero-painel {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-conteudo {
+    padding: 18px !important;
+    border-radius: 22px !important;
+    min-height: 0 !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .linha-tags-painel {
+    gap: 6px !important;
+    margin-bottom: 9px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-conteudo .hero-tag,
+  .conteudo:not(.pagina-relatorios) .hero-tag {
+    padding: 6px 9px !important;
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-conteudo h2 {
+    margin: 8px 0 8px !important;
+    font-size: clamp(27px, 8.5vw, 36px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-conteudo p {
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.42 !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-metricas {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 13px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-metricas span {
+    justify-content: center !important;
+    min-height: 36px !important;
+    padding: 7px 8px !important;
+    font-size: 12px !important;
+    border-radius: 14px !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-painel-metricas strong {
+    font-size: 15px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .atalho-chamada-topo {
+    margin-top: 13px !important;
+    width: 100% !important;
+    min-height: 62px !important;
+    padding: 10px 12px !important;
+    border-radius: 18px !important;
+    gap: 12px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .atalho-chamada-topo-icone {
+    width: 42px !important;
+    height: 42px !important;
+    flex-basis: 42px !important;
+    border-radius: 15px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .atalho-chamada-topo-texto strong {
+    font-size: 17px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .atalho-chamada-topo-texto small {
+    font-size: 12px !important;
+    line-height: 1.24 !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-acoes {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 12px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-acoes .botao-principal,
+  .conteudo:not(.pagina-relatorios) .hero-acoes .botao-secundario {
+    width: 100% !important;
+    min-height: 40px !important;
+    padding: 9px 8px !important;
+    border-radius: 14px !important;
+    font-size: 12px !important;
+    line-height: 1.18 !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .hero-acoes .botao-principal {
+    grid-column: 1 / -1 !important;
+    min-height: 44px !important;
+  }
+
+  .conteudo:not(.pagina-relatorios) .cards.cards-estatisticas,
+  .conteudo:not(.pagina-relatorios) .cards-estatisticas {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* Relatórios: topo e hero mais adequados ao celular */
+@media screen and (max-width: 760px) {
+  .pagina-relatorios {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .pagina-relatorios .topo-pagina,
+  .pagina-relatorios .topo-pagina-interna {
+    padding: 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .pagina-relatorios .relatorios-dashboard {
+    display: grid !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .pagina-relatorios .relatorios-hero,
+  .relatorios-hero {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 18px !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .selo-publico,
+  .relatorios-hero .selo-publico {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+  }
+
+  .pagina-relatorios .relatorios-hero h3,
+  .relatorios-hero h3 {
+    max-width: 100% !important;
+    margin: 10px 0 8px !important;
+    font-size: clamp(26px, 8.2vw, 34px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.045em !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .pagina-relatorios .relatorios-hero p,
+  .relatorios-hero p {
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.42 !important;
+  }
+
+  .pagina-relatorios .relatorios-percentual,
+  .relatorios-percentual {
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 18px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .pagina-relatorios .relatorios-percentual strong,
+  .relatorios-percentual strong {
+    font-size: clamp(40px, 12vw, 56px) !important;
+    line-height: 1 !important;
+  }
+
+  .pagina-relatorios .relatorios-percentual span,
+  .relatorios-percentual span {
+    margin-top: 4px !important;
+    font-size: 14px !important;
+  }
+
+  .cards-relatorios-modernas,
+  .pagina-relatorios .cards-relatorios-modernas {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-top: 0 !important;
+  }
+
+  .card-relatorio-moderna,
+  .pagina-relatorios .card-relatorio-moderna {
+    min-height: auto !important;
+    padding: 15px !important;
+    border-radius: 18px !important;
+  }
+
+  .card-relatorio-moderna strong,
+  .pagina-relatorios .card-relatorio-moderna strong {
+    font-size: 34px !important;
+    line-height: 1 !important;
+  }
+}
+
+/* Histórico de chamadas: nunca criar duas colunas estreitas no mobile */
+@media screen and (max-width: 760px) {
+  .historico-chamadas-relatorio,
+  .pagina-relatorios .historico-chamadas-relatorio {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .historico-chamadas-topo,
+  .historico-chamadas-controles,
+  .historico-chamadas-cabecalho-lista,
+  .lista-historico-chamadas,
+  .card-historico-chamada {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 10px !important;
+  }
+
+  .historico-chamadas-topo h3 {
+    font-size: clamp(24px, 7vw, 30px) !important;
+    line-height: 1.08 !important;
+    margin: 6px 0 !important;
+  }
+
+  .historico-chamadas-topo p {
+    max-width: none !important;
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+  }
+
+  .historico-chamadas-topo .botao-secundario,
+  .botao-excluir-chamada {
+    width: 100% !important;
+    min-height: 42px !important;
+  }
+
+  .historico-chamada-data {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  .historico-chamada-conteudo,
+  .historico-chamada-conteudo h4,
+  .historico-chamada-conteudo p,
+  .historico-chamada-resumo {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .historico-chamada-resumo span {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* Relatório/PDF na tela: rolagem horizontal só no relatório, texto sempre horizontal */
+@media screen and (max-width: 760px) {
+  .relatorio-folha-container,
+  .pre-visualizacao-relatorio,
+  .area-preview-relatorio,
+  .cartao-preview-relatorio,
+  .visualizacao-relatorio-extra-corpo,
+  .tabela-relatorio-wrapper,
+  .tabela-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+  }
+
+  .relatorio-folha,
+  .relatorio-ebd,
+  .area-relatorio {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+  }
+
+  .relatorio-folha table,
+  .relatorio-folha .tabela,
+  .relatorio-folha .tabela-ebd,
+  .relatorio-ebd table,
+  .relatorio-ebd .tabela,
+  .relatorio-ebd .tabela-ebd,
+  .area-relatorio table,
+  .area-relatorio .tabela,
+  .area-relatorio .tabela-ebd {
+    display: table !important;
+    width: 900px !important;
+    min-width: 900px !important;
+    max-width: none !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+  }
+
+  .relatorio-folha thead,
+  .relatorio-ebd thead,
+  .area-relatorio thead {
+    display: table-header-group !important;
+  }
+
+  .relatorio-folha tbody,
+  .relatorio-ebd tbody,
+  .area-relatorio tbody {
+    display: table-row-group !important;
+  }
+
+  .relatorio-folha tr,
+  .relatorio-ebd tr,
+  .area-relatorio tr {
+    display: table-row !important;
+    height: auto !important;
+  }
+
+  .relatorio-folha th,
+  .relatorio-folha td,
+  .relatorio-ebd th,
+  .relatorio-ebd td,
+  .area-relatorio th,
+  .area-relatorio td {
+    display: table-cell !important;
+    min-width: 58px !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    padding: 7px 6px !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    transform: none !important;
+    vertical-align: middle !important;
+  }
+
+  .relatorio-folha th:nth-child(2),
+  .relatorio-folha td:nth-child(2),
+  .relatorio-ebd th:nth-child(2),
+  .relatorio-ebd td:nth-child(2),
+  .area-relatorio th:nth-child(2),
+  .area-relatorio td:nth-child(2) {
+    min-width: 150px !important;
+    text-align: left !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .topo-mobile-interno {
+    min-height: 74px !important;
+    height: 74px !important;
+  }
+
+  .area-principal {
+    padding-top: 98px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .conteudo,
+  .conteudo.pagina-interna,
+  .pagina-relatorios,
+  main.conteudo {
+    padding: 12px !important;
+    border-radius: 20px !important;
+  }
+
+  .pagina-relatorios .topo-pagina,
+  .pagina-relatorios .topo-pagina-interna {
+    padding: 15px !important;
+  }
+
+  .pagina-relatorios .relatorios-hero,
+  .relatorios-hero {
+    padding: 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .pagina-relatorios .relatorios-hero h3,
+  .relatorios-hero h3 {
+    font-size: clamp(25px, 8vw, 31px) !important;
+  }
+
+  .pagina-relatorios .relatorios-percentual strong,
+  .relatorios-percentual strong {
+    font-size: clamp(38px, 11vw, 50px) !important;
+  }
+}
