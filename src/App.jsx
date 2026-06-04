@@ -79,14 +79,6 @@ function Icone({ nome, className = '' }) {
           <rect x="3" y="13" width="8" height="8" rx="2" />
         </svg>
       )
-    case 'inicio':
-      return (
-        <svg {...comum}>
-          <path d="M3 11.5 12 4l9 7.5" />
-          <path d="M5.5 10.5V20h13v-9.5" />
-          <path d="M9.5 20v-5.2a2.5 2.5 0 0 1 5 0V20" />
-        </svg>
-      )
     case 'classes':
       return (
         <svg {...comum}>
@@ -424,6 +416,8 @@ function App() {
   const [mensagemDiagnosticoAdmin, setMensagemDiagnosticoAdmin] = useState(null)
   const [mensagemHistoricoChamadas, setMensagemHistoricoChamadas] = useState(null)
   const [excluindoChamadaId, setExcluindoChamadaId] = useState(null)
+  const [dataHistoricoChamadasSelecionada, setDataHistoricoChamadasSelecionada] = useState('')
+  const [tipoHistoricoChamadasSelecionado, setTipoHistoricoChamadasSelecionado] = useState('todos')
   const [emailLogin, setEmailLogin] = useState('')
   const [senhaLogin, setSenhaLogin] = useState('')
   const [emailRecuperacao, setEmailRecuperacao] = useState('')
@@ -799,7 +793,7 @@ function App() {
   }, [mensagemHistoricoChamadas])
 
   const menu = [
-    { id: 'painel', nome: 'Painel', icone: 'inicio' },
+    { id: 'painel', nome: 'Painel', icone: 'painel' },
     { id: 'dashboard', nome: 'Resumo geral', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
@@ -10703,6 +10697,39 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     )
   }
 
+  function obterChaveDataHistoricoChamada(dataTexto) {
+    const texto = String(dataTexto || '').trim()
+
+    if (!texto) {
+      return ''
+    }
+
+    const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/)
+
+    if (iso) {
+      return `${iso[1]}-${iso[2]}-${iso[3]}`
+    }
+
+    const br = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
+
+    if (br) {
+      const dia = String(br[1]).padStart(2, '0')
+      const mes = String(br[2]).padStart(2, '0')
+      return `${br[3]}-${mes}-${dia}`
+    }
+
+    const dataLivre = new Date(texto)
+
+    if (!Number.isNaN(dataLivre.getTime())) {
+      const ano = dataLivre.getFullYear()
+      const mes = String(dataLivre.getMonth() + 1).padStart(2, '0')
+      const dia = String(dataLivre.getDate()).padStart(2, '0')
+      return `${ano}-${mes}-${dia}`
+    }
+
+    return texto
+  }
+
   function obterTempoOrdenacaoChamada(dataTexto, id = 0) {
     const texto = String(dataTexto || '').trim()
 
@@ -10739,6 +10766,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         titulo: `Chamada dos alunos${classe?.nome ? ` — ${classe.nome}` : ''}`,
         classe: classe?.nome || 'Classe não encontrada',
         data: chamada.data,
+        dataChave: obterChaveDataHistoricoChamada(chamada.data),
         resumo: [
           `Presentes: ${converterNumero(chamada.totalPresentes)}`,
           `Faltas: ${converterNumero(chamada.totalFaltas)}`,
@@ -10755,6 +10783,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       titulo: 'Chamada dos professores',
       classe: 'Professores da igreja',
       data: chamada.data,
+      dataChave: obterChaveDataHistoricoChamada(chamada.data),
       resumo: [
         `Presentes: ${converterNumero(chamada.totalPresentes)}`,
         `Faltaram: ${converterNumero(chamada.totalFaltas)}`,
@@ -10775,6 +10804,43 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         return Number(b.id || 0) - Number(a.id || 0)
       })
       .slice(0, 24)
+  }
+
+  function montarDatasHistoricoChamadas(historicoChamadas = []) {
+    const mapaDatas = new Map()
+
+    historicoChamadas.forEach((item) => {
+      const chave = item.dataChave || obterChaveDataHistoricoChamada(item.data)
+
+      if (!chave) {
+        return
+      }
+
+      const dataAtual = mapaDatas.get(chave) || {
+        chave,
+        rotulo: formatarDataCurtaRelatorio(item.data),
+        total: 0,
+        alunos: 0,
+        professores: 0,
+        tempo: obterTempoOrdenacaoChamada(item.data, item.id),
+      }
+
+      dataAtual.total += 1
+
+      if (item.tipo === 'professores') {
+        dataAtual.professores += 1
+      } else {
+        dataAtual.alunos += 1
+      }
+
+      if (obterTempoOrdenacaoChamada(item.data, item.id) > dataAtual.tempo) {
+        dataAtual.tempo = obterTempoOrdenacaoChamada(item.data, item.id)
+      }
+
+      mapaDatas.set(chave, dataAtual)
+    })
+
+    return Array.from(mapaDatas.values()).sort((a, b) => b.tempo - a.tempo)
   }
 
   async function excluirChamadaHistorico(item, event) {
@@ -10850,6 +10916,16 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     }
 
     const historicoChamadas = montarHistoricoChamadasRecentes()
+    const datasHistorico = montarDatasHistoricoChamadas(historicoChamadas)
+    const dataSelecionadaValida = datasHistorico.some((data) => data.chave === dataHistoricoChamadasSelecionada)
+      ? dataHistoricoChamadasSelecionada
+      : datasHistorico[0]?.chave || ''
+    const dataSelecionada = datasHistorico.find((data) => data.chave === dataSelecionadaValida)
+    const historicoDaData = historicoChamadas.filter((item) => {
+      const mesmaData = (item.dataChave || obterChaveDataHistoricoChamada(item.data)) === dataSelecionadaValida
+      const mesmoTipo = tipoHistoricoChamadasSelecionado === 'todos' || item.tipo === tipoHistoricoChamadasSelecionado
+      return mesmaData && mesmoTipo
+    })
 
     return (
       <div className="historico-chamadas-relatorio no-print">
@@ -10857,9 +10933,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           <div>
             <span className="selo-publico">Histórico</span>
             <h3>Histórico de chamadas</h3>
-            <p>
-              Encontre chamadas lançadas por engano e exclua apenas o registro da chamada, sem apagar alunos, classes ou professores.
-            </p>
+            <p>Consulte as chamadas por data e acompanhe os registros lançados na EBD.</p>
           </div>
 
           <button
@@ -10879,6 +10953,52 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           </button>
         </div>
 
+        {historicoChamadas.length > 0 && (
+          <div className="historico-chamadas-controles">
+            <label className="historico-campo">
+              <span>Data da chamada</span>
+              <select
+                value={dataSelecionadaValida}
+                onChange={(event) => setDataHistoricoChamadasSelecionada(event.target.value)}
+              >
+                {datasHistorico.map((data) => (
+                  <option value={data.chave} key={data.chave}>
+                    {data.rotulo} — {data.total} {data.total === 1 ? 'chamada' : 'chamadas'}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="historico-campo">
+              <span>Tipo</span>
+              <select
+                value={tipoHistoricoChamadasSelecionado}
+                onChange={(event) => setTipoHistoricoChamadasSelecionado(event.target.value)}
+              >
+                <option value="todos">Todas as chamadas</option>
+                <option value="alunos">Alunos</option>
+                <option value="professores">Professores</option>
+              </select>
+            </label>
+          </div>
+        )}
+
+        {datasHistorico.length > 1 && (
+          <div className="datas-historico-atalhos" aria-label="Datas com chamadas registradas">
+            {datasHistorico.slice(0, 8).map((data) => (
+              <button
+                type="button"
+                className={`botao-data-historico ${data.chave === dataSelecionadaValida ? 'ativo' : ''}`}
+                onClick={() => setDataHistoricoChamadasSelecionada(data.chave)}
+                key={data.chave}
+              >
+                <strong>{data.rotulo}</strong>
+                <span>{data.total} {data.total === 1 ? 'chamada' : 'chamadas'}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {mensagemHistoricoChamadas && (
           <div className={`aviso-historico-chamadas ${mensagemHistoricoChamadas.tipo}`}>
             <p>{mensagemHistoricoChamadas.texto}</p>
@@ -10893,35 +11013,53 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         )}
 
         {historicoChamadas.length > 0 ? (
-          <div className="lista-historico-chamadas">
-            {historicoChamadas.map((item) => (
-              <article className="card-historico-chamada" key={item.chave}>
-                <div className="historico-chamada-data">
-                  <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
-                  <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
-                </div>
+          <>
+            <div className="historico-chamadas-cabecalho-lista">
+              <div>
+                <span>Data selecionada</span>
+                <strong>{dataSelecionada?.rotulo || 'Selecione uma data'}</strong>
+              </div>
+              <p>
+                {historicoDaData.length} {historicoDaData.length === 1 ? 'registro encontrado' : 'registros encontrados'}
+              </p>
+            </div>
 
-                <div className="historico-chamada-conteudo">
-                  <h4>{item.titulo}</h4>
-                  <p>{item.classe}</p>
-                  <div className="historico-chamada-resumo">
-                    {item.resumo.map((linha) => (
-                      <span key={linha}>{linha}</span>
-                    ))}
-                  </div>
-                </div>
+            {historicoDaData.length > 0 ? (
+              <div className="lista-historico-chamadas">
+                {historicoDaData.map((item) => (
+                  <article className="card-historico-chamada" key={item.chave}>
+                    <div className="historico-chamada-data">
+                      <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
+                      <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
+                    </div>
 
-                <button
-                  className="botao-excluir botao-excluir-chamada"
-                  type="button"
-                  onClick={(event) => excluirChamadaHistorico(item, event)}
-                  disabled={excluindoChamadaId === item.chave}
-                >
-                  {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
-                </button>
-              </article>
-            ))}
-          </div>
+                    <div className="historico-chamada-conteudo">
+                      <h4>{item.titulo}</h4>
+                      <p>{item.classe}</p>
+                      <div className="historico-chamada-resumo">
+                        {item.resumo.map((linha) => (
+                          <span key={linha}>{linha}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      className="botao-excluir botao-excluir-chamada"
+                      type="button"
+                      onClick={(event) => excluirChamadaHistorico(item, event)}
+                      disabled={excluindoChamadaId === item.chave}
+                    >
+                      {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
+                    </button>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="aviso aviso-historico-vazio">
+                <p>Nenhuma chamada encontrada para essa combinação de filtros.</p>
+              </div>
+            )}
+          </>
         ) : (
           <div className="aviso aviso-historico-vazio">
             <p>Nenhuma chamada registrada até o momento.</p>
@@ -13333,7 +13471,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           onClick={() => navegarParaPagina('painel')}
           aria-label="Voltar à página inicial"
         >
-          <Icone nome="inicio" className="icone-svg" />
+          <Icone nome="painel" className="icone-svg" />
           <span>Página inicial</span>
         </button>
 
