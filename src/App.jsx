@@ -79,6 +79,14 @@ function Icone({ nome, className = '' }) {
           <rect x="3" y="13" width="8" height="8" rx="2" />
         </svg>
       )
+    case 'inicio':
+      return (
+        <svg {...comum}>
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5.5 10.5V20h13v-9.5" />
+          <path d="M9.5 20v-5.2a2.5 2.5 0 0 1 5 0V20" />
+        </svg>
+      )
     case 'classes':
       return (
         <svg {...comum}>
@@ -793,7 +801,7 @@ function App() {
   }, [mensagemHistoricoChamadas])
 
   const menu = [
-    { id: 'painel', nome: 'Painel', icone: 'painel' },
+    { id: 'painel', nome: 'Painel', icone: 'inicio' },
     { id: 'dashboard', nome: 'Resumo geral', icone: 'painel' },
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
@@ -13471,7 +13479,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
           onClick={() => navegarParaPagina('painel')}
           aria-label="Voltar à página inicial"
         >
-          <Icone nome="painel" className="icone-svg" />
+          <Icone nome="inicio" className="icone-svg" />
           <span>Página inicial</span>
         </button>
 
