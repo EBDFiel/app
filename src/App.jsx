@@ -8269,6 +8269,13 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
     return ''
   }
 
+  function obterPrimeiroNomeCartao(nome) {
+    return String(nome || 'Aniversariante')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)[0] || 'Aniversariante'
+  }
+
   function baixarCanvasComoPng(canvas, nomeArquivo) {
     const link = document.createElement('a')
     link.href = canvas.toDataURL('image/png')
@@ -8595,7 +8602,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                         <h4>
                           <span>Feliz</span>
                           <em>aniversário,</em>
-                          <strong className={obterClasseNomeCartao(aniversarianteCartao.nome)}>{aniversarianteCartao.nome}!</strong>
+                          <strong className={obterClasseNomeCartao(obterPrimeiroNomeCartao(aniversarianteCartao.nome))}>{obterPrimeiroNomeCartao(aniversarianteCartao.nome)}!</strong>
                         </h4>
 
                         <div className="cartao-aniversario-divisor" aria-hidden="true">❤</div>
