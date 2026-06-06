@@ -23565,6 +23565,221 @@ body,
     justify-content: start !important;
   }
 
+  /* v109 - cartão 4:3 corrigido, sem corte em cima e embaixo */
+.cartao-aniversario-oficial {
+  width: min(100%, 760px) !important;
+  aspect-ratio: 4 / 3 !important;
+  padding: 10px !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  background: linear-gradient(180deg, #fffdf9 0%, #fffaf3 100%) !important;
+}
+
+.cartao-aniversario-moldura {
+  inset: 10px !important;
+  border: 2px solid #c99742 !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at left 55%, rgba(191, 151, 91, 0.08), transparent 22%),
+    radial-gradient(circle at right 78%, rgba(191, 151, 91, 0.06), transparent 18%),
+    linear-gradient(180deg, #fffefc 0%, #fffaf4 100%) !important;
+}
+
+/* enfeites menores para não disputar espaço com o conteúdo */
+.cartao-aniversario-livro {
+  top: 26px !important;
+  left: 42px !important;
+  width: 62px !important;
+  height: 42px !important;
+  opacity: 0.95 !important;
+}
+
+.cartao-aniversario-pomba {
+  top: 28px !important;
+  right: 40px !important;
+  font-size: 30px !important;
+  opacity: 0.78 !important;
+}
+
+.cartao-aniversario-presente,
+.cartao-aniversario-bolo,
+.cartao-aniversario-flores span:nth-child(3),
+.cartao-aniversario-flores span:nth-child(4) {
+  display: none !important;
+}
+
+.cartao-aniversario-flores span:nth-child(1) {
+  width: 128px !important;
+  height: 128px !important;
+  left: -54px !important;
+  top: 132px !important;
+  opacity: 0.16 !important;
+}
+
+.cartao-aniversario-flores span:nth-child(2) {
+  width: 190px !important;
+  height: 190px !important;
+  left: -86px !important;
+  bottom: 52px !important;
+  opacity: 0.14 !important;
+}
+
+.cartao-aniversario-texto {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  gap: 10px !important;
+  padding: 38px 74px 26px !important;
+  overflow: visible !important;
+}
+
+.cartao-aniversario-texto h4 {
+  margin: 0 !important;
+  display: grid !important;
+  justify-items: center !important;
+  gap: 2px !important;
+  line-height: 1 !important;
+}
+
+.cartao-aniversario-texto h4 span {
+  display: block !important;
+  color: #9b6a27 !important;
+  font-family: "Brush Script MT", "Segoe Script", cursive !important;
+  font-size: clamp(24px, 2.8vw, 34px) !important;
+  font-weight: 400 !important;
+  line-height: 0.9 !important;
+}
+
+.cartao-aniversario-texto h4 em {
+  display: block !important;
+  color: #b67a2b !important;
+  font-family: "Brush Script MT", "Segoe Script", cursive !important;
+  font-size: clamp(24px, 2.9vw, 34px) !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 0.9 !important;
+}
+
+.cartao-aniversario-texto h4 strong,
+.cartao-aniversario-nome-longo,
+.cartao-aniversario-nome-muito-longo {
+  display: block !important;
+  max-width: 100% !important;
+  color: #8f1f1f !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(38px, 5vw, 58px) !important;
+  font-weight: 800 !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.03em !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
+  text-wrap: balance !important;
+}
+
+.cartao-aniversario-divisor {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  color: #c89038 !important;
+  font-size: 12px !important;
+}
+
+.cartao-aniversario-divisor::before,
+.cartao-aniversario-divisor::after {
+  width: 90px !important;
+  height: 2px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 144, 56, 0.82) 50%,
+    transparent 100%
+  ) !important;
+}
+
+.cartao-aniversario-mensagem {
+  max-width: 92% !important;
+  margin: 0 !important;
+  color: #4a241d !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(13px, 1.35vw, 18px) !important;
+  font-weight: 600 !important;
+  line-height: 1.18 !important;
+  text-wrap: balance !important;
+}
+
+.cartao-aniversario-versiculo {
+  width: min(74%, 470px) !important;
+  margin: 2px 0 0 !important;
+  padding: 14px 18px 12px !important;
+  border: 1.5px solid rgba(201, 151, 66, 0.6) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 8px 18px rgba(111, 29, 27, 0.06) !important;
+}
+
+.cartao-aniversario-versiculo > span {
+  display: none !important;
+}
+
+.cartao-aniversario-versiculo p {
+  margin: 0 0 6px !important;
+  color: #8f1f1f !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(12.5px, 1.22vw, 16px) !important;
+  font-style: italic !important;
+  font-weight: 600 !important;
+  line-height: 1.14 !important;
+  text-wrap: balance !important;
+}
+
+.cartao-aniversario-versiculo strong {
+  display: block !important;
+  color: #b67a2b !important;
+  font-size: clamp(10px, 0.92vw, 13px) !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+}
+
+.cartao-aniversario-texto footer {
+  display: grid !important;
+  gap: 1px !important;
+  margin-top: 2px !important;
+  color: #6f1d1b !important;
+}
+
+.cartao-aniversario-texto footer em {
+  display: block !important;
+  color: #8a5a19 !important;
+  font-family: "Brush Script MT", "Segoe Script", cursive !important;
+  font-size: clamp(15px, 1.25vw, 18px) !important;
+  font-style: normal !important;
+  line-height: 0.95 !important;
+}
+
+.cartao-aniversario-texto footer strong {
+  display: block !important;
+  color: #6f1d1b !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(11.5px, 0.98vw, 14px) !important;
+  font-style: italic !important;
+  font-weight: 600 !important;
+  line-height: 1.05 !important;
+  text-transform: none !important;
+}
+
+/* mobile: mantém visualização sem cortar */
+@media (max-width: 640px) {
+  .cartao-aniversario-visualizacao {
+    padding: 10px !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
+
   .cartao-aniversario-oficial {
     min-width: 520px !important;
     width: 520px !important;
@@ -23576,57 +23791,58 @@ body,
   }
 
   .cartao-aniversario-livro {
+    top: 22px !important;
     left: 28px !important;
-    top: 26px !important;
-    width: 48px !important;
+    width: 50px !important;
     height: 34px !important;
   }
 
   .cartao-aniversario-pomba {
-    right: 30px !important;
-    top: 27px !important;
-    font-size: 27px !important;
+    top: 24px !important;
+    right: 28px !important;
+    font-size: 24px !important;
   }
 
   .cartao-aniversario-texto {
-    padding: 20px 48px 16px !important;
-    gap: 5px !important;
+    padding: 32px 40px 18px !important;
+    gap: 8px !important;
   }
 
   .cartao-aniversario-texto h4 span {
-    font-size: 28px !important;
+    font-size: 22px !important;
   }
 
   .cartao-aniversario-texto h4 em {
-    font-size: 24px !important;
+    font-size: 22px !important;
   }
 
   .cartao-aniversario-texto h4 strong,
   .cartao-aniversario-nome-longo,
   .cartao-aniversario-nome-muito-longo {
-    max-width: 420px !important;
-    font-size: 44px !important;
+    max-width: 100% !important;
+    font-size: 40px !important;
+    line-height: 0.92 !important;
   }
 
   .cartao-aniversario-divisor::before,
   .cartao-aniversario-divisor::after {
-    width: 50px !important;
+    width: 52px !important;
   }
 
   .cartao-aniversario-mensagem {
-    max-width: 400px !important;
-    font-size: 12.5px !important;
+    max-width: 92% !important;
+    font-size: 12px !important;
     line-height: 1.14 !important;
   }
 
   .cartao-aniversario-versiculo {
-    width: 70% !important;
-    padding: 7px 12px 6px !important;
+    width: 76% !important;
+    padding: 10px 12px !important;
   }
 
   .cartao-aniversario-versiculo p {
     font-size: 11.5px !important;
-    line-height: 1.1 !important;
+    line-height: 1.12 !important;
   }
 
   .cartao-aniversario-versiculo strong {
@@ -23634,10 +23850,10 @@ body,
   }
 
   .cartao-aniversario-texto footer em {
-    font-size: 15px !important;
+    font-size: 13px !important;
   }
 
   .cartao-aniversario-texto footer strong {
-    font-size: 11.5px !important;
+    font-size: 10.5px !important;
   }
 }
