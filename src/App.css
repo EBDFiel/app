@@ -21256,3 +21256,287 @@ body,
     font-size: clamp(38px, 11vw, 50px) !important;
   }
 }
+
+/* =========================================================
+   v101 - Relatórios e histórico de chamadas mais limpos
+   - histórico não abre registros sem data escolhida
+   - layout desktop e mobile sem colunas estreitas/cortadas
+   ========================================================= */
+.pagina-relatorios,
+.pagina-relatorios * {
+  box-sizing: border-box;
+}
+
+.pagina-relatorios {
+  overflow-x: hidden;
+}
+
+.pagina-relatorios .historico-chamadas-relatorio,
+.historico-chamadas-relatorio {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 22px 0 18px !important;
+  padding: 20px !important;
+  overflow: hidden !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+  border: 1px solid #dbeafe !important;
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07) !important;
+}
+
+.historico-chamadas-topo {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  margin: 0 0 14px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.historico-chamadas-topo > div {
+  min-width: 0 !important;
+}
+
+.historico-chamadas-topo h3 {
+  margin: 8px 0 5px !important;
+  font-size: clamp(24px, 2vw, 32px) !important;
+  line-height: 1.1 !important;
+  color: #0f172a !important;
+}
+
+.historico-chamadas-topo p {
+  max-width: 580px !important;
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.historico-chamadas-topo .botao-secundario {
+  flex: 0 0 auto !important;
+  min-height: 42px !important;
+  white-space: nowrap !important;
+}
+
+.historico-chamadas-controles {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, 0.7fr) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 14px 0 12px !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.historico-campo,
+.historico-campo select {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.datas-historico-atalhos {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding: 3px 2px 12px !important;
+  margin: 0 0 8px !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.botao-data-historico {
+  flex: 0 0 auto !important;
+  min-width: 138px !important;
+  max-width: 180px !important;
+}
+
+.historico-chamadas-cabecalho-lista {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 12px 0 !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.lista-historico-chamadas {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.card-historico-chamada {
+  display: grid !important;
+  grid-template-columns: 104px minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 14px !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.045) !important;
+  overflow: hidden !important;
+}
+
+.historico-chamada-data {
+  width: 100% !important;
+  min-width: 0 !important;
+  text-align: center !important;
+}
+
+.historico-chamada-conteudo {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.historico-chamada-conteudo h4 {
+  margin: 0 0 4px !important;
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.historico-chamada-conteudo p {
+  margin: 0 0 9px !important;
+  overflow-wrap: anywhere !important;
+}
+
+.historico-chamada-resumo {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.historico-chamada-resumo span {
+  width: auto !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+.card-historico-chamada .botao-excluir-chamada {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  margin-top: 2px !important;
+}
+
+.historico-selecione-data {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 88px !important;
+  text-align: center !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 18px !important;
+}
+
+.historico-selecione-data p {
+  margin: 0 !important;
+  color: #475569 !important;
+  font-weight: 800 !important;
+}
+
+/* A área de relatório deve permanecer bem encaixada no desktop. */
+.pagina-relatorios .relatorio-acoes,
+.pagina-relatorios .relatorio-acoes-rodape {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.pagina-relatorios .relatorio-acoes-botoes,
+.pagina-relatorios .relatorio-acoes .grupo-botoes {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .historico-chamadas-topo,
+  .historico-chamadas-cabecalho-lista {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+  }
+
+  .historico-chamadas-topo .botao-secundario {
+    width: 100% !important;
+  }
+
+  .historico-chamadas-controles {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .pagina-relatorios .historico-chamadas-relatorio,
+  .historico-chamadas-relatorio {
+    margin: 14px 0 !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  .historico-chamadas-topo h3 {
+    font-size: clamp(24px, 8vw, 30px) !important;
+  }
+
+  .lista-historico-chamadas,
+  .card-historico-chamada {
+    grid-template-columns: 1fr !important;
+  }
+
+  .historico-chamada-data {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+  }
+
+  .historico-chamada-resumo {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .historico-chamada-resumo span {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes,
+  .pagina-relatorios .relatorio-acoes .grupo-botoes,
+  .pagina-relatorios .relatorio-acoes-botoes button,
+  .pagina-relatorios .relatorio-acoes .botao-principal,
+  .pagina-relatorios .relatorio-acoes .botao-secundario {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
