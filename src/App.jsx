@@ -8210,6 +8210,65 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
       .toLowerCase() || 'aniversariante'
   }
 
+  const mensagensCartaoAniversario = [
+    'Desejamos que o Senhor derrame paz, alegria e saúde sobre sua vida. Que este novo ciclo seja marcado por graça, crescimento espiritual e muitas vitórias.',
+    'Que Deus abençoe ricamente a sua caminhada e renove suas forças neste novo ano de vida. Receba um tempo de alegria, proteção, esperança e muitas bênçãos.',
+    'Oramos para que o Senhor conduza cada passo da sua vida com amor, sabedoria e paz. Que este aniversário abra uma fase linda de conquistas e comunhão com Deus.',
+    'Que esta nova etapa seja iluminada pela presença do Senhor. Desejamos um aniversário feliz, com saúde, serenidade, frutos espirituais e lindas respostas de oração.',
+    'Receba o carinho da Escola Bíblica Dominical neste dia especial. Que Deus fortaleça sua fé, alegre o seu coração e conceda um ano cheio de graça e vitórias.'
+  ]
+
+  const versiculosCartaoAniversario = [
+    {
+      texto: '“Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”',
+      referencia: 'Salmo 118:24',
+    },
+    {
+      texto: '“O Senhor te abençoe e te guarde; o Senhor faça resplandecer o rosto sobre ti.”',
+      referencia: 'Números 6:24-25',
+    },
+    {
+      texto: '“Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz.”',
+      referencia: 'Jeremias 29:11',
+    },
+    {
+      texto: '“Deleita-te também no Senhor, e ele te concederá o que deseja o teu coração.”',
+      referencia: 'Salmo 37:4',
+    },
+    {
+      texto: '“O choro pode durar uma noite, mas a alegria vem pela manhã.”',
+      referencia: 'Salmo 30:5',
+    },
+  ]
+
+  function obterIndiceVariacaoCartao(aniversariante) {
+    const chave = `${aniversariante?.id || ''}-${aniversariante?.nome || ''}-${aniversariante?.dataNascimento || ''}`
+
+    return Array.from(chave).reduce((total, caractere) => total + caractere.charCodeAt(0), 0)
+  }
+
+  function obterConteudoCartaoAniversario(aniversariante) {
+    const indiceBase = obterIndiceVariacaoCartao(aniversariante)
+    const mensagem = mensagensCartaoAniversario[indiceBase % mensagensCartaoAniversario.length]
+    const versiculo = versiculosCartaoAniversario[indiceBase % versiculosCartaoAniversario.length]
+
+    return {
+      mensagem,
+      versiculoTexto: versiculo.texto,
+      versiculoReferencia: versiculo.referencia,
+      assinaturaLinha1: 'com carinho,',
+      assinaturaLinha2: 'escola bíblica dominical.',
+    }
+  }
+
+  function obterClasseNomeCartao(nome) {
+    const tamanho = String(nome || '').trim().length
+
+    if (tamanho >= 24) return 'cartao-aniversario-nome-muito-longo'
+    if (tamanho >= 16) return 'cartao-aniversario-nome-longo'
+    return ''
+  }
+
   function baixarCanvasComoPng(canvas, nomeArquivo) {
     const link = document.createElement('a')
     link.href = canvas.toDataURL('image/png')
@@ -8281,7 +8340,14 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
       }
 
       const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
-      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉\n\nA Escola Bíblica Dominical preparou este cartão com carinho. Que Deus abençoe sua vida com paz, alegria e muitas vitórias.`
+      const conteudoCartao = obterConteudoCartaoAniversario(aniversariante)
+      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! 🎉
+
+${conteudoCartao.mensagem}
+
+${conteudoCartao.versiculoTexto} (${conteudoCartao.versiculoReferencia})
+
+${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
       try {
         const arquivo = await transformarCanvasEmArquivoPng(canvas, nomeArquivo)
@@ -8335,10 +8401,17 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
       const larguraPagina = pdf.internal.pageSize.getWidth()
       const alturaPagina = pdf.internal.pageSize.getHeight()
-      const larguraCartao = Math.min(170, larguraPagina - 20)
-      const alturaCartao = (canvas.height * larguraCartao) / canvas.width
+      const margemPagina = 10
+      let larguraCartao = Math.min(170, larguraPagina - margemPagina * 2)
+      let alturaCartao = (canvas.height * larguraCartao) / canvas.width
+
+      if (alturaCartao > alturaPagina - margemPagina * 2) {
+        alturaCartao = alturaPagina - margemPagina * 2
+        larguraCartao = (canvas.width * alturaCartao) / canvas.height
+      }
+
       const x = (larguraPagina - larguraCartao) / 2
-      const y = Math.max(8, (alturaPagina - alturaCartao) / 2)
+      const y = Math.max(margemPagina, (alturaPagina - alturaCartao) / 2)
 
       pdf.addImage(imagem, 'PNG', x, y, larguraCartao, alturaCartao)
       pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
@@ -8406,6 +8479,9 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
     const aniversariantesHoje = aniversariantes.filter((pessoa) => Number(pessoa.dias) === 0)
     const proximosAniversariantes = aniversariantes.filter((pessoa) => Number(pessoa.dias) > 0)
     const aniversarianteCartao = obterAniversarianteSelecionadoCartao(aniversariantes)
+    const conteudoCartaoAniversariante = aniversarianteCartao
+      ? obterConteudoCartaoAniversario(aniversarianteCartao)
+      : null
 
     return (
       <div
@@ -8493,7 +8569,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
                   <h4>Cartão pronto para {aniversarianteCartao.nome}</h4>
                   <p>
                     Baixe a imagem para enviar pelo WhatsApp ou imprima em papel A4.
-                    O cartão não usa cruz nem vela; mantém apenas Bíblia/livros e elementos delicados.
+                    A assinatura foi ajustada e cada aniversariante recebe uma mensagem diferente.
                   </p>
                 </div>
 
@@ -8519,25 +8595,24 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
                         <h4>
                           <span>Feliz</span>
                           <em>aniversário,</em>
-                          <strong>{aniversarianteCartao.nome}!</strong>
+                          <strong className={obterClasseNomeCartao(aniversarianteCartao.nome)}>{aniversarianteCartao.nome}!</strong>
                         </h4>
 
                         <div className="cartao-aniversario-divisor" aria-hidden="true">❤</div>
 
                         <p className="cartao-aniversario-mensagem">
-                          Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
-                          Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
+                          {conteudoCartaoAniversariante?.mensagem}
                         </p>
 
                         <section className="cartao-aniversario-versiculo">
                           <span>📖 Versículo bíblico</span>
-                          <p>“Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”</p>
-                          <strong>Salmo 118:24</strong>
+                          <p>{conteudoCartaoAniversariante?.versiculoTexto}</p>
+                          <strong>{conteudoCartaoAniversariante?.versiculoReferencia}</strong>
                         </section>
 
                         <footer>
-                          <em>Com carinho,</em>
-                          <strong>Escola Bíblica Dominical</strong>
+                          <em>{conteudoCartaoAniversariante?.assinaturaLinha1}</em>
+                          <strong>{conteudoCartaoAniversariante?.assinaturaLinha2}</strong>
                         </footer>
                       </div>
                     </div>
@@ -8549,8 +8624,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             <div className="janela-aniversariantes-rodape">
               <strong>Mensagem sugerida:</strong>
               <p>
-                Que esta data seja lembrada com carinho pela Escola Bíblica Dominical.
-                Deus abençoe cada vida com graça, sabedoria e crescimento na Palavra.
+                {conteudoCartaoAniversariante?.mensagem || 'Escolha um aniversariante para visualizar uma mensagem personalizada.'}
               </p>
             </div>
           </div>
