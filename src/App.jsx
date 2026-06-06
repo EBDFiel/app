@@ -6193,6 +6193,27 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     })
   }
 
+  function buscarDataAtualIso() {
+    return new Date().toISOString().slice(0, 10)
+  }
+
+  function confirmarDataDaChamada(dataInformada, tipoChamadaTexto) {
+    const dataNormalizada = dataInformada || buscarDataAtualIso()
+    const hojeIso = buscarDataAtualIso()
+
+    if (dataNormalizada === hojeIso) {
+      return true
+    }
+
+    const dataFormatada = formatarDataCurtaRelatorio(dataNormalizada)
+
+    return window.confirm(
+      `Você está salvando a ${tipoChamadaTexto} para a data ${dataFormatada}.
+
+Confirme se essa é realmente a data correta da EBD antes de continuar.`
+    )
+  }
+
   async function salvarChamada() {
     setMensagemChamada(null)
 
@@ -6262,6 +6283,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const totalFaltas = alunosDaClasse.filter(
       (aluno) => presencasAtuais[String(aluno.id)] === 'faltou'
     ).length
+
+    if (!confirmarDataDaChamada(dataAulaChamada, 'chamada dos alunos')) {
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Chamada não salva. Confira a data da aula e tente novamente.',
+      })
+      return
+    }
 
     const visitantes = converterNumero(dadosExtrasChamada.visitantes)
     const biblias = converterNumero(dadosExtrasChamada.biblias)
@@ -10280,6 +10309,14 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       (professor) => presencasProfessores[professor.id] === 'justificou'
     ).length
 
+    if (!confirmarDataDaChamada(dataAulaChamada, 'chamada dos professores')) {
+      setMensagemChamada({
+        tipo: 'aviso',
+        texto: 'Chamada dos professores não salva. Confira a data da aula e tente novamente.',
+      })
+      return
+    }
+
     const chamadaBanco = {
       id: Date.now(),
       igreja_id: buscarIgrejaIdAtual(),
@@ -10927,13 +10964,15 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
     const datasHistorico = montarDatasHistoricoChamadas(historicoChamadas)
     const dataSelecionadaValida = datasHistorico.some((data) => data.chave === dataHistoricoChamadasSelecionada)
       ? dataHistoricoChamadasSelecionada
-      : datasHistorico[0]?.chave || ''
+      : ''
     const dataSelecionada = datasHistorico.find((data) => data.chave === dataSelecionadaValida)
-    const historicoDaData = historicoChamadas.filter((item) => {
-      const mesmaData = (item.dataChave || obterChaveDataHistoricoChamada(item.data)) === dataSelecionadaValida
-      const mesmoTipo = tipoHistoricoChamadasSelecionado === 'todos' || item.tipo === tipoHistoricoChamadasSelecionado
-      return mesmaData && mesmoTipo
-    })
+    const historicoDaData = dataSelecionadaValida
+      ? historicoChamadas.filter((item) => {
+          const mesmaData = (item.dataChave || obterChaveDataHistoricoChamada(item.data)) === dataSelecionadaValida
+          const mesmoTipo = tipoHistoricoChamadasSelecionado === 'todos' || item.tipo === tipoHistoricoChamadasSelecionado
+          return mesmaData && mesmoTipo
+        })
+      : []
 
     return (
       <div className="historico-chamadas-relatorio no-print">
@@ -10969,6 +11008,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 value={dataSelecionadaValida}
                 onChange={(event) => setDataHistoricoChamadasSelecionada(event.target.value)}
               >
+                <option value="">Selecione uma data</option>
                 {datasHistorico.map((data) => (
                   <option value={data.chave} key={data.chave}>
                     {data.rotulo} — {data.total} {data.total === 1 ? 'chamada' : 'chamadas'}
@@ -10983,9 +11023,9 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
                 value={tipoHistoricoChamadasSelecionado}
                 onChange={(event) => setTipoHistoricoChamadasSelecionado(event.target.value)}
               >
-                <option value="todos">Todas as chamadas</option>
-                <option value="alunos">Alunos</option>
-                <option value="professores">Professores</option>
+                <option value="todos">Alunos e professores</option>
+                <option value="alunos">Somente alunos</option>
+                <option value="professores">Somente professores</option>
               </select>
             </label>
           </div>
@@ -11021,53 +11061,59 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
         )}
 
         {historicoChamadas.length > 0 ? (
-          <>
-            <div className="historico-chamadas-cabecalho-lista">
-              <div>
-                <span>Data selecionada</span>
-                <strong>{dataSelecionada?.rotulo || 'Selecione uma data'}</strong>
+          dataSelecionadaValida ? (
+            <>
+              <div className="historico-chamadas-cabecalho-lista">
+                <div>
+                  <span>Data selecionada</span>
+                  <strong>{dataSelecionada?.rotulo || 'Selecione uma data'}</strong>
+                </div>
+                <p>
+                  {historicoDaData.length} {historicoDaData.length === 1 ? 'registro encontrado' : 'registros encontrados'}
+                </p>
               </div>
-              <p>
-                {historicoDaData.length} {historicoDaData.length === 1 ? 'registro encontrado' : 'registros encontrados'}
-              </p>
-            </div>
 
-            {historicoDaData.length > 0 ? (
-              <div className="lista-historico-chamadas">
-                {historicoDaData.map((item) => (
-                  <article className="card-historico-chamada" key={item.chave}>
-                    <div className="historico-chamada-data">
-                      <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
-                      <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
-                    </div>
-
-                    <div className="historico-chamada-conteudo">
-                      <h4>{item.titulo}</h4>
-                      <p>{item.classe}</p>
-                      <div className="historico-chamada-resumo">
-                        {item.resumo.map((linha) => (
-                          <span key={linha}>{linha}</span>
-                        ))}
+              {historicoDaData.length > 0 ? (
+                <div className="lista-historico-chamadas">
+                  {historicoDaData.map((item) => (
+                    <article className="card-historico-chamada" key={item.chave}>
+                      <div className="historico-chamada-data">
+                        <strong>{formatarDataCurtaRelatorio(item.data)}</strong>
+                        <span>{item.tipo === 'professores' ? 'Professores' : 'Alunos'}</span>
                       </div>
-                    </div>
 
-                    <button
-                      className="botao-excluir botao-excluir-chamada"
-                      type="button"
-                      onClick={(event) => excluirChamadaHistorico(item, event)}
-                      disabled={excluindoChamadaId === item.chave}
-                    >
-                      {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
-                    </button>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className="aviso aviso-historico-vazio">
-                <p>Nenhuma chamada encontrada para essa combinação de filtros.</p>
-              </div>
-            )}
-          </>
+                      <div className="historico-chamada-conteudo">
+                        <h4>{item.titulo}</h4>
+                        <p>{item.classe}</p>
+                        <div className="historico-chamada-resumo">
+                          {item.resumo.map((linha) => (
+                            <span key={linha}>{linha}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        className="botao-excluir botao-excluir-chamada"
+                        type="button"
+                        onClick={(event) => excluirChamadaHistorico(item, event)}
+                        disabled={excluindoChamadaId === item.chave}
+                      >
+                        {excluindoChamadaId === item.chave ? 'Excluindo...' : 'Excluir chamada'}
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="aviso aviso-historico-vazio">
+                  <p>Nenhuma chamada encontrada para essa combinação de filtros.</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="aviso aviso-historico-vazio historico-selecione-data">
+              <p>Selecione uma data para visualizar as chamadas registradas.</p>
+            </div>
+          )
         ) : (
           <div className="aviso aviso-historico-vazio">
             <p>Nenhuma chamada registrada até o momento.</p>
