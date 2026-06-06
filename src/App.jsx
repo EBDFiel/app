@@ -8256,8 +8256,8 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
       mensagem,
       versiculoTexto: versiculo.texto,
       versiculoReferencia: versiculo.referencia,
-      assinaturaLinha1: 'com carinho,',
-      assinaturaLinha2: 'escola bíblica dominical.',
+      assinaturaLinha1: 'Com carinho,',
+      assinaturaLinha2: 'Escola Bíblica Dominical.',
     }
   }
 
