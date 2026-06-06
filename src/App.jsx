@@ -670,6 +670,7 @@ function App() {
   const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
   const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
   const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
+  const [abaAdministracao, setAbaAdministracao] = useState('visao')
   const [igrejaUsuariosAbertaId, setIgrejaUsuariosAbertaId] = useState(null)
   const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
     nome_igreja: '',
@@ -12290,7 +12291,13 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           </div>
 
           {!mostrarFormularioIgrejaAdmin && (
-            <button className="botao-principal" onClick={abrirNovaIgrejaAdmin}>
+            <button
+              className="botao-principal"
+              onClick={() => {
+                setAbaAdministracao('igrejas')
+                abrirNovaIgrejaAdmin()
+              }}
+            >
               Nova igreja
             </button>
           )}
@@ -12328,7 +12335,109 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           </div>
         </div>
 
+        <div className="admin-abas-navegacao" role="tablist" aria-label="Áreas da administração">
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'visao' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('visao')}
+          >
+            Visão geral
+          </button>
 
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'sugestoes' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('sugestoes')}
+          >
+            Sugestões recebidas
+          </button>
+
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'igrejas' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('igrejas')}
+          >
+            Igrejas cadastradas
+          </button>
+
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'auditoria' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('auditoria')}
+          >
+            Auditoria
+          </button>
+
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'diagnostico' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('diagnostico')}
+          >
+            Diagnóstico
+          </button>
+        </div>
+
+        {abaAdministracao === 'visao' && (
+          <div className="admin-visao-geral-grid">
+            <article className="admin-visao-card admin-visao-card-destaque">
+              <span className="selo-admin">Acompanhamento</span>
+              <h3>Sugestões das igrejas</h3>
+              <strong>{feedbacksAdmin.length}</strong>
+              <p>mensagens registradas para acompanhamento da equipe.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => setAbaAdministracao('sugestoes')}
+              >
+                Abrir sugestões
+              </button>
+            </article>
+
+            <article className="admin-visao-card">
+              <span className="selo-admin">Cadastro</span>
+              <h3>Igrejas cadastradas</h3>
+              <strong>{igrejasAdmin.length}</strong>
+              <p>igrejas, sedes e congregações registradas na plataforma.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => setAbaAdministracao('igrejas')}
+              >
+                Ver igrejas
+              </button>
+            </article>
+
+            <article className="admin-visao-card">
+              <span className="selo-admin">Acessos</span>
+              <h3>Auditoria</h3>
+              <strong>{cadastrosIncompletosAdmin.length}</strong>
+              <p>cadastros incompletos ou pendências de vínculo.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => setAbaAdministracao('auditoria')}
+              >
+                Abrir auditoria
+              </button>
+            </article>
+
+            <article className="admin-visao-card">
+              <span className="selo-admin">Suporte</span>
+              <h3>Diagnóstico técnico</h3>
+              <strong>{diagnosticoCarregamento ? 'OK' : '—'}</strong>
+              <p>ferramenta para analisar sessão, perfil e dados carregados.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => setAbaAdministracao('diagnostico')}
+              >
+                Abrir diagnóstico
+              </button>
+            </article>
+          </div>
+        )}
+
+        {abaAdministracao === 'diagnostico' && (
         <div className="diagnostico-carregamento-card diagnostico-admin-card">
           <div className="diagnostico-carregamento-cabecalho">
             <div>
@@ -12405,13 +12514,16 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             </div>
           )}
         </div>
+        )}
 
-        {renderizarAlertasFeedbackAdmin()}
+        {abaAdministracao === 'sugestoes' && renderizarAlertasFeedbackAdmin()}
 
-        {renderizarCadastrosIncompletosAdmin()}
+        {abaAdministracao === 'auditoria' && renderizarCadastrosIncompletosAdmin()}
 
         {/* Usuários vinculados agora aparecem dentro de cada igreja. */}
 
+        {abaAdministracao === 'igrejas' && (
+          <>
         {mostrarFormularioIgrejaAdmin && (
           <form className="formulario formulario-admin-igreja" onSubmit={salvarIgrejaAdmin}>
             <div className="topo-formulario-inline">
@@ -13020,6 +13132,8 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             </div>
           )}
         </div>
+          </>
+        )}
       </section>
     )
   }
