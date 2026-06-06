@@ -21540,3 +21540,318 @@ body,
     justify-content: center !important;
   }
 }
+
+/* v102 - Administração comercial mais organizada */
+.conteudo-admin-comercial {
+  gap: 22px;
+}
+
+.conteudo-admin-comercial .topo-admin-sistema {
+  align-items: center;
+  border: 1px solid rgba(15, 78, 126, 0.12);
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+}
+
+.cards-admin-sistema {
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+}
+
+.admin-abas-navegacao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px;
+  border: 1px solid rgba(15, 78, 126, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+  scrollbar-width: thin;
+}
+
+.admin-abas-navegacao::-webkit-scrollbar {
+  height: 6px;
+}
+
+.admin-abas-navegacao::-webkit-scrollbar-thumb {
+  background: rgba(14, 165, 233, 0.3);
+  border-radius: 999px;
+}
+
+.admin-aba-botao {
+  border: 1px solid rgba(14, 165, 233, 0.18);
+  background: #f8fbff;
+  color: #0f3456;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.admin-aba-botao:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(14, 165, 233, 0.12);
+}
+
+.admin-aba-botao.ativo {
+  background: linear-gradient(135deg, #0f4e7e, #0ea5e9);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(14, 165, 233, 0.25);
+}
+
+.admin-visao-geral-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-visao-card {
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 22px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff, #f8fbff);
+  border: 1px solid rgba(15, 78, 126, 0.12);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
+}
+
+.admin-visao-card-destaque {
+  background: linear-gradient(135deg, #f7fbff, #fff8df);
+}
+
+.admin-visao-card h3 {
+  margin: 0;
+  color: #0d2b45;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+}
+
+.admin-visao-card strong {
+  color: #0f4e7e;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.admin-visao-card p {
+  margin: 0;
+  color: #607184;
+  line-height: 1.55;
+  flex: 1;
+}
+
+.admin-visao-card .botao-secundario {
+  width: 100%;
+  justify-content: center;
+}
+
+.admin-feedback-alertas,
+.admin-acessos-bloco,
+.diagnostico-admin-card,
+.formulario-admin-igreja,
+.filtros-admin,
+.lista-admin-igrejas {
+  animation: adminFadeIn 0.2s ease;
+}
+
+@keyframes adminFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.conteudo-admin-comercial .admin-feedback-alertas {
+  border-radius: 26px;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+}
+
+.conteudo-admin-comercial .lista-feedbacks-admin {
+  gap: 12px;
+}
+
+.conteudo-admin-comercial .feedback-admin-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 16px;
+  align-items: start;
+  padding: 18px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 78, 126, 0.1);
+}
+
+.conteudo-admin-comercial .feedback-admin-conteudo > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #43566b;
+  line-height: 1.55;
+}
+
+.conteudo-admin-comercial .feedback-resposta-admin {
+  margin-top: 12px;
+  border-radius: 16px;
+}
+
+.conteudo-admin-comercial .acoes-feedback-admin {
+  display: grid;
+  gap: 8px;
+}
+
+.conteudo-admin-comercial .acoes-feedback-admin button {
+  width: 100%;
+  min-height: 38px;
+  justify-content: center;
+}
+
+.conteudo-admin-comercial .filtros-admin {
+  align-items: end;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid rgba(15, 78, 126, 0.1);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+.lista-admin-igrejas {
+  gap: 16px;
+}
+
+.lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes {
+  grid-template-columns: minmax(0, 1fr) 190px !important;
+  gap: 18px !important;
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(180deg, #fff, #f8fbff) !important;
+  border: 1px solid rgba(15, 78, 126, 0.12) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07) !important;
+}
+
+.lista-admin-igrejas .linha-titulo-admin {
+  margin-bottom: 8px;
+}
+
+.lista-admin-igrejas .linha-titulo-admin h3 {
+  color: #0d2b45;
+  font-size: 1.15rem;
+}
+
+.lista-admin-igrejas .igreja-admin-card .dados-igreja-admin {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(236, 246, 255, 0.66);
+  border: 1px solid rgba(15, 78, 126, 0.08);
+}
+
+.lista-admin-igrejas .igreja-admin-card .dados-igreja-admin p,
+.lista-admin-igrejas .igreja-admin-card > div:first-child > p {
+  margin: 4px 0;
+  color: #55677b;
+  line-height: 1.45;
+}
+
+.lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  align-content: start;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(248, 251, 255, 0.9);
+  border: 1px solid rgba(15, 78, 126, 0.08);
+}
+
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja button,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-principal,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-secundario,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-editar,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-excluir,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-acessar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-aprovar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-nao-aprovar-igreja,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-whatsapp-admin,
+.lista-admin-igrejas .igreja-admin-card .acoes-aprovacao-igreja .botao-copiar-admin {
+  width: 100% !important;
+  min-height: 38px !important;
+  padding: 9px 12px !important;
+  border-radius: 12px !important;
+  font-size: 0.84rem !important;
+}
+
+.lista-admin-igrejas .igreja-admin-card .grupo-aviso-aprovacao,
+.lista-admin-igrejas .igreja-admin-card .grupo-aprovacao-rapida {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+}
+
+@media (max-width: 1180px) {
+  .cards-admin-sistema {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-visao-geral-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .cards-admin-sistema {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-abas-navegacao {
+    border-radius: 18px;
+    padding: 8px;
+  }
+
+  .admin-aba-botao {
+    padding: 10px 13px;
+    font-size: 0.84rem;
+  }
+
+  .admin-visao-geral-grid,
+  .conteudo-admin-comercial .feedback-admin-item,
+  .lista-admin-igrejas .igreja-admin-card.item-lista.item-com-acoes,
+  .lista-admin-igrejas .igreja-admin-card .dados-igreja-admin {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-visao-card {
+    min-height: auto;
+  }
+
+  .conteudo-admin-comercial .acoes-feedback-admin,
+  .lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .lista-admin-igrejas .igreja-admin-card .grupo-aviso-aprovacao,
+  .lista-admin-igrejas .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-admin-sistema {
+    grid-template-columns: 1fr;
+  }
+
+  .conteudo-admin-comercial .topo-admin-sistema {
+    padding: 22px 18px;
+  }
+
+  .conteudo-admin-comercial .acoes-feedback-admin,
+  .lista-admin-igrejas .igreja-admin-card .acoes-item.acoes-aprovacao-igreja,
+  .lista-admin-igrejas .igreja-admin-card .grupo-aviso-aprovacao,
+  .lista-admin-igrejas .igreja-admin-card .grupo-aprovacao-rapida {
+    grid-template-columns: 1fr !important;
+  }
+}
