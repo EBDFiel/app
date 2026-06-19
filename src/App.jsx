@@ -1354,7 +1354,7 @@ function App() {
       definirSessao(null)
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja está aguardando liberação do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -12456,10 +12456,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="controle-piloto-admin">
           <div>
-            <span className="selo-admin">Piloto EBD Fiel</span>
-            <h3>Controle visual das {LIMITE_IGREJAS_PILOTO} igrejas do teste</h3>
+            <span className="selo-admin">Gestão EBD Fiel</span>
+            <h3>Acompanhamento das Igrejas</h3>
             <p>
-              {igrejasEmAcompanhamento} igreja(s) em acompanhamento, {igrejasLiberadas} liberada(s) para uso e {igrejasPendentes} aguardando decisão.
+              {igrejasAdmin.length} igreja(s) cadastrada(s), {igrejasLiberadas} usando a plataforma e {igrejasPendentes} aguardando liberação.
             </p>
           </div>
 
@@ -12476,7 +12476,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 setFiltroStatusIgrejaAdmin('pendente')
               }}
             >
-              Ver pendentes
+              Ver aguardando
             </button>
 
             <button
