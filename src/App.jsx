@@ -317,6 +317,7 @@ iniciarCorrecaoGlobalDeAcentos()
 
 const CHAVE_PAGINA_ATUAL = 'ebdfiel_pagina_atual'
 const CHAVE_SUPORTE_ADMIN = 'ebdfiel_igreja_suporte_admin'
+const LIMITE_IGREJAS_PILOTO = 10
 
 const PAGINAS_SISTEMA = [
   'painel',
@@ -670,6 +671,7 @@ function App() {
   const [mostrarFormularioIgrejaAdmin, setMostrarFormularioIgrejaAdmin] = useState(false)
   const [igrejaAdminEditandoId, setIgrejaAdminEditandoId] = useState(null)
   const [buscaIgrejaAdmin, setBuscaIgrejaAdmin] = useState('')
+  const [filtroStatusIgrejaAdmin, setFiltroStatusIgrejaAdmin] = useState('todos')
   const [abaAdministracao, setAbaAdministracao] = useState('visao')
   const [igrejaUsuariosAbertaId, setIgrejaUsuariosAbertaId] = useState(null)
   const [novaIgrejaAdmin, setNovaIgrejaAdmin] = useState({
@@ -2592,16 +2594,32 @@ Qualquer dificuldade, pode me chamar por aqui.`
   }
 
 
+  function obterStatusIgrejaAdmin(igreja) {
+    return String(igreja?.status_piloto || 'teste').toLowerCase()
+  }
+
   function filtrarIgrejasAdmin() {
-    const termo = buscaIgrejaAdmin.toLowerCase()
+    const termo = buscaIgrejaAdmin.trim().toLowerCase()
+    const filtroStatus = String(filtroStatusIgrejaAdmin || 'todos').toLowerCase()
 
     return igrejasAdmin.filter((igreja) => {
-      return (
+      const statusIgreja = obterStatusIgrejaAdmin(igreja)
+      const correspondeStatus =
+        filtroStatus === 'todos' ||
+        statusIgreja === filtroStatus ||
+        (filtroStatus === 'liberadas' && ['teste', 'ativa'].includes(statusIgreja))
+
+      const correspondeBusca =
+        !termo ||
         String(igreja.nome_igreja || '').toLowerCase().includes(termo) ||
         String(igreja.congregacao || '').toLowerCase().includes(termo) ||
         String(igreja.responsavel_nome || '').toLowerCase().includes(termo) ||
-        String(igreja.responsavel_email || '').toLowerCase().includes(termo)
-      )
+        String(igreja.responsavel_email || '').toLowerCase().includes(termo) ||
+        String(igreja.responsavel_whatsapp || '').toLowerCase().includes(termo) ||
+        String(igreja.cidade || '').toLowerCase().includes(termo) ||
+        String(igreja.estado || '').toLowerCase().includes(termo)
+
+      return correspondeStatus && correspondeBusca
     })
   }
 
@@ -12355,10 +12373,18 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     }
 
     const igrejasFiltradas = filtrarIgrejasAdmin()
-    const igrejasPendentes = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pendente').length
-    const igrejasTeste = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'teste').length
-    const igrejasAtivas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'ativa').length
-    const igrejasPausadas = igrejasAdmin.filter((igreja) => igreja.status_piloto === 'pausada').length
+    const igrejasPendentes = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'pendente').length
+    const igrejasTeste = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'teste').length
+    const igrejasAtivas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'ativa').length
+    const igrejasPausadas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'pausada').length
+    const igrejasCanceladas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'cancelada').length
+    const igrejasEmAcompanhamento = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) !== 'cancelada').length
+    const igrejasLiberadas = igrejasTeste + igrejasAtivas
+    const vagasRestantesPiloto = Math.max(LIMITE_IGREJAS_PILOTO - igrejasEmAcompanhamento, 0)
+    const percentualUsoPiloto = Math.min(
+      100,
+      Math.round((igrejasEmAcompanhamento / LIMITE_IGREJAS_PILOTO) * 100)
+    )
 
     return (
       <section className="conteudo conteudo-admin-comercial">
@@ -12414,6 +12440,56 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <strong>{igrejasPausadas}</strong>
             <p>aguardando retorno</p>
           </div>
+
+          <div className="card card-admin">
+            <span>Não aprovadas</span>
+            <strong>{igrejasCanceladas}</strong>
+            <p>canceladas ou reprovadas</p>
+          </div>
+
+          <div className="card card-admin card-admin-vagas">
+            <span>Vagas piloto</span>
+            <strong>{vagasRestantesPiloto}</strong>
+            <p>restantes de {LIMITE_IGREJAS_PILOTO}</p>
+          </div>
+        </div>
+
+        <div className="controle-piloto-admin">
+          <div>
+            <span className="selo-admin">Piloto EBD Fiel</span>
+            <h3>Controle visual das {LIMITE_IGREJAS_PILOTO} igrejas do teste</h3>
+            <p>
+              {igrejasEmAcompanhamento} igreja(s) em acompanhamento, {igrejasLiberadas} liberada(s) para uso e {igrejasPendentes} aguardando decisão.
+            </p>
+          </div>
+
+          <div className="controle-piloto-barra" aria-label={`Uso do piloto: ${percentualUsoPiloto}%`}>
+            <span style={{ width: `${percentualUsoPiloto}%` }} />
+          </div>
+
+          <div className="controle-piloto-acoes">
+            <button
+              type="button"
+              className="botao-secundario"
+              onClick={() => {
+                setAbaAdministracao('igrejas')
+                setFiltroStatusIgrejaAdmin('pendente')
+              }}
+            >
+              Ver pendentes
+            </button>
+
+            <button
+              type="button"
+              className="botao-secundario"
+              onClick={() => {
+                setAbaAdministracao('igrejas')
+                setFiltroStatusIgrejaAdmin('liberadas')
+              }}
+            >
+              Ver liberadas
+            </button>
+          </div>
         </div>
 
         <div className="admin-abas-navegacao" role="tablist" aria-label="Áreas da administração">
@@ -12460,6 +12536,23 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         {abaAdministracao === 'visao' && (
           <div className="admin-visao-geral-grid">
+            <article className={`admin-visao-card ${igrejasPendentes > 0 ? 'admin-visao-card-alerta' : ''}`}>
+              <span className="selo-admin">Aprovação</span>
+              <h3>Igrejas aguardando decisão</h3>
+              <strong>{igrejasPendentes}</strong>
+              <p>cadastros recebidos pelo site que ainda precisam ser liberados ou não aprovados.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => {
+                  setAbaAdministracao('igrejas')
+                  setFiltroStatusIgrejaAdmin('pendente')
+                }}
+              >
+                Analisar pendentes
+              </button>
+            </article>
+
             <article className="admin-visao-card admin-visao-card-destaque">
               <span className="selo-admin">Acompanhamento</span>
               <h3>Sugestões das igrejas</h3>
@@ -13032,15 +13125,31 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </form>
         )}
 
-        <div className="filtros filtros-admin">
+        <div className="filtros filtros-admin filtros-admin-igrejas">
           <label>
             Buscar igreja
             <input
               type="text"
               value={buscaIgrejaAdmin}
               onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
-              placeholder="Buscar por igreja, congregação, responsável ou e-mail"
+              placeholder="Buscar por igreja, congregação, responsável, e-mail, cidade ou estado"
             />
+          </label>
+
+          <label>
+            Filtrar status
+            <select
+              value={filtroStatusIgrejaAdmin}
+              onChange={(event) => setFiltroStatusIgrejaAdmin(event.target.value)}
+            >
+              <option value="todos">Todos</option>
+              <option value="pendente">Pendentes</option>
+              <option value="liberadas">Liberadas</option>
+              <option value="teste">Em uso</option>
+              <option value="ativa">Ativas</option>
+              <option value="pausada">Pausadas</option>
+              <option value="cancelada">Não aprovadas</option>
+            </select>
           </label>
 
           <button className="botao-secundario" onClick={carregarIgrejasAdmin}>
@@ -13050,7 +13159,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="lista lista-admin-igrejas">
           {igrejasFiltradas.map((igreja) => (
-            <div className="item-lista item-com-acoes igreja-admin-card" key={igreja.id}>
+            <div
+              className={`item-lista item-com-acoes igreja-admin-card igreja-admin-status-${obterStatusIgrejaAdmin(igreja)}`}
+              key={igreja.id}
+            >
               <div>
                 <div className="linha-titulo-admin">
                   <h3>{igreja.nome_igreja}</h3>
@@ -13209,7 +13321,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
           {igrejasFiltradas.length === 0 && (
             <div className="aviso">
-              <p>Nenhuma igreja encontrada.</p>
+              <p>Nenhuma igreja encontrada com os filtros selecionados.</p>
             </div>
           )}
         </div>
