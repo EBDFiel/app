@@ -25411,4 +25411,306 @@ select option {
     display: none !important;
   }
 }
+/* =========================================================
+   EBD FIEL V49 - CORREÇÃO DE CONTRASTE DO VISUAL PRINCIPAL
+   Mantém o estilo moderno, mas corrige textos apagados.
+   Não altera banco, cadastro, login ou Supabase.
+========================================================= */
 
+.app {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 30%),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.18), transparent 28%),
+    linear-gradient(180deg, #eaf4fb 0%, #f6f8fb 42%, #eef3f8 100%) !important;
+}
+
+/* Área principal clara e legível */
+.area-principal {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.12), transparent 32%),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.12), transparent 30%),
+    linear-gradient(180deg, #edf7fb 0%, #f7f9fc 100%) !important;
+}
+
+/* Container principal com contraste correto */
+.conteudo {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+/* Textos dentro da área principal */
+.conteudo h1,
+.conteudo h2,
+.conteudo h3,
+.conteudo h4,
+.conteudo h5,
+.conteudo h6,
+.conteudo strong,
+.conteudo label,
+.conteudo .card-valor,
+.conteudo .card-titulo {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.conteudo p,
+.conteudo span,
+.conteudo small,
+.conteudo li,
+.conteudo td,
+.conteudo th,
+.conteudo .contador-resultados,
+.conteudo .texto-suave {
+  color: #475569 !important;
+  text-shadow: none !important;
+}
+
+/* Cards, listas, formulários e blocos internos */
+.card,
+.item-lista,
+.resumo,
+.formulario,
+.filtros,
+.tabela-container,
+.mini-dashboard,
+.admin-card,
+.admin-card-comercial,
+.admin-card-executivo,
+.admin-metrica-card,
+.admin-painel-card,
+.admin-resumo-card,
+.admin-status-card,
+.admin-bloco,
+.admin-secao,
+.admin-auditoria-card,
+.admin-diagnostico-card,
+.admin-sugestao-card,
+.admin-igreja-card,
+.admin-visao-geral-grid > *,
+.grade-resumos-comerciais > *,
+.cards > *,
+.cards-estatisticas > * {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10) !important;
+  opacity: 1 !important;
+}
+
+/* Corrige textos dentro de cards administrativos */
+.card *,
+.item-lista *,
+.resumo *,
+.formulario *,
+.filtros *,
+.admin-card *,
+.admin-card-comercial *,
+.admin-card-executivo *,
+.admin-metrica-card *,
+.admin-painel-card *,
+.admin-resumo-card *,
+.admin-status-card *,
+.admin-bloco *,
+.admin-secao *,
+.admin-auditoria-card *,
+.admin-diagnostico-card *,
+.admin-sugestao-card *,
+.admin-igreja-card *,
+.admin-visao-geral-grid > * *,
+.grade-resumos-comerciais > * *,
+.cards > * *,
+.cards-estatisticas > * * {
+  text-shadow: none !important;
+}
+
+/* Títulos e números dos cards */
+.card h3,
+.card h4,
+.admin-card h3,
+.admin-card h4,
+.admin-card-comercial h3,
+.admin-card-executivo h3,
+.admin-metrica-card h3,
+.admin-painel-card h3,
+.admin-resumo-card h3,
+.admin-status-card h3,
+.admin-visao-geral-grid h3,
+.grade-resumos-comerciais h3,
+.cards h3,
+.cards-estatisticas h3 {
+  color: #0f172a !important;
+}
+
+.card p,
+.admin-card p,
+.admin-card-comercial p,
+.admin-card-executivo p,
+.admin-metrica-card p,
+.admin-painel-card p,
+.admin-resumo-card p,
+.admin-status-card p,
+.admin-visao-geral-grid p,
+.grade-resumos-comerciais p,
+.cards p,
+.cards-estatisticas p {
+  color: #64748b !important;
+}
+
+/* Bloco de acompanhamento em destaque */
+.admin-operacao-destaque,
+.admin-acompanhamento-destaque,
+.admin-destaque-comercial {
+  background:
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.24), transparent 34%),
+    linear-gradient(135deg, #07111f 0%, #102131 52%, #12315d 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(247, 178, 77, 0.28) !important;
+  box-shadow: 0 24px 65px rgba(7, 17, 31, 0.28) !important;
+}
+
+.admin-operacao-destaque *,
+.admin-acompanhamento-destaque *,
+.admin-destaque-comercial * {
+  color: #ffffff !important;
+}
+
+/* Abas da Administração */
+.admin-abas-navegacao,
+.abas,
+.abas-chamada {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08) !important;
+}
+
+.admin-abas-navegacao button,
+.abas button,
+.abas-chamada button {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+}
+
+.admin-abas-navegacao button.ativo,
+.admin-abas-navegacao button.active,
+.abas button.ativo,
+.abas button.active,
+.abas-chamada button.ativo,
+.abas-chamada button.active {
+  background: linear-gradient(135deg, #f7b24d 0%, #ff9800 100%) !important;
+  color: #111827 !important;
+  border-color: rgba(247, 178, 77, 0.55) !important;
+  box-shadow: 0 14px 30px rgba(255, 152, 0, 0.22) !important;
+}
+
+/* Botões */
+.botao-principal,
+.conteudo .botao-principal {
+  background: linear-gradient(135deg, #f7b24d 0%, #ff9800 100%) !important;
+  color: #111827 !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 14px 30px rgba(255, 152, 0, 0.24) !important;
+}
+
+.botao-secundario,
+.conteudo .botao-secundario {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(203, 213, 225, 0.95) !important;
+}
+
+.botao-editar {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border-color: #bfdbfe !important;
+}
+
+.botao-excluir {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  border-color: #fecdd3 !important;
+}
+
+/* Inputs e selects */
+input,
+select,
+textarea {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Tabelas */
+.tabela,
+.tabela th,
+.tabela td {
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+
+.tabela th {
+  background: #f8fafc !important;
+  color: #334155 !important;
+}
+
+/* Mantém relatórios e impressão com aparência correta */
+.relatorio-folha,
+.relatorio-folha *,
+.tabela-ebd,
+.tabela-ebd * {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+/* Menu lateral escuro premium */
+.menu-lateral {
+  background:
+    radial-gradient(circle at top left, rgba(247, 178, 77, 0.10), transparent 28%),
+    linear-gradient(180deg, #07111f 0%, #101820 52%, #0b0f16 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.menu-lateral button {
+  color: #eef6fc !important;
+}
+
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, #12315d 0%, #0f4c81 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(247, 178, 77, 0.22) !important;
+}
+
+/* Logo e marca no menu */
+.marca-sidebar h1,
+.menu-lateral .marca-sidebar h1,
+.sidebar .marca-sidebar h1 {
+  color: #ffffff !important;
+  white-space: nowrap !important;
+}
+
+.marca-sidebar p,
+.menu-lateral .marca-sidebar p,
+.sidebar .marca-sidebar p {
+  color: rgba(255, 255, 255, 0.84) !important;
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+  .conteudo {
+    border-radius: 24px !important;
+    padding: 20px !important;
+  }
+
+  .area-principal {
+    padding: 16px !important;
+  }
+}
