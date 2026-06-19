@@ -24141,3 +24141,137 @@ body,
     font-size: 9px !important;
   }
 }
+
+/* =========================================================
+   v43 - Administração do piloto: acompanhamento seguro
+   ========================================================= */
+.cards-admin-sistema {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+}
+
+.card-admin-vagas {
+  border-color: rgba(0, 174, 239, 0.34) !important;
+  background:
+    radial-gradient(circle at top right, rgba(0, 174, 239, 0.13), transparent 34%),
+    #ffffff !important;
+}
+
+.controle-piloto-admin {
+  margin: 22px 0 18px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 360px) auto;
+  gap: 18px;
+  align-items: center;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 210, 0, 0.16), transparent 28%),
+    radial-gradient(circle at 92% 8%, rgba(0, 174, 239, 0.18), transparent 30%),
+    linear-gradient(135deg, #ffffff 0%, #f5fbff 100%);
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+}
+
+.controle-piloto-admin h3 {
+  margin: 8px 0 6px;
+  color: #0f172a;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.controle-piloto-admin p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.controle-piloto-barra {
+  height: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.controle-piloto-barra span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #008C44, #00AEEF);
+  transition: width 0.25s ease;
+}
+
+.controle-piloto-acoes {
+  display: grid;
+  gap: 10px;
+}
+
+.controle-piloto-acoes .botao-secundario {
+  margin-top: 0 !important;
+  white-space: nowrap;
+}
+
+.admin-visao-card-alerta {
+  border-color: rgba(245, 158, 11, 0.38) !important;
+  background:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 34%),
+    #ffffff !important;
+}
+
+.admin-visao-card-alerta .selo-admin {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.filtros-admin-igrejas {
+  grid-template-columns: minmax(260px, 1fr) minmax(190px, 240px) auto !important;
+}
+
+.conteudo-admin-comercial .filtros-admin select {
+  min-height: 44px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.igreja-admin-status-pendente {
+  border-color: rgba(245, 158, 11, 0.42) !important;
+  background:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.11), transparent 24%),
+    #ffffff !important;
+}
+
+.igreja-admin-status-cancelada {
+  opacity: 0.9;
+  border-color: rgba(220, 38, 38, 0.22) !important;
+}
+
+.igreja-admin-status-teste,
+.igreja-admin-status-ativa {
+  border-color: rgba(22, 163, 74, 0.22) !important;
+}
+
+@media (max-width: 1020px) {
+  .controle-piloto-admin,
+  .filtros-admin-igrejas {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controle-piloto-acoes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .controle-piloto-admin {
+    padding: 18px;
+  }
+
+  .controle-piloto-acoes {
+    grid-template-columns: 1fr;
+  }
+
+  .controle-piloto-acoes .botao-secundario {
+    width: 100%;
+  }
+}
