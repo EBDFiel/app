@@ -1163,7 +1163,7 @@ function App() {
     const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
 
     if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('Código de convite inválido. Confira o código informado.')
+      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
       return
     }
 
@@ -1223,8 +1223,17 @@ function App() {
     }
 
     try {
-      // Cadastro aberto: não aplicamos mais limite visual ou regra de lote na interface.
-      // Se existir alguma validação comercial no banco, ela será respeitada pelo retorno do Supabase.
+      const { data: vagasDisponiveis, error: erroVagasDisponiveis } = await supabase.rpc(
+        'vagas_piloto_disponiveis'
+      )
+
+      if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
+        setErroCadastroPiloto(
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
+        )
+        setCarregandoCadastroPiloto(false)
+        return
+      }
 
       const { data: cadastroAuth, error: erroCadastroAuth } = await supabase.auth.signUp({
         email: emailCadastro,
@@ -1345,7 +1354,7 @@ function App() {
       definirSessao(null)
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja está aguardando liberação do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja está aguardando aprovação do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -1363,7 +1372,7 @@ function App() {
         String(error?.details || '').includes('limite_piloto_atingido')
       ) {
         setErroCadastroPiloto(
-          'No momento, novos cadastros estão temporariamente indisponíveis. Aguarde a liberação administrativa.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
       } else if (
         String(error?.message || '').includes('usuario_ja_possui_perfil') ||
@@ -1374,7 +1383,7 @@ function App() {
         )
       } else {
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'Não foi possível criar o acesso da igreja.')
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
         )
       }
     } finally {
@@ -1594,7 +1603,7 @@ function App() {
         !suporteParaPreservar?.id &&
         (mensagemErro.toLowerCase().includes('cadastro incompleto') ||
           mensagemErro.toLowerCase().includes('ainda não liberado') ||
-          mensagemErro.toLowerCase().includes('aguardando liberação') ||
+          mensagemErro.toLowerCase().includes('aguardando aprovação') ||
           mensagemErro.toLowerCase().includes('sem igreja vinculada'))
       ) {
         limparDadosOperacionaisSemTrocarTela()
@@ -2303,7 +2312,7 @@ function App() {
         return
       }
 
-      mostrarErroSistema(error, 'Erro ao carregar igrejas cadastradas.')
+      mostrarErroSistema(error, 'Erro ao carregar igrejas do piloto.')
       return
     }
     await carregarAcessosAdmin()
@@ -2456,7 +2465,7 @@ function App() {
     }
 
     if (novoStatus === 'cancelada') {
-      alert('Igreja marcada como não liberada.')
+      alert('Igreja marcada como não aprovada.')
     }
   }
 
@@ -2519,7 +2528,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     try {
       await navigator.clipboard.writeText(mensagem)
-      alert('Mensagem de liberação copiada.')
+      alert('Mensagem de aprovação copiada.')
     } catch {
       window.prompt('Copie a mensagem abaixo:', mensagem)
     }
@@ -3386,8 +3395,8 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       'teste',
       'ativa',
       'ativo',
-      'liberada',
-      'liberado',
+      'aprovada',
+      'aprovado',
       'liberada',
       'liberado',
     ].includes(statusPilotoAtual)
@@ -3408,7 +3417,7 @@ EBD Fiel — Fiel à Palavra, organizado para servir melhor.`
       setTelaPublica('login')
       throw new Error(
         statusPilotoAtual === 'pendente'
-          ? 'Seu cadastro foi recebido e ainda está aguardando liberação do administrador.'
+          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
           : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
       )
     }
@@ -6726,11 +6735,11 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Aguardando liberação</span>
+            <span className="selo-apresentacao">Aguardando aprovação</span>
             <h2>Sua solicitação foi enviada.</h2>
             <p>
               O administrador vai conferir os dados da igreja e liberar o acesso para
-              a plataforma.
+              o teste piloto.
             </p>
           </div>
         </section>
@@ -6755,13 +6764,13 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             {ultimoCadastroPilotoEnviado.email && (
               <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
             )}
-            <span>Status: aguardando liberação</span>
+            <span>Status: aguardando aprovação</span>
           </div>
 
           <div className="aviso-aprovacao-cadastro">
             <strong>O que acontece agora?</strong>
             <p>
-              Aguarde a liberação do administrador. Após a liberação, você poderá
+              Aguarde a aprovação do administrador. Após a liberação, você poderá
               entrar normalmente com o e-mail e a senha cadastrados.
             </p>
           </div>
@@ -6792,23 +6801,23 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>Cadastro de igreja</p>
+              <p>Cadastro do teste piloto fechado.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Cadastro da plataforma</span>
-            <h2>Crie o acesso da sua igreja.</h2>
+            <span className="selo-apresentacao">Exclusivo para o grupo</span>
+            <h2>Crie o acesso da sua igreja para avaliação.</h2>
             <p>
-              O cadastro será enviado para liberação. Após a liberação, a igreja poderá
-              usar classes, alunos, professores, chamadas, relatórios e mensagens.
+              O cadastro será enviado para aprovação. Após a liberação, a igreja poderá
+              testar classes, alunos, professores, chamadas, relatórios e mensagens.
             </p>
           </div>
 
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="check" className="icone-beneficio" />
-              <span>Convite de cadastro obrigatório</span>
+              <span>Código do piloto obrigatório</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
@@ -6820,7 +6829,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>Liberação pelo administrador</span>
+              <span>Aprovação pelo administrador</span>
             </div>
           </div>
         </section>
@@ -6839,7 +6848,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
               <Icone nome="igreja" className="icone-status" />
             </div>
             <div>
-              <h2>Criar acesso da igreja</h2>
+              <h2>Criar acesso do piloto</h2>
               <p>Preencha seus dados e os dados da igreja participante.</p>
             </div>
           </div>
@@ -6959,7 +6968,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
               </label>
 
               <label>
-                Código de convite
+                Código do piloto
                 <input
                   type="text"
                   value={cadastroPiloto.codigoPiloto}
@@ -6969,7 +6978,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
                       codigoPiloto: event.target.value,
                     })
                   }
-                  placeholder="Código recebido para cadastro"
+                  placeholder="Código informado no grupo"
                 />
               </label>
             </div>
@@ -7223,7 +7232,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
               type="submit"
               disabled={carregandoCadastroPiloto}
             >
-              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para liberação'}
+              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovação'}
             </button>
           </form>
         </section>
@@ -7315,8 +7324,8 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             </div>
           </div>
 
-          <div className="aviso-login-liberado aviso-login-v70">
-            Use este acesso quando sua igreja já estiver liberada pelo administrador.
+          <div className="aviso-login-aprovado aviso-login-v70">
+            Use este acesso somente se sua igreja já foi aprovada pelo administrador.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -7475,8 +7484,8 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
                 <div className="hero-stats">
                   <div className="stat">
-                    <div className="stat-number">{'Online'}</div>
-                    <div className="stat-label">{'Gestão completa'}</div>
+                    <div className="stat-number">{'10'}</div>
+                    <div className="stat-label">{'Igrejas no piloto'}</div>
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'PDF'}</div>
@@ -7636,9 +7645,9 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
               <div className="plans-grid">
                 <article className="plan-card">
                   <div className="plan-badge">{'Fechado'}</div>
-                  <h3>{'Acesso inicial'}</h3>
+                  <h3>{'Teste piloto'}</h3>
                   <div className="plan-price">{'Gratuito'}</div>
-                  <p>{'Para igrejas liberadas pela administração.'}</p>
+                  <p>{'Para igrejas do grupo selecionadas.'}</p>
                   <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
                     {'Entrar'}
                   </button>
@@ -7664,7 +7673,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
                 </article>
               </div>
 
-              <p className="plans-note">{'Acesso organizado pela administra\u00e7\u00e3o do EBD Fiel.'}</p>
+              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
             </div>
           </section>
 
@@ -7674,9 +7683,9 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
               <div className="faq-list">
                 <details className="faq-item">
-                  <summary>{'Como fa\u00e7o para solicitar acesso?'}</summary>
+                  <summary>{'Como fa\u00e7o para participar do teste piloto?'}</summary>
                   <p>
-                    {'O acesso \u00e9 liberado pela administra\u00e7\u00e3o do EBD Fiel ap\u00f3s o cadastro da igreja.'}
+                    {'O teste piloto \u00e9 exclusivo para participantes do grupo de WhatsApp da EBD Fiel.'}
                   </p>
                 </details>
 
@@ -7788,7 +7797,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Cadastro recebido</span>
-            <h2>Seu acesso está aguardando liberação.</h2>
+            <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
               do sistema.
@@ -7800,9 +7809,9 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="mensagem-status-icone">
             <Icone nome="check" className="icone-status" />
           </div>
-          <h2>Aguardando liberação</h2>
+          <h2>Aguardando aprovação</h2>
           <p>
-            Assim que sua igreja for liberada, você poderá entrar normalmente e começar
+            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
             a validação.
           </p>
           <button className="botao-secundario" onClick={sairDoSistema}>
@@ -8717,7 +8726,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <div className="feedback-dica">
-                <strong>Ajude a melhorar o EBD Fiel</strong>
+                <strong>Ajude a melhorar o piloto</strong>
                 <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
               </div>
             </div>
@@ -12369,24 +12378,22 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     const igrejasAtivas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'ativa').length
     const igrejasPausadas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'pausada').length
     const igrejasCanceladas = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) === 'cancelada').length
-    const igrejasEmUso = igrejasTeste + igrejasAtivas
     const igrejasEmAcompanhamento = igrejasAdmin.filter((igreja) => obterStatusIgrejaAdmin(igreja) !== 'cancelada').length
-    const igrejasComAtencao = igrejasPendentes + igrejasPausadas
-    const percentualUsoPlataforma = igrejasAdmin.length
-      ? Math.min(100, Math.round((igrejasEmUso / igrejasAdmin.length) * 100))
-      : 0
-    const resumoOperacaoAdmin = igrejasPendentes > 0
-      ? `${igrejasPendentes} igreja(s) aguardando liberação.`
-      : 'Nenhuma igreja aguardando liberação no momento.'
+    const igrejasLiberadas = igrejasTeste + igrejasAtivas
+    const vagasRestantesPiloto = Math.max(LIMITE_IGREJAS_PILOTO - igrejasEmAcompanhamento, 0)
+    const percentualUsoPiloto = Math.min(
+      100,
+      Math.round((igrejasEmAcompanhamento / LIMITE_IGREJAS_PILOTO) * 100)
+    )
 
     return (
       <section className="conteudo conteudo-admin-comercial">
         <div className="topo-pagina topo-admin-sistema">
           <div>
             <span className="selo-admin">Administração do sistema</span>
-            <h2>Painel comercial</h2>
+            <h2>Administração comercial</h2>
             <p>
-              Acompanhe igrejas cadastradas, acessos, uso da plataforma, solicitações, suporte e relacionamento em uma visão executiva.
+              Gerencie igrejas, sedes, congregações, acessos, uso da plataforma, recuperação de senha e respostas em um único lugar.
             </p>
           </div>
 
@@ -12403,65 +12410,64 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           )}
         </div>
 
-        <div className="cards cards-admin-sistema cards-admin-executivo">
-          <div className="card card-admin card-admin-kpi card-admin-total">
-            <span>Total de igrejas</span>
+        <div className="cards cards-admin-sistema">
+          <div className="card card-admin">
+            <span>Total</span>
             <strong>{igrejasAdmin.length}</strong>
-            <p>contas registradas</p>
+            <p>igrejas cadastradas</p>
           </div>
 
-          <div className="card card-admin card-admin-kpi card-admin-pendentes">
-            <span>Aguardando liberação</span>
+          <div className="card card-admin">
+            <span>Pendentes</span>
             <strong>{igrejasPendentes}</strong>
-            <p>cadastros para análise</p>
+            <p>aguardando aprovação</p>
           </div>
 
-          <div className="card card-admin card-admin-kpi card-admin-em-uso">
-            <span>Usando a plataforma</span>
-            <strong>{igrejasEmUso}</strong>
-            <p>com acesso liberado</p>
+          <div className="card card-admin">
+            <span>Em uso</span>
+            <strong>{igrejasTeste}</strong>
+            <p>usando a plataforma</p>
           </div>
 
-          <div className="card card-admin card-admin-kpi card-admin-ativas">
+          <div className="card card-admin">
             <span>Ativas</span>
             <strong>{igrejasAtivas}</strong>
-            <p>igrejas ativas</p>
+            <p>liberadas para uso</p>
           </div>
 
-          <div className="card card-admin card-admin-kpi card-admin-pausadas">
+          <div className="card card-admin">
             <span>Pausadas</span>
             <strong>{igrejasPausadas}</strong>
             <p>aguardando retorno</p>
           </div>
 
-          <div className="card card-admin card-admin-kpi card-admin-canceladas">
-            <span>Canceladas</span>
+          <div className="card card-admin">
+            <span>Não aprovadas</span>
             <strong>{igrejasCanceladas}</strong>
-            <p>cadastros encerrados</p>
+            <p>canceladas ou reprovadas</p>
+          </div>
+
+          <div className="card card-admin card-admin-vagas">
+            <span>Vagas piloto</span>
+            <strong>{vagasRestantesPiloto}</strong>
+            <p>restantes de {LIMITE_IGREJAS_PILOTO}</p>
           </div>
         </div>
 
-        <div className="admin-operacao-destaque">
-          <div className="admin-operacao-conteudo">
-            <span className="selo-admin">Gestão EBD Fiel</span>
-            <h3>Acompanhamento das igrejas</h3>
+        <div className="controle-piloto-admin">
+          <div>
+            <span className="selo-admin">Piloto EBD Fiel</span>
+            <h3>Controle visual das {LIMITE_IGREJAS_PILOTO} igrejas do teste</h3>
             <p>
-              {igrejasEmAcompanhamento} igreja(s) em acompanhamento, {igrejasEmUso} usando a plataforma e {igrejasComAtencao} com algum ponto de atenção.
+              {igrejasEmAcompanhamento} igreja(s) em acompanhamento, {igrejasLiberadas} liberada(s) para uso e {igrejasPendentes} aguardando decisão.
             </p>
           </div>
 
-          <div className="admin-operacao-painel" aria-label={`Uso da plataforma: ${percentualUsoPlataforma}%`}>
-            <div className="admin-operacao-painel-topo">
-              <span>Uso da plataforma</span>
-              <strong>{percentualUsoPlataforma}%</strong>
-            </div>
-            <div className="admin-operacao-barra">
-              <span style={{ width: `${percentualUsoPlataforma}%` }} />
-            </div>
-            <p>{resumoOperacaoAdmin}</p>
+          <div className="controle-piloto-barra" aria-label={`Uso do piloto: ${percentualUsoPiloto}%`}>
+            <span style={{ width: `${percentualUsoPiloto}%` }} />
           </div>
 
-          <div className="admin-operacao-acoes">
+          <div className="controle-piloto-acoes">
             <button
               type="button"
               className="botao-secundario"
@@ -12470,7 +12476,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 setFiltroStatusIgrejaAdmin('pendente')
               }}
             >
-              Ver aguardando liberação
+              Ver pendentes
             </button>
 
             <button
@@ -12481,15 +12487,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 setFiltroStatusIgrejaAdmin('liberadas')
               }}
             >
-              Ver em uso
-            </button>
-
-            <button
-              type="button"
-              className="botao-secundario"
-              onClick={() => setAbaAdministracao('sugestoes')}
-            >
-              Abrir sugestões
+              Ver liberadas
             </button>
           </div>
         </div>
@@ -12539,10 +12537,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         {abaAdministracao === 'visao' && (
           <div className="admin-visao-geral-grid">
             <article className={`admin-visao-card ${igrejasPendentes > 0 ? 'admin-visao-card-alerta' : ''}`}>
-              <span className="selo-admin">Liberação</span>
-              <h3>Igrejas aguardando liberação</h3>
+              <span className="selo-admin">Aprovação</span>
+              <h3>Igrejas aguardando decisão</h3>
               <strong>{igrejasPendentes}</strong>
-              <p>cadastros recebidos pelo site que ainda precisam de análise administrativa.</p>
+              <p>cadastros recebidos pelo site que ainda precisam ser liberados ou não aprovados.</p>
               <button
                 type="button"
                 className="botao-secundario"
@@ -12551,12 +12549,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   setFiltroStatusIgrejaAdmin('pendente')
                 }}
               >
-                Analisar cadastros
+                Analisar pendentes
               </button>
             </article>
 
             <article className="admin-visao-card admin-visao-card-destaque">
-              <span className="selo-admin">Relacionamento</span>
+              <span className="selo-admin">Acompanhamento</span>
               <h3>Sugestões das igrejas</h3>
               <strong>{feedbacksAdmin.length}</strong>
               <p>mensagens registradas para acompanhamento da equipe.</p>
@@ -12570,7 +12568,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </article>
 
             <article className="admin-visao-card">
-              <span className="selo-admin">Operação</span>
+              <span className="selo-admin">Cadastro</span>
               <h3>Igrejas cadastradas</h3>
               <strong>{igrejasAdmin.length}</strong>
               <p>igrejas, sedes e congregações registradas na plataforma.</p>
@@ -12584,7 +12582,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </article>
 
             <article className="admin-visao-card">
-              <span className="selo-admin">Conferência</span>
+              <span className="selo-admin">Acessos</span>
               <h3>Auditoria</h3>
               <strong>{cadastrosIncompletosAdmin.length}</strong>
               <p>cadastros incompletos ou pendências de vínculo.</p>
@@ -13145,12 +13143,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               onChange={(event) => setFiltroStatusIgrejaAdmin(event.target.value)}
             >
               <option value="todos">Todos</option>
-              <option value="pendente">Aguardando liberação</option>
-              <option value="liberadas">Em uso</option>
+              <option value="pendente">Pendentes</option>
+              <option value="liberadas">Liberadas</option>
               <option value="teste">Em uso</option>
               <option value="ativa">Ativas</option>
               <option value="pausada">Pausadas</option>
-              <option value="cancelada">Canceladas</option>
+              <option value="cancelada">Não aprovadas</option>
             </select>
           </label>
 
@@ -13174,7 +13172,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       : igreja.status_piloto === 'ativa'
                         ? 'Ativa'
                         : igreja.status_piloto === 'pendente'
-                          ? 'Aguardando liberação'
+                          ? 'Pendente'
                           : igreja.status_piloto === 'pausada'
                             ? 'Pausada'
                             : igreja.status_piloto === 'cancelada'
@@ -13183,7 +13181,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   </span>
                   {igreja.status_piloto === 'pendente' && (
                     <span className="selo-aguardando-aprovacao">
-                      aguardando liberação
+                      aguardando decisão
                     </span>
                   )}
                 </div>
@@ -13237,7 +13235,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
-                    Período: {igreja.data_inicio_piloto || 'sem início'} até{' '}
+                    Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
                     {igreja.data_fim_piloto || 'sem fim'}
                   </p>
                 )}
@@ -13257,7 +13255,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       className="botao-nao-aprovar-igreja"
                       onClick={() => naoAprovarIgrejaPiloto(igreja)}
                     >
-                      Cancelar cadastro
+                      Não aprovar
                     </button>
                   </div>
                 )}
