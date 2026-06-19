@@ -24275,3 +24275,1140 @@ body,
     width: 100%;
   }
 }
+
+/* =========================================================
+   V48 - Aparência integrada ao site principal EBD Fiel
+   Alteração visual CSS-only. Não altera Supabase, banco, Auth,
+   queries, tabelas, RLS nem regras de negócio.
+   ========================================================= */
+
+:root {
+  --ebd-bg: #07111f;
+  --ebd-bg-2: #0c1828;
+  --ebd-bg-3: #102131;
+  --ebd-card: rgba(255, 255, 255, 0.055);
+  --ebd-card-2: rgba(255, 255, 255, 0.085);
+  --ebd-stroke: rgba(255, 255, 255, 0.10);
+  --ebd-stroke-strong: rgba(247, 178, 77, 0.28);
+  --ebd-text: #eef6fc;
+  --ebd-muted: #a7bacb;
+  --ebd-muted-2: #d2e0eb;
+  --ebd-primary: #f7b24d;
+  --ebd-primary-2: #ff9800;
+  --ebd-blue: #3ea6ff;
+  --ebd-blue-2: #2563eb;
+  --ebd-green: #22c55e;
+  --ebd-danger: #ef4444;
+  --ebd-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  --ebd-shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.22);
+  --cor-fundo: var(--ebd-bg) !important;
+  --cor-fundo-secundario: var(--ebd-bg-2) !important;
+  --cor-superficie: rgba(255, 255, 255, 0.06) !important;
+  --cor-superficie-escura: #06101c !important;
+  --cor-superficie-escura-2: #0c1828 !important;
+  --cor-primaria: var(--ebd-primary) !important;
+  --cor-primaria-escura: var(--ebd-primary-2) !important;
+  --cor-primaria-clara: rgba(247, 178, 77, 0.14) !important;
+  --cor-borda: var(--ebd-stroke) !important;
+  --cor-borda-forte: var(--ebd-stroke-strong) !important;
+  --cor-texto: var(--ebd-text) !important;
+  --cor-texto-suave: var(--ebd-muted) !important;
+  --sombra-padrao: var(--ebd-shadow) !important;
+  --sombra-suave: var(--ebd-shadow-soft) !important;
+}
+
+html,
+body,
+#root {
+  background: var(--ebd-bg) !important;
+  color: var(--ebd-text) !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  font-family: Inter, Arial, sans-serif !important;
+  background:
+    radial-gradient(circle at top left, rgba(62, 166, 255, 0.13), transparent 28%),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.15), transparent 26%),
+    linear-gradient(180deg, #06101c 0%, #0a1626 42%, #08111d 100%) !important;
+  color: var(--ebd-text) !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.55), transparent 76%);
+}
+
+.app,
+.pagina-publica,
+.tela-login {
+  position: relative !important;
+  z-index: 1 !important;
+  background:
+    radial-gradient(circle at 85% 8%, rgba(247, 178, 77, 0.13), transparent 24%),
+    radial-gradient(circle at 7% 13%, rgba(62, 166, 255, 0.12), transparent 25%),
+    linear-gradient(180deg, #06101c 0%, #0a1626 48%, #08111d 100%) !important;
+  color: var(--ebd-text) !important;
+}
+
+/* Estrutura logada */
+@media (min-width: 1024px) {
+  .app {
+    display: grid !important;
+    grid-template-columns: 306px minmax(0, 1fr) !important;
+    min-height: 100vh !important;
+  }
+
+  .menu-lateral {
+    width: 306px !important;
+    min-width: 306px !important;
+  }
+
+  .area-principal {
+    padding: 30px 36px 42px !important;
+  }
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at 18% 4%, rgba(247, 178, 77, 0.13), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(62, 166, 255, 0.11), transparent 28%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.96), rgba(6, 16, 28, 0.99)) !important;
+  border-right: 1px solid var(--ebd-stroke) !important;
+  box-shadow: 28px 0 80px rgba(0, 0, 0, 0.28) !important;
+  color: #ffffff !important;
+  gap: 22px !important;
+  padding: 26px 18px !important;
+}
+
+.marca-sidebar,
+.marca-sidebar-corrigida,
+.menu-lateral .marca-sidebar {
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+  padding: 0 0 22px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.logo-simbolo-sidebar,
+.logo-sidebar-corrigida,
+.menu-lateral .logo-simbolo,
+.marca-sidebar .logo-simbolo {
+  width: 62px !important;
+  height: 62px !important;
+  min-width: 62px !important;
+  border-radius: 20px !important;
+  padding: 7px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.26),
+    0 0 0 5px rgba(255, 255, 255, 0.04) !important;
+  overflow: hidden !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.logo-imagem,
+.logo-imagem-corrigida,
+.marca-sidebar img,
+.logo-simbolo img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 14px !important;
+  display: block !important;
+}
+
+.texto-marca-sidebar,
+.marca-sidebar > div:last-of-type {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.marca-sidebar h1,
+.texto-marca-sidebar h1,
+.menu-lateral .marca-sidebar h1 {
+  color: #ffffff !important;
+  font-size: 25px !important;
+  line-height: 0.98 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.045em !important;
+  white-space: nowrap !important;
+  margin: 0 0 5px !important;
+  text-shadow: 0 12px 26px rgba(0, 0, 0, 0.30) !important;
+}
+
+.marca-sidebar p,
+.texto-marca-sidebar p,
+.menu-lateral .marca-sidebar p {
+  color: var(--ebd-muted-2) !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  margin: 0 !important;
+  white-space: normal !important;
+}
+
+.fechar-menu-interno {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 12px !important;
+}
+
+.menu-navegacao,
+.menu-lateral nav {
+  gap: 8px !important;
+}
+
+.menu-lateral button,
+.menu-navegacao button {
+  min-height: 50px !important;
+  border-radius: 18px !important;
+  padding: 10px 12px !important;
+  color: #dce6ef !important;
+  font-weight: 800 !important;
+  background: transparent !important;
+  transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease !important;
+}
+
+.menu-lateral button:hover,
+.menu-navegacao button:hover {
+  transform: translateX(3px) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #ffffff !important;
+}
+
+.menu-lateral button.ativo,
+.menu-navegacao button.ativo {
+  background:
+    linear-gradient(135deg, rgba(247, 178, 77, 0.97), rgba(255, 152, 0, 0.97)) !important;
+  color: #102131 !important;
+  box-shadow:
+    0 14px 34px rgba(255, 152, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
+}
+
+.menu-lateral button.ativo .icone-menu,
+.menu-navegacao button.ativo .icone-menu {
+  color: #102131 !important;
+  background: rgba(255, 255, 255, 0.38) !important;
+}
+
+.icone-menu {
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 13px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #eef6fc !important;
+  flex: 0 0 35px !important;
+}
+
+.cartao-usuario-sidebar {
+  background:
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.12), transparent 36%),
+    rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  border-radius: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.cartao-usuario-sidebar strong {
+  color: #ffffff !important;
+}
+
+.titulo-usuario-sidebar,
+.cartao-usuario-sidebar p {
+  color: var(--ebd-muted) !important;
+}
+
+.selo-perfil-sidebar {
+  width: fit-content !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  color: #fff4df !important;
+  background: rgba(247, 178, 77, 0.14) !important;
+  border: 1px solid rgba(247, 178, 77, 0.25) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+
+.area-principal {
+  background: transparent !important;
+  color: var(--ebd-text) !important;
+  min-width: 0 !important;
+}
+
+.conteudo,
+main.conteudo,
+.conteudo.pagina-interna {
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.09), transparent 26%),
+    radial-gradient(circle at top left, rgba(62, 166, 255, 0.10), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  border-radius: 36px !important;
+  box-shadow: var(--ebd-shadow) !important;
+  color: var(--ebd-text) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.conteudo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.055) 18%, transparent 36%);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: ebdCardShine 7.5s ease-in-out infinite;
+}
+
+@keyframes ebdCardShine {
+  0%, 72% { transform: translateX(-140%) skewX(-18deg); opacity: 0; }
+  78% { opacity: 1; }
+  92% { transform: translateX(160%) skewX(-18deg); opacity: 0.6; }
+  100% { transform: translateX(160%) skewX(-18deg); opacity: 0; }
+}
+
+.conteudo > * {
+  position: relative;
+  z-index: 1;
+}
+
+.conteudo h2,
+.conteudo h3,
+.conteudo h4,
+.topo-pagina h2,
+.topo-pagina h3 {
+  color: #ffffff !important;
+  letter-spacing: -0.04em !important;
+}
+
+.conteudo > p,
+.conteudo p,
+.topo-pagina p,
+.card p,
+.item-lista p {
+  color: var(--ebd-muted) !important;
+}
+
+.topo-pagina {
+  margin-bottom: 24px !important;
+  padding: 28px !important;
+  border-radius: 30px !important;
+  background:
+    linear-gradient(180deg, rgba(7, 17, 31, 0.72), rgba(7, 17, 31, 0.92)),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.18), transparent 34%),
+    radial-gradient(circle at top left, rgba(62, 166, 255, 0.16), transparent 30%) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22) !important;
+}
+
+.topo-pagina h2 {
+  font-size: clamp(2.1rem, 4.5vw, 4rem) !important;
+  line-height: 1.02 !important;
+  margin: 8px 0 10px !important;
+}
+
+.selo-admin,
+.selo-publico,
+.selo-apresentacao,
+.hero-tag,
+.plan-badge,
+.card-admin span:first-child,
+.card-titulo {
+  display: inline-flex !important;
+  width: fit-content !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 13px !important;
+  border-radius: 999px !important;
+  background: rgba(247, 178, 77, 0.13) !important;
+  border: 1px solid rgba(247, 178, 77, 0.26) !important;
+  color: #ffe6c2 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* Cards e blocos gerais */
+.card,
+.item-lista,
+.formulario,
+.filtros,
+.resumo,
+.admin-visao-card,
+.diagnostico-carregamento-card,
+.dashboard-v41-bloco,
+.classe-card-moderno,
+.aviso-classes-moderno,
+.secao-configuracoes,
+.feedback-piloto-card,
+.feedback-recente-item,
+.usuario-vinculado-card,
+.igreja-admin-card,
+.cadastro-incompleto-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  border-radius: 26px !important;
+  color: var(--ebd-text) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.20) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.card:hover,
+.item-lista:hover,
+.admin-visao-card:hover,
+.igreja-admin-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(247, 178, 77, 0.22) !important;
+  box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28) !important;
+}
+
+.card h3,
+.item-lista h3,
+.formulario h3,
+.admin-visao-card h3,
+.dashboard-v41-bloco h3,
+.igreja-admin-card h3 {
+  color: #ffffff !important;
+}
+
+.card strong,
+.card-valor,
+.card-admin strong,
+.admin-visao-card strong,
+.dashboard-v41-circulo strong {
+  color: var(--ebd-primary) !important;
+  text-shadow: 0 10px 24px rgba(255, 152, 0, 0.12) !important;
+}
+
+.card-estatistica .card-icone,
+.topo-cartao-icone,
+.mensagem-status-icone,
+.hero-icone-area,
+.persona-avatar,
+.comparison-icon {
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.30), transparent 35%),
+    linear-gradient(135deg, var(--ebd-primary), var(--ebd-primary-2)) !important;
+  color: #102131 !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  box-shadow: 0 14px 28px rgba(255, 152, 0, 0.22) !important;
+}
+
+.cards,
+.cards-estatisticas,
+.cards-admin-sistema,
+.dashboard-v41-cards {
+  gap: 18px !important;
+}
+
+/* Botões */
+.botao-principal,
+button.botao-principal,
+.btn-primary,
+.botao-feedback-enviar,
+.menu-publico button {
+  background: linear-gradient(135deg, #ffb347, #ff9800) !important;
+  color: #102131 !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 14px 34px rgba(255, 152, 0, 0.26), inset 0 1px 0 rgba(255,255,255,0.32) !important;
+  font-weight: 900 !important;
+}
+
+.botao-principal:hover,
+button.botao-principal:hover,
+.btn-primary:hover,
+.botao-feedback-enviar:hover,
+.menu-publico button:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 20px 46px rgba(255, 152, 0, 0.34), inset 0 1px 0 rgba(255,255,255,0.38) !important;
+}
+
+.botao-secundario,
+button.botao-secundario,
+.btn-secondary,
+.btn-outline,
+.botao-editar,
+.botao-presenca,
+.botao-falta {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--ebd-text) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+.botao-secundario:hover,
+button.botao-secundario:hover,
+.btn-secondary:hover,
+.btn-outline:hover,
+.botao-editar:hover,
+.botao-presenca:hover,
+.botao-falta:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(247, 178, 77, 0.26) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+}
+
+.botao-excluir {
+  background: rgba(239, 68, 68, 0.10) !important;
+  border-color: rgba(239, 68, 68, 0.36) !important;
+  color: #fecaca !important;
+}
+
+/* Formulários */
+.formulario label,
+.filtros label,
+.feedback-campo span,
+label {
+  color: var(--ebd-text) !important;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea,
+.filtros input,
+.filtros select,
+.filtros textarea,
+input,
+select,
+textarea {
+  background: rgba(7, 17, 31, 0.64) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #eef6fc !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus,
+.filtros input:focus,
+.filtros select:focus,
+.filtros textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(247, 178, 77, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(247, 178, 77, 0.12), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(210, 224, 235, 0.58) !important;
+}
+
+select option {
+  background: #0c1828 !important;
+  color: #eef6fc !important;
+}
+
+/* Painel inicial */
+.hero-painel {
+  gap: 22px !important;
+}
+
+.hero-painel-conteudo,
+.dashboard-v41-hero {
+  overflow: hidden !important;
+  border-radius: 34px !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  background:
+    linear-gradient(180deg, rgba(7, 17, 31, 0.74), rgba(7, 17, 31, 0.95)),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.22), transparent 36%),
+    radial-gradient(circle at top left, rgba(62, 166, 255, 0.16), transparent 30%) !important;
+  color: #ffffff !important;
+  box-shadow: var(--ebd-shadow) !important;
+}
+
+.hero-painel-conteudo h2,
+.dashboard-v41-hero h3 {
+  color: #ffffff !important;
+  font-size: clamp(2.1rem, 4.5vw, 4.2rem) !important;
+  line-height: 1.03 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.hero-painel-conteudo p,
+.dashboard-v41-hero p {
+  color: var(--ebd-muted) !important;
+}
+
+.hero-painel-destaque {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035)) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  color: var(--ebd-text) !important;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.20) !important;
+}
+
+.hero-painel-destaque h3,
+.hero-painel-destaque li {
+  color: #ffffff !important;
+}
+
+/* Administração comercial */
+.conteudo-admin-comercial {
+  padding: 30px !important;
+}
+
+.topo-admin-sistema {
+  min-height: 210px !important;
+  align-items: center !important;
+}
+
+.cards-admin-executivo {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  margin-bottom: 22px !important;
+}
+
+.card-admin-kpi {
+  min-height: 150px !important;
+  padding: 22px !important;
+  overflow: hidden !important;
+}
+
+.card-admin-kpi::after,
+.admin-visao-card::after {
+  content: "";
+  position: absolute;
+  right: -26px;
+  bottom: -30px;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: rgba(247, 178, 77, 0.10);
+  pointer-events: none;
+}
+
+.admin-operacao-destaque {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.7fr) auto !important;
+  gap: 22px !important;
+  align-items: center !important;
+  padding: 28px !important;
+  border-radius: 34px !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  background:
+    linear-gradient(180deg, rgba(7, 17, 31, 0.76), rgba(7, 17, 31, 0.94)),
+    radial-gradient(circle at 12% 10%, rgba(62, 166, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 96% 10%, rgba(247, 178, 77, 0.18), transparent 30%) !important;
+  box-shadow: var(--ebd-shadow) !important;
+  margin: 22px 0 !important;
+}
+
+.admin-operacao-conteudo h3 {
+  color: #ffffff !important;
+  font-size: clamp(1.5rem, 3vw, 2.4rem) !important;
+  line-height: 1.1 !important;
+  margin: 12px 0 8px !important;
+}
+
+.admin-operacao-painel {
+  padding: 18px !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+}
+
+.admin-operacao-painel-topo {
+  color: #ffffff !important;
+}
+
+.admin-operacao-painel-topo strong {
+  color: var(--ebd-primary) !important;
+}
+
+.admin-operacao-barra {
+  height: 11px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.admin-operacao-barra span,
+.barra-grafico-v41 span,
+.linha-progresso-publica span,
+.barra-frequencia span {
+  display: block !important;
+  height: 100% !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, var(--ebd-primary), var(--ebd-primary-2)) !important;
+  box-shadow: 0 0 24px rgba(255, 152, 0, 0.28) !important;
+}
+
+.admin-operacao-acoes {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.admin-abas-navegacao {
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  padding: 12px !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  margin: 0 0 22px !important;
+}
+
+.admin-aba-botao {
+  border-radius: 999px !important;
+  min-height: 44px !important;
+  padding: 0 18px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--ebd-text) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  font-weight: 900 !important;
+}
+
+.admin-aba-botao.ativo {
+  background: linear-gradient(135deg, var(--ebd-primary), var(--ebd-primary-2)) !important;
+  color: #102131 !important;
+  border-color: transparent !important;
+  box-shadow: 0 14px 30px rgba(255, 152, 0, 0.24) !important;
+}
+
+.admin-visao-geral-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.admin-visao-card {
+  min-height: 250px !important;
+  padding: 24px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.admin-visao-card strong {
+  display: block !important;
+  font-size: 3.2rem !important;
+  line-height: 1 !important;
+  margin: 14px 0 10px !important;
+}
+
+.admin-visao-card .botao-secundario {
+  width: 100% !important;
+  margin-top: auto !important;
+}
+
+.admin-visao-card-destaque,
+.admin-visao-card-alerta {
+  border-color: rgba(247, 178, 77, 0.26) !important;
+  background:
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.04)) !important;
+}
+
+.status-piloto,
+.status-teste,
+.status-ativa,
+.status-pausada,
+.status-cancelada,
+.selo-status-igreja,
+.status-badge {
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: rgba(255,255,255,0.07) !important;
+  color: #eef6fc !important;
+  font-weight: 900 !important;
+}
+
+.status-teste,
+.status-ativa {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border-color: rgba(34, 197, 94, 0.30) !important;
+  color: #bbf7d0 !important;
+}
+
+.status-pausada {
+  background: rgba(247, 178, 77, 0.12) !important;
+  border-color: rgba(247, 178, 77, 0.30) !important;
+  color: #ffe6c2 !important;
+}
+
+.status-cancelada {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.30) !important;
+  color: #fecaca !important;
+}
+
+/* Listas e tabelas */
+.tabela-container {
+  border-radius: 22px !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  background: rgba(255,255,255,0.04) !important;
+}
+
+.tabela {
+  background: transparent !important;
+  color: var(--ebd-text) !important;
+}
+
+.tabela th {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #ffffff !important;
+}
+
+.tabela td {
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+  color: var(--ebd-muted-2) !important;
+}
+
+.relatorio-folha,
+.relatorio-folha *,
+.tabela-ebd,
+.tabela-ebd * {
+  color: #111827 !important;
+}
+
+.relatorio-folha {
+  background: #ffffff !important;
+  border-color: #111827 !important;
+}
+
+.tabela-ebd th {
+  background: #f3f4f6 !important;
+  color: #111827 !important;
+}
+
+.tabela-ebd td {
+  color: #111827 !important;
+  border-color: #111827 !important;
+}
+
+.aviso {
+  background: rgba(247, 178, 77, 0.10) !important;
+  border: 1px solid rgba(247, 178, 77, 0.26) !important;
+  color: #ffe6c2 !important;
+}
+
+.aviso p,
+.aviso strong {
+  color: inherit !important;
+}
+
+.aviso-sucesso-cadastro,
+.mensagem-status-sucesso {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border-color: rgba(34, 197, 94, 0.28) !important;
+  color: #bbf7d0 !important;
+}
+
+/* Página pública e login ficam mais próximas do site principal */
+.topo-publico,
+.hero-publico,
+.secao-publica,
+.rodape-publico,
+.footer {
+  color: var(--ebd-text) !important;
+}
+
+.topo-publico {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 20 !important;
+  margin-top: 0 !important;
+  padding: 14px 0 !important;
+}
+
+.topo-publico::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 86px;
+  background: rgba(7, 17, 31, 0.78);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--ebd-stroke);
+  z-index: -1;
+}
+
+.marca-publica strong,
+.marca-publica span,
+.menu-publico a {
+  color: var(--ebd-text) !important;
+}
+
+.marca-publica span,
+.menu-publico a {
+  color: var(--ebd-muted) !important;
+}
+
+.logo-publica,
+.marca-publica .logo-simbolo,
+.marca-login .logo-simbolo {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 7px !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.26) !important;
+}
+
+.hero-publico-card,
+.secao-beneficios-publica,
+.grade-recursos-publicos article,
+.cartao-plano-publico,
+.plan-card,
+.faq-item,
+.persona-card,
+.comparison-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035)) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  color: var(--ebd-text) !important;
+  box-shadow: var(--ebd-shadow-soft) !important;
+}
+
+.hero-publico h1,
+.secao-publica h2,
+.cabecalho-secao-publica h2,
+.cartao-plano-publico h2,
+.plan-card h3,
+.faq-item summary,
+.persona-card h3,
+.comparison-card h3 {
+  color: #ffffff !important;
+}
+
+.hero-publico p,
+.secao-publica p,
+.cabecalho-secao-publica p,
+.cartao-plano-publico p,
+.plan-card p,
+.faq-item p,
+.persona-card p,
+.comparison-card li {
+  color: var(--ebd-muted) !important;
+}
+
+.mini-dashboard {
+  background: rgba(7, 17, 31, 0.64) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  color: var(--ebd-text) !important;
+}
+
+.mini-grid div,
+.linha-progresso-publica {
+  background: rgba(255,255,255,0.055) !important;
+  border-color: var(--ebd-stroke) !important;
+}
+
+/* Login */
+.tela-login {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(62, 166, 255, 0.14), transparent 28%),
+    radial-gradient(circle at 86% 82%, rgba(247, 178, 77, 0.15), transparent 32%),
+    linear-gradient(145deg, #06101c 0%, #0a1626 54%, #08111d 100%) !important;
+}
+
+.painel-apresentacao {
+  background:
+    linear-gradient(180deg, rgba(7, 17, 31, 0.72), rgba(7, 17, 31, 0.95)),
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.18), transparent 34%),
+    radial-gradient(circle at top left, rgba(62, 166, 255, 0.14), transparent 30%) !important;
+  border-right: 1px solid var(--ebd-stroke) !important;
+}
+
+.cartao-login {
+  background:
+    radial-gradient(circle at top right, rgba(247, 178, 77, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035)) !important;
+  border-left: 1px solid var(--ebd-stroke) !important;
+  color: var(--ebd-text) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.topo-cartao-login h2,
+.cartao-mensagem h2,
+.apresentacao-texto h2,
+.marca-login h1 {
+  color: #ffffff !important;
+}
+
+.topo-cartao-login p,
+.cartao-mensagem p,
+.apresentacao-texto p,
+.marca-login p {
+  color: var(--ebd-muted) !important;
+}
+
+.formulario-login,
+.formulario-cadastro-piloto {
+  background: rgba(7, 17, 31, 0.42) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+}
+
+.botao-voltar-publico {
+  color: #ffe6c2 !important;
+}
+
+/* Compatibilidade mobile */
+.topo-mobile-interno {
+  background: rgba(7, 17, 31, 0.88) !important;
+  border-bottom: 1px solid var(--ebd-stroke) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.botao-menu-interno {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid var(--ebd-stroke) !important;
+  color: var(--ebd-text) !important;
+}
+
+.banner-modo-suporte {
+  background: rgba(247, 178, 77, 0.12) !important;
+  border: 1px solid rgba(247, 178, 77, 0.28) !important;
+  color: #ffe6c2 !important;
+}
+
+@media (max-width: 1023px) {
+  .app {
+    display: block !important;
+  }
+
+  .menu-lateral {
+    width: min(86vw, 330px) !important;
+    min-width: 0 !important;
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    transform: translateX(-105%) !important;
+    z-index: 1200 !important;
+    transition: transform 0.28s ease !important;
+    overflow-y: auto !important;
+  }
+
+  .menu-lateral.menu-lateral-aberto {
+    transform: translateX(0) !important;
+  }
+
+  .area-principal {
+    padding: 16px 12px 26px !important;
+  }
+
+  .conteudo,
+  main.conteudo {
+    border-radius: 26px !important;
+    padding: 18px !important;
+  }
+
+  .topo-pagina {
+    padding: 22px !important;
+    border-radius: 24px !important;
+  }
+
+  .topo-pagina h2 {
+    font-size: clamp(2rem, 10vw, 3.2rem) !important;
+  }
+
+  .admin-operacao-destaque {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-operacao-acoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-abas-navegacao {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .admin-aba-botao {
+    flex: 0 0 auto !important;
+  }
+
+  .tela-login {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .marca-sidebar,
+  .marca-sidebar-corrigida {
+    grid-template-columns: 54px minmax(0, 1fr) auto !important;
+  }
+
+  .logo-simbolo-sidebar,
+  .logo-sidebar-corrigida,
+  .menu-lateral .logo-simbolo,
+  .marca-sidebar .logo-simbolo {
+    width: 54px !important;
+    height: 54px !important;
+    min-width: 54px !important;
+    border-radius: 17px !important;
+  }
+
+  .marca-sidebar h1,
+  .texto-marca-sidebar h1 {
+    font-size: 22px !important;
+  }
+
+  .marca-sidebar p,
+  .texto-marca-sidebar p {
+    font-size: 11px !important;
+  }
+
+  .cards,
+  .cards-estatisticas,
+  .cards-admin-sistema,
+  .admin-visao-geral-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media print {
+  body,
+  #root,
+  .app,
+  .area-principal,
+  .conteudo,
+  .relatorio-folha {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  .menu-lateral,
+  .topo-mobile-interno,
+  .no-print,
+  .admin-operacao-destaque,
+  .admin-abas-navegacao,
+  .topo-pagina .botao-principal,
+  .topo-pagina .botao-secundario {
+    display: none !important;
+  }
+}
+
