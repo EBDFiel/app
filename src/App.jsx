@@ -13987,14 +13987,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         </button>
       </header>
 
-      {menuInternoAberto && (
-        <button
-          type="button"
-          className="overlay-menu-interno"
-          aria-label="Fechar menu lateral"
-          onClick={() => setMenuInternoAberto(false)}
-        />
-      )}
+      {/* Overlay removido para evitar escurecimento/blur no menu mobile.
+          O fechamento continua pelo botão X do menu e pelos itens de navegação. */}
 
       <aside className={`menu-lateral ${menuInternoAberto ? 'menu-lateral-aberto' : ''}`}>
         <div className="marca-sidebar">
