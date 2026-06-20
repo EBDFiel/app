@@ -27026,3 +27026,19 @@ img[src*="logoplataformaebd"] {
   object-fit: cover !important;
   box-shadow: none !important;
 }
+/* Cadastro público simplificado */
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(2),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(3),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(4),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(7),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(8),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(9),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(10),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(11),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(12),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(13),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(14),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(15),
+.cartao-cadastro-piloto .grupo-cadastro-piloto + .grupo-cadastro-piloto label:nth-of-type(16) {
+  display: none !important;
+}
