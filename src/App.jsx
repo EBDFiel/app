@@ -253,22 +253,68 @@ function iniciarCorrecaoGlobalDeAcentos() {
   ]
 
   function corrigir(texto) {
-    if (!texto || typeof texto !== 'string') {
-      return texto
-    }
-
-    let novo = texto
-
-    pares.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
-    })
-
-    palavras.forEach(([errado, certo]) => {
-      novo = novo.split(errado).join(certo)
-    })
-
-    return novo
+  if (!texto || typeof texto !== 'string') {
+    return texto
   }
+
+  let novo = texto
+
+  pares.forEach(([errado, certo]) => {
+    novo = novo.split(errado).join(certo)
+  })
+
+  palavras.forEach(([errado, certo]) => {
+    novo = novo.split(errado).join(certo)
+  })
+
+  const substituicoesExtras = [
+    ['â†’', '→'],
+    ['â†', ''],
+    ['âœ“', '✓'],
+    ['âœ”', '✓'],
+    ['â€œ', '“'],
+    ['â€', '”'],
+    ['â€˜', '‘'],
+    ['â€™', '’'],
+    ['â€“', '–'],
+    ['â€”', '—'],
+    ['â€¢', '•'],
+    ['Ã¡', 'á'],
+    ['Ã ', 'à'],
+    ['Ã¢', 'â'],
+    ['Ã£', 'ã'],
+    ['Ã©', 'é'],
+    ['Ãª', 'ê'],
+    ['Ã­', 'í'],
+    ['Ã³', 'ó'],
+    ['Ã´', 'ô'],
+    ['Ãµ', 'õ'],
+    ['Ãº', 'ú'],
+    ['Ã§', 'ç'],
+    ['Ã', 'Á'],
+    ['Ã€', 'À'],
+    ['Ã‚', 'Â'],
+    ['Ãƒ', 'Ã'],
+    ['Ã‰', 'É'],
+    ['ÃŠ', 'Ê'],
+    ['Ã', 'Í'],
+    ['Ã“', 'Ó'],
+    ['Ã”', 'Ô'],
+    ['Ã•', 'Õ'],
+    ['Ãš', 'Ú'],
+    ['Ã‡', 'Ç'],
+    ['Âº', 'º'],
+    ['Âª', 'ª'],
+    ['Â·', '·'],
+    ['Â', ''],
+  ]
+
+  substituicoesExtras.forEach(([errado, certo]) => {
+    novo = novo.split(errado).join(certo)
+  })
+
+  return novo
+}
 
   function varrer() {
     if (!document.body) {
