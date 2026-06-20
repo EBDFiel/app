@@ -8340,23 +8340,23 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
   const versiculosCartaoAniversario = [
     {
-      texto: 'â€œEste é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.â€',
+      texto: '“Este é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.”',
       referencia: 'Salmo 118:24',
     },
     {
-      texto: 'â€œO Senhor te abençoe e te guarde; o Senhor faça resplandecer o rosto sobre ti.â€',
+      texto: '“O Senhor te abençoe e te guarde; o Senhor faça resplandecer o rosto sobre ti.”',
       referencia: 'Números 6:24-25',
     },
     {
-      texto: 'â€œPorque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz.â€',
+      texto: '“Porque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz.”',
       referencia: 'Jeremias 29:11',
     },
     {
-      texto: 'â€œDeleita-te também no Senhor, e ele te concederá o que deseja o teu coração.â€',
+      texto: '“Deleita-te também no Senhor, e ele te concederá o que deseja o teu coração.”',
       referencia: 'Salmo 37:4',
     },
     {
-      texto: 'â€œO choro pode durar uma noite, mas a alegria vem pela manhã.â€',
+      texto: '“O choro pode durar uma noite, mas a alegria vem pela manhã.”',
       referencia: 'Salmo 30:5',
     },
   ]
@@ -8431,11 +8431,30 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
       return null
     }
 
-    return html2canvas(area, {
+    const canvasOriginal = await html2canvas(area, {
       scale: 3,
       backgroundColor: '#ffffff',
       useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
     })
+
+    const margemExportacao = 60
+    const canvasFinal = document.createElement('canvas')
+    canvasFinal.width = canvasOriginal.width + margemExportacao * 2
+    canvasFinal.height = canvasOriginal.height + margemExportacao * 2
+
+    const contexto = canvasFinal.getContext('2d')
+
+    if (!contexto) {
+      return canvasOriginal
+    }
+
+    contexto.fillStyle = '#ffffff'
+    contexto.fillRect(0, 0, canvasFinal.width, canvasFinal.height)
+    contexto.drawImage(canvasOriginal, margemExportacao, margemExportacao)
+
+    return canvasFinal
   }
 
   async function baixarImagemCartaoAniversario() {
@@ -8686,7 +8705,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     <div className="janela-aniversariante-icone">{'🎂'}</div>
                     <div>
                       <strong>{pessoa.nome}</strong>
-                      <p>{pessoa.tipo} â€¢ {pessoa.detalhe || 'Sem informação'}</p>
+                      <p>{pessoa.tipo} • {pessoa.detalhe || 'Sem informação'}</p>
                     </div>
                     <span>{formatarDataNascimento(pessoa.dataNascimento)}</span>
                     <em>{descreverAniversario(pessoa.dias)}</em>
@@ -8749,7 +8768,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                         </p>
 
                         <section className="cartao-aniversario-versiculo">
-                          <span>{'🎂'}– Versículo bíblico</span>
+                          <span>Versículo bíblico</span>
                           <p>{conteudoCartaoAniversariante?.versiculoTexto}</p>
                           <strong>{conteudoCartaoAniversariante?.versiculoReferencia}</strong>
                         </section>
