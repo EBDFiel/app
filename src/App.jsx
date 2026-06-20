@@ -257,7 +257,89 @@ function iniciarCorrecaoGlobalDeAcentos() {
     return texto
   }
 
+  function contarMarcadoresMojibake(valor) {
+    const codigosMarcadores = new Set([0x00c3, 0x00c2, 0x00e2, 0x00f0, 0xfffd])
+
+    return Array.from(valor).reduce((total, caractere) => {
+      return total + (codigosMarcadores.has(caractere.charCodeAt(0)) ? 1 : 0)
+    }, 0)
+  }
+
+  function decodificarUmaVez(valor) {
+    if (contarMarcadoresMojibake(valor) === 0) {
+      return valor
+    }
+
+    const mapaWindows1252 = {
+      0x20ac: 0x80,
+      0x201a: 0x82,
+      0x0192: 0x83,
+      0x201e: 0x84,
+      0x2026: 0x85,
+      0x2020: 0x86,
+      0x2021: 0x87,
+      0x02c6: 0x88,
+      0x2030: 0x89,
+      0x0160: 0x8a,
+      0x2039: 0x8b,
+      0x0152: 0x8c,
+      0x017d: 0x8e,
+      0x2018: 0x91,
+      0x2019: 0x92,
+      0x201c: 0x93,
+      0x201d: 0x94,
+      0x2022: 0x95,
+      0x2013: 0x96,
+      0x2014: 0x97,
+      0x02dc: 0x98,
+      0x2122: 0x99,
+      0x0161: 0x9a,
+      0x203a: 0x9b,
+      0x0153: 0x9c,
+      0x017e: 0x9e,
+      0x0178: 0x9f,
+    }
+
+    const bytes = []
+
+    for (const caractere of valor) {
+      const codigo = caractere.charCodeAt(0)
+
+      if (codigo <= 0xff) {
+        bytes.push(codigo)
+      } else if (mapaWindows1252[codigo]) {
+        bytes.push(mapaWindows1252[codigo])
+      } else {
+        return valor
+      }
+    }
+
+    try {
+      const decodificado = new TextDecoder('utf-8').decode(new Uint8Array(bytes))
+
+      if (!decodificado || decodificado.includes('\uFFFD')) {
+        return valor
+      }
+
+      return contarMarcadoresMojibake(decodificado) < contarMarcadoresMojibake(valor)
+        ? decodificado
+        : valor
+    } catch {
+      return valor
+    }
+  }
+
   let novo = texto
+
+  for (let rodada = 0; rodada < 3; rodada += 1) {
+    const decodificado = decodificarUmaVez(novo)
+
+    if (decodificado === novo) {
+      break
+    }
+
+    novo = decodificado
+  }
 
   pares.forEach(([errado, certo]) => {
     novo = novo.split(errado).join(certo)
@@ -315,7 +397,6 @@ function iniciarCorrecaoGlobalDeAcentos() {
 
   return novo
 }
-
   function varrer() {
     if (!document.body) {
       return
