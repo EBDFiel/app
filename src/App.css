@@ -26115,3 +26115,282 @@ textarea::placeholder {
   content: "Analisar aguardando";
   font-size: 15px !important;
 }
+/* =========================================================
+   EBD FIEL - AJUSTE DO MENU LATERAL
+   Remove X, tira moldura da logo e muda fundo para azul claro.
+========================================================= */
+
+/* Remove o botão X do menu lateral */
+.fechar-menu-interno {
+  display: none !important;
+}
+
+/* Remove o espaço reservado para o X */
+.menu-lateral .marca-sidebar {
+  padding-right: 4px !important;
+}
+
+/* Fundo azul claro no menu lateral */
+.menu-lateral {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.20), transparent 34%),
+    linear-gradient(180deg, #e8f5ff 0%, #d8ecff 48%, #c7e3fb 100%) !important;
+  color: #0f172a !important;
+  border-right: 1px solid rgba(37, 99, 235, 0.18) !important;
+  box-shadow: 18px 0 42px rgba(15, 23, 42, 0.10) !important;
+}
+
+/* Remove moldura/fundo da logo no menu */
+.menu-lateral .logo-simbolo,
+.menu-lateral .logo-simbolo-sidebar,
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+/* Ajusta imagem da logo sem moldura */
+.menu-lateral .logo-imagem {
+  width: 58px !important;
+  height: 58px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Textos da marca no menu */
+.menu-lateral .marca-sidebar h1,
+.menu-lateral .marca-sidebar p,
+.marca-sidebar h1,
+.marca-sidebar p {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.menu-lateral .marca-sidebar h1 {
+  font-size: 23px !important;
+  font-weight: 900 !important;
+}
+
+.menu-lateral .marca-sidebar p {
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+/* Linha abaixo da marca */
+.menu-lateral .marca-sidebar {
+  border-bottom: 1px solid rgba(37, 99, 235, 0.16) !important;
+}
+
+/* Botões do menu com texto escuro */
+.menu-lateral button,
+.menu-lateral .menu-navegacao button,
+.menu-lateral .menu-navegacao button span {
+  color: #0f172a !important;
+}
+
+/* Ícones do menu */
+.menu-lateral .icone-menu {
+  background: rgba(255, 255, 255, 0.70) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+}
+
+/* Hover dos botões */
+.menu-lateral .menu-navegacao button:hover {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: #0f172a !important;
+}
+
+/* Botão ativo continua destacado */
+.menu-lateral .menu-navegacao button.ativo,
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, #0b84e5 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 14px 28px rgba(3, 105, 161, 0.24) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo span,
+.menu-lateral button.ativo span {
+  color: #ffffff !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo .icone-menu,
+.menu-lateral button.ativo .icone-menu {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Card do usuário no rodapé do menu */
+.cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(37, 99, 235, 0.16) !important;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08) !important;
+}
+
+.cartao-usuario-sidebar,
+.cartao-usuario-sidebar *,
+.cartao-usuario-sidebar strong,
+.cartao-usuario-sidebar span,
+.cartao-usuario-sidebar p {
+  color: #0f172a !important;
+}
+
+.cartao-usuario-sidebar .selo-perfil-sidebar {
+  background: #fff7ed !important;
+  color: #92400e !important;
+  border: 1px solid #fed7aa !important;
+}
+
+/* Botão sair */
+.botao-sair-sidebar {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(37, 99, 235, 0.18) !important;
+}
+
+.botao-sair-sidebar span,
+.botao-sair-sidebar svg {
+  color: #0f172a !important;
+}
+/* =========================================================
+   EBD FIEL - AJUSTE DO MENU LATERAL
+   Remove X, tira moldura da logo e muda fundo para azul claro.
+========================================================= */
+
+.fechar-menu-interno {
+  display: none !important;
+}
+
+.menu-lateral .marca-sidebar {
+  padding-right: 4px !important;
+}
+
+.menu-lateral {
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.20), transparent 34%),
+    linear-gradient(180deg, #e8f5ff 0%, #d8ecff 48%, #c7e3fb 100%) !important;
+  color: #0f172a !important;
+  border-right: 1px solid rgba(37, 99, 235, 0.18) !important;
+  box-shadow: 18px 0 42px rgba(15, 23, 42, 0.10) !important;
+}
+
+.menu-lateral .logo-simbolo,
+.menu-lateral .logo-simbolo-sidebar,
+.menu-lateral .marca-sidebar .logo-simbolo,
+.menu-lateral .marca-sidebar .logo-simbolo-sidebar {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+.menu-lateral .logo-imagem {
+  width: 58px !important;
+  height: 58px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.menu-lateral .marca-sidebar h1,
+.menu-lateral .marca-sidebar p,
+.marca-sidebar h1,
+.marca-sidebar p {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+.menu-lateral .marca-sidebar h1 {
+  font-size: 23px !important;
+  font-weight: 900 !important;
+}
+
+.menu-lateral .marca-sidebar p {
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+.menu-lateral .marca-sidebar {
+  border-bottom: 1px solid rgba(37, 99, 235, 0.16) !important;
+}
+
+.menu-lateral button,
+.menu-lateral .menu-navegacao button,
+.menu-lateral .menu-navegacao button span {
+  color: #0f172a !important;
+}
+
+.menu-lateral .icone-menu {
+  background: rgba(255, 255, 255, 0.70) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(37, 99, 235, 0.12) !important;
+}
+
+.menu-lateral .menu-navegacao button:hover {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: #0f172a !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo,
+.menu-lateral button.ativo {
+  background: linear-gradient(135deg, #0b84e5 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 14px 28px rgba(3, 105, 161, 0.24) !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo span,
+.menu-lateral button.ativo span {
+  color: #ffffff !important;
+}
+
+.menu-lateral .menu-navegacao button.ativo .icone-menu,
+.menu-lateral button.ativo .icone-menu {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(37, 99, 235, 0.16) !important;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08) !important;
+}
+
+.cartao-usuario-sidebar,
+.cartao-usuario-sidebar *,
+.cartao-usuario-sidebar strong,
+.cartao-usuario-sidebar span,
+.cartao-usuario-sidebar p {
+  color: #0f172a !important;
+}
+
+.cartao-usuario-sidebar .selo-perfil-sidebar {
+  background: #fff7ed !important;
+  color: #92400e !important;
+  border: 1px solid #fed7aa !important;
+}
+
+.botao-sair-sidebar {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(37, 99, 235, 0.18) !important;
+}
+
+.botao-sair-sidebar span,
+.botao-sair-sidebar svg {
+  color: #0f172a !important;
+}
