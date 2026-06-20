@@ -7,35 +7,35 @@ import { supabase } from './lib/supabase'
 const classesIniciais = [
   { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
   { id: 2, nome: 'Adultos', professor: 'Pr. Carlos' },
-  { id: 3, nome: 'CrianÃ§as', professor: 'IrmÃ£ Ana' },
+  { id: 3, nome: 'Crianças', professor: 'Irmã Ana' },
 ]
 
 const ESTADOS_BRASIL = [
   { sigla: 'AC', nome: 'Acre' },
   { sigla: 'AL', nome: 'Alagoas' },
-  { sigla: 'AP', nome: 'AmapÃ¡' },
+  { sigla: 'AP', nome: 'Amapá' },
   { sigla: 'AM', nome: 'Amazonas' },
   { sigla: 'BA', nome: 'Bahia' },
-  { sigla: 'CE', nome: 'CearÃ¡' },
+  { sigla: 'CE', nome: 'Ceará' },
   { sigla: 'DF', nome: 'Distrito Federal' },
-  { sigla: 'ES', nome: 'EspÃ­rito Santo' },
-  { sigla: 'GO', nome: 'GoiÃ¡s' },
-  { sigla: 'MA', nome: 'MaranhÃ£o' },
+  { sigla: 'ES', nome: 'Espírito Santo' },
+  { sigla: 'GO', nome: 'Goiás' },
+  { sigla: 'MA', nome: 'Maranhão' },
   { sigla: 'MT', nome: 'Mato Grosso' },
   { sigla: 'MS', nome: 'Mato Grosso do Sul' },
   { sigla: 'MG', nome: 'Minas Gerais' },
-  { sigla: 'PA', nome: 'ParÃ¡' },
-  { sigla: 'PB', nome: 'ParaÃ­ba' },
-  { sigla: 'PR', nome: 'ParanÃ¡' },
+  { sigla: 'PA', nome: 'Pará' },
+  { sigla: 'PB', nome: 'Paraíba' },
+  { sigla: 'PR', nome: 'Paraná' },
   { sigla: 'PE', nome: 'Pernambuco' },
-  { sigla: 'PI', nome: 'PiauÃ­' },
+  { sigla: 'PI', nome: 'Piauí' },
   { sigla: 'RJ', nome: 'Rio de Janeiro' },
   { sigla: 'RN', nome: 'Rio Grande do Norte' },
   { sigla: 'RS', nome: 'Rio Grande do Sul' },
-  { sigla: 'RO', nome: 'RondÃ´nia' },
+  { sigla: 'RO', nome: 'Rondônia' },
   { sigla: 'RR', nome: 'Roraima' },
   { sigla: 'SC', nome: 'Santa Catarina' },
-  { sigla: 'SP', nome: 'SÃ£o Paulo' },
+  { sigla: 'SP', nome: 'São Paulo' },
   { sigla: 'SE', nome: 'Sergipe' },
   { sigla: 'TO', nome: 'Tocantins' },
 ]
@@ -44,7 +44,7 @@ const ESTADOS_BRASIL = [
 const alunosIniciais = [
   { id: 1, nome: 'Pedro Silva', classeId: 1, telefone: '(11) 99999-0000', dataNascimento: '', tipoPessoa: 'aluno' },
   { id: 2, nome: 'Maria Souza', classeId: 2, telefone: '', dataNascimento: '', tipoPessoa: 'aluno' },
-  { id: 3, nome: 'JoÃ£o Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
+  { id: 3, nome: 'João Santos', classeId: 3, telefone: '(11) 98888-1111', dataNascimento: '', tipoPessoa: 'aluno' },
 ]
 
 
@@ -354,7 +354,7 @@ function salvarPaginaAtualSalva(paginaId) {
   try {
     window.localStorage.setItem(CHAVE_PAGINA_ATUAL, paginaId)
   } catch (error) {
-    console.error('Erro ao salvar pÃ¡gina atual:', error)
+    console.error('Erro ao salvar página atual:', error)
   }
 }
 
@@ -810,22 +810,22 @@ congregacao: '',
     { id: 'classes', nome: 'Classes', icone: 'classes', apenasSecretaria: true },
     { id: 'alunos', nome: 'Alunos', icone: 'alunos' },
     { id: 'professores', nome: 'Professores', icone: 'usuarios', apenasSecretaria: true },
-    { id: 'usuarios', nome: 'UsuÃ¡rios', icone: 'usuarios', apenasSecretaria: true },
+    { id: 'usuarios', nome: 'Usuários', icone: 'usuarios', apenasSecretaria: true },
     { id: 'chamada', nome: 'Chamada', icone: 'chamada' },
-    { id: 'relatorios', nome: 'RelatÃ³rios', icone: 'relatorios' },
-    { id: 'historico', nome: 'HistÃ³rico do aluno', icone: 'alunos' },
+    { id: 'relatorios', nome: 'Relatórios', icone: 'relatorios' },
+    { id: 'historico', nome: 'Histórico do aluno', icone: 'alunos' },
     { id: 'financeiro', nome: 'Financeiro', icone: 'relatorios', apenasSecretaria: true },
-    { id: 'backup', nome: 'SeguranÃ§a e auditoria', icone: 'configuracoes', apenasSecretaria: true },
-    { id: 'manual', nome: 'Manual do usuÃ¡rio', icone: 'relatorios' },
+    { id: 'backup', nome: 'Segurança e auditoria', icone: 'configuracoes', apenasSecretaria: true },
+    { id: 'manual', nome: 'Manual do usuário', icone: 'relatorios' },
     {
       id: 'configuracoes',
-      nome: 'ConfiguraÃ§Ãµes',
+      nome: 'Configurações',
       icone: 'configuracoes',
       apenasSecretaria: true,
     },
     {
       id: 'administracao',
-      nome: 'AdministraÃ§Ã£o',
+      nome: 'Administração',
       icone: 'configuracoes',
       apenasAdminSistema: true,
     },
@@ -875,9 +875,9 @@ congregacao: '',
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      // Importante: o callback do Supabase Auth nÃ£o deve aguardar consultas ao Supabase.
-      // Depois do F5, chamadas assÃ­ncronas com await dentro deste callback podem prender
-      // a restauraÃ§Ã£o da sessÃ£o e deixar o app com dados zerados. Por isso, quando
+      // Importante: o callback do Supabase Auth não deve aguardar consultas ao Supabase.
+      // Depois do F5, chamadas assíncronas com await dentro deste callback podem prender
+      // a restauração da sessão e deixar o app com dados zerados. Por isso, quando
       // precisamos carregar dados, agendamos para depois do callback terminar.
       if (typeof window !== 'undefined' && window.__ebdFielSaindoDoSistema) {
         setCarregando(false)
@@ -944,8 +944,8 @@ congregacao: '',
         return
       }
 
-      // A sessÃ£o inicial apÃ³s F5 Ã© carregada por iniciarAutenticacao().
-      // NÃ£o carregamos dados aqui para evitar corrida/lock com getSession().
+      // A sessão inicial após F5 é carregada por iniciarAutenticacao().
+      // Não carregamos dados aqui para evitar corrida/lock com getSession().
       if (event === 'INITIAL_SESSION') {
         setCarregando(false)
         setVerificandoSessao(false)
@@ -958,10 +958,10 @@ congregacao: '',
         window.setTimeout(() => {
           carregarDadosOnline(session, igrejaSuporteSalva)
             .catch((erroCarregamentoSessao) => {
-              console.error('Erro ao validar sessÃ£o:', erroCarregamentoSessao)
+              console.error('Erro ao validar sessão:', erroCarregamentoSessao)
               setErroSistema(
                 erroCarregamentoSessao?.message ||
-                  'NÃ£o foi possÃ­vel validar sua sessÃ£o.'
+                  'Não foi possível validar sua sessão.'
               )
             })
             .finally(() => {
@@ -1038,7 +1038,7 @@ congregacao: '',
           console.error('Erro ao carregar dados iniciais:', erroCarregamentoInicial)
           setErroSistema(
             erroCarregamentoInicial?.message ||
-              'NÃ£o foi possÃ­vel carregar os dados iniciais.'
+              'Não foi possível carregar os dados iniciais.'
           )
           setCarregando(false)
         })
@@ -1047,7 +1047,7 @@ congregacao: '',
         setCarregando(false)
       }
     } catch (error) {
-      console.error('Erro ao verificar sessÃ£o:', error)
+      console.error('Erro ao verificar sessão:', error)
       setErroSistema('Erro ao verificar login.')
       setVerificandoSessao(false)
       setCarregando(false)
@@ -1164,7 +1164,7 @@ congregacao: '',
     const emailCadastro = cadastroPiloto.email.trim().toLowerCase()
 
     if (codigoInformado !== codigoPilotoOficial) {
-      setErroCadastroPiloto('CÃ³digo do piloto invÃ¡lido. Confira o cÃ³digo informado no grupo.')
+      setErroCadastroPiloto('Código do piloto inválido. Confira o código informado no grupo.')
       return
     }
 
@@ -1178,12 +1178,12 @@ congregacao: '',
     const telefoneCompleto = `${telefoneDdd}${telefoneNumero}`
 
     if (telefoneDdd.length !== 2) {
-      setErroCadastroPiloto('Informe o DDD com 2 nÃºmeros.')
+      setErroCadastroPiloto('Informe o DDD com 2 números.')
       return
     }
 
     if (telefoneNumero.length < 8) {
-      setErroCadastroPiloto('Informe o nÃºmero de telefone/WhatsApp.')
+      setErroCadastroPiloto('Informe o número de telefone/WhatsApp.')
       return
     }
 
@@ -1198,7 +1198,7 @@ congregacao: '',
     }
 
     if (cadastroPiloto.senha !== cadastroPiloto.confirmarSenha) {
-      setErroCadastroPiloto('A confirmaÃ§Ã£o de senha nÃ£o confere.')
+      setErroCadastroPiloto('A confirmação de senha não confere.')
       return
     }
 
@@ -1213,7 +1213,7 @@ congregacao: '',
     }
 
     if (cadastroPiloto.tipoIgreja === 'congregacao' && !cadastroPiloto.sedeFiliadaNome.trim()) {
-      setErroCadastroPiloto('Informe a sede Ã  qual a congregaÃ§Ã£o Ã© filiada.')
+      setErroCadastroPiloto('Informe a sede à qual a congregação é filiada.')
       return
     }
 
@@ -1230,7 +1230,7 @@ congregacao: '',
 
       if (!erroVagasDisponiveis && Number(vagasDisponiveis) <= 0) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto jÃ¡ foi atingido. Aguarde a liberaÃ§Ã£o de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
         setCarregandoCadastroPiloto(false)
         return
@@ -1257,7 +1257,7 @@ congregacao: '',
 
         if (erroLoginCadastro) {
           setSucessoCadastroPiloto(
-            'Seu usuÃ¡rio foi criado. Confira seu e-mail para confirmar o cadastro e depois faÃ§a login.'
+            'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
           )
           return
         }
@@ -1268,7 +1268,7 @@ congregacao: '',
 
       if (!usuarioCadastro?.id || !sessaoCadastro) {
         setSucessoCadastroPiloto(
-          'Seu usuÃ¡rio foi criado. Confira seu e-mail para confirmar o cadastro e depois faÃ§a login.'
+          'Seu usuário foi criado. Confira seu e-mail para confirmar o cadastro e depois faça login.'
         )
         return
       }
@@ -1328,7 +1328,7 @@ congregacao: '',
 
       if (!igrejaCriadaIdNormalizada) {
         throw new Error(
-          'O cadastro da igreja foi iniciado, mas nÃ£o foi possÃ­vel confirmar o vÃ­nculo. Entre em contato com o administrador.'
+          'O cadastro da igreja foi iniciado, mas não foi possível confirmar o vínculo. Entre em contato com o administrador.'
         )
       }
 
@@ -1355,7 +1355,7 @@ congregacao: '',
       definirSessao(null)
 
       setSucessoCadastroPiloto(
-        'Cadastro enviado com sucesso! Sua igreja estÃ¡ aguardando liberaÃ§Ã£o do administrador.'
+        'Cadastro enviado com sucesso! Sua igreja está aguardando liberação do administrador.'
       )
       setUltimoCadastroPilotoEnviado({
         nomeIgreja: cadastroPiloto.nomeIgreja.trim(),
@@ -1373,18 +1373,18 @@ congregacao: '',
         String(error?.details || '').includes('limite_piloto_atingido')
       ) {
         setErroCadastroPiloto(
-          'O limite inicial de 10 igrejas para o teste piloto jÃ¡ foi atingido. Aguarde a liberaÃ§Ã£o de novas vagas.'
+          'O limite inicial de 10 igrejas para o teste piloto já foi atingido. Aguarde a liberação de novas vagas.'
         )
       } else if (
         String(error?.message || '').includes('usuario_ja_possui_perfil') ||
         String(error?.details || '').includes('usuario_ja_possui_perfil')
       ) {
         setErroCadastroPiloto(
-          'Este e-mail jÃ¡ iniciou um cadastro anteriormente. Use â€œEsqueci minha senhaâ€ para recuperar o acesso ou fale com o administrador para concluir o vÃ­nculo.'
+          'Este e-mail já iniciou um cadastro anteriormente. Use â€œEsqueci minha senhaâ€ para recuperar o acesso ou fale com o administrador para concluir o vínculo.'
         )
       } else {
         setErroCadastroPiloto(
-          traduzirErroSistema(error, 'NÃ£o foi possÃ­vel criar o acesso do piloto.')
+          traduzirErroSistema(error, 'Não foi possível criar o acesso do piloto.')
         )
       }
     } finally {
@@ -1405,7 +1405,7 @@ congregacao: '',
     setMensagemRecuperacao('')
 
     if (!email) {
-      setErroRecuperacao('Informe seu e-mail para receber o link de recuperaÃ§Ã£o.')
+      setErroRecuperacao('Informe seu e-mail para receber o link de recuperação.')
       return
     }
 
@@ -1421,12 +1421,12 @@ congregacao: '',
       }
 
       setMensagemRecuperacao(
-        'Link de recuperaÃ§Ã£o enviado. Confira sua caixa de entrada e tambÃ©m a pasta de spam.'
+        'Link de recuperação enviado. Confira sua caixa de entrada e também a pasta de spam.'
       )
     } catch (error) {
       console.error(error)
       setErroRecuperacao(
-        traduzirErroSistema(error, 'NÃ£o foi possÃ­vel enviar o link de recuperaÃ§Ã£o.')
+        traduzirErroSistema(error, 'Não foi possível enviar o link de recuperação.')
       )
     } finally {
       setCarregandoRecuperacao(false)
@@ -1444,7 +1444,7 @@ congregacao: '',
     }
 
     if (novaSenhaRecuperacao !== confirmarNovaSenhaRecuperacao) {
-      setErroNovaSenha('A confirmaÃ§Ã£o da nova senha nÃ£o confere.')
+      setErroNovaSenha('A confirmação da nova senha não confere.')
       return
     }
 
@@ -1468,7 +1468,7 @@ congregacao: '',
     } catch (error) {
       console.error(error)
       setErroNovaSenha(
-        traduzirErroSistema(error, 'NÃ£o foi possÃ­vel atualizar a senha.')
+        traduzirErroSistema(error, 'Não foi possível atualizar a senha.')
       )
     } finally {
       setCarregandoNovaSenha(false)
@@ -1503,7 +1503,7 @@ congregacao: '',
       await carregarDadosOnline(data.session)
     } catch (error) {
       console.error('Erro ao entrar:', error)
-      setErroLogin('E-mail ou senha invÃ¡lidos.')
+      setErroLogin('E-mail ou senha inválidos.')
     } finally {
       setCarregandoLogin(false)
     }
@@ -1591,7 +1591,7 @@ congregacao: '',
     } catch (error) {
       console.error('Erro ao carregar dados:', error)
 
-      const mensagemErro = error?.message || 'NÃ£o foi possÃ­vel carregar os dados do Supabase.'
+      const mensagemErro = error?.message || 'Não foi possível carregar os dados do Supabase.'
       setErroSistema(mensagemErro)
 
       if (suporteParaPreservar?.id && sessaoAtual?.user?.id) {
@@ -1603,8 +1603,8 @@ congregacao: '',
       if (
         !suporteParaPreservar?.id &&
         (mensagemErro.toLowerCase().includes('cadastro incompleto') ||
-          mensagemErro.toLowerCase().includes('ainda nÃ£o liberado') ||
-          mensagemErro.toLowerCase().includes('aguardando aprovaÃ§Ã£o') ||
+          mensagemErro.toLowerCase().includes('ainda não liberado') ||
+          mensagemErro.toLowerCase().includes('aguardando aprovação') ||
           mensagemErro.toLowerCase().includes('sem igreja vinculada'))
       ) {
         limparDadosOperacionaisSemTrocarTela()
@@ -1638,18 +1638,18 @@ congregacao: '',
 
   async function inserirDadosIniciais(igrejaAtualId, sessaoAtual = sessao) {
     // PROTEÃ‡ÃƒO v51:
-    // Esta funÃ§Ã£o deixou de criar dados automÃ¡ticos com IDs fixos.
+    // Esta função deixou de criar dados automáticos com IDs fixos.
     // Antes, classes/alunos iniciais usavam id 1, 2 e 3 com upsert, o que podia
     // interferir em registros existentes de outras igrejas quando havia conflito de ID.
-    // Para proteger as igrejas ativas, nenhuma classe ou aluno serÃ¡ criado automaticamente
+    // Para proteger as igrejas ativas, nenhuma classe ou aluno será criado automaticamente
     // ao carregar uma igreja. Se uma igreja nova precisar de classes, cadastre manualmente
     // pela tela Classes.
     if (!igrejaAtualId) {
-      throw new Error('Igreja nÃ£o identificada para criar os dados iniciais.')
+      throw new Error('Igreja não identificada para criar os dados iniciais.')
     }
 
     console.warn(
-      'CriaÃ§Ã£o automÃ¡tica de dados iniciais bloqueada para proteger cadastros existentes.',
+      'Criação automática de dados iniciais bloqueada para proteger cadastros existentes.',
       { igrejaAtualId, userId: sessaoAtual?.user?.id }
     )
 
@@ -1810,7 +1810,7 @@ congregacao: '',
     const igrejaIdSelecionada = Number(igreja?.id)
 
     if (!igrejaIdSelecionada) {
-      alert('NÃ£o foi possÃ­vel identificar a igreja selecionada.')
+      alert('Não foi possível identificar a igreja selecionada.')
       return
     }
 
@@ -1871,11 +1871,11 @@ congregacao: '',
       definirIgrejaSuporteAdmin(null)
       setErroSistema(
         erroSuporte?.message ||
-          'NÃ£o foi possÃ­vel acessar esta igreja em modo suporte agora.'
+          'Não foi possível acessar esta igreja em modo suporte agora.'
       )
       alert(
         erroSuporte?.message ||
-          'NÃ£o foi possÃ­vel acessar esta igreja em modo suporte agora.'
+          'Não foi possível acessar esta igreja em modo suporte agora.'
       )
     } finally {
       setCarregando(false)
@@ -2113,7 +2113,7 @@ congregacao: '',
     if (error) {
       console.error(error)
       setErroCadastrosIncompletosAdmin(
-        traduzirErroSistema(error, 'NÃ£o foi possÃ­vel carregar os cadastros incompletos.')
+        traduzirErroSistema(error, 'Não foi possível carregar os cadastros incompletos.')
       )
       setCadastrosIncompletosAdmin([])
       return
@@ -2136,12 +2136,12 @@ congregacao: '',
     }
 
     if (!novoAcessoAdmin.nome.trim()) {
-      alert('Informe o nome do usuÃ¡rio.')
+      alert('Informe o nome do usuário.')
       return
     }
 
     if (!novoAcessoAdmin.email.trim()) {
-      alert('Informe o e-mail do usuÃ¡rio.')
+      alert('Informe o e-mail do usuário.')
       return
     }
 
@@ -2165,7 +2165,7 @@ congregacao: '',
       .upsert(dadosAcesso, { onConflict: 'user_id' })
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel salvar o acesso.')
+      mostrarErroSistema(error, 'Não foi possível salvar o acesso.')
       return
     }
 
@@ -2181,7 +2181,7 @@ congregacao: '',
     }
 
     const confirmar = window.confirm(
-      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuÃ¡rio continuarÃ¡ existindo no Authentication, mas ficarÃ¡ sem vÃ­nculo no sistema.`
+      `Deseja remover o acesso de ${acesso.nome || acesso.email}? O usuário continuará existindo no Authentication, mas ficará sem vínculo no sistema.`
     )
 
     if (!confirmar) {
@@ -2194,7 +2194,7 @@ congregacao: '',
       .eq('user_id', acesso.user_id)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel remover o acesso.')
+      mostrarErroSistema(error, 'Não foi possível remover o acesso.')
       return
     }
 
@@ -2203,12 +2203,12 @@ congregacao: '',
 
   async function enviarRecuperacaoSenhaAdmin(email) {
     if (!email) {
-      alert('Este usuÃ¡rio nÃ£o possui e-mail cadastrado.')
+      alert('Este usuário não possui e-mail cadastrado.')
       return
     }
 
     const confirmar = window.confirm(
-      `Enviar link de recuperaÃ§Ã£o de senha para ${email}?`
+      `Enviar link de recuperação de senha para ${email}?`
     )
 
     if (!confirmar) {
@@ -2220,11 +2220,11 @@ congregacao: '',
     })
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel enviar o link de recuperaÃ§Ã£o de senha.')
+      mostrarErroSistema(error, 'Não foi possível enviar o link de recuperação de senha.')
       return
     }
 
-    alert('Link de recuperaÃ§Ã£o enviado. PeÃ§a para o usuÃ¡rio conferir o e-mail.')
+    alert('Link de recuperação enviado. Peça para o usuário conferir o e-mail.')
   }
 
   function buscarIgrejasAdminCache() {
@@ -2406,7 +2406,7 @@ congregacao: '',
     }
 
     const confirmar = window.confirm(
-      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta aÃ§Ã£o pode apagar os dados vinculados.`
+      `Deseja realmente excluir a igreja ${igreja.nome_igreja}? Esta ação pode apagar os dados vinculados.`
     )
 
     if (!confirmar) {
@@ -2434,7 +2434,7 @@ congregacao: '',
       novoStatus === 'teste'
         ? 'liberar esta igreja para uso da plataforma'
         : novoStatus === 'cancelada'
-          ? 'nÃ£o aprovar esta igreja'
+          ? 'não aprovar esta igreja'
           : `alterar o status para ${novoStatus}`
 
     const confirmar = window.confirm(`Deseja ${textoAcao}: ${nomeIgreja}?`)
@@ -2449,7 +2449,7 @@ congregacao: '',
       .eq('id', igreja.id)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel alterar o status da igreja.')
+      mostrarErroSistema(error, 'Não foi possível alterar o status da igreja.')
       return
     }
 
@@ -2457,7 +2457,7 @@ congregacao: '',
 
     if (novoStatus === 'teste') {
       const avisarAgora = window.confirm(
-        'Igreja liberada para uso da plataforma. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsÃ¡vel?'
+        'Igreja liberada para uso da plataforma. Deseja abrir o WhatsApp com uma mensagem pronta para avisar o responsável?'
       )
 
       if (avisarAgora) {
@@ -2466,7 +2466,7 @@ congregacao: '',
     }
 
     if (novoStatus === 'cancelada') {
-      alert('Igreja marcada como nÃ£o aprovada.')
+      alert('Igreja marcada como não aprovada.')
     }
   }
 
@@ -2489,19 +2489,19 @@ Acesse o sistema pelo link:
 
 https://app.ebdfiel.com.br
 
-Entre com o e-mail e a senha cadastrados no momento da inscriÃ§Ã£o.
+Entre com o e-mail e a senha cadastrados no momento da inscrição.
 
-Manual rÃ¡pido para comeÃ§ar:
+Manual rápido para começar:
 
 1. Confira os dados da igreja no painel.
-2. VÃ¡ em Classes e cadastre as turmas da EBD.
-3. VÃ¡ em Alunos ou entre em uma classe para cadastrar os alunos.
-4. VÃ¡ em Professores para cadastrar os professores da EBD.
-5. Vincule os professores Ã s classes correspondentes.
-6. VÃ¡ em Chamada para registrar a presenÃ§a dos alunos.
-7. Use Chamada dos professores para registrar a presenÃ§a dos professores.
-8. Em RelatÃ³rios, gere o relatÃ³rio da EBD em PDF.
-9. Durante o uso da plataforma, use a Ã¡rea de mensagens para enviar sugestÃµes, dÃºvidas ou dificuldades.
+2. Vá em Classes e cadastre as turmas da EBD.
+3. Vá em Alunos ou entre em uma classe para cadastrar os alunos.
+4. Vá em Professores para cadastrar os professores da EBD.
+5. Vincule os professores às classes correspondentes.
+6. Vá em Chamada para registrar a presença dos alunos.
+7. Use Chamada dos professores para registrar a presença dos professores.
+8. Em Relatórios, gere o relatório da EBD em PDF.
+9. Durante o uso da plataforma, use a área de mensagens para enviar sugestões, dúvidas ou dificuldades.
 
 Qualquer dificuldade, pode me chamar por aqui.`
   }
@@ -2516,7 +2516,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const texto = encodeURIComponent(mensagem)
 
     if (!numeroLimpo) {
-      alert('Esta igreja nÃ£o possui WhatsApp cadastrado. Use o botÃ£o â€œCopiar mensagemâ€.')
+      alert('Esta igreja não possui WhatsApp cadastrado. Use o botão â€œCopiar mensagemâ€.')
       return
     }
 
@@ -2529,7 +2529,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
 
     try {
       await navigator.clipboard.writeText(mensagem)
-      alert('Mensagem de aprovaÃ§Ã£o copiada.')
+      alert('Mensagem de aprovação copiada.')
     } catch {
       window.prompt('Copie a mensagem abaixo:', mensagem)
     }
@@ -2562,13 +2562,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
   function copiarContatoAcessoAdmin(acesso) {
     const contato = buscarContatoIgrejaAdmin(acesso.igreja_id)
     const texto = [
-      `Nome: ${acesso.nome || contato.responsavel || 'NÃ£o informado'}`,
-      `E-mail de acesso: ${acesso.email || 'NÃ£o informado'}`,
+      `Nome: ${acesso.nome || contato.responsavel || 'Não informado'}`,
+      `E-mail de acesso: ${acesso.email || 'Não informado'}`,
       `Igreja: ${buscarNomeIgrejaAdmin(acesso.igreja_id)}`,
-      `ResponsÃ¡vel: ${contato.responsavel || 'NÃ£o informado'}`,
-      `WhatsApp: ${contato.whatsapp || 'NÃ£o informado'}`,
-      `Telefone: ${contato.telefone || 'NÃ£o informado'}`,
-      `E-mail da igreja/responsÃ¡vel: ${contato.email || 'NÃ£o informado'}`,
+      `Responsável: ${contato.responsavel || 'Não informado'}`,
+      `WhatsApp: ${contato.whatsapp || 'Não informado'}`,
+      `Telefone: ${contato.telefone || 'Não informado'}`,
+      `E-mail da igreja/responsável: ${contato.email || 'Não informado'}`,
     ].join('\n')
 
     navigator.clipboard
@@ -2582,13 +2582,13 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const numero = limparNumeroWhatsApp(contato.whatsapp || contato.telefone)
 
     if (!numero) {
-      alert('NÃ£o hÃ¡ WhatsApp/telefone cadastrado para este acesso.')
+      alert('Não há WhatsApp/telefone cadastrado para este acesso.')
       return
     }
 
     const numeroComPais = numero.startsWith('55') ? numero : `55${numero}`
     const mensagem = encodeURIComponent(
-      `Paz do Senhor! Aqui Ã© o suporte do EBD Fiel. Estou entrando em contato sobre o acesso da igreja ${buscarNomeIgrejaAdmin(acesso.igreja_id)}.`
+      `Paz do Senhor! Aqui é o suporte do EBD Fiel. Estou entrando em contato sobre o acesso da igreja ${buscarNomeIgrejaAdmin(acesso.igreja_id)}.`
     )
 
     window.open(`https://wa.me/${numeroComPais}?text=${mensagem}`, '_blank', 'noopener,noreferrer')
@@ -2624,7 +2624,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     })
   }
 
-  function traduzirErroSistema(erro, mensagemPadrao = 'NÃ£o foi possÃ­vel concluir a operaÃ§Ã£o.') {
+  function traduzirErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
     const mensagemOriginal =
       typeof erro === 'string'
         ? erro
@@ -2636,48 +2636,48 @@ Qualquer dificuldade, pode me chamar por aqui.`
       const colunaEncontrada = String(mensagemOriginal).match(/'([^']+)' column/)
       const tabelaEncontrada = String(mensagemOriginal).match(/of '([^']+)'/)
 
-      const coluna = colunaEncontrada?.[1] || 'necessÃ¡ria'
+      const coluna = colunaEncontrada?.[1] || 'necessária'
       const tabela = tabelaEncontrada?.[1] || 'do banco de dados'
 
-      return `O campo "${coluna}" ainda nÃ£o existe na tabela "${tabela}" do Supabase. Rode o SQL de atualizaÃ§Ã£o do banco, aguarde alguns segundos e tente novamente.`
+      return `O campo "${coluna}" ainda não existe na tabela "${tabela}" do Supabase. Rode o SQL de atualização do banco, aguarde alguns segundos e tente novamente.`
     }
 
     if (mensagem.includes('schema cache')) {
-      return 'O Supabase ainda estÃ¡ atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
+      return 'O Supabase ainda está atualizando o cache do banco de dados. Aguarde alguns segundos, aperte Ctrl + F5 e tente novamente.'
     }
 
     if (mensagem.includes('duplicate key') || mensagem.includes('already exists')) {
-      return 'Esse cadastro jÃ¡ existe. Verifique os dados informados e tente novamente.'
+      return 'Esse cadastro já existe. Verifique os dados informados e tente novamente.'
     }
 
     if (mensagem.includes('violates foreign key constraint')) {
-      return 'NÃ£o foi possÃ­vel salvar porque hÃ¡ uma ligaÃ§Ã£o obrigatÃ³ria faltando no banco de dados. Verifique se a igreja, classe ou usuÃ¡rio vinculado existe.'
+      return 'Não foi possível salvar porque há uma ligação obrigatória faltando no banco de dados. Verifique se a igreja, classe ou usuário vinculado existe.'
     }
 
     if (mensagem.includes('violates row-level security') || mensagem.includes('row-level security')) {
-      return 'VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o. Verifique se estÃ¡ logado com o perfil correto.'
+      return 'Você não tem permissão para realizar esta ação. Verifique se está logado com o perfil correto.'
     }
 
     if (mensagem.includes('invalid input syntax')) {
-      return 'Algum campo foi preenchido com um formato invÃ¡lido. Confira nÃºmeros, datas e campos obrigatÃ³rios.'
+      return 'Algum campo foi preenchido com um formato inválido. Confira números, datas e campos obrigatórios.'
     }
 
     if (mensagem.includes('failed to fetch') || mensagem.includes('networkerror')) {
-      return 'NÃ£o foi possÃ­vel conectar ao servidor. Verifique sua internet e tente novamente.'
+      return 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
     }
 
     if (mensagem.includes('jwt') || mensagem.includes('token')) {
-      return 'Sua sessÃ£o expirou. Saia do sistema e entre novamente.'
+      return 'Sua sessão expirou. Saia do sistema e entre novamente.'
     }
 
     if (mensagem.includes('auth')) {
-      return 'NÃ£o foi possÃ­vel confirmar seu login. Saia do sistema e entre novamente.'
+      return 'Não foi possível confirmar seu login. Saia do sistema e entre novamente.'
     }
 
     return mensagemPadrao
   }
 
-  function mostrarErroSistema(erro, mensagemPadrao = 'NÃ£o foi possÃ­vel concluir a operaÃ§Ã£o.') {
+  function mostrarErroSistema(erro, mensagemPadrao = 'Não foi possível concluir a operação.') {
     console.error(erro)
     alert(traduzirErroSistema(erro, mensagemPadrao))
   }
@@ -2747,7 +2747,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     event.preventDefault()
 
     if (!igrejaEstaEmTestePiloto()) {
-      alert('A Ã¡rea de sugestÃµes estÃ¡ disponÃ­vel para igrejas liberadas na plataforma.')
+      alert('A área de sugestões está disponível para igrejas liberadas na plataforma.')
       return
     }
 
@@ -2761,7 +2761,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     const { error } = await supabase.from('feedbacks_piloto').insert({
       igreja_id: buscarIgrejaIdAtual(),
       user_id: sessao?.user?.id || null,
-      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'UsuÃ¡rio',
+      nome_usuario: perfilUsuario?.nome || sessao?.user?.email || 'Usuário',
       email_usuario: perfilUsuario?.email || sessao?.user?.email || '',
       perfil_usuario: perfilUsuario?.perfil || '',
       tipo: feedbackPiloto.tipo,
@@ -2772,7 +2772,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
     setCarregandoFeedback(false)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel enviar sua mensagem.')
+      mostrarErroSistema(error, 'Não foi possível enviar sua mensagem.')
       return
     }
 
@@ -2793,7 +2793,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
       .eq('id', feedbackId)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel marcar a mensagem como lida.')
+      mostrarErroSistema(error, 'Não foi possível marcar a mensagem como lida.')
       return
     }
 
@@ -2828,7 +2828,7 @@ Qualquer dificuldade, pode me chamar por aqui.`
   }
 
   function montarMensagemRespostaFeedback(feedback) {
-    const nome = feedback.nome_usuario || 'irmÃ£o(Ã£)'
+    const nome = feedback.nome_usuario || 'irmão(ã)'
     const resposta = feedback.resposta_admin || respostaFeedbackAdmin
 
     return `Paz do Senhor, ${nome}!
@@ -2838,9 +2838,9 @@ Obrigado pela mensagem enviada sobre o EBD Fiel.
 Resposta da equipe:
 ${resposta}
 
-Seguimos Ã  disposiÃ§Ã£o para ajudar no uso da plataforma.
+Seguimos à disposição para ajudar no uso da plataforma.
 
-EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
+EBD Fiel â€” Fiel à Palavra, organizado para servir melhor.`
   }
 
   async function salvarRespostaFeedback(feedback) {
@@ -2869,14 +2869,14 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     setEnviandoRespostaFeedback(false)
 
     if (error) {
-      mostrarErroSistema(error, 'NÃ£o foi possÃ­vel salvar a resposta da mensagem.')
+      mostrarErroSistema(error, 'Não foi possível salvar a resposta da mensagem.')
       return
     }
 
     setFeedbackRespondendoId(null)
     setRespostaFeedbackAdmin('')
     await carregarFeedbacksAdmin()
-    alert('Resposta salva. A igreja verÃ¡ a resposta na Ã¡rea de mensagens.')
+    alert('Resposta salva. A igreja verá a resposta na área de mensagens.')
   }
 
   async function registrarNotificacaoFeedback(feedbackId) {
@@ -2903,11 +2903,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const emailDestino = feedback.email_usuario
 
     if (!emailDestino) {
-      alert('Esta mensagem nÃ£o possui e-mail vinculado.')
+      alert('Esta mensagem não possui e-mail vinculado.')
       return
     }
 
-    const assunto = encodeURIComponent('Resposta Ã  sua mensagem no EBD Fiel')
+    const assunto = encodeURIComponent('Resposta à sua mensagem no EBD Fiel')
     const corpo = encodeURIComponent(montarMensagemRespostaFeedback(feedback))
 
     await registrarNotificacaoFeedback(feedback.id)
@@ -2921,7 +2921,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const apenasNumeros = String(telefone || '').replace(/\D/g, '')
 
     if (!apenasNumeros) {
-      alert('NÃ£o encontrei WhatsApp/telefone vinculado a esta mensagem. Use o botÃ£o copiar mensagem ou enviar e-mail.')
+      alert('Não encontrei WhatsApp/telefone vinculado a esta mensagem. Use o botão copiar mensagem ou enviar e-mail.')
       return
     }
 
@@ -3017,7 +3017,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
   async function buscarTodosOsDados(sessaoAtual = sessaoRef.current, igrejaSuporteForcada = null) {
     if (!sessaoAtual?.user?.id) {
-      throw new Error('NÃ£o foi possÃ­vel confirmar sua sessÃ£o. Saia e entre novamente no sistema.')
+      throw new Error('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
     }
 
     const emailSessaoAtual = String(sessaoAtual?.user?.email || '').toLowerCase()
@@ -3026,10 +3026,10 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       igrejaSuporteSelecionada?.id && emailsAdminSistema.includes(emailSessaoAtual)
     )
 
-    // v76: nÃ£o limpar classes/alunos/chamadas antes do retorno do Supabase.
+    // v76: não limpar classes/alunos/chamadas antes do retorno do Supabase.
     // Em celulares e redes mais lentas, a limpeza antecipada fazia a tela aparecer
-    // zerada durante atualizaÃ§Ãµes, troca de versÃ£o ou novo login. Os dados antigos
-    // permanecem visÃ­veis atÃ© os dados atualizados chegarem com sucesso.
+    // zerada durante atualizações, troca de versão ou novo login. Os dados antigos
+    // permanecem visíveis até os dados atualizados chegarem com sucesso.
 
     const { data: perfilBanco, error: erroPerfil } = await supabase
       .from('perfis_usuarios')
@@ -3185,7 +3185,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         setIgrejaId(null)
         setTelaPublica('login')
         throw new Error(
-          'Cadastro incompleto ou ainda nÃ£o liberado. Entre em contato com a administraÃ§Ã£o.'
+          'Cadastro incompleto ou ainda não liberado. Entre em contato com a administração.'
         )
       }
     }
@@ -3418,8 +3418,8 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       setTelaPublica('login')
       throw new Error(
         statusPilotoAtual === 'pendente'
-          ? 'Seu cadastro foi recebido e ainda estÃ¡ aguardando aprovaÃ§Ã£o do administrador.'
-          : 'Seu acesso ainda nÃ£o estÃ¡ liberado. Entre em contato com a administraÃ§Ã£o.'
+          ? 'Seu cadastro foi recebido e ainda está aguardando aprovação do administrador.'
+          : 'Seu acesso ainda não está liberado. Entre em contato com a administração.'
       )
     }
 
@@ -3846,10 +3846,10 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
   function montarMensagemFaltosoWhatsApp(item) {
     const nomeIgreja = buscarNomeIgrejaParaExibicao()
     return [
-      `OlÃ¡, paz do Senhor! Aqui Ã© da secretaria da EBD ${nomeIgreja}.`,
-      `Sentimos a falta de ${item.aluno.nome} na Escola BÃ­blica Dominical.`,
-      `Registramos ${item.motivo.toLowerCase()} e queremos saber se estÃ¡ tudo bem.`,
-      'Conte conosco. SerÃ¡ uma alegria receber vocÃªs novamente na prÃ³xima EBD.',
+      `Olá, paz do Senhor! Aqui é da secretaria da EBD ${nomeIgreja}.`,
+      `Sentimos a falta de ${item.aluno.nome} na Escola Bíblica Dominical.`,
+      `Registramos ${item.motivo.toLowerCase()} e queremos saber se está tudo bem.`,
+      'Conte conosco. Será uma alegria receber vocês novamente na próxima EBD.',
     ].join('\n')
   }
 
@@ -3857,7 +3857,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const telefone = limparNumeroWhatsApp(item.aluno.telefone || '')
 
     if (!telefone) {
-      alert('Este aluno nÃ£o possui telefone/WhatsApp cadastrado.')
+      alert('Este aluno não possui telefone/WhatsApp cadastrado.')
       return
     }
 
@@ -3870,7 +3870,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(mensagem)
-      alert('Mensagem copiada. Agora cole no WhatsApp do aluno/responsÃ¡vel.')
+      alert('Mensagem copiada. Agora cole no WhatsApp do aluno/responsável.')
       return
     }
 
@@ -3898,7 +3898,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         vinculosProfessores,
       },
       observacao:
-        'CÃ³pia de seguranÃ§a exportada pelo painel da igreja. NÃ£o altera dados no Supabase e serve como arquivo de consulta em JSON.',
+        'Cópia de segurança exportada pelo painel da igreja. Não altera dados no Supabase e serve como arquivo de consulta em JSON.',
     }
   }
 
@@ -3921,9 +3921,9 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
   function copiarResumoAuditoriaLocal() {
     const linhas = [
       `Igreja: ${buscarNomeIgrejaParaExibicao()}`,
-      `Igreja ID: ${buscarIgrejaIdAtual() || 'nÃ£o identificado'}`,
-      `UsuÃ¡rio: ${sessao?.user?.email || 'nÃ£o identificado'}`,
-      `Perfil: ${perfilUsuario?.perfil || 'nÃ£o identificado'}`,
+      `Igreja ID: ${buscarIgrejaIdAtual() || 'não identificado'}`,
+      `Usuário: ${sessao?.user?.email || 'não identificado'}`,
+      `Perfil: ${perfilUsuario?.perfil || 'não identificado'}`,
       `Classes: ${classes.length}`,
       `Alunos: ${alunosSomente().length}`,
       `Professores: ${professoresSomente().length}`,
@@ -4153,7 +4153,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           motivo:
             faltasConsecutivas >= 2
               ? `${faltasConsecutivas} faltas consecutivas`
-              : `${faltasMes} faltas no mÃªs`,
+              : `${faltasMes} faltas no mês`,
         }
       })
       .filter((item) => item.faltasConsecutivas >= 2 || item.faltasMes >= 3)
@@ -4173,7 +4173,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
     const iframe = document.createElement('iframe')
     iframe.id = idIframe
-    iframe.title = 'ImpressÃ£o EBD Fiel'
+    iframe.title = 'Impressão EBD Fiel'
     iframe.style.position = 'fixed'
     iframe.style.right = '0'
     iframe.style.bottom = '0'
@@ -4187,7 +4187,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const documentoIframe = iframe.contentWindow?.document
 
     if (!documentoIframe) {
-      alert('NÃ£o foi possÃ­vel preparar a impressÃ£o. Tente novamente.')
+      alert('Não foi possível preparar a impressão. Tente novamente.')
       iframe.remove()
       return
     }
@@ -4201,8 +4201,8 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         iframe.contentWindow?.focus()
         iframe.contentWindow?.print()
       } catch (error) {
-        console.error('Erro ao imprimir relatÃ³rio:', error)
-        alert('NÃ£o foi possÃ­vel abrir a impressÃ£o automaticamente. Tente novamente.')
+        console.error('Erro ao imprimir relatório:', error)
+        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
       }
 
       setTimeout(() => {
@@ -4410,10 +4410,10 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <table>
           <thead>
             <tr>
-              <th class="numero">NÂº</th>
+              <th class="numero">Nº</th>
               <th>Nome</th>
               <th>Perfil</th>
-              <th>Classe/Ã¡rea</th>
+              <th>Classe/área</th>
               <th>Data</th>
               <th>Quando</th>
             </tr>
@@ -4424,7 +4424,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                 <td class="numero">${indice + 1}</td>
                 <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
                 <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
-                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informaÃ§Ã£o')}</td>
+                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
                 <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
                 <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
               </tr>
@@ -4432,11 +4432,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           </tbody>
         </table>
       `
-      : '<div class="vazio">Nenhum aniversariante encontrado para os prÃ³ximos 7 dias.</div>'
+      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
 
     mostrarRelatorioExtraNaTela(
       'Aniversariantes da semana',
-      'Pessoas com aniversÃ¡rio hoje ou nos prÃ³ximos 7 dias.',
+      'Pessoas com aniversário hoje ou nos próximos 7 dias.',
       conteudo,
       'portrait',
       'iframe-aniversariantes-semana'
@@ -4451,7 +4451,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <table>
           <thead>
             <tr>
-              <th class="numero">NÂº</th>
+              <th class="numero">Nº</th>
               <th>Nome</th>
               <th>Classe</th>
               <th>Data</th>
@@ -4473,11 +4473,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           </tbody>
         </table>
       `
-      : '<div class="vazio">Nenhum aniversariante encontrado para este mÃªs.</div>'
+      : '<div class="vazio">Nenhum aniversariante encontrado para este mês.</div>'
 
     mostrarRelatorioExtraNaTela(
-      'Aniversariantes do mÃªs',
-      `ReferÃªncia: ${formatarMesAtualExtenso()}`,
+      'Aniversariantes do mês',
+      `Referência: ${formatarMesAtualExtenso()}`,
       conteudo,
       'portrait',
       'iframe-aniversariantes-mes'
@@ -4492,11 +4492,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <table>
           <thead>
             <tr>
-              <th class="numero">NÂº</th>
+              <th class="numero">Nº</th>
               <th>Aluno</th>
               <th>Classe</th>
               <th>Faltas consecutivas</th>
-              <th>Faltas no mÃªs</th>
+              <th>Faltas no mês</th>
               <th>Ãšltima chamada</th>
               <th>Alerta</th>
             </tr>
@@ -4520,7 +4520,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
     mostrarRelatorioExtraNaTela(
       'Alertas de faltas',
-      'Alunos com 2 faltas consecutivas ou 3 faltas no mÃªs.',
+      'Alunos com 2 faltas consecutivas ou 3 faltas no mês.',
       conteudo,
       'landscape',
       'iframe-alertas-faltas'
@@ -4535,12 +4535,12 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <table>
           <thead>
             <tr>
-              <th class="numero">NÂº</th>
+              <th class="numero">Nº</th>
               <th>Aluno</th>
               <th>Classe</th>
-              <th>PresenÃ§as</th>
+              <th>Presenças</th>
               <th>Chamadas</th>
-              <th>FrequÃªncia</th>
+              <th>Frequência</th>
             </tr>
           </thead>
           <tbody>
@@ -4557,11 +4557,11 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           </tbody>
         </table>
       `
-      : '<div class="vazio">Nenhum destaque de frequÃªncia encontrado para este mÃªs.</div>'
+      : '<div class="vazio">Nenhum destaque de frequência encontrado para este mês.</div>'
 
     mostrarRelatorioExtraNaTela(
-      'Destaques de frequÃªncia',
-      `Alunos com 80% ou mais de presenÃ§a em ${formatarMesAtualExtenso()}.`,
+      'Destaques de frequência',
+      `Alunos com 80% ou mais de presença em ${formatarMesAtualExtenso()}.`,
       conteudo,
       'portrait',
       'iframe-destaques-frequencia'
@@ -4572,17 +4572,17 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const aniversariantes = buscarAniversariantesDoMes()
 
     if (aniversariantes.length === 0) {
-      alert('Nenhum aniversariante encontrado para este mÃªs.')
+      alert('Nenhum aniversariante encontrado para este mês.')
       return
     }
 
     const textoOpcoes = [
-      '0 - Todos os aniversariantes do mÃªs',
+      '0 - Todos os aniversariantes do mês',
       ...aniversariantes.map((aluno, indice) => `${indice + 1} - ${aluno.nome}`),
     ].join('\n')
 
     const escolha = window.prompt(
-      `Quais cartÃµes deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todos ou o nÃºmero de uma pessoa.`,
+      `Quais cartões deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todos ou o número de uma pessoa.`,
       '0'
     )
 
@@ -4593,7 +4593,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const escolhaNumerica = Number.parseInt(escolha, 10)
 
     if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > aniversariantes.length) {
-      alert('OpÃ§Ã£o invÃ¡lida. Tente novamente e escolha um nÃºmero da lista.')
+      alert('Opção inválida. Tente novamente e escolha um número da lista.')
       return
     }
 
@@ -4605,25 +4605,25 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       <div class="cartoes-grid">
         ${selecionados.map((aluno) => `
           <article class="cartao-aniversario">
-            <h3>Feliz aniversÃ¡rio!</h3>
-            <p>A Escola BÃ­blica Dominical parabeniza:</p>
+            <h3>Feliz aniversário!</h3>
+            <p>A Escola Bíblica Dominical parabeniza:</p>
             <strong>${escaparHtmlRelatorio(aluno.nome)}</strong>
             <p>
-              Desejamos que o Senhor abenÃ§oe sua vida com paz, alegria, saÃºde e muitos frutos.
-              Que este novo ciclo seja repleto da graÃ§a de Deus e de lindas vitÃ³rias.
+              Desejamos que o Senhor abençoe sua vida com paz, alegria, saúde e muitos frutos.
+              Que este novo ciclo seja repleto da graça de Deus e de lindas vitórias.
             </p>
-            <p><strong>VersÃ­culo bÃ­blico:</strong> â€œEste Ã© o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.â€</p>
+            <p><strong>Versículo bíblico:</strong> â€œEste é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.â€</p>
             <p><strong>Salmo 118:24</strong></p>
             <p><strong>Data:</strong> ${escaparHtmlRelatorio(aluno.dataNascimentoFormatada)}</p>
-            <p class="assinatura-cartao">Com carinho, Escola BÃ­blica Dominical</p>
+            <p class="assinatura-cartao">Com carinho, Escola Bíblica Dominical</p>
           </article>
         `).join('')}
       </div>
     `
 
     mostrarRelatorioExtraNaTela(
-      'CartÃµes de aniversariantes',
-      `ReferÃªncia: ${formatarMesAtualExtenso()}`,
+      'Cartões de aniversariantes',
+      `Referência: ${formatarMesAtualExtenso()}`,
       conteudo,
       'portrait',
       'iframe-cartoes-aniversariantes'
@@ -4634,7 +4634,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const relatorio = document.querySelector('.relatorio-folha')
 
     if (!relatorio) {
-      alert('RelatÃ³rio nÃ£o encontrado para impressÃ£o.')
+      alert('Relatório não encontrado para impressão.')
       return
     }
 
@@ -4642,7 +4642,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
     if (!janela) {
       alert(
-        'O navegador bloqueou a abertura da impressÃ£o. No celular, use o botÃ£o Baixar PDF.'
+        'O navegador bloqueou a abertura da impressão. No celular, use o botão Baixar PDF.'
       )
       return
     }
@@ -4654,7 +4654,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>RelatÃ³rio EBD Fiel</title>
+          <title>Relatório EBD Fiel</title>
 
           <style>
             * {
@@ -5018,7 +5018,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
   function montarRelatorioEmBrancoHTML() {
     const endereco = montarEnderecoIgreja()
-    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'RelatÃ³rio em branco'
+    const nomeIgreja = configuracaoIgreja.nome_igreja || configuracaoIgreja.nome || 'Relatório em branco'
     const linhasClasses = classes.length > 0 ? classes : classesIniciais
 
     const linhasTabela = linhasClasses
@@ -5072,14 +5072,14 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
           <table class="tabela tabela-ebd">
             <thead>
               <tr>
-                <th>NÂº</th>
+                <th>Nº</th>
                 <th>Classes</th>
-                <th>MatrÃ­cula</th>
-                <th>AusÃªncia</th>
-                <th>PresenÃ§a</th>
+                <th>Matrícula</th>
+                <th>Ausência</th>
+                <th>Presença</th>
                 <th>Visitante</th>
                 <th>Total</th>
-                <th>BÃ­blia</th>
+                <th>Bíblia</th>
                 <th>Revista</th>
                 <th>Ofertas</th>
                 <th>%</th>
@@ -5106,9 +5106,9 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
                 <td colspan="11">CHAMADA DOS PROFESSORES</td>
               </tr>
               <tr class="linha-professores-cabecalho">
-                <td>NÂº</td>
+                <td>Nº</td>
                 <td colspan="3">Professor</td>
-                <td colspan="3">Classe de referÃªncia</td>
+                <td colspan="3">Classe de referência</td>
                 <td colspan="2">Presente</td>
                 <td colspan="1">Faltou</td>
                 <td colspan="1">Justificou</td>
@@ -5119,7 +5119,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         </div>
 
         <div class="area-observacoes-rascunho">
-          <strong>ObservaÃ§Ãµes:</strong>
+          <strong>Observações:</strong>
           <div></div>
           <div></div>
           <div></div>
@@ -5133,7 +5133,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const janela = window.open('', '_blank')
 
     if (!janela) {
-      alert('O navegador bloqueou a abertura da impressÃ£o. Permita pop-ups para imprimir o modelo em branco.')
+      alert('O navegador bloqueou a abertura da impressão. Permita pop-ups para imprimir o modelo em branco.')
       return
     }
 
@@ -5144,7 +5144,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>RelatÃ³rio em branco - EBD Fiel</title>
+          <title>Relatório em branco - EBD Fiel</title>
           <style>
             * { box-sizing: border-box; }
             body {
@@ -5319,13 +5319,13 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
             <table class="tabela-chamada-classe">
               <thead>
                 <tr>
-                  <th>NÂº</th>
+                  <th>Nº</th>
                   <th>Nome do aluno</th>
                   <th>Presente</th>
                   <th>Falta</th>
-                  <th>BÃ­blia</th>
+                  <th>Bíblia</th>
                   <th>Revista</th>
-                  <th>ObservaÃ§Ã£o</th>
+                  <th>Observação</th>
                 </tr>
               </thead>
               <tbody>
@@ -5337,13 +5337,13 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
               <div><strong>Presentes:</strong> ______</div>
               <div><strong>Faltas:</strong> ______</div>
               <div><strong>Visitantes:</strong> ______</div>
-              <div><strong>BÃ­blias:</strong> ______</div>
+              <div><strong>Bíblias:</strong> ______</div>
               <div><strong>Revistas:</strong> ______</div>
               <div><strong>Oferta:</strong> R$ ______</div>
             </div>
 
             <div class="observacoes-chamada-classe">
-              <strong>ObservaÃ§Ãµes:</strong>
+              <strong>Observações:</strong>
               <div></div>
               <div></div>
             </div>
@@ -5373,7 +5373,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     ].join('\n')
 
     const escolha = window.prompt(
-      `Qual chamada deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todas ou o nÃºmero de uma classe.`,
+      `Qual chamada deseja gerar?\n\n${textoOpcoes}\n\nDigite 0 para todas ou o número de uma classe.`,
       '0'
     )
 
@@ -5384,7 +5384,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const escolhaNumerica = Number.parseInt(escolha, 10)
 
     if (Number.isNaN(escolhaNumerica) || escolhaNumerica < 0 || escolhaNumerica > classesDisponiveis.length) {
-      alert('OpÃ§Ã£o invÃ¡lida. Tente novamente e escolha um nÃºmero da lista.')
+      alert('Opção inválida. Tente novamente e escolha um número da lista.')
       return
     }
 
@@ -5536,7 +5536,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
     const iframe = document.createElement('iframe')
     iframe.id = 'iframe-impressao-chamada-classe'
-    iframe.title = 'ImpressÃ£o da chamada por classe'
+    iframe.title = 'Impressão da chamada por classe'
     iframe.style.position = 'fixed'
     iframe.style.right = '0'
     iframe.style.bottom = '0'
@@ -5550,7 +5550,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const documentoIframe = iframe.contentWindow?.document
 
     if (!documentoIframe) {
-      alert('NÃ£o foi possÃ­vel preparar a impressÃ£o. Tente novamente.')
+      alert('Não foi possível preparar a impressão. Tente novamente.')
       iframe.remove()
       return
     }
@@ -5565,7 +5565,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
         iframe.contentWindow?.print()
       } catch (error) {
         console.error('Erro ao imprimir chamada por classe:', error)
-        alert('NÃ£o foi possÃ­vel abrir a impressÃ£o automaticamente. Tente novamente.')
+        alert('Não foi possível abrir a impressão automaticamente. Tente novamente.')
       }
 
       setTimeout(() => {
@@ -5589,7 +5589,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const relatorioOriginal = document.querySelector('.relatorio-folha')
 
     if (!relatorioOriginal) {
-      alert('RelatÃ³rio nÃ£o encontrado para gerar PDF.')
+      alert('Relatório não encontrado para gerar PDF.')
       return
     }
 
@@ -5678,7 +5678,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       pdf.save('relatorio-ebd-fiel.pdf')
     } catch (error) {
       console.error('Erro ao gerar PDF:', error)
-      alert('NÃ£o foi possÃ­vel gerar o PDF. Tente novamente.')
+      alert('Não foi possível gerar o PDF. Tente novamente.')
     }
   }
 
@@ -5727,7 +5727,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
       if (error) {
         console.error(error)
-        alert('Erro ao salvar alteraÃ§Ãµes da classe.')
+        alert('Erro ao salvar alterações da classe.')
         return
       }
     } else {
@@ -5760,7 +5760,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     )
 
     if (existemAlunos) {
-      alert('NÃ£o Ã© possÃ­vel excluir essa classe porque existem alunos nela.')
+      alert('Não é possível excluir essa classe porque existem alunos nela.')
       return
     }
 
@@ -5942,8 +5942,8 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
       if (duplicado) {
         alert(
           tipoPessoaCadastro === 'professor'
-            ? 'JÃ¡ existe um professor com esse nome vinculado a esta classe.'
-            : 'JÃ¡ existe um aluno com esse nome matriculado nesta classe.'
+            ? 'Já existe um professor com esse nome vinculado a esta classe.'
+            : 'Já existe um aluno com esse nome matriculado nesta classe.'
         )
         return
       }
@@ -5964,7 +5964,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
 
         if (error) {
           console.error(error)
-          alert('Erro ao salvar alteraÃ§Ãµes do aluno.')
+          alert('Erro ao salvar alterações do aluno.')
           return
         }
       } else {
@@ -6149,7 +6149,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     if (status === 'presente') return 'Presente'
     if (status === 'faltou') return 'Faltou'
     if (status === 'justificou') return 'Justificou'
-    return 'Sem marcaÃ§Ã£o'
+    return 'Sem marcação'
   }
 
   function calcularPercentualPresencaProfessores() {
@@ -6190,7 +6190,7 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     if (alunosDaClasse.length === 0) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: 'NÃ£o encontrei alunos nessa classe. Verifique se os alunos estÃ£o vinculados Ã  classe escolhida.',
+        texto: 'Não encontrei alunos nessa classe. Verifique se os alunos estão vinculados à classe escolhida.',
       })
       return
     }
@@ -6228,9 +6228,9 @@ EBD Fiel â€” Fiel Ã  Palavra, organizado para servir melhor.`
     const dataFormatada = formatarDataCurtaRelatorio(dataNormalizada)
 
     return window.confirm(
-      `VocÃª estÃ¡ salvando a ${tipoChamadaTexto} para a data ${dataFormatada}.
+      `Você está salvando a ${tipoChamadaTexto} para a data ${dataFormatada}.
 
-Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
+Confirme se essa é realmente a data correta da EBD antes de continuar.`
     )
   }
 
@@ -6261,7 +6261,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     if (!classeSelecionada) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: 'A classe selecionada nÃ£o foi encontrada. Atualize a pÃ¡gina e escolha a classe novamente.',
+        texto: 'A classe selecionada não foi encontrada. Atualize a página e escolha a classe novamente.',
       })
       return
     }
@@ -6275,7 +6275,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     if (alunosDaClasse.length === 0) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: `NÃ£o encontrei alunos cadastrados na classe ${classeSelecionada.nome}. Verifique se os alunos estÃ£o vinculados a essa classe.`,
+        texto: `Não encontrei alunos cadastrados na classe ${classeSelecionada.nome}. Verifique se os alunos estão vinculados a essa classe.`,
       })
       return
     }
@@ -6307,7 +6307,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     if (!confirmarDataDaChamada(dataAulaChamada, 'chamada dos alunos')) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: 'Chamada nÃ£o salva. Confira a data da aula e tente novamente.',
+        texto: 'Chamada não salva. Confira a data da aula e tente novamente.',
       })
       return
     }
@@ -6343,7 +6343,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       console.error(error)
       setMensagemChamada({
         tipo: 'erro',
-        texto: 'NÃ£o foi possÃ­vel salvar a chamada. Verifique sua conexÃ£o e tente novamente.',
+        texto: 'Não foi possível salvar a chamada. Verifique sua conexão e tente novamente.',
       })
       return
     }
@@ -6376,17 +6376,17 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     event.preventDefault()
 
     if (!podeGerenciarCadastros()) {
-      alert('Apenas a secretaria pode alterar as configuraÃ§Ãµes da igreja.')
+      alert('Apenas a secretaria pode alterar as configurações da igreja.')
       return
     }
 
     if (!sessao?.user?.id) {
-      alert('NÃ£o foi possÃ­vel confirmar sua sessÃ£o. Saia e entre novamente no sistema.')
+      alert('Não foi possível confirmar sua sessão. Saia e entre novamente no sistema.')
       return
     }
 
     if (!buscarIgrejaIdAtual()) {
-      alert('Igreja nÃ£o identificada. Saia e entre novamente no sistema.')
+      alert('Igreja não identificada. Saia e entre novamente no sistema.')
       return
     }
 
@@ -6445,10 +6445,10 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       }
 
       await buscarTodosOsDados(sessao)
-      alert('ConfiguraÃ§Ãµes da igreja salvas com sucesso!')
+      alert('Configurações da igreja salvas com sucesso!')
     } catch (error) {
-      console.error('Erro ao salvar configuraÃ§Ãµes da igreja:', error)
-      alert(error?.message || 'Erro ao salvar configuraÃ§Ãµes da igreja.')
+      console.error('Erro ao salvar configurações da igreja:', error)
+      alert(error?.message || 'Erro ao salvar configurações da igreja.')
     } finally {
       setSalvandoConfiguracaoIgreja(false)
     }
@@ -6537,13 +6537,13 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃ£o inteligente para Escola BÃ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Sistema comercial pronto para igrejas</span>
-            <h2>Organize classes, alunos, chamadas e relatÃ³rios em um sÃ³ lugar.</h2>
+            <h2>Organize classes, alunos, chamadas e relatórios em um só lugar.</h2>
             <p>
               Acesse o painel para acompanhar os dados da sua EBD com uma interface
               moderna, simples e profissional.
@@ -6556,7 +6556,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             <Icone nome="check" className="icone-status" />
           </div>
           <h2>Verificando acesso...</h2>
-          <p>Aguarde um momento enquanto conferimos sua sessÃ£o.</p>
+          <p>Aguarde um momento enquanto conferimos sua sessão.</p>
         </section>
       </div>
     )
@@ -6576,7 +6576,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>RedefiniÃ§Ã£o segura de senha.</p>
+              <p>Redefinição segura de senha.</p>
             </div>
           </div>
 
@@ -6584,7 +6584,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             <span className="selo-apresentacao">Nova senha</span>
             <h2>Crie uma nova senha de acesso.</h2>
             <p>
-              Digite uma nova senha para continuar usando o sistema com seguranÃ§a.
+              Digite uma nova senha para continuar usando o sistema com segurança.
             </p>
           </div>
         </section>
@@ -6654,7 +6654,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>RecuperaÃ§Ã£o de acesso.</p>
+              <p>Recuperação de acesso.</p>
             </div>
           </div>
 
@@ -6662,8 +6662,8 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             <span className="selo-apresentacao">Esqueci minha senha</span>
             <h2>Receba um link para redefinir sua senha.</h2>
             <p>
-              Informe o e-mail usado no cadastro. O sistema enviarÃ¡ um link seguro para
-              vocÃª criar uma nova senha.
+              Informe o e-mail usado no cadastro. O sistema enviará um link seguro para
+              você criar uma nova senha.
             </p>
           </div>
         </section>
@@ -6674,7 +6674,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             type="button"
             onClick={() => setTelaPublica('login')}
           >
-            â† Voltar para login
+            Voltar para login
           </button>
 
           <div className="topo-cartao-login">
@@ -6683,7 +6683,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h2>Recuperar senha</h2>
-              <p>Digite seu e-mail para receber o link de recuperaÃ§Ã£o.</p>
+              <p>Digite seu e-mail para receber o link de recuperação.</p>
             </div>
           </div>
 
@@ -6709,7 +6709,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               type="submit"
               disabled={carregandoRecuperacao}
             >
-              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperaÃ§Ã£o'}
+              {carregandoRecuperacao ? 'Enviando...' : 'Enviar link de recuperação'}
             </button>
           </form>
         </section>
@@ -6736,8 +6736,8 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
           </div>
 
           <div className="apresentacao-texto">
-            <span className="selo-apresentacao">Aguardando aprovaÃ§Ã£o</span>
-            <h2>Sua solicitaÃ§Ã£o foi enviada.</h2>
+            <span className="selo-apresentacao">Aguardando aprovação</span>
+            <h2>Sua solicitação foi enviada.</h2>
             <p>
               O administrador vai conferir os dados da igreja e liberar o acesso para
               o teste piloto.
@@ -6760,18 +6760,18 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
 
           <div className="resumo-cadastro-enviado">
             {ultimoCadastroPilotoEnviado.responsavel && (
-              <span>ResponsÃ¡vel: {ultimoCadastroPilotoEnviado.responsavel}</span>
+              <span>Responsável: {ultimoCadastroPilotoEnviado.responsavel}</span>
             )}
             {ultimoCadastroPilotoEnviado.email && (
               <span>E-mail: {ultimoCadastroPilotoEnviado.email}</span>
             )}
-            <span>Status: aguardando aprovaÃ§Ã£o</span>
+            <span>Status: aguardando aprovação</span>
           </div>
 
           <div className="aviso-aprovacao-cadastro">
             <strong>O que acontece agora?</strong>
             <p>
-              Aguarde a aprovaÃ§Ã£o do administrador. ApÃ³s a liberaÃ§Ã£o, vocÃª poderÃ¡
+              Aguarde a aprovação do administrador. Após a liberação, você poderá
               entrar normalmente com o e-mail e a senha cadastrados.
             </p>
           </div>
@@ -6821,11 +6821,11 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
-              <span>Sede ou congregaÃ§Ã£o</span>
+              <span>Sede ou congregação</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="usuarios" className="icone-beneficio" />
-              <span>Secretaria ou superintendÃªncia</span>
+              <span>Secretaria ou superintendência</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
@@ -6855,7 +6855,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
 
           <form className="formulario formulario-cadastro-piloto" onSubmit={cadastrarAcessoPiloto}>
             <div className="grupo-cadastro-piloto">
-              <h3>ResponsÃ¡vel</h3>
+              <h3>Responsável</h3>
 
               <label>
                 Nome
@@ -6883,7 +6883,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                     })
                   }
                 >
-                  <option value="secretario">SecretÃ¡rio(a)</option>
+                  <option value="secretario">Secretário(a)</option>
                   <option value="superintendente">Superintendente</option>
                 </select>
               </label>
@@ -6946,7 +6946,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                   onChange={(event) =>
                     setCadastroPiloto({ ...cadastroPiloto, senha: event.target.value })
                   }
-                  placeholder="MÃ­nimo 6 caracteres"
+                  placeholder="Mínimo 6 caracteres"
                   autoComplete="new-password"
                 />
               </label>
@@ -6968,7 +6968,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               </label>
 
               <label style={{ display: 'none' }}>
-                CÃ³digo do piloto
+                Código do piloto
                 <input
                   type="text"
                   value={cadastroPiloto.codigoPiloto}
@@ -6978,7 +6978,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                       codigoPiloto: event.target.value,
                     })
                   }
-                  placeholder="CÃ³digo informado no grupo"
+                  placeholder="Código informado no grupo"
                 />
               </label>
             </div>
@@ -7013,12 +7013,12 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                   }
                 >
                   <option value="sede">Sede</option>
-                  <option value="congregacao">CongregaÃ§Ã£o</option>
+                  <option value="congregacao">Congregação</option>
                 </select>
               </label>
 
               <label>
-                CongregaÃ§Ã£o
+                Congregação
                 <input
                   type="text"
                   value={cadastroPiloto.congregacao}
@@ -7043,7 +7043,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                       pastorDirigente: event.target.value,
                     })
                   }
-                  placeholder="Ex: Pr. JoÃ£o Silva"
+                  placeholder="Ex: Pr. João Silva"
                 />
               </label>
 
@@ -7088,7 +7088,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               </label>
 
               <label className="campo-cadastro-piloto-largo">
-                EndereÃ§o
+                Endereço
                 <input
                   type="text"
                   value={cadastroPiloto.endereco}
@@ -7103,7 +7103,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               </label>
 
               <label>
-                NÃºmero
+                Número
                 <input
                   type="text"
                   value={cadastroPiloto.numeroEndereco}
@@ -7128,7 +7128,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                       complementoEndereco: event.target.value,
                     })
                   }
-                  placeholder="Opcional: sala, fundos, referÃªncia..."
+                  placeholder="Opcional: sala, fundos, referência..."
                 />
               </label>
 
@@ -7162,7 +7162,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                   </label>
 
                   <label className="campo-cadastro-piloto-largo">
-                    EndereÃ§o da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={cadastroPiloto.sedeFiliadaEndereco}
@@ -7177,7 +7177,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                   </label>
 
                   <label>
-                    NÃºmero da sede
+                    Número da sede
                     <input
                       type="text"
                       value={cadastroPiloto.sedeFiliadaNumero}
@@ -7254,32 +7254,32 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃ£o inteligente para Escola BÃ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto apresentacao-login-v70">
-            <span className="selo-apresentacao">Ãrea segura da igreja</span>
-            <h2>Acesse o sistema da sua Escola BÃ­blica Dominical.</h2>
+            <span className="selo-apresentacao">Área segura da igreja</span>
+            <h2>Acesse o sistema da sua Escola Bíblica Dominical.</h2>
             <p>
-              Entre para cuidar de classes, alunos, professores, chamadas, relatÃ³rios
-              e configuraÃ§Ãµes em um ambiente simples e organizado.
+              Entre para cuidar de classes, alunos, professores, chamadas, relatórios
+              e configurações em um ambiente simples e organizado.
             </p>
           </div>
 
           <div className="preview-login-v70" aria-hidden="true">
             <div className="preview-login-card preview-login-card-maior">
               <span>Chamada digital</span>
-              <strong>PresenÃ§as registradas</strong>
+              <strong>Presenças registradas</strong>
               <small>Dados separados por igreja</small>
             </div>
             <div className="preview-login-card">
-              <span>RelatÃ³rios</span>
+              <span>Relatórios</span>
               <strong>PDF pronto</strong>
-              <small>OrganizaÃ§Ã£o para a secretaria</small>
+              <small>Organização para a secretaria</small>
             </div>
             <div className="preview-login-card">
-              <span>FrequÃªncia</span>
+              <span>Frequência</span>
               <strong>100%</strong>
               <small>Acompanhamento semanal</small>
             </div>
@@ -7300,7 +7300,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>RelatÃ³rios modernos</span>
+              <span>Relatórios modernos</span>
             </div>
           </div>
         </section>
@@ -7311,7 +7311,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             type="button"
             onClick={() => setTelaPublica('landing')}
           >
-            â† Voltar para apresentaÃ§Ã£o
+            â† Voltar para apresentação
           </button>
 
           <div className="topo-cartao-login">
@@ -7325,7 +7325,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
           </div>
 
           <div className="aviso-login-aprovado aviso-login-v70">
-            Use este acesso somente se sua igreja jÃ¡ foi aprovada pelo administrador.
+            Use este acesso somente se sua igreja já foi aprovada pelo administrador.
           </div>
 
           <form className="formulario formulario-login" onSubmit={entrarComEmailSenha}>
@@ -7366,7 +7366,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             <span className="selo-primeiro-acesso">Primeiro acesso?</span>
             <h3>Solicitar cadastro da igreja</h3>
             <p>
-              Ainda nÃ£o tem acesso? Cadastre sua igreja para anÃ¡lise e liberaÃ§Ã£o do
+              Ainda não tem acesso? Cadastre sua igreja para análise e liberação do
               administrador.
             </p>
 
@@ -7421,7 +7421,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
               <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'DÃºvidas'}</a>
+              <a href="#faq">{'Dúvidas'}</a>
               <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
                 {'Entrar no sistema'}
               </button>
@@ -7440,7 +7440,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             {'Planos'}
           </a>
           <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            {'DÃºvidas'}
+            {'Dúvidas'}
           </a>
           <button
             className="btn-nav-mobile"
@@ -7470,12 +7470,12 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
 
                 <h1>
                   {'Organize sua '}
-                  <span>{'Escola BÃ­blica Dominical'}</span>
+                  <span>{'Escola Bíblica Dominical'}</span>
                   {' em poucos minutos'}
                 </h1>
 
                 <p>
-                  {'Controle classes, alunos, professores, chamadas e relatÃ³rios em um sÃ³ lugar, sem planilhas e sem retrabalho.'}
+                  {'Controle classes, alunos, professores, chamadas e relatórios em um só lugar, sem planilhas e sem retrabalho.'}
                 </p>
 
                 <button className="btn-primary btn-hero-login-v70" type="button" onClick={() => setTelaPublica('login')}>
@@ -7489,7 +7489,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'PDF'}</div>
-                    <div className="stat-label">{'RelatÃ³rios prontos'}</div>
+                    <div className="stat-label">{'Relatórios prontos'}</div>
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'24/7'}</div>
@@ -7506,9 +7506,8 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                 </div>
 
                 <div className="mockup-body">
-                  <div className="mockup-check">{'âœ“'}</div>
                   <h3>{'Painel da EBD'}</h3>
-                  <p>{'Resumo simples para secretaria, professores e lideranÃ§a.'}</p>
+                  <p>{'Resumo simples para secretaria, professores e liderança.'}</p>
 
                   <div className="mockup-metricas-v70">
                     <div>
@@ -7517,11 +7516,11 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                     </div>
                     <div>
                       <strong>{'92%'}</strong>
-                      <span>{'frequÃªncia'}</span>
+                      <span>{'frequência'}</span>
                     </div>
                     <div>
                       <strong>{'PDF'}</strong>
-                      <span>{'relatÃ³rio'}</span>
+                      <span>{'relatório'}</span>
                     </div>
                   </div>
 
@@ -7721,7 +7720,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               <a href="#recursos">{'Recursos'}</a>
               <a href="#beneficios">{'Benef\u00edcios'}</a>
               <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'DÃºvidas'}</a>
+              <a href="#faq">{'Dúvidas'}</a>
             </div>
 
             <div className="footer-col">
@@ -7761,7 +7760,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃ£o inteligente para Escola BÃ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
         </section>
@@ -7791,13 +7790,13 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃ£o da Escola BÃ­blica Dominical.</p>
+              <p>Gestão da Escola Bíblica Dominical.</p>
             </div>
           </div>
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Cadastro recebido</span>
-            <h2>Seu acesso estÃ¡ aguardando aprovaÃ§Ã£o.</h2>
+            <h2>Seu acesso está aguardando aprovação.</h2>
             <p>
               A equipe administradora vai conferir os dados da igreja e liberar o uso
               do sistema.
@@ -7809,10 +7808,10 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
           <div className="mensagem-status-icone">
             <Icone nome="check" className="icone-status" />
           </div>
-          <h2>Aguardando aprovaÃ§Ã£o</h2>
+          <h2>Aguardando aprovação</h2>
           <p>
-            Assim que sua igreja for aprovada, vocÃª poderÃ¡ entrar normalmente e comeÃ§ar
-            a validaÃ§Ã£o.
+            Assim que sua igreja for aprovada, você poderá entrar normalmente e começar
+            a validação.
           </p>
           <button className="botao-secundario" onClick={sairDoSistema}>
             Sair
@@ -7836,7 +7835,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div>
               <h1>EBD Fiel</h1>
-              <p>GestÃ£o inteligente para Escola BÃ­blica Dominical.</p>
+              <p>Gestão inteligente para Escola Bíblica Dominical.</p>
             </div>
           </div>
         </section>
@@ -7944,7 +7943,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     }
 
     if (dias === 1) {
-      return 'AmanhÃ£'
+      return 'Amanhã'
     }
 
     return `Em ${dias} dias`
@@ -7996,17 +7995,17 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     event.preventDefault()
 
     if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode cadastrar usuÃ¡rios.')
+      alert('Apenas a secretaria pode cadastrar usuários.')
       return
     }
 
     if (!novoPerfil.userId.trim()) {
-      alert('Informe o User UID do usuÃ¡rio criado no Supabase Auth.')
+      alert('Informe o User UID do usuário criado no Supabase Auth.')
       return
     }
 
     if (!novoPerfil.nome.trim() || !novoPerfil.email.trim()) {
-      alert('Informe o nome e o e-mail do usuÃ¡rio.')
+      alert('Informe o nome e o e-mail do usuário.')
       return
     }
 
@@ -8035,7 +8034,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       .single()
 
     if (error) {
-      mostrarErroSistema(error, 'Erro ao salvar usuÃ¡rio.')
+      mostrarErroSistema(error, 'Erro ao salvar usuário.')
       return
     }
 
@@ -8045,7 +8044,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       .eq('perfil_usuario_id', perfilSalvo.id)
 
     if (erroRemoverVinculos) {
-      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vÃ­nculos do professor.')
+      mostrarErroSistema(erroRemoverVinculos, 'Erro ao atualizar vínculos do professor.')
       return
     }
 
@@ -8062,24 +8061,24 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
         .insert(vinculosParaSalvar)
 
       if (erroInserirVinculos) {
-        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor Ã s classes.')
+        mostrarErroSistema(erroInserirVinculos, 'Erro ao vincular professor às classes.')
         return
       }
     }
 
     await buscarTodosOsDados()
     cancelarFormularioPerfil()
-    alert('UsuÃ¡rio salvo com sucesso!')
+    alert('Usuário salvo com sucesso!')
   }
 
   async function excluirPerfilUsuario(perfil) {
     if (!usuarioEhSecretaria()) {
-      alert('Apenas a secretaria pode excluir usuÃ¡rios.')
+      alert('Apenas a secretaria pode excluir usuários.')
       return
     }
 
     if (perfil.user_id === sessao?.user?.id) {
-      alert('VocÃª nÃ£o pode excluir o seu prÃ³prio perfil de secretaria.')
+      alert('Você não pode excluir o seu próprio perfil de secretaria.')
       return
     }
 
@@ -8119,10 +8118,10 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
         <table>
           <thead>
             <tr>
-              <th class="numero">NÂº</th>
+              <th class="numero">Nº</th>
               <th>Nome</th>
-              <th>FunÃ§Ã£o</th>
-              <th>Classe/Ã¡rea</th>
+              <th>Função</th>
+              <th>Classe/área</th>
               <th>Data</th>
               <th>Quando</th>
             </tr>
@@ -8133,7 +8132,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                 <td class="numero">${indice + 1}</td>
                 <td>${escaparHtmlRelatorio(pessoa.nome)}</td>
                 <td>${escaparHtmlRelatorio(pessoa.tipo || '')}</td>
-                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informaÃ§Ã£o')}</td>
+                <td>${escaparHtmlRelatorio(pessoa.detalhe || 'Sem informação')}</td>
                 <td>${escaparHtmlRelatorio(formatarDataNascimento(pessoa.dataNascimento))}</td>
                 <td>${escaparHtmlRelatorio(descreverAniversario(pessoa.dias))}</td>
               </tr>
@@ -8141,7 +8140,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
           </tbody>
         </table>
       `
-      : '<div class="vazio">Nenhum aniversariante encontrado para os prÃ³ximos 7 dias.</div>'
+      : '<div class="vazio">Nenhum aniversariante encontrado para os próximos 7 dias.</div>'
   }
 
   function imprimirAniversariantesSemana() {
@@ -8150,7 +8149,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     imprimirHtmlEmIframe(
       montarDocumentoRelatorioExtra(
         'Aniversariantes da semana',
-        'Pessoas com aniversÃ¡rio hoje ou nos prÃ³ximos 7 dias.',
+        'Pessoas com aniversário hoje ou nos próximos 7 dias.',
         montarHtmlTabelaAniversariantesSemana(aniversariantes),
         'portrait'
       ),
@@ -8162,7 +8161,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     const area = aniversariantesSemanaRef.current
 
     if (!area) {
-      alert('NÃ£o foi possÃ­vel encontrar a lista de aniversariantes para gerar o PDF.')
+      alert('Não foi possível encontrar a lista de aniversariantes para gerar o PDF.')
       return
     }
 
@@ -8206,7 +8205,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       pdf.save('aniversariantes-da-semana-ebd-fiel.pdf')
     } catch (error) {
       console.error('Erro ao gerar PDF de aniversariantes:', error)
-      alert('NÃ£o foi possÃ­vel gerar o PDF. Tente novamente.')
+      alert('Não foi possível gerar o PDF. Tente novamente.')
     }
   }
 
@@ -8229,32 +8228,32 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
   }
 
   const mensagensCartaoAniversario = [
-    'Desejamos que o Senhor derrame paz, alegria e saÃºde sobre sua vida. Que este novo ciclo seja marcado por graÃ§a, crescimento espiritual e muitas vitÃ³rias.',
-    'Que Deus abenÃ§oe ricamente a sua caminhada e renove suas forÃ§as neste novo ano de vida. Receba um tempo de alegria, proteÃ§Ã£o, esperanÃ§a e muitas bÃªnÃ§Ã£os.',
-    'Oramos para que o Senhor conduza cada passo da sua vida com amor, sabedoria e paz. Que este aniversÃ¡rio abra uma fase linda de conquistas e comunhÃ£o com Deus.',
-    'Que esta nova etapa seja iluminada pela presenÃ§a do Senhor. Desejamos um aniversÃ¡rio feliz, com saÃºde, serenidade, frutos espirituais e lindas respostas de oraÃ§Ã£o.',
-    'Receba o carinho da Escola BÃ­blica Dominical neste dia especial. Que Deus fortaleÃ§a sua fÃ©, alegre o seu coraÃ§Ã£o e conceda um ano cheio de graÃ§a e vitÃ³rias.'
+    'Desejamos que o Senhor derrame paz, alegria e saúde sobre sua vida. Que este novo ciclo seja marcado por graça, crescimento espiritual e muitas vitórias.',
+    'Que Deus abençoe ricamente a sua caminhada e renove suas forças neste novo ano de vida. Receba um tempo de alegria, proteção, esperança e muitas bênçãos.',
+    'Oramos para que o Senhor conduza cada passo da sua vida com amor, sabedoria e paz. Que este aniversário abra uma fase linda de conquistas e comunhão com Deus.',
+    'Que esta nova etapa seja iluminada pela presença do Senhor. Desejamos um aniversário feliz, com saúde, serenidade, frutos espirituais e lindas respostas de oração.',
+    'Receba o carinho da Escola Bíblica Dominical neste dia especial. Que Deus fortaleça sua fé, alegre o seu coração e conceda um ano cheio de graça e vitórias.'
   ]
 
   const versiculosCartaoAniversario = [
     {
-      texto: 'â€œEste Ã© o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.â€',
+      texto: 'â€œEste é o dia que fez o Senhor; regozijemo-nos e alegremo-nos nele.â€',
       referencia: 'Salmo 118:24',
     },
     {
-      texto: 'â€œO Senhor te abenÃ§oe e te guarde; o Senhor faÃ§a resplandecer o rosto sobre ti.â€',
-      referencia: 'NÃºmeros 6:24-25',
+      texto: 'â€œO Senhor te abençoe e te guarde; o Senhor faça resplandecer o rosto sobre ti.â€',
+      referencia: 'Números 6:24-25',
     },
     {
-      texto: 'â€œPorque eu bem sei os pensamentos que penso de vÃ³s, diz o Senhor; pensamentos de paz.â€',
+      texto: 'â€œPorque eu bem sei os pensamentos que penso de vós, diz o Senhor; pensamentos de paz.â€',
       referencia: 'Jeremias 29:11',
     },
     {
-      texto: 'â€œDeleita-te tambÃ©m no Senhor, e ele te concederÃ¡ o que deseja o teu coraÃ§Ã£o.â€',
+      texto: 'â€œDeleita-te também no Senhor, e ele te concederá o que deseja o teu coração.â€',
       referencia: 'Salmo 37:4',
     },
     {
-      texto: 'â€œO choro pode durar uma noite, mas a alegria vem pela manhÃ£.â€',
+      texto: 'â€œO choro pode durar uma noite, mas a alegria vem pela manhã.â€',
       referencia: 'Salmo 30:5',
     },
   ]
@@ -8275,7 +8274,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
       versiculoTexto: versiculo.texto,
       versiculoReferencia: versiculo.referencia,
       assinaturaLinha1: 'Com carinho,',
-      assinaturaLinha2: 'Escola BÃ­blica Dominical.',
+      assinaturaLinha2: 'Escola Bíblica Dominical.',
     }
   }
 
@@ -8306,13 +8305,13 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
   function transformarCanvasEmArquivoPng(canvas, nomeArquivo) {
     return new Promise((resolve, reject) => {
       if (!canvas) {
-        reject(new Error('CartÃ£o nÃ£o encontrado.'))
+        reject(new Error('Cartão não encontrado.'))
         return
       }
 
       canvas.toBlob((blob) => {
         if (!blob) {
-          reject(new Error('NÃ£o foi possÃ­vel preparar a imagem do cartÃ£o.'))
+          reject(new Error('Não foi possível preparar a imagem do cartão.'))
           return
         }
 
@@ -8325,7 +8324,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
     const area = cartaoAniversarioRef.current
 
     if (!area) {
-      alert('Selecione um aniversariante para gerar o cartÃ£o.')
+      alert('Selecione um aniversariante para gerar o cartão.')
       return null
     }
 
@@ -8350,8 +8349,8 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
         `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
       )
     } catch (error) {
-      console.error('Erro ao baixar cartÃ£o de aniversÃ¡rio:', error)
-      alert('NÃ£o foi possÃ­vel baixar o cartÃ£o. Tente novamente.')
+      console.error('Erro ao baixar cartão de aniversário:', error)
+      alert('Não foi possível baixar o cartão. Tente novamente.')
     }
   }
 
@@ -8366,7 +8365,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
 
       const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
       const conteudoCartao = obterConteudoCartaoAniversario(aniversariante)
-      const mensagemWhatsApp = `Feliz aniversÃ¡rio, ${aniversariante?.nome || ''}! ðŸŽ‰
+      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! ðŸŽ‰
 
 ${conteudoCartao.mensagem}
 
@@ -8377,7 +8376,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       try {
         const arquivo = await transformarCanvasEmArquivoPng(canvas, nomeArquivo)
         const dadosCompartilhamento = {
-          title: `CartÃ£o de aniversÃ¡rio - ${aniversariante?.nome || 'Aniversariante'}`,
+          title: `Cartão de aniversário - ${aniversariante?.nome || 'Aniversariante'}`,
           text: mensagemWhatsApp,
           files: [arquivo],
         }
@@ -8387,24 +8386,24 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           return
         }
       } catch (erroCompartilhamento) {
-        console.warn('Compartilhamento direto com imagem indisponÃ­vel neste navegador:', erroCompartilhamento)
+        console.warn('Compartilhamento direto com imagem indisponível neste navegador:', erroCompartilhamento)
       }
 
       baixarCanvasComoPng(canvas, nomeArquivo)
 
       const mensagem = encodeURIComponent(
-        `${mensagemWhatsApp}\n\nO cartÃ£o foi baixado em imagem. Anexe a imagem no WhatsApp para enviar ao aniversariante.`
+        `${mensagemWhatsApp}\n\nO cartão foi baixado em imagem. Anexe a imagem no WhatsApp para enviar ao aniversariante.`
       )
       const janelaWhatsApp = window.open(`https://wa.me/?text=${mensagem}`, '_blank', 'noopener,noreferrer')
 
       if (!janelaWhatsApp) {
-        alert('O cartÃ£o foi baixado. Abra o WhatsApp e anexe a imagem para enviar ao aniversariante.')
+        alert('O cartão foi baixado. Abra o WhatsApp e anexe a imagem para enviar ao aniversariante.')
       } else {
-        alert('Neste navegador nÃ£o foi possÃ­vel enviar imagem e mensagem juntos automaticamente. O cartÃ£o foi baixado e o WhatsApp foi aberto com a mensagem pronta.')
+        alert('Neste navegador não foi possível enviar imagem e mensagem juntos automaticamente. O cartão foi baixado e o WhatsApp foi aberto com a mensagem pronta.')
       }
     } catch (error) {
-      console.error('Erro ao abrir WhatsApp para envio do cartÃ£o:', error)
-      alert('NÃ£o foi possÃ­vel abrir o WhatsApp. O cartÃ£o pode ser baixado pelo botÃ£o Baixar cartÃ£o.')
+      console.error('Erro ao abrir WhatsApp para envio do cartão:', error)
+      alert('Não foi possível abrir o WhatsApp. O cartão pode ser baixado pelo botão Baixar cartão.')
     }
   }
 
@@ -8441,8 +8440,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       pdf.addImage(imagem, 'PNG', x, y, larguraCartao, alturaCartao)
       pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
     } catch (error) {
-      console.error('Erro ao gerar PDF do cartÃ£o de aniversÃ¡rio:', error)
-      alert('NÃ£o foi possÃ­vel gerar o PDF do cartÃ£o. Tente novamente.')
+      console.error('Erro ao gerar PDF do cartão de aniversário:', error)
+      alert('Não foi possível gerar o PDF do cartão. Tente novamente.')
     }
   }
 
@@ -8463,7 +8462,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <head>
               <meta charset="UTF-8" />
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>CartÃ£o de aniversÃ¡rio</title>
+              <title>Cartão de aniversário</title>
               <style>
                 * { box-sizing: border-box; }
                 body {
@@ -8487,15 +8486,15 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </style>
             </head>
             <body>
-              <img src="${imagem}" alt="CartÃ£o de aniversÃ¡rio" />
+              <img src="${imagem}" alt="Cartão de aniversário" />
             </body>
           </html>
         `,
         'iframe-cartao-aniversario-individual'
       )
     } catch (error) {
-      console.error('Erro ao imprimir cartÃ£o de aniversÃ¡rio:', error)
-      alert('NÃ£o foi possÃ­vel imprimir o cartÃ£o. Tente novamente.')
+      console.error('Erro ao imprimir cartão de aniversário:', error)
+      alert('Não foi possível imprimir o cartão. Tente novamente.')
     }
   }
 
@@ -8536,7 +8535,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <span className="hero-tag">Agenda da semana</span>
                 <h3>Aniversariantes da semana</h3>
                 <p>
-                  Confira alunos, professores e secretarias que fazem aniversÃ¡rio hoje ou nos prÃ³ximos 7 dias.
+                  Confira alunos, professores e secretarias que fazem aniversário hoje ou nos próximos 7 dias.
                 </p>
               </div>
               <div className="janela-aniversariantes-selo">ðŸŽ</div>
@@ -8553,7 +8552,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </div>
               <div>
                 <strong>{proximosAniversariantes.length}</strong>
-                <span>PrÃ³ximos dias</span>
+                <span>Próximos dias</span>
               </div>
             </div>
 
@@ -8567,7 +8566,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     <div className="janela-aniversariante-icone">ðŸŽ‰</div>
                     <div>
                       <strong>{pessoa.nome}</strong>
-                      <p>{pessoa.tipo} â€¢ {pessoa.detalhe || 'Sem informaÃ§Ã£o'}</p>
+                      <p>{pessoa.tipo} â€¢ {pessoa.detalhe || 'Sem informação'}</p>
                     </div>
                     <span>{formatarDataNascimento(pessoa.dataNascimento)}</span>
                     <em>{descreverAniversario(pessoa.dias)}</em>
@@ -8576,22 +8575,22 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       className="botao-mini-cartao"
                       onClick={() => setAniversarianteCartaoId(pessoa.id)}
                     >
-                      Ver cartÃ£o
+                      Ver cartão
                     </button>
                   </article>
                 ))}
               </div>
             ) : (
               <div className="janela-aniversariantes-vazio">
-                Nenhum aniversÃ¡rio cadastrado para os prÃ³ximos 7 dias.
+                Nenhum aniversário cadastrado para os próximos 7 dias.
               </div>
             )}
 
             {aniversarianteCartao && (
               <div className="cartao-aniversario-area">
                 <div className="cartao-aniversario-info">
-                  <span className="hero-tag">CartÃ£o individual</span>
-                  <h4>CartÃ£o pronto para {aniversarianteCartao.nome}</h4>
+                  <span className="hero-tag">Cartão individual</span>
+                  <h4>Cartão pronto para {aniversarianteCartao.nome}</h4>
                   <p>
                     Baixe a imagem para enviar pelo WhatsApp ou imprima em papel A4.
                     A assinatura foi ajustada e cada aniversariante recebe uma mensagem diferente.
@@ -8602,7 +8601,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   <article className="cartao-aniversario-oficial" ref={cartaoAniversarioRef}>
                     <div className="cartao-aniversario-moldura">
                       <div className="cartao-aniversario-livro" aria-hidden="true">ðŸ“–</div>
-                      <div className="cartao-aniversario-pomba" aria-hidden="true">ðŸ•Šï¸</div>
+                      <div className="cartao-aniversario-pomba" aria-hidden="true">ðŸ•Š️</div>
                       <div className="cartao-aniversario-flores cartao-aniversario-flores-esquerda" aria-hidden="true">
                         <span></span><span></span><span></span><span></span>
                       </div>
@@ -8619,18 +8618,18 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       <div className="cartao-aniversario-texto">
                         <h4>
                           <span>Feliz</span>
-                          <em>aniversÃ¡rio,</em>
+                          <em>aniversário,</em>
                           <strong className={obterClasseNomeCartao(obterPrimeiroNomeCartao(aniversarianteCartao.nome))}>{obterPrimeiroNomeCartao(aniversarianteCartao.nome)}!</strong>
                         </h4>
 
-                        <div className="cartao-aniversario-divisor" aria-hidden="true">â¤</div>
+                        <div className="cartao-aniversario-divisor" aria-hidden="true">❤</div>
 
                         <p className="cartao-aniversario-mensagem">
                           {conteudoCartaoAniversariante?.mensagem}
                         </p>
 
                         <section className="cartao-aniversario-versiculo">
-                          <span>ðŸ“– VersÃ­culo bÃ­blico</span>
+                          <span>ðŸ“– Versículo bíblico</span>
                           <p>{conteudoCartaoAniversariante?.versiculoTexto}</p>
                           <strong>{conteudoCartaoAniversariante?.versiculoReferencia}</strong>
                         </section>
@@ -8656,16 +8655,16 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
           <div className="janela-aniversariantes-acoes janela-aniversariantes-acoes-completas">
             <button className="botao-principal" type="button" onClick={baixarImagemCartaoAniversario} disabled={!aniversarianteCartao}>
-              Baixar cartÃ£o
+              Baixar cartão
             </button>
             <button className="botao-secundario" type="button" onClick={enviarCartaoPeloWhatsApp} disabled={!aniversarianteCartao}>
               Enviar imagem no WhatsApp
             </button>
             <button className="botao-secundario" type="button" onClick={baixarPdfCartaoAniversario} disabled={!aniversarianteCartao}>
-              Baixar PDF do cartÃ£o
+              Baixar PDF do cartão
             </button>
             <button className="botao-secundario" type="button" onClick={imprimirCartaoAniversario} disabled={!aniversarianteCartao}>
-              Imprimir cartÃ£o
+              Imprimir cartão
             </button>
             <button className="botao-secundario" type="button" onClick={baixarPdfAniversariantesSemana}>
               PDF da lista
@@ -8692,9 +8691,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="feedback-piloto-topo feedback-piloto-topo-compacto">
           <div>
             <span className="hero-tag">Ajude a melhorar</span>
-            <h3>Enviar sugestÃ£o para a equipe EBD Fiel</h3>
+            <h3>Enviar sugestão para a equipe EBD Fiel</h3>
             <p>
-              Registre dÃºvidas, sugestÃµes, elogios ou pontos de melhoria. A equipe poderÃ¡ acompanhar e responder pela plataforma.
+              Registre dúvidas, sugestões, elogios ou pontos de melhoria. A equipe poderá acompanhar e responder pela plataforma.
             </p>
           </div>
 
@@ -8703,7 +8702,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             type="button"
             onClick={() => setFormularioSugestaoAberto((aberto) => !aberto)}
           >
-            {formularioSugestaoAberto ? 'Ocultar formulÃ¡rio' : 'Enviar sugestÃ£o'}
+            {formularioSugestaoAberto ? 'Ocultar formulário' : 'Enviar sugestão'}
           </button>
         </div>
 
@@ -8718,16 +8717,16 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     setFeedbackPiloto({ ...feedbackPiloto, tipo: event.target.value })
                   }
                 >
-                  <option value="sugestao">SugestÃ£o</option>
+                  <option value="sugestao">Sugestão</option>
                   <option value="erro">Erro encontrado</option>
-                  <option value="duvida">DÃºvida</option>
+                  <option value="duvida">Dúvida</option>
                   <option value="elogio">Elogio</option>
                 </select>
               </label>
 
               <div className="feedback-dica">
                 <strong>Ajude a melhorar o piloto</strong>
-                <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que vocÃª esperava.</span>
+                <span>Descreva com detalhes o que aconteceu, onde aconteceu e o que você esperava.</span>
               </div>
             </div>
 
@@ -8755,7 +8754,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </button>
 
               <p>
-                Sua mensagem fica registrada para os administradores acompanharem e responderem pela prÃ³pria plataforma.
+                Sua mensagem fica registrada para os administradores acompanharem e responderem pela própria plataforma.
               </p>
             </div>
           </form>
@@ -8811,24 +8810,24 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <p>Indicadores visuais sem alterar os cadastros existentes.</p>
           </div>
           <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-            Abrir relatÃ³rios
+            Abrir relatórios
           </button>
         </div>
 
         <div className="dashboard-v41-hero">
           <div>
-            <span className="selo-publico">VisÃ£o geral</span>
+            <span className="selo-publico">Visão geral</span>
             <h3>{buscarNomeIgrejaParaExibicao()}</h3>
-            <p>Resumo automÃ¡tico de presenÃ§a, matrÃ­cula, classes e acompanhamento pastoral da secretaria.</p>
+            <p>Resumo automático de presença, matrícula, classes e acompanhamento pastoral da secretaria.</p>
           </div>
           <div className="dashboard-v41-circulo">
             <strong>{calcularFrequenciaGeral()}%</strong>
-            <span>frequÃªncia geral</span>
+            <span>frequência geral</span>
           </div>
         </div>
 
         <div className="cards cards-estatisticas dashboard-v41-cards">
-          <CardResumo icone="alunos" titulo="MatrÃ­cula" valor={alunosSomente().length} descricao="alunos cadastrados" />
+          <CardResumo icone="alunos" titulo="Matrícula" valor={alunosSomente().length} descricao="alunos cadastrados" />
           <CardResumo icone="classes" titulo="Classes" valor={classes.length} descricao="turmas ativas" />
           <CardResumo icone="chamada" titulo="Chamadas" valor={chamadasSalvas.length} descricao="registros de alunos" />
           <CardResumo icone="check" titulo="Alertas" valor={alertasFaltas.length} descricao="alunos para acompanhar" destaque />
@@ -8836,7 +8835,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="dashboard-v41-grid">
           <div className="dashboard-v41-bloco">
-            <h3>FrequÃªncia por classe</h3>
+            <h3>Frequência por classe</h3>
             <div className="lista-graficos-v41">
               {dadosClasse.map((item) => (
                 <div className="linha-grafico-v41" key={item.classe.id}>
@@ -8844,10 +8843,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     <strong>{item.classe.nome}</strong>
                     <span>{item.frequencia}%</span>
                   </div>
-                  <div className="barra-grafico-v41" aria-label={`FrequÃªncia ${item.frequencia}%`}>
+                  <div className="barra-grafico-v41" aria-label={`Frequência ${item.frequencia}%`}>
                     <span style={{ width: `${item.frequencia}%` }} />
                   </div>
-                  <p>{item.presentes} presenÃ§as, {item.faltas} faltas, {item.chamadas} chamada(s).</p>
+                  <p>{item.presentes} presenças, {item.faltas} faltas, {item.chamadas} chamada(s).</p>
                 </div>
               ))}
               {dadosClasse.length === 0 && <p className="texto-sem-aniversariantes">Nenhuma classe cadastrada ainda.</p>}
@@ -8861,9 +8860,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <div className="item-dashboard-v41" key={item.aluno.id}>
                   <div>
                     <strong>{item.aluno.nome}</strong>
-                    <p>{item.classeNome} - {item.frequencia}% de frequÃªncia</p>
+                    <p>{item.classeNome} - {item.frequencia}% de frequência</p>
                   </div>
-                  <span>â­</span>
+                  <span>⭐</span>
                 </div>
               ))}
               {alertasFaltas.slice(0, 5).map((item) => (
@@ -8878,7 +8877,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 </div>
               ))}
               {destaques.length === 0 && alertasFaltas.length === 0 && (
-                <p className="texto-sem-aniversariantes">FaÃ§a chamadas para gerar indicadores.</p>
+                <p className="texto-sem-aniversariantes">Faça chamadas para gerar indicadores.</p>
               )}
             </div>
           </div>
@@ -8897,8 +8896,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>HistÃ³rico individual do aluno</h2>
-            <p>Consulta somente leitura, usando chamadas jÃ¡ salvas.</p>
+            <h2>Histórico individual do aluno</h2>
+            <p>Consulta somente leitura, usando chamadas já salvas.</p>
           </div>
         </div>
 
@@ -8940,8 +8939,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <p>{buscarNomeClasse(historico.aluno.classeId)} â€¢ {historico.aluno.telefone || 'sem telefone'}</p>
               </div>
               <div className="historico-v41-numeros">
-                <div><strong>{historico.frequencia}%</strong><span>frequÃªncia</span></div>
-                <div><strong>{historico.presentes}</strong><span>presenÃ§as</span></div>
+                <div><strong>{historico.frequencia}%</strong><span>frequência</span></div>
+                <div><strong>{historico.presentes}</strong><span>presenças</span></div>
                 <div><strong>{historico.faltas}</strong><span>faltas</span></div>
               </div>
             </div>
@@ -8954,7 +8953,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     <th>Classe</th>
                     <th>Status</th>
                     <th>Visitantes</th>
-                    <th>BÃ­blias</th>
+                    <th>Bíblias</th>
                     <th>Revistas</th>
                   </tr>
                 </thead>
@@ -8979,7 +8978,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </div>
           </div>
         ) : (
-          <div className="aviso"><p>Selecione um aluno para visualizar o histÃ³rico.</p></div>
+          <div className="aviso"><p>Selecione um aluno para visualizar o histórico.</p></div>
         )}
       </section>
     )
@@ -8993,14 +8992,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="topo-pagina">
           <div>
             <h2>Controle financeiro da EBD</h2>
-            <p>Resumo das ofertas lanÃ§adas nas chamadas. NÃ£o cria nem altera lanÃ§amentos no banco.</p>
+            <p>Resumo das ofertas lançadas nas chamadas. Não cria nem altera lançamentos no banco.</p>
           </div>
         </div>
 
         <div className="cards cards-estatisticas">
           <CardResumo icone="relatorios" titulo="Total de ofertas" valor={formatarMoeda(resumo.totalOfertas)} descricao="soma das chamadas" destaque />
           <CardResumo icone="chamada" titulo="Chamadas com oferta" valor={resumo.chamadasComOferta} descricao="registros com valor informado" />
-          <CardResumo icone="check" titulo="MÃ©dia por chamada" valor={formatarMoeda(resumo.mediaPorChamada)} descricao="mÃ©dia dos registros com oferta" />
+          <CardResumo icone="check" titulo="Média por chamada" valor={formatarMoeda(resumo.mediaPorChamada)} descricao="média dos registros com oferta" />
         </div>
 
         <div className="financeiro-v41-bloco">
@@ -9011,7 +9010,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <tr>
                   <th>Classe</th>
                   <th>Chamadas</th>
-                  <th>Total lanÃ§ado</th>
+                  <th>Total lançado</th>
                 </tr>
               </thead>
               <tbody>
@@ -9026,7 +9025,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </table>
           </div>
           <div className="aviso aviso-financeiro-v41">
-            <p>Para preservar seguranÃ§a, esta fase usa somente o campo â€œofertasâ€ das chamadas existentes. LanÃ§amentos financeiros avanÃ§ados podem ser ativados depois em tabela prÃ³pria.</p>
+            <p>Para preservar segurança, esta fase usa somente o campo â€œofertasâ€ das chamadas existentes. Lançamentos financeiros avançados podem ser ativados depois em tabela própria.</p>
           </div>
         </div>
       </section>
@@ -9056,7 +9055,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               data: null,
               error: {
                 message: `Tempo esgotado ao consultar ${nome}.`,
-                details: 'A consulta nÃ£o respondeu dentro do tempo esperado.',
+                details: 'A consulta não respondeu dentro do tempo esperado.',
                 code: 'TIMEOUT_DIAGNOSTICO',
               },
               count: null,
@@ -9186,7 +9185,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       resultado.erros.geral = montarErro(error) || { message: String(error) }
     }
 
-    console.log('DiagnÃ³stico EBD Fiel:', resultado)
+    console.log('Diagnóstico EBD Fiel:', resultado)
     setDiagnosticoCarregamento(resultado)
     setCarregandoDiagnostico(false)
   }
@@ -9217,7 +9216,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     try {
       copiado = document.execCommand('copy')
     } catch (error) {
-      console.error('Fallback de cÃ³pia falhou:', error)
+      console.error('Fallback de cópia falhou:', error)
       copiado = false
     }
 
@@ -9230,7 +9229,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     event?.stopPropagation?.()
 
     if (!diagnosticoCarregamento || typeof document === 'undefined') {
-      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnÃ³stico antes de baixar.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de baixar.' })
       return
     }
 
@@ -9244,7 +9243,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'DiagnÃ³stico baixado com sucesso.' })
+    setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico baixado com sucesso.' })
   }
 
   async function copiarDiagnosticoCarregamento(event) {
@@ -9252,7 +9251,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     event?.stopPropagation?.()
 
     if (!diagnosticoCarregamento) {
-      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnÃ³stico antes de copiar.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'erro', texto: 'Execute o diagnóstico antes de copiar.' })
       return
     }
 
@@ -9261,29 +9260,29 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(texto)
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'DiagnÃ³stico copiado para a Ã¡rea de transferÃªncia.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       const copiado = copiarTextoComFallback(texto)
       if (copiado) {
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'DiagnÃ³stico copiado para a Ã¡rea de transferÃªncia.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       baixarDiagnosticoCarregamento(event)
-      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cÃ³pia. Baixei o diagnÃ³stico em arquivo.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     } catch (error) {
-      console.error('Erro ao copiar diagnÃ³stico:', error)
+      console.error('Erro ao copiar diagnóstico:', error)
       const copiado = copiarTextoComFallback(texto)
 
       if (copiado) {
-        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'DiagnÃ³stico copiado para a Ã¡rea de transferÃªncia.' })
+        setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'Diagnóstico copiado para a área de transferência.' })
         return
       }
 
       baixarDiagnosticoCarregamento(event)
-      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cÃ³pia. Baixei o diagnÃ³stico em arquivo.' })
+      setMensagemDiagnosticoAdmin({ tipo: 'sucesso', texto: 'O navegador bloqueou a cópia. Baixei o diagnóstico em arquivo.' })
     }
   }
 
@@ -9292,16 +9291,16 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>SeguranÃ§a e auditoria</h2>
-            <p>Ferramentas seguras de leitura para conferÃªncia e cÃ³pia local da igreja.</p>
+            <h2>Segurança e auditoria</h2>
+            <p>Ferramentas seguras de leitura para conferência e cópia local da igreja.</p>
           </div>
         </div>
 
         <div className="backup-v41-grid">
           <div className="backup-v41-card">
-            <span className="selo-publico">CÃ³pia de seguranÃ§a local</span>
+            <span className="selo-publico">Cópia de segurança local</span>
             <h3>Exportar dados da igreja</h3>
-            <p>Gera um arquivo JSON com os dados carregados na sessÃ£o atual. NÃ£o modifica cadastros no Supabase.</p>
+            <p>Gera um arquivo JSON com os dados carregados na sessão atual. Não modifica cadastros no Supabase.</p>
             <button className="botao-principal" type="button" onClick={baixarBackupLocalSeguro}>
               Baixar backup JSON
             </button>
@@ -9309,8 +9308,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
           <div className="backup-v41-card">
             <span className="selo-publico">Auditoria</span>
-            <h3>Resumo da sessÃ£o</h3>
-            <p>Copie um resumo com igreja, usuÃ¡rio, perfil e totais para suporte tÃ©cnico.</p>
+            <h3>Resumo da sessão</h3>
+            <p>Copie um resumo com igreja, usuário, perfil e totais para suporte técnico.</p>
             <button className="botao-secundario" type="button" onClick={copiarResumoAuditoriaLocal}>
               Copiar resumo
             </button>
@@ -9318,8 +9317,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         </div>
 
         <div className="resumo resumo-alerta-claro">
-          <h3>PrÃ³xima camada recomendada</h3>
-          <p>Para backup automÃ¡tico real, use o SQL seguro enviado junto com esta versÃ£o para criar tabela de auditoria/backups sem alterar tabelas existentes.</p>
+          <h3>Próxima camada recomendada</h3>
+          <p>Para backup automático real, use o SQL seguro enviado junto com esta versão para criar tabela de auditoria/backups sem alterar tabelas existentes.</p>
         </div>
       </section>
     )
@@ -9345,15 +9344,15 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </div>
             <h2>{buscarNomeIgrejaParaExibicao()}</h2>
             <p>
-              Controle classes, alunos, chamadas e relatÃ³rios da Escola BÃ­blica Dominical
-              com uma estrutura pronta para uso e comercializaÃ§Ã£o.
+              Controle classes, alunos, chamadas e relatórios da Escola Bíblica Dominical
+              com uma estrutura pronta para uso e comercialização.
             </p>
 
             <div className="hero-painel-metricas" aria-label="Resumo da igreja">
               <span><strong>{classes.length}</strong> classes</span>
               <span><strong>{alunosSomente().length}</strong> alunos</span>
               <span><strong>{professoresSomente().length}</strong> professores</span>
-              <span><strong>{calcularFrequenciaGeral()}%</strong> frequÃªncia</span>
+              <span><strong>{calcularFrequenciaGeral()}%</strong> frequência</span>
             </div>
 
             {(usuarioEhSecretaria() || usuarioEhProfessor()) && (
@@ -9368,7 +9367,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 </span>
                 <span className="atalho-chamada-topo-texto">
                   <strong>Fazer chamada</strong>
-                  <small>Atalho principal para registrar presenÃ§a</small>
+                  <small>Atalho principal para registrar presença</small>
                 </span>
               </button>
             )}
@@ -9380,7 +9379,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 </button>
               )}
               <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-                Ver relatÃ³rios
+                Ver relatórios
               </button>
 
               <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('dashboard')}>
@@ -9388,7 +9387,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </button>
 
               <button className="botao-secundario botao-manual-painel" type="button" onClick={() => navegarParaPagina('manual')}>
-                Ver manual do usuÃ¡rio
+                Ver manual do usuário
               </button>
             </div>
           </div>
@@ -9397,14 +9396,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <div className="hero-icone-area">
               <Icone nome="biblia" className="icone-hero" />
             </div>
-            <h3>Resumo rÃ¡pido</h3>
+            <h3>Resumo rápido</h3>
             <p>Dados sincronizados automaticamente no Supabase.</p>
             <ul>
               <li>{classes.length} classes ativas</li>
               <li>{alunosSomente().length} alunos cadastrados</li>
               <li>{professoresSomente().length} professores cadastrados</li>
               <li>{chamadasSalvas.length} chamadas registradas</li>
-              <li>{calcularFrequenciaGeral()}% de frequÃªncia geral</li>
+              <li>{calcularFrequenciaGeral()}% de frequência geral</li>
             </ul>
           </div>
         </div>
@@ -9433,13 +9432,13 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             icone="chamada"
             titulo="Chamadas"
             valor={chamadasSalvas.length}
-            descricao="Registros salvos de presenÃ§a."
+            descricao="Registros salvos de presença."
           />
           <CardResumo
             icone="check"
-            titulo="FrequÃªncia geral"
+            titulo="Frequência geral"
             valor={`${calcularFrequenciaGeral()}%`}
-            descricao="MÃ©dia de presenÃ§a nas chamadas lanÃ§adas."
+            descricao="Média de presença nas chamadas lançadas."
             destaque
           />
         </div>
@@ -9447,14 +9446,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         {usuarioEhSecretaria() && (
           <div className="acoes-rapidas-painel">
             <div>
-              <span className="hero-tag">AÃ§Ãµes rÃ¡pidas</span>
+              <span className="hero-tag">Ações rápidas</span>
               <h3>O que deseja fazer agora?</h3>
             </div>
 
             <div className="acoes-rapidas-grade">
               <button className="acao-rapida-principal" type="button" onClick={() => navegarParaPagina('chamada')}>
                 <strong>Fazer chamada</strong>
-                <span>Registrar presenÃ§a da classe</span>
+                <span>Registrar presença da classe</span>
               </button>
 
               <button
@@ -9481,7 +9480,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
               <button type="button" onClick={abrirJanelaAniversariantesSemana}>
                 <strong>Ver aniversariantes</strong>
-                <span>Semana, PDF e impressÃ£o</span>
+                <span>Semana, PDF e impressão</span>
               </button>
             </div>
           </div>
@@ -9494,11 +9493,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <span className="hero-tag">Acompanhamento da secretaria</span>
                 <h3>Alertas da EBD</h3>
                 <p>
-                  Acompanhe aniversariantes, faltas recorrentes e alunos com boa frequÃªncia.
+                  Acompanhe aniversariantes, faltas recorrentes e alunos com boa frequência.
                 </p>
               </div>
               <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-                Ver relatÃ³rios
+                Ver relatórios
               </button>
             </div>
 
@@ -9509,7 +9508,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   <strong>Aniversariantes</strong>
                   <p>
                     {aniversariantesDaSemana.length > 0
-                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversÃ¡rio nesta semana.`
+                      ? `${aniversariantesDaSemana.length} pessoa${aniversariantesDaSemana.length === 1 ? '' : 's'} com aniversário nesta semana.`
                       : 'Nenhum aniversariante encontrado nesta semana.'}
                   </p>
                 </div>
@@ -9517,12 +9516,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </button>
 
               <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioAlertasFaltas}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-faltas">âš ï¸</span>
+                <span className="alerta-ebd-icone alerta-ebd-icone-faltas">âš ️</span>
                 <div>
                   <strong>Alertas de faltas</strong>
                   <p>
                     {alertasDeFaltasPainel.length > 0
-                      ? `${alertasDeFaltasPainel.length} aluno${alertasDeFaltasPainel.length === 1 ? '' : 's'} precisando de atenÃ§Ã£o.`
+                      ? `${alertasDeFaltasPainel.length} aluno${alertasDeFaltasPainel.length === 1 ? '' : 's'} precisando de atenção.`
                       : 'Nenhum alerta de faltas no momento.'}
                   </p>
                 </div>
@@ -9530,12 +9529,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </button>
 
               <button className="alerta-ebd-card" type="button" onClick={abrirRelatorioDestaquesFrequencia}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-destaque">â­</span>
+                <span className="alerta-ebd-icone alerta-ebd-icone-destaque">⭐</span>
                 <div>
-                  <strong>Destaques de frequÃªncia</strong>
+                  <strong>Destaques de frequência</strong>
                   <p>
                     {destaquesDeFrequenciaPainel.length > 0
-                      ? `${destaquesDeFrequenciaPainel.length} aluno${destaquesDeFrequenciaPainel.length === 1 ? '' : 's'} com boa frequÃªncia.`
+                      ? `${destaquesDeFrequenciaPainel.length} aluno${destaquesDeFrequenciaPainel.length === 1 ? '' : 's'} com boa frequência.`
                       : 'Sem destaques calculados ainda.'}
                   </p>
                 </div>
@@ -9553,7 +9552,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <div>
                 <span className="hero-tag">Agenda da semana</span>
                 <h3>Aniversariantes da semana</h3>
-                <p>Veja rapidamente quem deve receber atenÃ§Ã£o especial nos prÃ³ximos dias.</p>
+                <p>Veja rapidamente quem deve receber atenção especial nos próximos dias.</p>
               </div>
               <button className="botao-secundario" type="button" onClick={abrirJanelaAniversariantesSemana}>
                 Ver lista completa
@@ -9582,7 +9581,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </div>
             ) : (
               <p className="texto-sem-aniversariantes">
-                Nenhum aniversÃ¡rio cadastrado para os prÃ³ximos 7 dias.
+                Nenhum aniversário cadastrado para os próximos 7 dias.
               </p>
             )}
           </div>
@@ -9601,11 +9600,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           >
             <span className="icone-configuracao-rapida"><Icone nome="configuracoes" className="icone-svg" /></span>
             <div>
-              <h3>PersonalizaÃ§Ã£o da igreja</h3>
+              <h3>Personalização da igreja</h3>
               <p>
                 {configuracaoIgreja.nome_igreja
-                  ? 'Dados configurados para relatÃ³rios e PDFs.'
-                  : 'Configure nome, endereÃ§o e contatos da igreja.'}
+                  ? 'Dados configurados para relatórios e PDFs.'
+                  : 'Configure nome, endereço e contatos da igreja.'}
               </p>
             </div>
           </button>
@@ -9636,8 +9635,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </h3>
             <p>
               {formularioProfessor
-                ? 'Este cadastro tambÃ©m aparece no menu Professores e na Chamada dos professores.'
-                : 'Este aluno serÃ¡ cadastrado diretamente na classe selecionada e aparecerÃ¡ na chamada dos alunos.'}
+                ? 'Este cadastro também aparece no menu Professores e na Chamada dos professores.'
+                : 'Este aluno será cadastrado diretamente na classe selecionada e aparecerá na chamada dos alunos.'}
             </p>
           </div>
         </div>
@@ -9656,7 +9655,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </label>
 
           <label>
-            Classe de referÃªncia
+            Classe de referência
             <select
               value={novoAluno.classeId}
               onChange={(event) =>
@@ -9705,7 +9704,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             {salvandoAluno
               ? 'Salvando...'
               : alunoEditandoId
-                ? 'Salvar alteraÃ§Ãµes'
+                ? 'Salvar alterações'
                 : formularioProfessor
                   ? 'Salvar professor'
                   : 'Salvar aluno'}
@@ -9728,7 +9727,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>O cadastro de classes Ã© gerenciado pela secretaria.</p>
+          <p>O cadastro de classes é gerenciado pela secretaria.</p>
         </section>
       )
     }
@@ -9737,9 +9736,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo pagina-interna pagina-classes">
         <div className="topo-pagina topo-pagina-interna">
           <div>
-            <span className="subtitulo-pagina-interna">GestÃ£o de turmas</span>
+            <span className="subtitulo-pagina-interna">Gestão de turmas</span>
             <h2>Classes</h2>
-            <p>Organize as classes da EBD, veja matrÃ­culas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
+            <p>Organize as classes da EBD, veja matrículas em destaque e cadastre alunos ou professores diretamente pela turma.</p>
           </div>
 
           {!mostrarFormularioClasse && (
@@ -9756,7 +9755,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <h3>{classeEditandoId ? 'Alterar nome da classe' : 'Cadastrar nova classe'}</h3>
               <p>
                 {classeEditandoId
-                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarÃ£o nesta mesma turma.'
+                  ? 'Atualize o nome da classe. Os alunos e professores vinculados continuarão nesta mesma turma.'
                   : 'Crie uma nova turma para organizar alunos, professores e chamadas da EBD.'}
               </p>
             </div>
@@ -9769,7 +9768,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 onChange={(event) =>
                   setNovaClasse({ ...novaClasse, nome: event.target.value })
                 }
-                placeholder="Ex: Jovens, Adultos, CrianÃ§as..."
+                placeholder="Ex: Jovens, Adultos, Crianças..."
                 autoFocus
               />
             </label>
@@ -9794,7 +9793,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="aviso aviso-classes-professores aviso-classes-moderno">
           <p>
-            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrÃ­cula de cada turma.
+            Clique em uma classe para cadastrar alunos, vincular professores e acompanhar a matrícula de cada turma.
           </p>
         </div>
 
@@ -9823,7 +9822,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <div className="classe-card-corpo">
                   <div className="classe-card-resumo">
                     <div className="classe-card-resumo-item resumo-matricula">
-                      <strong>MatrÃ­cula</strong>
+                      <strong>Matrícula</strong>
                       <span>{matriculaClasse} alunos</span>
                     </div>
                   </div>
@@ -9949,9 +9948,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     const cadastrosFiltrados = ehPaginaProfessor ? filtrarProfessores() : filtrarAlunos()
     const tituloPagina = ehPaginaProfessor ? 'Professores' : 'Alunos'
     const descricaoPagina = ehPaginaProfessor
-      ? 'Cadastre, edite e organize os professores. A classe de referÃªncia tambÃ©m atualiza a lista de professores em Classes.'
+      ? 'Cadastre, edite e organize os professores. A classe de referência também atualiza a lista de professores em Classes.'
       : usuarioEhProfessor()
-        ? 'Veja os alunos vinculados Ã s suas classes.'
+        ? 'Veja os alunos vinculados às suas classes.'
         : 'Cadastre, edite, busque e organize os alunos por classe.'
     const obterInicialCadastro = (nome) => String(nome || '?').trim().charAt(0).toUpperCase() || '?'
 
@@ -10003,7 +10002,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </label>
 
             <label>
-              Classe de referÃªncia
+              Classe de referência
               <select
                 value={novoAluno.classeId}
                 onChange={(event) =>
@@ -10051,7 +10050,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit" disabled={salvandoAluno}>
-                {salvandoAluno ? 'Salvando...' : alunoEditandoId ? 'Salvar alteraÃ§Ãµes' : 'Salvar cadastro'}
+                {salvandoAluno ? 'Salvando...' : alunoEditandoId ? 'Salvar alterações' : 'Salvar cadastro'}
               </button>
 
               <button
@@ -10163,7 +10162,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>O cadastro de usuÃ¡rios Ã© gerenciado pela secretaria.</p>
+          <p>O cadastro de usuários é gerenciado pela secretaria.</p>
         </section>
       )
     }
@@ -10172,7 +10171,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>UsuÃ¡rios</h2>
+            <h2>Usuários</h2>
             <p>
               Cadastre secretarias e professores da igreja. O login precisa existir
               primeiro em Authentication no Supabase.
@@ -10181,14 +10180,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
           {!mostrarFormularioPerfil && (
             <button className="botao-principal" onClick={abrirNovoPerfil}>
-              Novo usuÃ¡rio
+              Novo usuário
             </button>
           )}
         </div>
 
         <div className="aviso aviso-usuarios">
           <p>
-            <strong>Importante:</strong> primeiro crie o usuÃ¡rio em
+            <strong>Importante:</strong> primeiro crie o usuário em
             Supabase â†’ Authentication â†’ Users. Depois copie o User UID e cadastre
             aqui para vincular o perfil, a classe e a data de nascimento.
           </p>
@@ -10302,7 +10301,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {perfilEditandoId ? 'Salvar alteraÃ§Ãµes' : 'Salvar usuÃ¡rio'}
+                {perfilEditandoId ? 'Salvar alterações' : 'Salvar usuário'}
               </button>
 
               <button
@@ -10378,7 +10377,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     if (professores.length === 0) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: 'Ainda nÃ£o hÃ¡ professores cadastrados em UsuÃ¡rios.',
+        texto: 'Ainda não há professores cadastrados em Usuários.',
       })
       return
     }
@@ -10412,7 +10411,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     if (!confirmarDataDaChamada(dataAulaChamada, 'chamada dos professores')) {
       setMensagemChamada({
         tipo: 'aviso',
-        texto: 'Chamada dos professores nÃ£o salva. Confira a data da aula e tente novamente.',
+        texto: 'Chamada dos professores não salva. Confira a data da aula e tente novamente.',
       })
       return
     }
@@ -10443,7 +10442,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       console.error(error)
       setMensagemChamada({
         tipo: 'erro',
-        texto: 'NÃ£o foi possÃ­vel salvar a chamada dos professores. Verifique sua conexÃ£o e tente novamente.',
+        texto: 'Não foi possível salvar a chamada dos professores. Verifique sua conexão e tente novamente.',
       })
       return
     }
@@ -10474,11 +10473,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo pagina-interna pagina-chamada">
         <div className="topo-pagina topo-pagina-interna">
           <div>
-            <span className="subtitulo-pagina-interna">Registro de frequÃªncia</span>
+            <span className="subtitulo-pagina-interna">Registro de frequência</span>
             <h2>Chamada</h2>
             <p>
               {usuarioEhProfessor()
-                ? 'FaÃ§a a chamada das classes vinculadas pela secretaria.'
+                ? 'Faça a chamada das classes vinculadas pela secretaria.'
                 : 'Registre a chamada dos alunos e a chamada separada dos professores.'}
             </p>
           </div>
@@ -10556,7 +10555,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 </select>
                 {usuarioEhProfessor() && (
                   <small className="texto-ajuda-campo">
-                    VocÃª sÃ³ verÃ¡ as classes vinculadas pela secretaria.
+                    Você só verá as classes vinculadas pela secretaria.
                   </small>
                 )}
               </label>
@@ -10569,7 +10568,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   onChange={(event) => setDataAulaChamada(event.target.value)}
                 />
                 <small className="texto-ajuda-campo">
-                  O sistema preenche com a data de hoje, mas vocÃª pode alterar.
+                  O sistema preenche com a data de hoje, mas você pode alterar.
                 </small>
               </label>
 
@@ -10588,7 +10587,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   </label>
 
                   <label>
-                    BÃ­blias
+                    Bíblias
                     <input
                       type="number"
                       min="0"
@@ -10631,7 +10630,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             {classeChamadaId && classeSelecionada && alunosDaClasse.length === 0 && !mensagemChamada && (
               <div className="aviso">
                 <p>
-                  NÃ£o encontrei alunos vinculados Ã  classe {classeSelecionada.nome}.
+                  Não encontrei alunos vinculados à classe {classeSelecionada.nome}.
                   Verifique o cadastro dos alunos antes de salvar a chamada.
                 </p>
               </div>
@@ -10641,7 +10640,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <>
                 <div className="resumo-chamada">
                   <p>
-                    <strong>MatrÃ­cula:</strong> {alunosDaClasse.length}
+                    <strong>Matrícula:</strong> {alunosDaClasse.length}
                   </p>
 
                   <p>
@@ -10729,7 +10728,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   onChange={(event) => setDataAulaChamada(event.target.value)}
                 />
                 <small className="texto-ajuda-campo">
-                  Use a data do domingo/aula referente Ã  chamada.
+                  Use a data do domingo/aula referente à chamada.
                 </small>
               </label>
             </div>
@@ -10749,7 +10748,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             {professoresDaIgreja.length === 0 && (
               <div className="aviso">
                 <p>
-                  Nenhum professor cadastrado. VÃ¡ em Alunos e Professores,
+                  Nenhum professor cadastrado. Vá em Alunos e Professores,
                   cadastre uma pessoa com tipo Professor.
                 </p>
               </div>
@@ -10763,7 +10762,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       <div>
                         <h3>{professor.nome}</h3>
                         {professor.telefone && <p>Telefone: {professor.telefone}</p>}
-                        <p>Classe de referÃªncia: {buscarNomeClasse(professor.classeId)}</p>
+                        <p>Classe de referência: {buscarNomeClasse(professor.classeId)}</p>
                       </div>
 
                       <div className="acoes-chamada acoes-chamada-professores">
@@ -10815,7 +10814,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
                 <div className="formulario formulario-observacao-professores">
                   <label>
-                    ObservaÃ§Ãµes da chamada dos professores
+                    Observações da chamada dos professores
                     <input
                       type="text"
                       value={observacoesChamadaProfessores}
@@ -10909,7 +10908,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         chave: `alunos-${chamada.id}`,
         tipo: 'alunos',
         titulo: `Chamada dos alunos${classe?.nome ? ` â€” ${classe.nome}` : ''}`,
-        classe: classe?.nome || 'Classe nÃ£o encontrada',
+        classe: classe?.nome || 'Classe não encontrada',
         data: chamada.data,
         dataChave: obterChaveDataHistoricoChamada(chamada.data),
         resumo: [
@@ -10995,7 +10994,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     if (!item?.id) {
       setMensagemHistoricoChamadas({
         tipo: 'erro',
-        texto: 'NÃ£o encontrei o identificador dessa chamada.',
+        texto: 'Não encontrei o identificador dessa chamada.',
       })
       return
     }
@@ -11005,14 +11004,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     if (!igrejaAtualId) {
       setMensagemHistoricoChamadas({
         tipo: 'erro',
-        texto: 'NÃ£o foi possÃ­vel confirmar a igreja atual. Atualize os dados e tente novamente.',
+        texto: 'Não foi possível confirmar a igreja atual. Atualize os dados e tente novamente.',
       })
       return
     }
 
     const dataFormatada = formatarDataCurtaRelatorio(item.data)
     const confirmou = window.confirm(
-      `Deseja realmente excluir esta chamada?\n\n${item.titulo}\nData: ${dataFormatada}\n\nEssa aÃ§Ã£o remove apenas o registro da chamada. Alunos, classes e professores nÃ£o serÃ£o apagados.`
+      `Deseja realmente excluir esta chamada?\n\n${item.titulo}\nData: ${dataFormatada}\n\nEssa ação remove apenas o registro da chamada. Alunos, classes e professores não serão apagados.`
     )
 
     if (!confirmou) {
@@ -11042,13 +11041,13 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
       setMensagemHistoricoChamadas({
         tipo: 'sucesso',
-        texto: 'Chamada excluÃ­da com sucesso. Os cadastros da igreja nÃ£o foram alterados.',
+        texto: 'Chamada excluída com sucesso. Os cadastros da igreja não foram alterados.',
       })
     } catch (error) {
       console.error('Erro ao excluir chamada:', error)
       setMensagemHistoricoChamadas({
         tipo: 'erro',
-        texto: 'NÃ£o foi possÃ­vel excluir a chamada. Verifique sua permissÃ£o e tente novamente.',
+        texto: 'Não foi possível excluir a chamada. Verifique sua permissão e tente novamente.',
       })
     } finally {
       setExcluindoChamadaId(null)
@@ -11078,9 +11077,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <div className="historico-chamadas-relatorio no-print">
         <div className="historico-chamadas-topo">
           <div>
-            <span className="selo-publico">HistÃ³rico</span>
-            <h3>HistÃ³rico de chamadas</h3>
-            <p>Consulte as chamadas por data e acompanhe os registros lanÃ§ados na EBD.</p>
+            <span className="selo-publico">Histórico</span>
+            <h3>Histórico de chamadas</h3>
+            <p>Consulte as chamadas por data e acompanhe os registros lançados na EBD.</p>
           </div>
 
           <button
@@ -11088,15 +11087,15 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             type="button"
             onClick={() =>
               buscarTodosOsDados().catch((error) => {
-                console.error('Erro ao atualizar histÃ³rico de chamadas:', error)
+                console.error('Erro ao atualizar histórico de chamadas:', error)
                 setMensagemHistoricoChamadas({
                   tipo: 'erro',
-                  texto: 'NÃ£o foi possÃ­vel atualizar o histÃ³rico agora. Tente novamente.',
+                  texto: 'Não foi possível atualizar o histórico agora. Tente novamente.',
                 })
               })
             }
           >
-            Atualizar histÃ³rico
+            Atualizar histórico
           </button>
         </div>
 
@@ -11153,7 +11152,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <button
               type="button"
               onClick={() => setMensagemHistoricoChamadas(null)}
-              aria-label="Fechar mensagem do histÃ³rico de chamadas"
+              aria-label="Fechar mensagem do histórico de chamadas"
             >
               Ã—
             </button>
@@ -11205,7 +11204,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 </div>
               ) : (
                 <div className="aviso aviso-historico-vazio">
-                  <p>Nenhuma chamada encontrada para essa combinaÃ§Ã£o de filtros.</p>
+                  <p>Nenhuma chamada encontrada para essa combinação de filtros.</p>
                 </div>
               )}
             </>
@@ -11216,7 +11215,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           )
         ) : (
           <div className="aviso aviso-historico-vazio">
-            <p>Nenhuma chamada registrada atÃ© o momento.</p>
+            <p>Nenhuma chamada registrada até o momento.</p>
           </div>
         )}
       </div>
@@ -11236,34 +11235,34 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo pagina-interna pagina-relatorios">
         <div className="topo-pagina topo-pagina-interna no-print">
           <div>
-            <span className="subtitulo-pagina-interna">AnÃ¡lises e documentos</span>
-            <h2>RelatÃ³rios</h2>
+            <span className="subtitulo-pagina-interna">Análises e documentos</span>
+            <h2>Relatórios</h2>
             <p>
               {usuarioEhProfessor()
-                ? 'RelatÃ³rio da sua classe no modelo da Escola BÃ­blica Dominical.'
-                : 'RelatÃ³rio geral no modelo da Escola BÃ­blica Dominical.'}
+                ? 'Relatório da sua classe no modelo da Escola Bíblica Dominical.'
+                : 'Relatório geral no modelo da Escola Bíblica Dominical.'}
             </p>
           </div>
 
           <div className="relatorio-orientacao no-print">
-            <span>Confira o relatÃ³rio abaixo e use os botÃµes no final da folha.</span>
+            <span>Confira o relatório abaixo e use os botões no final da folha.</span>
           </div>
         </div>
 
         <div className="relatorios-dashboard no-print">
           <div className="relatorios-hero">
             <div>
-              <span className="selo-publico">RelatÃ³rios da EBD</span>
-              <h3>Resumo geral da Escola BÃ­blica Dominical</h3>
+              <span className="selo-publico">Relatórios da EBD</span>
+              <h3>Resumo geral da Escola Bíblica Dominical</h3>
               <p>
-                Acompanhe alunos, classes, frequÃªncia e presenÃ§a dos professores
-                com uma visualizaÃ§Ã£o mais clara e moderna.
+                Acompanhe alunos, classes, frequência e presença dos professores
+                com uma visualização mais clara e moderna.
               </p>
             </div>
 
             <div className="relatorios-percentual">
               <strong>{calcularFrequenciaGeral()}%</strong>
-              <span>frequÃªncia geral</span>
+              <span>frequência geral</span>
             </div>
           </div>
 
@@ -11287,9 +11286,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </div>
 
             <div className="card card-relatorio-moderna destaque">
-              <span>FrequÃªncia</span>
+              <span>Frequência</span>
               <strong>{calcularFrequenciaGeral()}%</strong>
-              <p>mÃ©dia geral de presenÃ§a</p>
+              <p>média geral de presença</p>
             </div>
           </div>
 
@@ -11298,7 +11297,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <div className="cabecalho-relatorio-professores">
                 <div>
                   <span className="selo-publico">Professores</span>
-                  <h3>Resumo da Ãºltima chamada dos professores</h3>
+                  <h3>Resumo da última chamada dos professores</h3>
                   <p>Data da chamada: {formatarDataRelatorio(resumoProfessores.data)}</p>
                 </div>
 
@@ -11361,8 +11360,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               />
 
               <div className="cabecalho-relatorio-titulos">
-                <span className="relatorio-selo-institucional">RelatÃ³rio oficial da EBD</span>
-                <h3>{configuracaoIgreja.nome_igreja || 'RelatÃ³rio do Domingo'}</h3>
+                <span className="relatorio-selo-institucional">Relatório oficial da EBD</span>
+                <h3>{configuracaoIgreja.nome_igreja || 'Relatório do Domingo'}</h3>
                 {configuracaoIgreja.congregacao && <p>{configuracaoIgreja.congregacao}</p>}
               </div>
             </div>
@@ -11374,7 +11373,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               {configuracaoIgreja.superintendente_ebd && (
                 <p><strong>Superintendente:</strong> {configuracaoIgreja.superintendente_ebd}</p>
               )}
-              {montarEnderecoIgreja() && <p><strong>EndereÃ§o:</strong> {montarEnderecoIgreja()}</p>}
+              {montarEnderecoIgreja() && <p><strong>Endereço:</strong> {montarEnderecoIgreja()}</p>}
               {(configuracaoIgreja.telefone || configuracaoIgreja.email) && (
                 <p>
                   <strong>Contato:</strong>{' '}
@@ -11396,17 +11395,17 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <table className="tabela tabela-ebd">
               <thead>
                 <tr>
-                  <th>NÂº</th>
+                  <th>Nº</th>
                   <th>Classes</th>
-                  <th>MatrÃ­cula</th>
-                  <th>AusÃªncia</th>
-                  <th>PresenÃ§a</th>
+                  <th>Matrícula</th>
+                  <th>Ausência</th>
+                  <th>Presença</th>
                   <th>Visitante</th>
                   <th>Total</th>
-                  <th>BÃ­blia</th>
+                  <th>Bíblia</th>
                   <th>Revista</th>
                   <th>Ofertas</th>
-                  <th>FrequÃªncia</th>
+                  <th>Frequência</th>
                 </tr>
               </thead>
 
@@ -11443,7 +11442,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <tr className="linha-domingo-anterior">
                   <td colSpan="11">
                     <span>Domingo anterior</span>
-                    <small>Dados comparativos da Ãºltima Escola BÃ­blica Dominical.</small>
+                    <small>Dados comparativos da última Escola Bíblica Dominical.</small>
                   </td>
                 </tr>
 
@@ -11457,16 +11456,16 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                           <span>Presentes: {resumoProfessores.presentes}</span>
                           <span>Faltaram: {resumoProfessores.faltaram}</span>
                           <span>Justificaram: {resumoProfessores.justificaram}</span>
-                          <span>FrequÃªncia: {percentualProfessores}%</span>
+                          <span>Frequência: {percentualProfessores}%</span>
                         </div>
                       </td>
                     </tr>
 
                     <tr className="linha-professores-cabecalho">
-                      <td>NÂº</td>
+                      <td>Nº</td>
                       <td colSpan="3">Professor</td>
-                      <td colSpan="3">Classe de referÃªncia</td>
-                      <td colSpan="2">SituaÃ§Ã£o</td>
+                      <td colSpan="3">Classe de referência</td>
+                      <td colSpan="2">Situação</td>
                       <td colSpan="2">Data</td>
                     </tr>
 
@@ -11491,7 +11490,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       ))
                     ) : (
                       <tr className="linha-professor-tabela-relatorio">
-                        <td colSpan="11">Nenhuma chamada de professor lanÃ§ada neste perÃ­odo.</td>
+                        <td colSpan="11">Nenhuma chamada de professor lançada neste período.</td>
                       </tr>
                     )}
                   </>
@@ -11501,7 +11500,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </div>
 
           <div className="rodape-relatorio-oficial">
-            RelatÃ³rio gerado pelo EBD Fiel â€” GestÃ£o inteligente para Escola BÃ­blica Dominical â€¢ Gerado em {buscarDataAtual()}
+            Relatório gerado pelo EBD Fiel â€” Gestão inteligente para Escola Bíblica Dominical â€¢ Gerado em {buscarDataAtual()}
           </div>
         </div>
 
@@ -11509,7 +11508,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="relatorio-acoes-rodape no-print">
           <div>
-            <strong>AÃ§Ãµes do relatÃ³rio</strong>
+            <strong>Ações do relatório</strong>
             <span>Imprima, salve em PDF ou gere uma folha em branco para rascunho.</span>
           </div>
 
@@ -11529,7 +11528,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               className="botao-secundario"
               onClick={abrirRelatorioEmBrancoParaImpressao}
             >
-              RelatÃ³rio em branco
+              Relatório em branco
             </button>
 
             <button
@@ -11544,7 +11543,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               className="botao-secundario"
               onClick={abrirRelatorioAniversariantesMes}
             >
-              Aniversariantes do mÃªs
+              Aniversariantes do mês
             </button>
 
             <button
@@ -11558,14 +11557,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               className="botao-secundario"
               onClick={abrirRelatorioDestaquesFrequencia}
             >
-              Destaques de frequÃªncia
+              Destaques de frequência
             </button>
 
             <button
               className="botao-secundario"
               onClick={abrirCartoesAniversariantes}
             >
-              CartÃµes de aniversariantes
+              Cartões de aniversariantes
             </button>
           </div>
         </div>
@@ -11574,17 +11573,17 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <div className="visualizacao-relatorio-extra no-print" id="visualizacao-relatorio-extra">
             <div className="visualizacao-relatorio-extra-topo">
               <div>
-                <span className="selo-publico">VisualizaÃ§Ã£o</span>
+                <span className="selo-publico">Visualização</span>
                 <h3>{relatorioExtraVisualizacao.titulo}</h3>
                 <p>{relatorioExtraVisualizacao.subtitulo}</p>
-                <small>Confira as informaÃ§Ãµes antes de gerar o PDF ou mandar para impressÃ£o. Esta visualizaÃ§Ã£o nÃ£o altera nenhum cadastro da igreja.</small>
+                <small>Confira as informações antes de gerar o PDF ou mandar para impressão. Esta visualização não altera nenhum cadastro da igreja.</small>
               </div>
               <div className="visualizacao-relatorio-extra-acoes">
                 <button className="botao-principal" type="button" onClick={imprimirRelatorioExtraVisualizado}>
                   Baixar ou imprimir
                 </button>
                 <button className="botao-secundario" type="button" onClick={() => setRelatorioExtraVisualizacao(null)}>
-                  Fechar visualizaÃ§Ã£o
+                  Fechar visualização
                 </button>
               </div>
             </div>
@@ -11600,7 +11599,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>As configuraÃ§Ãµes da igreja sÃ£o gerenciadas pela secretaria.</p>
+          <p>As configurações da igreja são gerenciadas pela secretaria.</p>
         </section>
       )
     }
@@ -11609,8 +11608,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo">
         <div className="topo-pagina">
           <div>
-            <h2>ConfiguraÃ§Ãµes da Igreja</h2>
-            <p>Preencha os dados que aparecerÃ£o nos relatÃ³rios e PDFs.</p>
+            <h2>Configurações da Igreja</h2>
+            <p>Preencha os dados que aparecerão nos relatórios e PDFs.</p>
           </div>
         </div>
 
@@ -11624,19 +11623,19 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('nome_igreja', event.target.value)
                 }
-                placeholder="Ex: Assembleia de Deus MinistÃ©rio..."
+                placeholder="Ex: Assembleia de Deus Ministério..."
               />
             </label>
 
             <label>
-              CongregaÃ§Ã£o / departamento
+              Congregação / departamento
               <input
                 type="text"
                 value={configuracaoIgreja.congregacao}
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('congregacao', event.target.value)
                 }
-                placeholder="Ex: Escola BÃ­blica Dominical"
+                placeholder="Ex: Escola Bíblica Dominical"
               />
             </label>
 
@@ -11651,7 +11650,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     event.target.value
                   )
                 }
-                placeholder="Ex: Pr. JoÃ£o Silva"
+                placeholder="Ex: Pr. João Silva"
               />
             </label>
 
@@ -11666,7 +11665,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     event.target.value
                   )
                 }
-                placeholder="Ex: IrmÃ£ Maria Helena"
+                placeholder="Ex: Irmã Maria Helena"
               />
             </label>
 
@@ -11695,7 +11694,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </label>
 
             <label>
-              EndereÃ§o
+              Endereço
               <input
                 type="text"
                 value={configuracaoIgreja.endereco}
@@ -11726,7 +11725,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 onChange={(event) =>
                   alterarConfiguracaoIgreja('cidade', event.target.value)
                 }
-                placeholder="Ex: SÃ£o Paulo"
+                placeholder="Ex: São Paulo"
               />
             </label>
 
@@ -11754,13 +11753,13 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               type="submit"
               disabled={salvandoConfiguracaoIgreja}
             >
-              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configuraÃ§Ãµes'}
+              {salvandoConfiguracaoIgreja ? 'Salvando...' : 'Salvar configurações'}
             </button>
           </div>
         </form>
 
         <div className="resumo">
-          <h3>PrÃ©via do cabeÃ§alho</h3>
+          <h3>Prévia do cabeçalho</h3>
           <p>
             <strong>{buscarNomeIgrejaParaExibicao()}</strong>
           </p>
@@ -11820,7 +11819,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   <p>{feedback.mensagem}</p>
 
                   <small>
-                    {feedback.tipo} - {feedback.nome_usuario || feedback.email_usuario || 'UsuÃ¡rio'} â€¢{' '}
+                    {feedback.tipo} - {feedback.nome_usuario || feedback.email_usuario || 'Usuário'} â€¢{' '}
                     {formatarDataHoraFeedback(feedback.created_at)}
                   </small>
 
@@ -11841,11 +11840,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   {feedbackRespondendoId === feedback.id && (
                     <div className="feedback-responder-box">
                       <label>
-                        Resposta Ã  mensagem
+                        Resposta à mensagem
                         <textarea
                           value={respostaFeedbackAdmin}
                           onChange={(event) => setRespostaFeedbackAdmin(event.target.value)}
-                          placeholder="Escreva a resposta que a igreja verÃ¡ na Ã¡rea de mensagens..."
+                          placeholder="Escreva a resposta que a igreja verá na área de mensagens..."
                           rows="5"
                         />
                       </label>
@@ -11929,8 +11928,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <div className="usuarios-vinculados-igreja">
         <div className="usuarios-vinculados-topo">
           <div>
-            <strong>UsuÃ¡rios vinculados a esta igreja</strong>
-            <span>{acessosDaIgreja.length} usuÃ¡rio(s)</span>
+            <strong>Usuários vinculados a esta igreja</strong>
+            <span>{acessosDaIgreja.length} usuário(s)</span>
           </div>
 
           <button
@@ -11944,7 +11943,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         {acessosDaIgreja.length === 0 && (
           <div className="aviso usuarios-vinculados-vazio">
-            <p>Nenhum usuÃ¡rio vinculado a esta igreja.</p>
+            <p>Nenhum usuário vinculado a esta igreja.</p>
           </div>
         )}
 
@@ -11965,7 +11964,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 className="botao-secundario"
                 onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}
               >
-                Enviar recuperaÃ§Ã£o
+                Enviar recuperação
               </button>
 
               <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
@@ -11994,7 +11993,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     const texto = [
       `User UID: ${cadastro.user_id}`,
       `E-mail: ${cadastro.email || 'Sem e-mail'}`,
-      `Criado em: ${formatarDataHoraFeedback(cadastro.criado_em) || 'Data nÃ£o informada'}`,
+      `Criado em: ${formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}`,
     ].join('\n')
 
     navigator.clipboard
@@ -12037,9 +12036,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <span className="selo-admin">Auditoria de acessos</span>
             <h3>Cadastros incompletos</h3>
             <p>
-              UsuÃ¡rios que existem no Supabase Authentication, mas ainda nÃ£o possuem perfil
-              em perfis_usuarios. A soluÃ§Ã£o mais limpa costuma ser excluir o
-              usuÃ¡rio no Authentication e pedir novo cadastro.
+              Usuários que existem no Supabase Authentication, mas ainda não possuem perfil
+              em perfis_usuarios. A solução mais limpa costuma ser excluir o
+              usuário no Authentication e pedir novo cadastro.
             </p>
           </div>
 
@@ -12075,11 +12074,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <article className="acesso-admin-card" key={cadastro.user_id}>
                 <div>
                   <div className="linha-acesso-admin">
-                    <h4>{cadastro.email || 'UsuÃ¡rio sem e-mail'}</h4>
+                    <h4>{cadastro.email || 'Usuário sem e-mail'}</h4>
                     <span>Sem perfil</span>
                   </div>
 
-                  <p>Criado em: {formatarDataHoraFeedback(cadastro.criado_em) || 'Data nÃ£o informada'}</p>
+                  <p>Criado em: {formatarDataHoraFeedback(cadastro.criado_em) || 'Data não informada'}</p>
                   <small>User UID: {cadastro.user_id}</small>
                 </div>
 
@@ -12097,7 +12096,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     type="button"
                     onClick={() => prepararVinculoCadastroIncompleto(cadastro)}
                   >
-                    Preparar vÃ­nculo
+                    Preparar vínculo
                   </button>
                 </div>
               </article>
@@ -12122,10 +12121,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="admin-acessos-topo">
           <div>
             <span className="selo-admin">Igrejas e acessos</span>
-            <h3>Controle comercial de usuÃ¡rios</h3>
+            <h3>Controle comercial de usuários</h3>
             <p>
-              Vincule secretarias e professores Ã s igrejas cadastradas. Para criar o login,
-              primeiro crie o usuÃ¡rio em Supabase â†’ Authentication â†’ Users e cole o User UID aqui.
+              Vincule secretarias e professores às igrejas cadastradas. Para criar o login,
+              primeiro crie o usuário em Supabase â†’ Authentication â†’ Users e cole o User UID aqui.
             </p>
           </div>
 
@@ -12157,7 +12156,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <div>
                 <h3>{acessoAdminEditandoUserId ? 'Editar acesso' : 'Novo acesso'}</h3>
                 <p>
-                  Este vÃ­nculo define qual igreja o usuÃ¡rio acessa e qual perfil ele terÃ¡ no sistema.
+                  Este vínculo define qual igreja o usuário acessa e qual perfil ele terá no sistema.
                 </p>
               </div>
             </div>
@@ -12238,7 +12237,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   onChange={(event) =>
                     setNovoAcessoAdmin({ ...novoAcessoAdmin, classeId: event.target.value })
                   }
-                  placeholder="Opcional, normalmente sÃ³ para professor"
+                  placeholder="Opcional, normalmente só para professor"
                 />
               </label>
 
@@ -12307,7 +12306,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   return (
                     <div className="contato-acesso-admin">
                       {contato.responsavel && (
-                        <p>ResponsÃ¡vel: {contato.responsavel}</p>
+                        <p>Responsável: {contato.responsavel}</p>
                       )}
 
                       {contato.whatsapp && (
@@ -12330,7 +12329,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
               <div className="acoes-acesso-admin">
                 <button className="botao-secundario" onClick={() => enviarRecuperacaoSenhaAdmin(acesso.email)}>
-                  Enviar recuperaÃ§Ã£o
+                  Enviar recuperação
                 </button>
 
                 <button className="botao-verde" onClick={() => abrirWhatsAppAcessoAdmin(acesso)}>
@@ -12367,7 +12366,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       return (
         <section className="conteudo">
           <h2>Acesso restrito</h2>
-          <p>Esta Ã¡rea Ã© exclusiva para administradores do sistema.</p>
+          <p>Esta área é exclusiva para administradores do sistema.</p>
         </section>
       )
     }
@@ -12390,10 +12389,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       <section className="conteudo conteudo-admin-comercial">
         <div className="topo-pagina topo-admin-sistema">
           <div>
-            <span className="selo-admin">AdministraÃ§Ã£o do sistema</span>
-            <h2>AdministraÃ§Ã£o comercial</h2>
+            <span className="selo-admin">Administração do sistema</span>
+            <h2>Administração comercial</h2>
             <p>
-              Gerencie igrejas, sedes, congregaÃ§Ãµes, acessos, uso da plataforma, recuperaÃ§Ã£o de senha e respostas em um Ãºnico lugar.
+              Gerencie igrejas, sedes, congregações, acessos, uso da plataforma, recuperação de senha e respostas em um único lugar.
             </p>
           </div>
 
@@ -12420,7 +12419,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <div className="card card-admin">
             <span>Pendentes</span>
             <strong>{igrejasPendentes}</strong>
-            <p>aguardando aprovaÃ§Ã£o</p>
+            <p>aguardando aprovação</p>
           </div>
 
           <div className="card card-admin">
@@ -12442,7 +12441,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </div>
 
           <div className="card card-admin">
-            <span>NÃ£o aprovadas</span>
+            <span>Não aprovadas</span>
             <strong>{igrejasCanceladas}</strong>
             <p>canceladas ou reprovadas</p>
           </div>
@@ -12456,10 +12455,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         <div className="controle-piloto-admin">
           <div>
-            <span className="selo-admin">GestÃ£o EBD Fiel</span>
+            <span className="selo-admin">Gestão EBD Fiel</span>
             <h3>Acompanhamento das Igrejas</h3>
             <p>
-              {igrejasAdmin.length} igreja(s) cadastrada(s), {igrejasLiberadas} usando a plataforma e {igrejasPendentes} aguardando liberaÃ§Ã£o.
+              {igrejasAdmin.length} igreja(s) cadastrada(s), {igrejasLiberadas} usando a plataforma e {igrejasPendentes} aguardando liberação.
             </p>
           </div>
 
@@ -12492,13 +12491,13 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </div>
         </div>
 
-        <div className="admin-abas-navegacao" role="tablist" aria-label="Ãreas da administraÃ§Ã£o">
+        <div className="admin-abas-navegacao" role="tablist" aria-label="Áreas da administração">
           <button
             type="button"
             className={`admin-aba-botao ${abaAdministracao === 'visao' ? 'ativo' : ''}`}
             onClick={() => setAbaAdministracao('visao')}
           >
-            VisÃ£o geral
+            Visão geral
           </button>
 
           <button
@@ -12506,7 +12505,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             className={`admin-aba-botao ${abaAdministracao === 'sugestoes' ? 'ativo' : ''}`}
             onClick={() => setAbaAdministracao('sugestoes')}
           >
-            SugestÃµes recebidas
+            Sugestões recebidas
           </button>
 
           <button
@@ -12530,17 +12529,17 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             className={`admin-aba-botao ${abaAdministracao === 'diagnostico' ? 'ativo' : ''}`}
             onClick={() => setAbaAdministracao('diagnostico')}
           >
-            DiagnÃ³stico
+            Diagnóstico
           </button>
         </div>
 
         {abaAdministracao === 'visao' && (
           <div className="admin-visao-geral-grid">
             <article className={`admin-visao-card ${igrejasPendentes > 0 ? 'admin-visao-card-alerta' : ''}`}>
-              <span className="selo-admin">AprovaÃ§Ã£o</span>
-              <h3>Igrejas aguardando decisÃ£o</h3>
+              <span className="selo-admin">Aprovação</span>
+              <h3>Igrejas aguardando decisão</h3>
               <strong>{igrejasPendentes}</strong>
-              <p>cadastros recebidos pelo site que ainda precisam ser liberados ou nÃ£o aprovados.</p>
+              <p>cadastros recebidos pelo site que ainda precisam ser liberados ou não aprovados.</p>
               <button
                 type="button"
                 className="botao-secundario"
@@ -12555,7 +12554,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <article className="admin-visao-card admin-visao-card-destaque">
               <span className="selo-admin">Acompanhamento</span>
-              <h3>SugestÃµes das igrejas</h3>
+              <h3>Sugestões das igrejas</h3>
               <strong>{feedbacksAdmin.length}</strong>
               <p>mensagens registradas para acompanhamento da equipe.</p>
               <button
@@ -12563,7 +12562,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 className="botao-secundario"
                 onClick={() => setAbaAdministracao('sugestoes')}
               >
-                Abrir sugestÃµes
+                Abrir sugestões
               </button>
             </article>
 
@@ -12571,7 +12570,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <span className="selo-admin">Cadastro</span>
               <h3>Igrejas cadastradas</h3>
               <strong>{igrejasAdmin.length}</strong>
-              <p>igrejas, sedes e congregaÃ§Ãµes registradas na plataforma.</p>
+              <p>igrejas, sedes e congregações registradas na plataforma.</p>
               <button
                 type="button"
                 className="botao-secundario"
@@ -12585,7 +12584,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <span className="selo-admin">Acessos</span>
               <h3>Auditoria</h3>
               <strong>{cadastrosIncompletosAdmin.length}</strong>
-              <p>cadastros incompletos ou pendÃªncias de vÃ­nculo.</p>
+              <p>cadastros incompletos ou pendências de vínculo.</p>
               <button
                 type="button"
                 className="botao-secundario"
@@ -12597,15 +12596,15 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <article className="admin-visao-card">
               <span className="selo-admin">Suporte</span>
-              <h3>DiagnÃ³stico tÃ©cnico</h3>
+              <h3>Diagnóstico técnico</h3>
               <strong>{diagnosticoCarregamento ? 'OK' : 'â€”'}</strong>
-              <p>ferramenta para analisar sessÃ£o, perfil e dados carregados.</p>
+              <p>ferramenta para analisar sessão, perfil e dados carregados.</p>
               <button
                 type="button"
                 className="botao-secundario"
                 onClick={() => setAbaAdministracao('diagnostico')}
               >
-                Abrir diagnÃ³stico
+                Abrir diagnóstico
               </button>
             </article>
           </div>
@@ -12615,10 +12614,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="diagnostico-carregamento-card diagnostico-admin-card">
           <div className="diagnostico-carregamento-cabecalho">
             <div>
-              <span className="hero-tag">Suporte tÃ©cnico</span>
-              <h3>DiagnÃ³stico do carregamento</h3>
+              <span className="hero-tag">Suporte técnico</span>
+              <h3>Diagnóstico do carregamento</h3>
               <p>
-                Ferramenta exclusiva do administrador para conferir sessÃ£o, perfil,
+                Ferramenta exclusiva do administrador para conferir sessão, perfil,
                 igreja vinculada e retorno das consultas do Supabase quando alguma igreja relatar dados zerados.
               </p>
             </div>
@@ -12629,7 +12628,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 onClick={executarDiagnosticoCarregamento}
                 disabled={carregandoDiagnostico}
               >
-                {carregandoDiagnostico ? 'Verificando...' : 'Executar diagnÃ³stico'}
+                {carregandoDiagnostico ? 'Verificando...' : 'Executar diagnóstico'}
               </button>
 
               <button
@@ -12645,10 +12644,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           {diagnosticoCarregamento ? (
             <>
               <div className="diagnostico-grid">
-                <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessÃ£o'}</span></div>
-                <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'nÃ£o encontrado'}</span></div>
-                <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'nÃ£o encontrado'}</span></div>
-                <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'nÃ£o encontrado'}</span></div>
+                <div><strong>E-mail</strong><span>{diagnosticoCarregamento.sessao?.email || 'sem sessão'}</span></div>
+                <div><strong>User ID</strong><span>{diagnosticoCarregamento.sessao?.userId || 'não encontrado'}</span></div>
+                <div><strong>Perfil</strong><span>{diagnosticoCarregamento.perfilUsado?.perfil || 'não encontrado'}</span></div>
+                <div><strong>Igreja ID</strong><span>{diagnosticoCarregamento.perfilUsado?.igreja_id || 'não encontrado'}</span></div>
                 <div><strong>Classes Supabase</strong><span>{diagnosticoCarregamento.contagens?.classes ?? 'sem consulta'}</span></div>
                 <div><strong>Alunos Supabase</strong><span>{diagnosticoCarregamento.contagens?.alunos ?? 'sem consulta'}</span></div>
                 <div><strong>Chamadas Supabase</strong><span>{diagnosticoCarregamento.contagens?.chamadas ?? 'sem consulta'}</span></div>
@@ -12657,10 +12656,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
               <div className="grupo-botoes diagnostico-botoes-final">
                 <button className="botao-secundario" type="button" onClick={copiarDiagnosticoCarregamento}>
-                  Copiar diagnÃ³stico
+                  Copiar diagnóstico
                 </button>
                 <button className="botao-secundario" type="button" onClick={baixarDiagnosticoCarregamento}>
-                  Baixar diagnÃ³stico
+                  Baixar diagnóstico
                 </button>
               </div>
 
@@ -12670,7 +12669,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   <button
                     type="button"
                     onClick={() => setMensagemDiagnosticoAdmin(null)}
-                    aria-label="Fechar mensagem do diagnÃ³stico"
+                    aria-label="Fechar mensagem do diagnóstico"
                   >
                     Ã—
                   </button>
@@ -12678,13 +12677,13 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               )}
 
               <details className="diagnostico-detalhes">
-                <summary>Ver diagnÃ³stico completo</summary>
+                <summary>Ver diagnóstico completo</summary>
                 <pre>{JSON.stringify(diagnosticoCarregamento, null, 2)}</pre>
               </details>
             </>
           ) : (
             <div className="aviso diagnostico-admin-aviso">
-              <p>Execute o diagnÃ³stico quando precisar conferir carregamento de sessÃ£o, perfil, igreja e dados retornados.</p>
+              <p>Execute o diagnóstico quando precisar conferir carregamento de sessão, perfil, igreja e dados retornados.</p>
             </div>
           )}
         </div>
@@ -12694,7 +12693,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
         {abaAdministracao === 'auditoria' && renderizarCadastrosIncompletosAdmin()}
 
-        {/* UsuÃ¡rios vinculados agora aparecem dentro de cada igreja. */}
+        {/* Usuários vinculados agora aparecem dentro de cada igreja. */}
 
         {abaAdministracao === 'igrejas' && (
           <>
@@ -12704,8 +12703,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <div>
                 <h3>{igrejaAdminEditandoId ? 'Editar igreja' : 'Nova igreja'}</h3>
                 <p>
-                  Cadastre a igreja com endereÃ§o completo, tipo de igreja e vÃ­nculo com a sede.
-                  Depois crie o usuÃ¡rio no Supabase, em Authentication â†’ Users, e vincule o acesso.
+                  Cadastre a igreja com endereço completo, tipo de igreja e vínculo com a sede.
+                  Depois crie o usuário no Supabase, em Authentication â†’ Users, e vincule o acesso.
                 </p>
               </div>
             </div>
@@ -12727,7 +12726,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                CongregaÃ§Ã£o
+                Congregação
                 <input
                   type="text"
                   value={novaIgrejaAdmin.congregacao}
@@ -12752,7 +12751,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       pastor_dirigente: event.target.value,
                     })
                   }
-                  placeholder="Ex: Pr. JoÃ£o Silva"
+                  placeholder="Ex: Pr. João Silva"
                 />
               </label>
 
@@ -12824,7 +12823,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label className="campo-sede-filiada">
-                EndereÃ§o da igreja
+                Endereço da igreja
                 <input
                   type="text"
                   value={novaIgrejaAdmin.endereco}
@@ -12839,7 +12838,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                NÃºmero
+                Número
                 <input
                   type="text"
                   value={novaIgrejaAdmin.numero_endereco}
@@ -12895,7 +12894,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   }
                 >
                   <option value="sede">Sede</option>
-                  <option value="congregacao">CongregaÃ§Ã£o</option>
+                  <option value="congregacao">Congregação</option>
                 </select>
               </label>
 
@@ -12917,7 +12916,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   </label>
 
                   <label className="campo-sede-filiada">
-                    EndereÃ§o da sede
+                    Endereço da sede
                     <input
                       type="text"
                       value={novaIgrejaAdmin.sede_filiada_endereco}
@@ -12932,7 +12931,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   </label>
 
                   <label>
-                    NÃºmero da sede
+                    Número da sede
                     <input
                       type="text"
                       value={novaIgrejaAdmin.sede_filiada_numero}
@@ -13007,7 +13006,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                ResponsÃ¡vel
+                Responsável
                 <input
                   type="text"
                   value={novaIgrejaAdmin.responsavel_nome}
@@ -13017,12 +13016,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       responsavel_nome: event.target.value,
                     })
                   }
-                  placeholder="Nome da secretaria responsÃ¡vel"
+                  placeholder="Nome da secretaria responsável"
                 />
               </label>
 
               <label>
-                E-mail do responsÃ¡vel
+                E-mail do responsável
                 <input
                   type="email"
                   value={novaIgrejaAdmin.responsavel_email}
@@ -13036,7 +13035,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                WhatsApp do responsÃ¡vel
+                WhatsApp do responsável
                 <input
                   type="text"
                   value={novaIgrejaAdmin.responsavel_whatsapp}
@@ -13051,7 +13050,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                Limite de usuÃ¡rios
+                Limite de usuários
                 <input
                   type="number"
                   min="1"
@@ -13066,7 +13065,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label>
-                InÃ­cio do acompanhamento
+                Início do acompanhamento
                 <input
                   type="date"
                   value={novaIgrejaAdmin.data_inicio_piloto}
@@ -13094,7 +13093,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               </label>
 
               <label className="campo-observacoes-admin">
-                ObservaÃ§Ãµes internas
+                Observações internas
                 <input
                   type="text"
                   value={novaIgrejaAdmin.observacoes_piloto}
@@ -13104,14 +13103,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       observacoes_piloto: event.target.value,
                     })
                   }
-                  placeholder="Ex: igreja em implantaÃ§Ã£o ou acompanhamento inicial"
+                  placeholder="Ex: igreja em implantação ou acompanhamento inicial"
                 />
               </label>
             </div>
 
             <div className="grupo-botoes">
               <button className="botao-principal" type="submit">
-                {igrejaAdminEditandoId ? 'Salvar alteraÃ§Ãµes' : 'Salvar igreja'}
+                {igrejaAdminEditandoId ? 'Salvar alterações' : 'Salvar igreja'}
               </button>
 
               <button
@@ -13132,7 +13131,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               type="text"
               value={buscaIgrejaAdmin}
               onChange={(event) => setBuscaIgrejaAdmin(event.target.value)}
-              placeholder="Buscar por igreja, congregaÃ§Ã£o, responsÃ¡vel, e-mail, cidade ou estado"
+              placeholder="Buscar por igreja, congregação, responsável, e-mail, cidade ou estado"
             />
           </label>
 
@@ -13148,7 +13147,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <option value="teste">Em uso</option>
               <option value="ativa">Ativas</option>
               <option value="pausada">Pausadas</option>
-              <option value="cancelada">NÃ£o aprovadas</option>
+              <option value="cancelada">Não aprovadas</option>
             </select>
           </label>
 
@@ -13181,18 +13180,18 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   </span>
                   {igreja.status_piloto === 'pendente' && (
                     <span className="selo-aguardando-aprovacao">
-                      aguardando decisÃ£o
+                      aguardando decisão
                     </span>
                   )}
                 </div>
 
-                {igreja.congregacao && <p>CongregaÃ§Ã£o: {igreja.congregacao}</p>}
+                {igreja.congregacao && <p>Congregação: {igreja.congregacao}</p>}
                 {igreja.pastor_dirigente && <p>Dirigente: {igreja.pastor_dirigente}</p>}
                 <div className="dados-igreja-admin">
                   <p>
                     Tipo:{' '}
                     <strong>
-                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'CongregaÃ§Ã£o'}
+                      {igreja.tipo_igreja === 'sede' ? 'Sede' : 'Congregação'}
                     </strong>
                   </p>
 
@@ -13205,8 +13204,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
                   {(igreja.endereco || igreja.bairro || igreja.cep) && (
                     <p>
-                      EndereÃ§o: {igreja.endereco}
-                      {igreja.numero_endereco ? `, nÂº ${igreja.numero_endereco}` : ''}
+                      Endereço: {igreja.endereco}
+                      {igreja.numero_endereco ? `, nº ${igreja.numero_endereco}` : ''}
                       {igreja.complemento_endereco ? `, ${igreja.complemento_endereco}` : ''}
                       {igreja.bairro ? `, ${igreja.bairro}` : ''}
                       {igreja.cep ? ` - CEP ${igreja.cep}` : ''}
@@ -13221,21 +13220,21 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
                   {igreja.tipo_igreja === 'congregacao' && igreja.sede_filiada_endereco && (
                     <p>
-                      EndereÃ§o da sede: {igreja.sede_filiada_endereco}
-                      {igreja.sede_filiada_numero ? `, nÂº ${igreja.sede_filiada_numero}` : ''}
+                      Endereço da sede: {igreja.sede_filiada_endereco}
+                      {igreja.sede_filiada_numero ? `, nº ${igreja.sede_filiada_numero}` : ''}
                       {igreja.sede_filiada_complemento ? `, ${igreja.sede_filiada_complemento}` : ''}
                       {igreja.sede_filiada_cep ? ` - CEP ${igreja.sede_filiada_cep}` : ''}
                     </p>
                   )}
                 </div>
 
-                {igreja.responsavel_nome && <p>ResponsÃ¡vel: {igreja.responsavel_nome}</p>}
+                {igreja.responsavel_nome && <p>Responsável: {igreja.responsavel_nome}</p>}
                 {igreja.responsavel_email && <p>E-mail: {igreja.responsavel_email}</p>}
                 {igreja.responsavel_whatsapp && <p>WhatsApp: {igreja.responsavel_whatsapp}</p>}
-                <p>UsuÃ¡rios vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
+                <p>Usuários vinculados: {contarAcessosDaIgreja(igreja.id)}</p>
                 {(igreja.data_inicio_piloto || igreja.data_fim_piloto) && (
                   <p>
-                    Acompanhamento: {igreja.data_inicio_piloto || 'sem inÃ­cio'} atÃ©{' '}
+                    Acompanhamento: {igreja.data_inicio_piloto || 'sem início'} até{' '}
                     {igreja.data_fim_piloto || 'sem fim'}
                   </p>
                 )}
@@ -13255,7 +13254,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                       className="botao-nao-aprovar-igreja"
                       onClick={() => naoAprovarIgrejaPiloto(igreja)}
                     >
-                      NÃ£o aprovar
+                      Não aprovar
                     </button>
                   </div>
                 )}
@@ -13301,8 +13300,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   onClick={() => alternarUsuariosDaIgreja(igreja.id)}
                 >
                   {Number(igrejaUsuariosAbertaId) === Number(igreja.id)
-                    ? 'Ocultar usuÃ¡rios'
-                    : `UsuÃ¡rios vinculados (${contarAcessosDaIgreja(igreja.id)})`}
+                    ? 'Ocultar usuários'
+                    : `Usuários vinculados (${contarAcessosDaIgreja(igreja.id)})`}
                 </button>
 
                 <button type="button" className="botao-editar" onClick={() => editarIgrejaAdmin(igreja)}>
@@ -13337,84 +13336,84 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         numero: '01',
         titulo: 'Confira os dados da igreja',
         texto:
-          'Antes de comeÃ§ar, confira nome da igreja, congregaÃ§Ã£o, dirigente, superintendente, endereÃ§o, telefone e e-mail. Esses dados aparecem nos relatÃ³rios e PDFs.',
-        local: 'Painel ou ConfiguraÃ§Ãµes',
+          'Antes de começar, confira nome da igreja, congregação, dirigente, superintendente, endereço, telefone e e-mail. Esses dados aparecem nos relatórios e PDFs.',
+        local: 'Painel ou Configurações',
       },
       {
         numero: '02',
         titulo: 'Cadastre as classes da EBD',
         texto:
-          'Crie as turmas da Escola BÃ­blica Dominical e mantenha nomes claros, como CrianÃ§as, Adolescentes, Jovens, Adultos ou Novos Convertidos.',
+          'Crie as turmas da Escola Bíblica Dominical e mantenha nomes claros, como Crianças, Adolescentes, Jovens, Adultos ou Novos Convertidos.',
         local: 'Menu Classes',
       },
       {
         numero: '03',
         titulo: 'Cadastre alunos e professores',
         texto:
-          'Inclua alunos em suas classes e cadastre professores como professores da EBD. Depois vincule cada professor Ã  classe correta.',
+          'Inclua alunos em suas classes e cadastre professores como professores da EBD. Depois vincule cada professor à classe correta.',
         local: 'Menus Alunos, Professores ou Classes',
       },
       {
         numero: '04',
-        titulo: 'FaÃ§a a chamada dos alunos',
+        titulo: 'Faça a chamada dos alunos',
         texto:
-          'Na data da EBD, selecione a classe, marque Presente ou Faltou para cada aluno e preencha visitantes, BÃ­blias, revistas e ofertas.',
+          'Na data da EBD, selecione a classe, marque Presente ou Faltou para cada aluno e preencha visitantes, Bíblias, revistas e ofertas.',
         local: 'Menu Chamada',
       },
       {
         numero: '05',
-        titulo: 'FaÃ§a a chamada dos professores',
+        titulo: 'Faça a chamada dos professores',
         texto:
-          'Registre tambÃ©m a presenÃ§a, falta ou justificativa dos professores. Essa chamada aparece no relatÃ³rio junto com os dados da EBD.',
+          'Registre também a presença, falta ou justificativa dos professores. Essa chamada aparece no relatório junto com os dados da EBD.',
         local: 'Menu Chamada',
       },
       {
         numero: '06',
-        titulo: 'Gere relatÃ³rios e PDFs',
+        titulo: 'Gere relatórios e PDFs',
         texto:
-          'ApÃ³s salvar as chamadas, gere o relatÃ³rio da Escola BÃ­blica Dominical, imprima, salve em PDF ou baixe o arquivo pelo sistema.',
-        local: 'Menu RelatÃ³rios',
+          'Após salvar as chamadas, gere o relatório da Escola Bíblica Dominical, imprima, salve em PDF ou baixe o arquivo pelo sistema.',
+        local: 'Menu Relatórios',
       },
       {
         numero: '07',
         titulo: 'Corrija chamadas feitas por engano',
         texto:
-          'Se uma chamada foi feita como teste ou em data fictÃ­cia, use o HistÃ³rico de chamadas para localizar e excluir somente aquele registro.',
-        local: 'RelatÃ³rios > HistÃ³rico de chamadas',
+          'Se uma chamada foi feita como teste ou em data fictícia, use o Histórico de chamadas para localizar e excluir somente aquele registro.',
+        local: 'Relatórios > Histórico de chamadas',
       },
       {
         numero: '08',
         titulo: 'Acompanhe aniversariantes',
         texto:
-          'Veja os aniversariantes da semana, abra o cartÃ£o individual, baixe o cartÃ£o ou envie a imagem com mensagem pelo WhatsApp quando o dispositivo permitir.',
+          'Veja os aniversariantes da semana, abra o cartão individual, baixe o cartão ou envie a imagem com mensagem pelo WhatsApp quando o dispositivo permitir.',
         local: 'Painel > Aniversariantes',
       },
       {
         numero: '09',
         titulo: 'Use o atalho Fazer chamada',
         texto:
-          'O botÃ£o Fazer chamada no topo do painel leva direto para a chamada, que Ã© a aÃ§Ã£o principal do dia a dia da secretaria e dos professores.',
+          'O botão Fazer chamada no topo do painel leva direto para a chamada, que é a ação principal do dia a dia da secretaria e dos professores.',
         local: 'Painel',
       },
       {
         numero: '10',
-        titulo: 'Envie sugestÃ£o ou dÃºvida',
+        titulo: 'Envie sugestão ou dúvida',
         texto:
-          'Durante o uso, envie mensagem para a equipe do EBD Fiel sempre que encontrar dÃºvida, erro, dificuldade ou sugestÃ£o de melhoria.',
-        local: 'Painel > Enviar sugestÃ£o',
+          'Durante o uso, envie mensagem para a equipe do EBD Fiel sempre que encontrar dúvida, erro, dificuldade ou sugestão de melhoria.',
+        local: 'Painel > Enviar sugestão',
       },
       {
         numero: '11',
         titulo: 'Volte ao painel quando precisar',
         texto:
-          'Em qualquer Ã¡rea interna, use o botÃ£o PÃ¡gina inicial para retornar ao painel principal da igreja sem precisar sair do sistema.',
+          'Em qualquer área interna, use o botão Página inicial para retornar ao painel principal da igreja sem precisar sair do sistema.',
         local: 'Topo do sistema',
       },
       {
         numero: '12',
-        titulo: 'Saia com seguranÃ§a',
+        titulo: 'Saia com segurança',
         texto:
-          'Ao terminar o uso, clique em Sair. A sessÃ£o serÃ¡ encerrada e a prÃ³xima pessoa precisarÃ¡ fazer login novamente.',
+          'Ao terminar o uso, clique em Sair. A sessão será encerrada e a próxima pessoa precisará fazer login novamente.',
         local: 'Menu lateral',
       },
     ]
@@ -13424,11 +13423,11 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="manual-hero">
           <div>
             <span className="selo-manual">Manual atualizado</span>
-            <h2>Manual do usuÃ¡rio EBD Fiel</h2>
+            <h2>Manual do usuário EBD Fiel</h2>
             <p>
-              Guia prÃ¡tico para secretaria, professores e lideranÃ§a usarem o sistema
-              com seguranÃ§a: cadastros, chamadas, relatÃ³rios, aniversariantes,
-              histÃ³rico de chamadas e suporte.
+              Guia prático para secretaria, professores e liderança usarem o sistema
+              com segurança: cadastros, chamadas, relatórios, aniversariantes,
+              histórico de chamadas e suporte.
             </p>
           </div>
 
@@ -13437,7 +13436,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               Fazer chamada
             </button>
             <button className="botao-secundario" type="button" onClick={() => navegarParaPagina('relatorios')}>
-              Ver relatÃ³rios
+              Ver relatórios
             </button>
           </div>
         </div>
@@ -13446,7 +13445,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <strong>Ordem recomendada:</strong>
           <span>
             confira os dados da igreja, cadastre classes, alunos e professores,
-            faÃ§a as chamadas, acompanhe aniversariantes e gere os relatÃ³rios.
+            faça as chamadas, acompanhe aniversariantes e gere os relatórios.
           </span>
         </div>
 
@@ -13469,8 +13468,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <span className="selo-manual">Chamada dos alunos</span>
             <h3>Como registrar a chamada da classe</h3>
             <p>
-              A chamada dos alunos Ã© a rotina principal do EBD Fiel. Ela alimenta os
-              relatÃ³rios de frequÃªncia, presenÃ§a, ausÃªncia, visitantes, BÃ­blias,
+              A chamada dos alunos é a rotina principal do EBD Fiel. Ela alimenta os
+              relatórios de frequência, presença, ausência, visitantes, Bíblias,
               revistas e ofertas.
             </p>
           </div>
@@ -13487,7 +13486,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>2. Escolha a classe e confira a data</strong>
               <p>
-                Selecione a classe correta. A data Ã© preenchida automaticamente, mas
+                Selecione a classe correta. A data é preenchida automaticamente, mas
                 pode ser conferida antes de salvar.
               </p>
             </article>
@@ -13495,7 +13494,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>3. Marque cada aluno</strong>
               <p>
-                Use <b>Presente</b> ou <b>Faltou</b> em cada aluno. TambÃ©m Ã© possÃ­vel
+                Use <b>Presente</b> ou <b>Faltou</b> em cada aluno. Também é possível
                 marcar todos como presentes ou faltaram quando isso facilitar a rotina.
               </p>
             </article>
@@ -13504,40 +13503,40 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <strong>4. Salve a chamada</strong>
               <p>
                 Depois de conferir os dados, clique em <b>Salvar chamada dos alunos</b>.
-                O sistema mostrarÃ¡ uma mensagem de confirmaÃ§Ã£o.
+                O sistema mostrará uma mensagem de confirmação.
               </p>
             </article>
           </div>
 
           <div className="manual-observacao">
             <strong>Importante:</strong> se uma chamada for feita por engano, use o
-            HistÃ³rico de chamadas em RelatÃ³rios para excluir apenas aquele registro.
+            Histórico de chamadas em Relatórios para excluir apenas aquele registro.
           </div>
         </div>
 
         <div className="manual-secao-detalhada manual-secao-secretaria">
           <div className="manual-secao-cabecalho">
-            <span className="selo-manual">HistÃ³rico de chamadas</span>
+            <span className="selo-manual">Histórico de chamadas</span>
             <h3>Como apagar uma chamada feita como teste</h3>
             <p>
-              Essa opÃ§Ã£o serve para remover uma chamada lanÃ§ada por engano, como uma
-              data fictÃ­cia usada em teste, sem apagar alunos, classes ou professores.
+              Essa opção serve para remover uma chamada lançada por engano, como uma
+              data fictícia usada em teste, sem apagar alunos, classes ou professores.
             </p>
           </div>
 
           <div className="manual-lista-passos">
             <article>
-              <strong>1. Abra RelatÃ³rios</strong>
+              <strong>1. Abra Relatórios</strong>
               <p>
-                No menu principal, clique em <b>RelatÃ³rios</b> e procure a Ã¡rea
-                <b> HistÃ³rico de chamadas</b>.
+                No menu principal, clique em <b>Relatórios</b> e procure a área
+                <b> Histórico de chamadas</b>.
               </p>
             </article>
 
             <article>
               <strong>2. Localize a chamada</strong>
               <p>
-                Confira a data, o tipo da chamada e a classe. Verifique com atenÃ§Ã£o
+                Confira a data, o tipo da chamada e a classe. Verifique com atenção
                 antes de excluir.
               </p>
             </article>
@@ -13545,23 +13544,23 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>3. Clique em Excluir chamada</strong>
               <p>
-                Use o botÃ£o <b>Excluir chamada</b> somente no registro que foi feito
+                Use o botão <b>Excluir chamada</b> somente no registro que foi feito
                 por engano.
               </p>
             </article>
 
             <article>
-              <strong>4. Confirme a exclusÃ£o</strong>
+              <strong>4. Confirme a exclusão</strong>
               <p>
-                O sistema pedirÃ¡ confirmaÃ§Ã£o. ApÃ³s confirmar, apenas aquela chamada
-                serÃ¡ removida e os relatÃ³rios serÃ£o atualizados.
+                O sistema pedirá confirmação. Após confirmar, apenas aquela chamada
+                será removida e os relatórios serão atualizados.
               </p>
             </article>
           </div>
 
           <div className="manual-observacao">
-            <strong>AtenÃ§Ã£o:</strong> a exclusÃ£o remove somente a chamada selecionada.
-            NÃ£o exclui alunos, professores, classes nem dados da igreja.
+            <strong>Atenção:</strong> a exclusão remove somente a chamada selecionada.
+            Não exclui alunos, professores, classes nem dados da igreja.
           </div>
         </div>
 
@@ -13571,7 +13570,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <h3>Como o professor faz a chamada da classe</h3>
             <p>
               O professor consegue registrar chamada apenas das classes em que estiver
-              vinculado pela secretaria ou administraÃ§Ã£o da igreja.
+              vinculado pela secretaria ou administração da igreja.
             </p>
           </div>
 
@@ -13587,7 +13586,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>2. Abrir o menu Chamada</strong>
               <p>
-                Depois do login, clique em <b>Chamada</b>. O sistema mostrarÃ¡ somente a
+                Depois do login, clique em <b>Chamada</b>. O sistema mostrará somente a
                 classe ou as classes vinculadas ao professor.
               </p>
             </article>
@@ -13595,8 +13594,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>3. Selecionar a classe e preencher a chamada</strong>
               <p>
-                Escolha a classe, marque presenÃ§a ou falta para cada aluno e preencha os
-                campos adicionais, como visitantes, BÃ­blias, revistas, ofertas e observaÃ§Ãµes.
+                Escolha a classe, marque presença ou falta para cada aluno e preencha os
+                campos adicionais, como visitantes, Bíblias, revistas, ofertas e observações.
               </p>
             </article>
 
@@ -13604,31 +13603,31 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <strong>4. Conferir e salvar</strong>
               <p>
                 Antes de salvar, confira a data, a classe selecionada e os totais. Depois
-                clique em <b>Salvar chamada</b>. A informaÃ§Ã£o ficarÃ¡ disponÃ­vel nos
-                relatÃ³rios da igreja.
+                clique em <b>Salvar chamada</b>. A informação ficará disponível nos
+                relatórios da igreja.
               </p>
             </article>
           </div>
 
           <div className="manual-observacao">
             <strong>Importante:</strong> se nenhuma classe aparecer para o professor, a
-            secretaria precisa verificar se ele estÃ¡ vinculado Ã  classe correta.
+            secretaria precisa verificar se ele está vinculado à classe correta.
           </div>
         </div>
 
         <div className="manual-secao-detalhada manual-secao-secretaria">
           <div className="manual-secao-cabecalho">
             <span className="selo-manual">Secretaria</span>
-            <h3>Como vincular o professor Ã  classe</h3>
+            <h3>Como vincular o professor à classe</h3>
             <p>
               Para que o professor consiga fazer chamada, ele precisa estar cadastrado e
-              ligado Ã  classe correta dentro da igreja.
+              ligado à classe correta dentro da igreja.
             </p>
           </div>
 
           <div className="manual-lista-passos">
             <article>
-              <strong>1. Acessar a pÃ¡gina Classes</strong>
+              <strong>1. Acessar a página Classes</strong>
               <p>
                 No menu principal, clique em <b>Classes</b> e localize a classe onde o
                 professor atua.
@@ -13647,32 +13646,32 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <strong>3. Informar os dados do professor</strong>
               <p>
                 Preencha o nome do professor e, quando solicitado, o e-mail de acesso.
-                Confirme se a classe exibida Ã© realmente a classe correta.
+                Confirme se a classe exibida é realmente a classe correta.
               </p>
             </article>
 
             <article>
-              <strong>4. Salvar e conferir o vÃ­nculo</strong>
+              <strong>4. Salvar e conferir o vínculo</strong>
               <p>
                 Depois de salvar, o nome do professor deve aparecer dentro da classe.
-                Esse vÃ­nculo Ã© o que libera a chamada daquela turma para o professor.
+                Esse vínculo é o que libera a chamada daquela turma para o professor.
               </p>
             </article>
           </div>
 
           <div className="manual-observacao">
-            <strong>Quando o professor nÃ£o enxergar a classe:</strong> confira se o usuÃ¡rio
-            dele estÃ¡ cadastrado como <b>professor</b>, se o e-mail estÃ¡ correto, se a
-            classe ainda existe e se o vÃ­nculo foi salvo na classe certa.
+            <strong>Quando o professor não enxergar a classe:</strong> confira se o usuário
+            dele está cadastrado como <b>professor</b>, se o e-mail está correto, se a
+            classe ainda existe e se o vínculo foi salvo na classe certa.
           </div>
         </div>
 
         <div className="manual-secao-detalhada">
           <div className="manual-secao-cabecalho">
             <span className="selo-manual">Aniversariantes</span>
-            <h3>Como usar cartÃµes de aniversÃ¡rio</h3>
+            <h3>Como usar cartões de aniversário</h3>
             <p>
-              O painel mostra aniversariantes da semana e permite gerar cartÃµes
+              O painel mostra aniversariantes da semana e permite gerar cartões
               individuais para compartilhar ou imprimir.
             </p>
           </div>
@@ -13687,17 +13686,17 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             </article>
 
             <article>
-              <strong>2. Ver cartÃ£o</strong>
+              <strong>2. Ver cartão</strong>
               <p>
-                Em cada pessoa, clique em <b>Ver cartÃ£o</b> para abrir o cartÃ£o individual
-                com mensagem e versÃ­culo bÃ­blico.
+                Em cada pessoa, clique em <b>Ver cartão</b> para abrir o cartão individual
+                com mensagem e versículo bíblico.
               </p>
             </article>
 
             <article>
               <strong>3. Enviar no WhatsApp</strong>
               <p>
-                Use <b>Enviar imagem no WhatsApp</b>. Em dispositivos compatÃ­veis, o
+                Use <b>Enviar imagem no WhatsApp</b>. Em dispositivos compatíveis, o
                 sistema compartilha imagem e mensagem juntas.
               </p>
             </article>
@@ -13705,7 +13704,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <article>
               <strong>4. Baixar ou imprimir</strong>
               <p>
-                TambÃ©m Ã© possÃ­vel baixar o cartÃ£o em imagem, baixar em PDF ou imprimir
+                Também é possível baixar o cartão em imagem, baixar em PDF ou imprimir
                 para entregar pessoalmente.
               </p>
             </article>
@@ -13715,10 +13714,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         {usuarioEhAdminSistema() && (
           <div className="manual-secao-detalhada manual-secao-secretaria">
             <div className="manual-secao-cabecalho">
-              <span className="selo-manual">AdministraÃ§Ã£o</span>
-              <h3>DiagnÃ³stico para suporte do administrador</h3>
+              <span className="selo-manual">Administração</span>
+              <h3>Diagnóstico para suporte do administrador</h3>
               <p>
-                O diagnÃ³stico Ã© uma ferramenta de suporte disponÃ­vel apenas para o
+                O diagnóstico é uma ferramenta de suporte disponível apenas para o
                 administrador geral da plataforma. Ele ajuda a verificar carregamento,
                 perfil, igreja e dados retornados pelo Supabase.
               </p>
@@ -13726,17 +13725,17 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <div className="manual-lista-passos">
               <article>
-                <strong>1. Acesse AdministraÃ§Ã£o</strong>
+                <strong>1. Acesse Administração</strong>
                 <p>
-                  Entre com o usuÃ¡rio administrador geral e abra a pÃ¡gina
-                  <b> AdministraÃ§Ã£o</b>.
+                  Entre com o usuário administrador geral e abra a página
+                  <b> Administração</b>.
                 </p>
               </article>
 
               <article>
-                <strong>2. Execute o diagnÃ³stico</strong>
+                <strong>2. Execute o diagnóstico</strong>
                 <p>
-                  Clique em <b>Executar diagnÃ³stico</b> para conferir e-mail, perfil,
+                  Clique em <b>Executar diagnóstico</b> para conferir e-mail, perfil,
                   igreja ID e quantidade de dados retornados.
                 </p>
               </article>
@@ -13744,16 +13743,16 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
               <article>
                 <strong>3. Copie o resultado</strong>
                 <p>
-                  Use <b>Copiar diagnÃ³stico</b>. O sistema mostra uma confirmaÃ§Ã£o quando
-                  o conteÃºdo for copiado.
+                  Use <b>Copiar diagnóstico</b>. O sistema mostra uma confirmação quando
+                  o conteúdo for copiado.
                 </p>
               </article>
 
               <article>
                 <strong>4. Use no atendimento</strong>
                 <p>
-                  O diagnÃ³stico ajuda a descobrir se o problema estÃ¡ no perfil, na igreja,
-                  nas permissÃµes ou no carregamento dos dados.
+                  O diagnóstico ajuda a descobrir se o problema está no perfil, na igreja,
+                  nas permissões ou no carregamento dos dados.
                 </p>
               </article>
             </div>
@@ -13764,9 +13763,9 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <div>
             <h3>Dica para usar bem o EBD Fiel</h3>
             <p>
-              Mantenha classes, alunos e professores atualizados. FaÃ§a as chamadas na data
-              correta, acompanhe aniversariantes e use o histÃ³rico para corrigir chamadas
-              de teste ou lanÃ§adas por engano.
+              Mantenha classes, alunos e professores atualizados. Faça as chamadas na data
+              correta, acompanhe aniversariantes e use o histórico para corrigir chamadas
+              de teste ou lançadas por engano.
             </p>
           </div>
 
@@ -13822,7 +13821,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </div>
           <div>
             <strong>EBD Fiel</strong>
-            <span>Escola BÃ­blica Dominical</span>
+            <span>Escola Bíblica Dominical</span>
           </div>
         </div>
 
@@ -13830,10 +13829,10 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           type="button"
           className="botao-inicio-interno"
           onClick={() => navegarParaPagina('painel')}
-          aria-label="Voltar Ã  pÃ¡gina inicial"
+          aria-label="Voltar à página inicial"
         >
           <Icone nome="inicio" className="icone-svg" />
-          <span>PÃ¡gina inicial</span>
+          <span>Página inicial</span>
         </button>
 
         <button
@@ -13869,7 +13868,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           </div>
           <div>
             <h1>EBD Fiel</h1>
-            <p>GestÃ£o da Escola BÃ­blica</p>
+            <p>Gestão da Escola Bíblica</p>
           </div>
 
           <button
@@ -13918,12 +13917,12 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
             <div>
               <span>Modo suporte ativo</span>
               <strong>
-                VocÃª estÃ¡ visualizando a igreja{' '}
+                Você está visualizando a igreja{' '}
                 {igrejaSuporteAdmin?.nome_igreja ||
                   igrejaAtualPiloto?.nome_igreja ||
                   buscarNomeIgrejaParaExibicao()}
               </strong>
-              <p>VocÃª continua logado como administrador do sistema.</p>
+              <p>Você continua logado como administrador do sistema.</p>
             </div>
 
             <button type="button" className="botao-sair-suporte" onClick={sairDoModoSuporteAdmin}>
