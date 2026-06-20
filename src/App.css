@@ -26707,3 +26707,260 @@ html body #root .botao-sair-sidebar {
   background-color: #ffffff !important;
   text-shadow: none !important;
 }
+
+/* =========================================================
+   EBD FIEL V55B - LOGIN PREMIUM AZUL
+   Reformula a tela de login, aumenta a logo e remove manchas escuras.
+   Não altera banco, Supabase, cadastro, login ou lógica.
+========================================================= */
+
+.tela-login-v70 {
+  min-height: 100vh !important;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.20), transparent 24%),
+    radial-gradient(circle at 88% 90%, rgba(34, 211, 238, 0.28), transparent 32%),
+    linear-gradient(135deg, #0d6efd 0%, #1597ea 48%, #22c7d9 100%) !important;
+  color: #ffffff !important;
+  overflow-x: hidden !important;
+}
+
+/* Remove manchas escuras e sombras fortes da tela de login */
+.tela-login-v70::before,
+.tela-login-v70::after,
+.painel-login-v70::before,
+.painel-login-v70::after,
+.cartao-login::before,
+.cartao-login::after,
+.cartao-login-v70::before,
+.cartao-login-v70::after {
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 0 !important;
+}
+
+/* Lado esquerdo do login */
+.painel-login-v70 {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 255, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.14), transparent 34%),
+    linear-gradient(135deg, #0d6efd 0%, #1597ea 48%, #22c7d9 100%) !important;
+  color: #ffffff !important;
+  padding: 64px 60px !important;
+  position: relative !important;
+}
+
+/* Marca do login com logo maior */
+.painel-login-v70 .marca-login {
+  align-items: center !important;
+  gap: 26px !important;
+  margin-bottom: 54px !important;
+}
+
+/* Remove moldura da logo e aumenta bastante */
+.painel-login-v70 .marca-login .logo-simbolo {
+  width: 132px !important;
+  height: 132px !important;
+  min-width: 132px !important;
+  min-height: 132px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.painel-login-v70 .marca-login .logo-imagem {
+  width: 132px !important;
+  height: 132px !important;
+  min-width: 132px !important;
+  min-height: 132px !important;
+  max-width: 132px !important;
+  max-height: 132px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: 0 20px 42px rgba(7, 17, 31, 0.18) !important;
+}
+
+.painel-login-v70 .marca-login h1 {
+  color: #ffffff !important;
+  font-size: 42px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-shadow: 0 10px 26px rgba(7, 17, 31, 0.18) !important;
+}
+
+.painel-login-v70 .marca-login p {
+  color: rgba(255, 255, 255, 0.96) !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  max-width: 520px !important;
+}
+
+/* Texto principal do login */
+.apresentacao-login-v70 .selo-apresentacao {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.34) !important;
+  box-shadow: none !important;
+}
+
+.apresentacao-login-v70 h2 {
+  color: #ffffff !important;
+  font-size: clamp(46px, 5.2vw, 78px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.06em !important;
+  text-shadow: 0 16px 38px rgba(7, 17, 31, 0.20) !important;
+  max-width: 800px !important;
+}
+
+.apresentacao-login-v70 p {
+  color: rgba(255, 255, 255, 0.96) !important;
+  font-size: 20px !important;
+  line-height: 1.65 !important;
+  max-width: 760px !important;
+}
+
+/* Cards do lado esquerdo */
+.preview-login-v70 .preview-login-card,
+.beneficios-login-v70 .beneficio-item {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 42px rgba(7, 17, 31, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.preview-login-v70 .preview-login-card *,
+.beneficios-login-v70 .beneficio-item * {
+  color: #ffffff !important;
+}
+
+/* Lado direito do login */
+.tela-login-v70 .cartao-login,
+.tela-login-v70 .cartao-login-v70 {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.10), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f4faff 100%) !important;
+  border: 1px solid rgba(203, 213, 225, 0.82) !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.13) !important;
+  border-radius: 32px !important;
+  color: #0f172a !important;
+}
+
+/* Topo do formulário */
+.tela-login-v70 .topo-cartao-login h2,
+.tela-login-v70 .cartao-login h2 {
+  color: #0f315f !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.tela-login-v70 .topo-cartao-login p,
+.tela-login-v70 .cartao-login p {
+  color: #475569 !important;
+  font-weight: 700 !important;
+}
+
+.tela-login-v70 .topo-cartao-icone {
+  background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%) !important;
+  color: #0b84e5 !important;
+  border: 1px solid rgba(14, 132, 229, 0.16) !important;
+  box-shadow: 0 14px 32px rgba(14, 132, 229, 0.14) !important;
+}
+
+/* Aviso amarelo */
+.tela-login-v70 .aviso,
+.tela-login-v70 .aviso-cadastro-piloto,
+.tela-login-v70 .alerta-login {
+  background: #fff7d6 !important;
+  border: 1px solid #f6d365 !important;
+  color: #6b3d00 !important;
+  box-shadow: 0 10px 26px rgba(180, 83, 9, 0.08) !important;
+}
+
+/* Inputs */
+.tela-login-v70 input,
+.tela-login-v70 select,
+.tela-login-v70 textarea {
+  background: #eef6ff !important;
+  color: #0f172a !important;
+  border: 1px solid #c7ddf7 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+}
+
+.tela-login-v70 input:focus,
+.tela-login-v70 select:focus,
+.tela-login-v70 textarea:focus {
+  border-color: #0b84e5 !important;
+  box-shadow: 0 0 0 4px rgba(14, 132, 229, 0.14) !important;
+}
+
+/* Botões do login */
+.tela-login-v70 .botao-principal,
+.tela-login-v70 button[type="submit"] {
+  background: linear-gradient(135deg, #ffb347 0%, #ff9800 100%) !important;
+  color: #111827 !important;
+  border: none !important;
+  box-shadow: 0 18px 36px rgba(255, 152, 0, 0.24) !important;
+  border-radius: 18px !important;
+  font-weight: 900 !important;
+}
+
+.tela-login-v70 .botao-principal:hover,
+.tela-login-v70 button[type="submit"]:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.02) !important;
+}
+
+/* Card de solicitar cadastro */
+.tela-login-v70 .cartao-cadastro,
+.tela-login-v70 .cadastro-igreja-card,
+.tela-login-v70 .card-solicitar-cadastro {
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 34%),
+    linear-gradient(180deg, #f0fff7 0%, #f7ffef 100%) !important;
+  border: 1px solid rgba(34, 197, 94, 0.22) !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .painel-login-v70 {
+    padding: 36px 24px !important;
+  }
+
+  .painel-login-v70 .marca-login {
+    gap: 18px !important;
+    margin-bottom: 34px !important;
+  }
+
+  .painel-login-v70 .marca-login .logo-simbolo,
+  .painel-login-v70 .marca-login .logo-imagem {
+    width: 92px !important;
+    height: 92px !important;
+    min-width: 92px !important;
+    min-height: 92px !important;
+    max-width: 92px !important;
+    max-height: 92px !important;
+  }
+
+  .painel-login-v70 .marca-login h1 {
+    font-size: 30px !important;
+  }
+
+  .painel-login-v70 .marca-login p {
+    font-size: 15px !important;
+  }
+
+  .apresentacao-login-v70 h2 {
+    font-size: 42px !important;
+  }
+}
+
