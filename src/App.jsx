@@ -6807,17 +6807,16 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
 
           <div className="apresentacao-texto">
             <span className="selo-apresentacao">Cadastro mediante liberação</span>
-            <h2>Crie o acesso da sua igreja para avaliaÃ§Ã£o.</h2>
+            <h2>Solicite o cadastro da sua igreja.</h2>
             <p>
-              O cadastro serÃ¡ enviado para aprovaÃ§Ã£o. ApÃ³s a liberaÃ§Ã£o, a igreja poderÃ¡
-              testar classes, alunos, professores, chamadas, relatÃ³rios e mensagens.
+              O cadastro será enviado para análise. Após a liberação, a igreja poderá acessar a plataforma e completar os dados internos.
             </p>
           </div>
 
           <div className="beneficios-login">
             <div className="beneficio-item">
               <Icone nome="check" className="icone-beneficio" />
-              <span>CÃ³digo do piloto obrigatÃ³rio</span>
+              <span>Sem código de acesso</span>
             </div>
             <div className="beneficio-item">
               <Icone nome="igreja" className="icone-beneficio" />
@@ -6829,7 +6828,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
             </div>
             <div className="beneficio-item">
               <Icone nome="relatorios" className="icone-beneficio" />
-              <span>AprovaÃ§Ã£o pelo administrador</span>
+              <span>Liberação pelo administrador</span>
             </div>
           </div>
         </section>
@@ -6967,7 +6966,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
                 />
               </label>
 
-              <label>
+              <label style={{ display: 'none' }}>
                 CÃ³digo do piloto
                 <input
                   type="text"
@@ -7232,7 +7231,7 @@ Confirme se essa Ã© realmente a data correta da EBD antes de continuar.`
               type="submit"
               disabled={carregandoCadastroPiloto}
             >
-              {carregandoCadastroPiloto ? 'Enviando cadastro...' : 'Enviar cadastro para aprovaÃ§Ã£o'}
+              {carregandoCadastroPiloto ? 'Enviando solicitação...' : 'Enviar solicitação de cadastro'}
             </button>
           </form>
         </section>
