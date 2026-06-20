@@ -26394,3 +26394,316 @@ textarea::placeholder {
 .botao-sair-sidebar svg {
   color: #0f172a !important;
 }
+/* =========================================================
+   EBD FIEL V54 - LOGO GLOBAL + AZUL PADRÃO PÁGINA PRINCIPAL
+   Objetivo:
+   1) Remover molduras das logos em login, menu e áreas internas.
+   2) Garantir fundo azul claro/moderno no menu lateral.
+   3) Trocar blocos escuros/marrons por azul semelhante à página principal.
+   4) Melhorar contraste da descrição no painel do usuário.
+   Não altera banco, Supabase, login, cadastro ou lógica.
+========================================================= */
+
+:root {
+  --ebd-azul-principal: #1478f2;
+  --ebd-azul-claro: #33b7e8;
+  --ebd-azul-medio: #0ea5e9;
+  --ebd-azul-escuro: #073b63;
+  --ebd-amarelo: #ffb21a;
+  --ebd-branco: #ffffff;
+}
+
+/* =========================
+   LOGO SEM MOLDURA - TODAS AS ÁREAS
+========================= */
+.logo-simbolo,
+.logo-simbolo-sidebar,
+.marca-login .logo-simbolo,
+.marca-sidebar .logo-simbolo,
+.marca-sidebar .logo-simbolo-sidebar,
+.menu-lateral .logo-simbolo,
+.menu-lateral .logo-simbolo-sidebar,
+.marca-publica .logo-publica,
+.topo-mobile-interno .logo-simbolo,
+.topo-mobile-interno .logo-simbolo-sidebar {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.logo-imagem,
+.marca-login .logo-imagem,
+.marca-sidebar .logo-imagem,
+.menu-lateral .logo-imagem,
+.marca-publica .logo-imagem,
+.topo-mobile-interno .logo-imagem {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.menu-lateral .logo-imagem,
+.marca-sidebar .logo-imagem {
+  width: 58px !important;
+  height: 58px !important;
+}
+
+/* Remove o X do topo do menu interno */
+.fechar-menu-interno {
+  display: none !important;
+}
+
+/* =========================
+   MENU LATERAL AZUL CLARO
+========================= */
+html body #root .app .menu-lateral,
+html body #root .menu-lateral {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(255, 255, 255, 0.52), transparent 30%),
+    radial-gradient(circle at 92% 16%, rgba(20, 120, 242, 0.18), transparent 34%),
+    linear-gradient(180deg, #e8f6ff 0%, #d8eeff 48%, #c7e7fb 100%) !important;
+  color: #073b63 !important;
+  border-right: 1px solid rgba(14, 116, 144, 0.20) !important;
+  box-shadow: 18px 0 42px rgba(7, 59, 99, 0.10) !important;
+}
+
+html body #root .menu-lateral .marca-sidebar {
+  border-bottom: 1px solid rgba(7, 59, 99, 0.16) !important;
+  padding-right: 4px !important;
+}
+
+html body #root .menu-lateral .marca-sidebar h1,
+html body #root .menu-lateral .marca-sidebar strong,
+html body #root .menu-lateral .marca-sidebar p,
+html body #root .menu-lateral .marca-sidebar span {
+  color: #073b63 !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-lateral .marca-sidebar h1,
+html body #root .menu-lateral .marca-sidebar strong {
+  font-weight: 900 !important;
+}
+
+html body #root .menu-lateral .marca-sidebar p,
+html body #root .menu-lateral .marca-sidebar span {
+  color: #164e63 !important;
+  font-weight: 800 !important;
+}
+
+html body #root .menu-lateral button,
+html body #root .menu-lateral .menu-navegacao button,
+html body #root .menu-lateral .menu-navegacao button span {
+  color: #073b63 !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-lateral .icone-menu {
+  background: rgba(255, 255, 255, 0.74) !important;
+  color: #075985 !important;
+  border: 1px solid rgba(14, 116, 144, 0.14) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button:hover,
+html body #root .menu-lateral nav button:hover {
+  background: rgba(255, 255, 255, 0.76) !important;
+  color: #073b63 !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo,
+html body #root .menu-lateral button.ativo,
+html body #root .menu-lateral nav button.ativo {
+  background: linear-gradient(135deg, #1478f2 0%, #0ea5e9 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  box-shadow: 0 14px 28px rgba(14, 165, 233, 0.28) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo span,
+html body #root .menu-lateral button.ativo span,
+html body #root .menu-lateral nav button.ativo span,
+html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral button.ativo .icone-menu,
+html body #root .menu-lateral nav button.ativo .icone-menu {
+  color: #ffffff !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral button.ativo .icone-menu,
+html body #root .menu-lateral nav button.ativo .icone-menu {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+/* Card do usuário no menu */
+html body #root .cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(14, 116, 144, 0.18) !important;
+  box-shadow: 0 14px 32px rgba(7, 59, 99, 0.10) !important;
+}
+
+html body #root .cartao-usuario-sidebar,
+html body #root .cartao-usuario-sidebar *,
+html body #root .cartao-usuario-sidebar strong,
+html body #root .cartao-usuario-sidebar span,
+html body #root .cartao-usuario-sidebar p {
+  color: #073b63 !important;
+}
+
+html body #root .botao-sair-sidebar {
+  background: #ffffff !important;
+  color: #073b63 !important;
+  border: 1px solid rgba(14, 116, 144, 0.20) !important;
+}
+
+/* =========================
+   LOGIN / CADASTRO - TROCA FUNDO MARROM/ESCURO POR AZUL
+========================= */
+.tela-login .painel-apresentacao,
+.tela-login .painel-cadastro-piloto,
+.tela-mensagem .painel-apresentacao {
+  background:
+    radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.20), transparent 28%),
+    radial-gradient(circle at 86% 80%, rgba(51, 183, 232, 0.34), transparent 35%),
+    linear-gradient(135deg, #1478f2 0%, #139fe5 54%, #28c4dc 100%) !important;
+  color: #ffffff !important;
+}
+
+.tela-login .painel-apresentacao h1,
+.tela-login .painel-apresentacao h2,
+.tela-login .painel-apresentacao p,
+.tela-login .painel-apresentacao span,
+.tela-login .painel-cadastro-piloto h1,
+.tela-login .painel-cadastro-piloto h2,
+.tela-login .painel-cadastro-piloto p,
+.tela-login .painel-cadastro-piloto span {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(7, 59, 99, 0.16) !important;
+}
+
+.tela-login .selo-apresentacao {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+}
+
+.tela-login .beneficio-item {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+}
+
+/* =========================
+   PAINEL DO USUÁRIO - FUNDO AZUL E TEXTO DESTACADO
+========================= */
+.hero-painel-conteudo,
+.conteudo:not(.pagina-relatorios) .hero-painel-conteudo {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 12% 84%, rgba(51, 183, 232, 0.30), transparent 34%),
+    linear-gradient(135deg, #1478f2 0%, #168ce7 48%, #28c4dc 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow: 0 26px 60px rgba(20, 120, 242, 0.22) !important;
+  color: #ffffff !important;
+}
+
+.hero-painel-conteudo::before,
+.conteudo:not(.pagina-relatorios) .hero-painel-conteudo::before {
+  background: none !important;
+}
+
+.hero-painel-conteudo h2,
+.conteudo:not(.pagina-relatorios) .hero-painel-conteudo h2 {
+  color: #ffffff !important;
+  text-shadow: 0 4px 18px rgba(7, 59, 99, 0.24) !important;
+}
+
+.hero-painel-conteudo p,
+.conteudo:not(.pagina-relatorios) .hero-painel-conteudo p {
+  color: rgba(255, 255, 255, 0.96) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 10px rgba(7, 59, 99, 0.18) !important;
+}
+
+.hero-painel-conteudo .hero-tag,
+.conteudo:not(.pagina-relatorios) .hero-painel-conteudo .hero-tag,
+.linha-tags-painel .hero-tag {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+}
+
+.hero-painel-metricas span,
+.conteudo:not(.pagina-relatorios) .hero-painel-metricas span {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+}
+
+.hero-painel-metricas strong,
+.conteudo:not(.pagina-relatorios) .hero-painel-metricas strong {
+  color: #ffffff !important;
+}
+
+.atalho-chamada-topo,
+.conteudo:not(.pagina-relatorios) .atalho-chamada-topo {
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #073b63 !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 18px 38px rgba(7, 59, 99, 0.14) !important;
+}
+
+.atalho-chamada-topo strong,
+.atalho-chamada-topo small,
+.conteudo:not(.pagina-relatorios) .atalho-chamada-topo strong,
+.conteudo:not(.pagina-relatorios) .atalho-chamada-topo small {
+  color: #073b63 !important;
+  text-shadow: none !important;
+}
+
+.atalho-chamada-topo-icone,
+.conteudo:not(.pagina-relatorios) .atalho-chamada-topo-icone {
+  background: linear-gradient(135deg, #1478f2, #28c4dc) !important;
+  color: #ffffff !important;
+}
+
+.hero-acoes .botao-principal,
+.conteudo:not(.pagina-relatorios) .hero-acoes .botao-principal {
+  background: linear-gradient(135deg, #ffb21a, #ff9800) !important;
+  color: #111827 !important;
+  box-shadow: 0 14px 30px rgba(255, 152, 0, 0.20) !important;
+}
+
+.hero-acoes .botao-secundario,
+.conteudo:not(.pagina-relatorios) .hero-acoes .botao-secundario {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #073b63 !important;
+  border: 1px solid rgba(255, 255, 255, 0.60) !important;
+}
+
+/* Blocos de apresentação que ainda estiverem escuros/marrons */
+.painel-apresentacao,
+.hero-painel-conteudo,
+.admin-operacao-destaque,
+.admin-acompanhamento-destaque,
+.admin-destaque-comercial {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.20), transparent 30%),
+    linear-gradient(135deg, #1478f2 0%, #139fe5 55%, #28c4dc 100%) !important;
+}
+
+/* Mantém relatórios/impressão neutros */
+.relatorio-folha,
+.relatorio-folha *,
+.tabela-ebd,
+.tabela-ebd * {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  text-shadow: none !important;
+}
