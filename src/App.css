@@ -27260,3 +27260,90 @@ html body #root .mockup-body h3 {
   opacity: 1 !important;
   text-shadow: none !important;
 }
+/* =========================================================
+   EBD FIEL - AJUSTE DE CONTRASTE DO RESUMO GERAL
+========================================================= */
+
+.pagina-dashboard .hero-painel,
+.pagina-dashboard .painel-hero,
+.pagina-dashboard .card-hero,
+.dashboard .hero-painel,
+.dashboard .painel-hero,
+.dashboard .card-hero,
+.resumo-geral .hero-painel,
+.resumo-geral .painel-hero,
+.resumo-geral .card-hero {
+  background: linear-gradient(135deg, #1586e5 0%, #25bfd1 100%) !important;
+  color: #ffffff !important;
+}
+
+.pagina-dashboard .hero-painel h1,
+.pagina-dashboard .painel-hero h1,
+.pagina-dashboard .card-hero h1,
+.dashboard .hero-painel h1,
+.dashboard .painel-hero h1,
+.dashboard .card-hero h1,
+.resumo-geral .hero-painel h1,
+.resumo-geral .painel-hero h1,
+.resumo-geral .card-hero h1 {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+.pagina-dashboard .hero-painel p,
+.pagina-dashboard .painel-hero p,
+.pagina-dashboard .card-hero p,
+.dashboard .hero-painel p,
+.dashboard .painel-hero p,
+.dashboard .card-hero p,
+.resumo-geral .hero-painel p,
+.resumo-geral .painel-hero p,
+.resumo-geral .card-hero p {
+  color: #eef8ff !important;
+  opacity: 1 !important;
+}
+/* =========================================================
+   EBD FIEL - AJUSTE DO CÍRCULO DE FREQUÊNCIA DO RESUMO GERAL
+========================================================= */
+
+.dashboard-v41-circulo {
+  width: 158px !important;
+  height: 158px !important;
+  min-width: 158px !important;
+  min-height: 158px !important;
+  max-width: 158px !important;
+  max-height: 158px !important;
+  padding: 18px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-align: center !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+.dashboard-v41-circulo strong {
+  display: block !important;
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 38px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.dashboard-v41-circulo span {
+  display: block !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  color: #eaf4ff !important;
+  font-size: 13px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
