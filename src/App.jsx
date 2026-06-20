@@ -8492,8 +8492,8 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
       const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
       const conteudoCartao = obterConteudoCartaoAniversario(aniversariante)
-      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! ðŸŽ‰
-
+      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! {'🎂'}
+      
 ${conteudoCartao.mensagem}
 
 ${conteudoCartao.versiculoTexto} (${conteudoCartao.versiculoReferencia})
@@ -8665,7 +8665,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   Confira alunos, professores e secretarias que fazem aniversário hoje ou nos próximos 7 dias.
                 </p>
               </div>
-              <div className="janela-aniversariantes-selo">ðŸŽ</div>
+              <div className="janela-aniversariantes-selo">Ž{'🎂'}</div>
             </div>
 
             <div className="janela-aniversariantes-resumo">
@@ -8690,7 +8690,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                     className={`janela-aniversariante-item${aniversarianteCartao?.id === pessoa.id ? ' ativo' : ''}`}
                     key={pessoa.id}
                   >
-                    <div className="janela-aniversariante-icone">ðŸŽ‰</div>
+                    <div className="janela-aniversariante-icone">{'🎂'}</div>
                     <div>
                       <strong>{pessoa.nome}</strong>
                       <p>{pessoa.tipo} â€¢ {pessoa.detalhe || 'Sem informação'}</p>
@@ -8727,8 +8727,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 <div className="cartao-aniversario-visualizacao">
                   <article className="cartao-aniversario-oficial" ref={cartaoAniversarioRef}>
                     <div className="cartao-aniversario-moldura">
-                      <div className="cartao-aniversario-livro" aria-hidden="true">ðŸ“–</div>
-                      <div className="cartao-aniversario-pomba" aria-hidden="true">ðŸ•Š️</div>
+                      <div className="cartao-aniversario-livro" aria-hidden="true">{'🎂'}</div>
+                      <div className="cartao-aniversario-pomba" aria-hidden="true">{'🎂'}</div>
                       <div className="cartao-aniversario-flores cartao-aniversario-flores-esquerda" aria-hidden="true">
                         <span></span><span></span><span></span><span></span>
                       </div>
@@ -8756,7 +8756,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                         </p>
 
                         <section className="cartao-aniversario-versiculo">
-                          <span>ðŸ“– Versículo bíblico</span>
+                          <span>{'🎂'}– Versículo bíblico</span>
                           <p>{conteudoCartaoAniversariante?.versiculoTexto}</p>
                           <strong>{conteudoCartaoAniversariante?.versiculoReferencia}</strong>
                         </section>
@@ -9630,7 +9630,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
 
             <div className="alertas-ebd-grade">
               <button className="alerta-ebd-card" type="button" onClick={abrirJanelaAniversariantesSemana}>
-                <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">ðŸŽ‚</span>
+                <span className="alerta-ebd-icone alerta-ebd-icone-aniversario">{'🎂'}</span>
                 <div>
                   <strong>Aniversariantes</strong>
                   <p>

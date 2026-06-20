@@ -27468,3 +27468,38 @@ html body #root .mockup-body h3 {
   color: #ffffff !important;
   text-decoration: none !important;
 }
+/* =========================================================
+   EBD FIEL - CONTRASTE FINAL DO BANNER RESUMO GERAL
+========================================================= */
+
+.dashboard-v41-hero h1,
+.dashboard-v41-cabecalho h1,
+.dashboard-v41-banner h1,
+.resumo-geral-hero h1,
+.resumo-geral-banner h1 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.22) !important;
+}
+
+.dashboard-v41-hero p,
+.dashboard-v41-cabecalho p,
+.dashboard-v41-banner p,
+.resumo-geral-hero p,
+.resumo-geral-banner p {
+  color: #f2fbff !important;
+  -webkit-text-fill-color: #f2fbff !important;
+  opacity: 1 !important;
+}
+
+.dashboard-v41-hero .badge,
+.dashboard-v41-cabecalho .badge,
+.dashboard-v41-banner .badge,
+.dashboard-v41-hero .selo,
+.dashboard-v41-cabecalho .selo,
+.dashboard-v41-banner .selo {
+  color: #0b3763 !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.95) !important;
+  opacity: 1 !important;
+}
