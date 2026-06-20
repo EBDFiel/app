@@ -26020,3 +26020,98 @@ textarea::placeholder {
     min-height: 118px !important;
   }
 }
+/* =========================================================
+   EBD FIEL V53 - AJUSTE VISUAL DE LINGUAGEM COMERCIAL
+   Corrige visualmente textos antigos sem alterar App.jsx.
+   Não altera banco, cadastro, login, Supabase ou lógica.
+========================================================= */
+
+/* Card superior: Pendentes -> Aguardando */
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(2) > span {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(2) > span::after {
+  content: "AGUARDANDO";
+  font-size: 11px !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(2) > p {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(2) > p::after {
+  content: "aguardando liberação";
+  font-size: 13px !important;
+}
+
+/* Card superior: Não aprovadas -> Canceladas */
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(6) > span {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(6) > span::after {
+  content: "CANCELADAS";
+  font-size: 11px !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(6) > p {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .cards-admin-sistema .card-admin:nth-child(6) > p::after {
+  content: "canceladas ou inativas";
+  font-size: 13px !important;
+}
+
+/* Botão: Ver liberadas -> Ver em uso */
+.conteudo-admin-comercial .controle-piloto-acoes button:nth-child(2) {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .controle-piloto-acoes button:nth-child(2)::after {
+  content: "Ver em uso";
+  font-size: 15px !important;
+}
+
+/* Card inferior: Aprovação -> Liberação */
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child .selo-admin {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child .selo-admin::after {
+  content: "LIBERAÇÃO";
+  font-size: 11px !important;
+}
+
+/* Card inferior: Igrejas aguardando decisão -> Igrejas aguardando liberação */
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child h3 {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child h3::after {
+  content: "Igrejas aguardando liberação";
+  font-size: 22px !important;
+  line-height: 1.2 !important;
+}
+
+/* Card inferior: texto explicativo */
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child p {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child p::after {
+  content: "cadastros recebidos pelo site que ainda precisam ser liberados.";
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+}
+
+/* Card inferior: Analisar pendentes -> Analisar aguardando */
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child button {
+  font-size: 0 !important;
+}
+
+.conteudo-admin-comercial .admin-visao-geral-grid > *:first-child button::after {
+  content: "Analisar aguardando";
+  font-size: 15px !important;
+}
