@@ -27551,3 +27551,10 @@ html body #root .conteudo .dashboard-v41-circulo span {
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
 }
+/* =========================================================
+   EBD FIEL - REMOVE SÍMBOLO QUEBRADO DO TOPO DOS ANIVERSARIANTES
+========================================================= */
+
+.janela-aniversariantes-selo {
+  display: none !important;
+}
