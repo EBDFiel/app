@@ -27600,3 +27600,31 @@ html body #root .conteudo .dashboard-v41-circulo span {
     -webkit-backdrop-filter: none !important;
   }
 }
+/* =========================================================
+   EBD FIEL - REMOVE ESCURECIMENTO DO MENU MOBILE INTERNO
+   Classe real: overlay-menu-interno
+========================================================= */
+
+@media screen and (max-width: 900px) {
+  html body #root .app.menu-interno-ativo .overlay-menu-interno,
+  html body #root .overlay-menu-interno {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    box-shadow: none !important;
+  }
+
+  html body #root .app.menu-interno-ativo .area-principal,
+  html body #root .app.menu-interno-ativo .conteudo {
+    filter: none !important;
+    -webkit-filter: none !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto {
+    box-shadow: 14px 0 28px rgba(15, 23, 42, 0.14) !important;
+  }
+}
