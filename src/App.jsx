@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import './App.css'
@@ -8468,7 +8468,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
       const nomeArquivo = `cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.png`
       const conteudoCartao = obterConteudoCartaoAniversario(aniversariante)
-      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! {'🎂'}
+      const mensagemWhatsApp = `Feliz aniversário, ${aniversariante?.nome || ''}! 🎂
       
 ${conteudoCartao.mensagem}
 
@@ -8510,85 +8510,34 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     }
   }
 
-  async function imprimirCartaoAniversario() {
-  try {
-    const canvas = await capturarCartaoAniversario()
+  async function baixarPdfCartaoAniversario() {
+    try {
+      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
+      const canvas = await capturarCartaoAniversario()
 
-    if (!canvas) {
-      return
+      if (!canvas) {
+        return
+      }
+
+      const imagem = canvas.toDataURL('image/png')
+      const larguraCartao = canvas.width
+      const alturaCartao = canvas.height
+
+      const pdf = new jsPDF({
+        orientation: larguraCartao >= alturaCartao ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [larguraCartao, alturaCartao],
+        compress: true,
+      })
+
+      pdf.addImage(imagem, 'PNG', 0, 0, larguraCartao, alturaCartao)
+      pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
+    } catch (error) {
+      console.error('Erro ao gerar PDF do cartão de aniversário:', error)
+      alert('Não foi possível gerar o PDF do cartão. Tente novamente.')
     }
-
-    const imagem = canvas.toDataURL('image/png')
-    const larguraImagem = canvas.width
-    const alturaImagem = canvas.height
-
-    imprimirHtmlEmIframe(
-      `
-        <!doctype html>
-        <html lang="pt-BR">
-          <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Cartão de aniversário</title>
-            <style>
-              * {
-                box-sizing: border-box;
-              }
-
-              html,
-              body {
-                margin: 0;
-                padding: 0;
-                width: ${larguraImagem}px;
-                height: ${alturaImagem}px;
-                background: #ffffff;
-                overflow: hidden;
-              }
-
-              body {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-
-              img {
-                width: ${larguraImagem}px;
-                height: ${alturaImagem}px;
-                display: block;
-                object-fit: contain;
-              }
-
-              @media print {
-                @page {
-                  size: ${larguraImagem}px ${alturaImagem}px;
-                  margin: 0;
-                }
-
-                html,
-                body {
-                  width: ${larguraImagem}px;
-                  height: ${alturaImagem}px;
-                }
-
-                img {
-                  width: ${larguraImagem}px;
-                  height: ${alturaImagem}px;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <img src="${imagem}" alt="Cartão de aniversário" />
-          </body>
-        </html>
-      `,
-      'iframe-cartao-aniversario-individual'
-    )
-  } catch (error) {
-    console.error('Erro ao imprimir cartão de aniversário:', error)
-    alert('Não foi possível imprimir o cartão. Tente novamente.')
   }
-}
+
   async function imprimirCartaoAniversario() {
     try {
       const canvas = await capturarCartaoAniversario()
@@ -8598,6 +8547,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
       }
 
       const imagem = canvas.toDataURL('image/png')
+      const larguraImagem = canvas.width
+      const alturaImagem = canvas.height
 
       imprimirHtmlEmIframe(
         `
@@ -8605,27 +8556,52 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <html lang="pt-BR">
             <head>
               <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <meta name="viewport" content="width=${larguraImagem}, initial-scale=1.0" />
               <title>Cartão de aniversário</title>
               <style>
-                * { box-sizing: border-box; }
+                * {
+                  box-sizing: border-box;
+                }
+
+                html,
                 body {
                   margin: 0;
-                  min-height: 100vh;
-                  display: grid;
-                  place-items: center;
-                  padding: 10mm;
+                  padding: 0;
+                  width: ${larguraImagem}px;
+                  height: ${alturaImagem}px;
                   background: #ffffff;
+                  overflow: hidden;
                 }
+
+                body {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
                 img {
-                  width: min(170mm, 100%);
-                  height: auto;
+                  width: ${larguraImagem}px;
+                  height: ${alturaImagem}px;
                   display: block;
-                  border-radius: 10mm;
+                  object-fit: contain;
                 }
+
                 @media print {
-                  @page { size: A4 portrait; margin: 8mm; }
-                  body { padding: 0; }
+                  @page {
+                    size: ${larguraImagem}px ${alturaImagem}px;
+                    margin: 0;
+                  }
+
+                  html,
+                  body {
+                    width: ${larguraImagem}px;
+                    height: ${alturaImagem}px;
+                  }
+
+                  img {
+                    width: ${larguraImagem}px;
+                    height: ${alturaImagem}px;
+                  }
                 }
               </style>
             </head>
@@ -8736,7 +8712,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                   <span className="hero-tag">Cartão individual</span>
                   <h4>Cartão pronto para {aniversarianteCartao.nome}</h4>
                   <p>
-                    Baixe a imagem para enviar pelo WhatsApp ou imprima em papel A4.
+                    Baixe a imagem para enviar pelo WhatsApp ou gere o PDF no tamanho exato do cartão.
                     A assinatura foi ajustada e cada aniversariante recebe uma mensagem diferente.
                   </p>
                 </div>
