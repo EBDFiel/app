@@ -26963,4 +26963,66 @@ html body #root .botao-sair-sidebar {
     font-size: 42px !important;
   }
 }
+/* =========================================================
+   EBD FIEL - REMOVE SOMBRA QUADRADA DA LOGO
+   Corrige logo da página principal/login e áreas públicas.
+========================================================= */
 
+.painel-login-v70 .marca-login .logo-simbolo,
+.painel-login-v70 .marca-login .logo-imagem,
+.tela-login-v70 .marca-login .logo-simbolo,
+.tela-login-v70 .marca-login .logo-imagem,
+.login-apresentacao .logo-simbolo,
+.login-apresentacao .logo-imagem,
+.marca-login .logo-simbolo,
+.marca-login .logo-imagem,
+.home-brand img,
+.marca-site img,
+.logo-site img,
+.brand-site img,
+.topo-marca img,
+img[src*="logo-ebd-fiel"],
+img[src*="logo-oficial-ebd-fiel"],
+img[src*="logoplataformaebd"] {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Corta qualquer fundo quadrado da imagem, mantendo a logo circular */
+.painel-login-v70 .marca-login .logo-imagem,
+.tela-login-v70 .marca-login .logo-imagem,
+.login-apresentacao .logo-imagem,
+.marca-login .logo-imagem,
+img[src*="logo-ebd-fiel"],
+img[src*="logo-oficial-ebd-fiel"],
+img[src*="logoplataformaebd"] {
+  border-radius: 999px !important;
+  object-fit: cover !important;
+}
+
+/* Mantém a logo grande no login, mas sem sombra quadrada */
+.painel-login-v70 .marca-login .logo-simbolo,
+.painel-login-v70 .marca-login .logo-imagem {
+  width: 132px !important;
+  height: 132px !important;
+  min-width: 132px !important;
+  min-height: 132px !important;
+  max-width: 132px !important;
+  max-height: 132px !important;
+}
+
+/* Topo da página principal: logo sem moldura e sem sombra */
+.home-brand img,
+.marca-site img,
+.logo-site img,
+.brand-site img,
+.topo-marca img {
+  width: 84px !important;
+  height: 84px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+  box-shadow: none !important;
+}
