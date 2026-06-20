@@ -8510,44 +8510,85 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     }
   }
 
-  async function baixarPdfCartaoAniversario() {
-    try {
-      const aniversariante = obterAniversarianteSelecionadoCartao(buscarAniversariantesDaSemana())
-      const canvas = await capturarCartaoAniversario()
+  async function imprimirCartaoAniversario() {
+  try {
+    const canvas = await capturarCartaoAniversario()
 
-      if (!canvas) {
-        return
-      }
-
-      const imagem = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      })
-
-      const larguraPagina = pdf.internal.pageSize.getWidth()
-      const alturaPagina = pdf.internal.pageSize.getHeight()
-      const margemPagina = 10
-      let larguraCartao = Math.min(170, larguraPagina - margemPagina * 2)
-      let alturaCartao = (canvas.height * larguraCartao) / canvas.width
-
-      if (alturaCartao > alturaPagina - margemPagina * 2) {
-        alturaCartao = alturaPagina - margemPagina * 2
-        larguraCartao = (canvas.width * alturaCartao) / canvas.height
-      }
-
-      const x = (larguraPagina - larguraCartao) / 2
-      const y = Math.max(margemPagina, (alturaPagina - alturaCartao) / 2)
-
-      pdf.addImage(imagem, 'PNG', x, y, larguraCartao, alturaCartao)
-      pdf.save(`cartao-aniversario-${limparNomeParaArquivo(aniversariante?.nome)}.pdf`)
-    } catch (error) {
-      console.error('Erro ao gerar PDF do cartão de aniversário:', error)
-      alert('Não foi possível gerar o PDF do cartão. Tente novamente.')
+    if (!canvas) {
+      return
     }
-  }
 
+    const imagem = canvas.toDataURL('image/png')
+    const larguraImagem = canvas.width
+    const alturaImagem = canvas.height
+
+    imprimirHtmlEmIframe(
+      `
+        <!doctype html>
+        <html lang="pt-BR">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Cartão de aniversário</title>
+            <style>
+              * {
+                box-sizing: border-box;
+              }
+
+              html,
+              body {
+                margin: 0;
+                padding: 0;
+                width: ${larguraImagem}px;
+                height: ${alturaImagem}px;
+                background: #ffffff;
+                overflow: hidden;
+              }
+
+              body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              img {
+                width: ${larguraImagem}px;
+                height: ${alturaImagem}px;
+                display: block;
+                object-fit: contain;
+              }
+
+              @media print {
+                @page {
+                  size: ${larguraImagem}px ${alturaImagem}px;
+                  margin: 0;
+                }
+
+                html,
+                body {
+                  width: ${larguraImagem}px;
+                  height: ${alturaImagem}px;
+                }
+
+                img {
+                  width: ${larguraImagem}px;
+                  height: ${alturaImagem}px;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <img src="${imagem}" alt="Cartão de aniversário" />
+          </body>
+        </html>
+      `,
+      'iframe-cartao-aniversario-individual'
+    )
+  } catch (error) {
+    console.error('Erro ao imprimir cartão de aniversário:', error)
+    alert('Não foi possível imprimir o cartão. Tente novamente.')
+  }
+}
   async function imprimirCartaoAniversario() {
     try {
       const canvas = await capturarCartaoAniversario()
