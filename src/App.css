@@ -27558,3 +27558,45 @@ html body #root .conteudo .dashboard-v41-circulo span {
 .janela-aniversariantes-selo {
   display: none !important;
 }
+/* =========================================================
+   EBD FIEL - REMOVE SOMBRA/BLUR EXCESSIVO DO MENU MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+  .app::before,
+  .app::after,
+  .menu-overlay,
+  .overlay-menu,
+  .sidebar-overlay,
+  .fundo-menu-mobile,
+  .menu-mobile-overlay,
+  .backdrop-menu,
+  .backdrop-sidebar {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    opacity: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .area-principal,
+  .conteudo,
+  .menu-lateral,
+  .sidebar,
+  .navegacao-lateral {
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  .menu-lateral {
+    box-shadow: 8px 0 24px rgba(15, 23, 42, 0.12) !important;
+  }
+
+  body,
+  #root,
+  .app {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
