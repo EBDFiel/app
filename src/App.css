@@ -28209,3 +28209,83 @@ html body #root .conteudo .dashboard-v41-circulo span {
     justify-content: center !important;
   }
 }
+/* =========================================================
+   EBD FIEL - AJUSTE DO INDICADOR DE FREQUÊNCIA DOS RELATÓRIOS
+   Troca a bolha circular por um card moderno e legível
+========================================================= */
+
+@media screen {
+  .pagina-relatorios .relatorios-hero .relatorios-percentual {
+    width: 190px !important;
+    height: auto !important;
+    min-height: 112px !important;
+    padding: 20px 22px !important;
+    border-radius: 24px !important;
+    display: grid !important;
+    align-content: center !important;
+    justify-items: start !important;
+    gap: 8px !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 246, 255, 0.92) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    box-shadow:
+      0 18px 38px rgba(15, 23, 42, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    color: #0f172a !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual::before {
+    content: 'Frequência' !important;
+    display: inline-flex !important;
+    width: fit-content !important;
+    padding: 5px 9px !important;
+    border-radius: 999px !important;
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual::after {
+    content: '' !important;
+    position: absolute !important;
+    right: -28px !important;
+    bottom: -30px !important;
+    width: 92px !important;
+    height: 92px !important;
+    border-radius: 999px !important;
+    background: rgba(14, 165, 233, 0.12) !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual strong {
+    color: #0f172a !important;
+    font-size: 44px !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.055em !important;
+    font-weight: 950 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual span {
+    color: #334155 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .pagina-relatorios .relatorios-hero .relatorios-percentual {
+    width: 100% !important;
+    min-height: 96px !important;
+    justify-items: start !important;
+  }
+}
