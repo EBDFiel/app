@@ -12500,6 +12500,152 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     )
   }
 
+  function renderizarMapaSistemaAdmin() {
+    const gruposMapaSistema = [
+      {
+        titulo: 'Área pública',
+        subtitulo: 'Entrada comercial e institucional do EBD Fiel.',
+        itens: [
+          'Página inicial pública',
+          'Recursos, Benefícios, Planos e Dúvidas',
+          'Entrada no sistema',
+          'Apresentação da plataforma',
+        ],
+      },
+      {
+        titulo: 'Acesso e cadastro',
+        subtitulo: 'Fluxos usados antes do usuário entrar no painel.',
+        itens: [
+          'Login',
+          'Recuperação de senha',
+          'Solicitação de cadastro da igreja',
+          'Cadastro enviado para análise',
+        ],
+      },
+      {
+        titulo: 'Secretaria',
+        subtitulo: 'Área principal de operação da EBD.',
+        itens: [
+          'Painel',
+          'Resumo geral',
+          'Classes',
+          'Alunos',
+          'Professores',
+          'Usuários',
+          'Chamada',
+        ],
+      },
+      {
+        titulo: 'Relatórios e acompanhamento',
+        subtitulo: 'Dados consolidados para gestão e impressão.',
+        itens: [
+          'Relatórios',
+          'Histórico do aluno',
+          'Frequência por classe',
+          'Aniversariantes da semana',
+          'Cartão de aniversário',
+        ],
+      },
+      {
+        titulo: 'Gestão interna',
+        subtitulo: 'Configurações e suporte da igreja.',
+        itens: [
+          'Financeiro',
+          'Segurança e auditoria',
+          'Manual do usuário',
+          'Configurações da igreja',
+          'Personalização para relatórios e PDFs',
+        ],
+      },
+      {
+        titulo: 'Administração do sistema',
+        subtitulo: 'Área restrita para controle geral da plataforma.',
+        itens: [
+          'Visão geral administrativa',
+          'Sugestões recebidas',
+          'Igrejas cadastradas',
+          'Auditoria',
+          'Diagnóstico',
+          'Mapa do sistema',
+        ],
+      },
+    ]
+
+    const fluxosMapaSistema = [
+      {
+        titulo: 'Cadastro de igreja',
+        passos: 'Solicitação pública → análise administrativa → liberação → primeiro acesso → completar dados internos.',
+      },
+      {
+        titulo: 'Chamada',
+        passos: 'Selecionar classe e data → marcar presença/falta → salvar → alimentar relatórios e frequência.',
+      },
+      {
+        titulo: 'Relatórios',
+        passos: 'Selecionar período ou turma → visualizar resumo → gerar impressão/PDF.',
+      },
+      {
+        titulo: 'Aniversariantes',
+        passos: 'Sistema identifica aniversariantes → usuário abre a lista → gera cartão → baixa, imprime ou compartilha.',
+      },
+    ]
+
+    return (
+      <div className="admin-mapa-sistema">
+        <div className="admin-mapa-cabecalho">
+          <span className="selo-admin">Mapa do sistema</span>
+          <h3>Estrutura atual do EBD Fiel</h3>
+          <p>
+            Visão administrativa das áreas públicas, telas internas, fluxos principais e páginas restritas do sistema.
+            Use este mapa para suporte, treinamento, manutenção e conferência de acesso.
+          </p>
+        </div>
+
+        <div className="admin-mapa-grid">
+          {gruposMapaSistema.map((grupo) => (
+            <article className="admin-mapa-card" key={grupo.titulo}>
+              <div>
+                <span className="admin-mapa-etiqueta">{grupo.itens.length} itens</span>
+                <h4>{grupo.titulo}</h4>
+                <p>{grupo.subtitulo}</p>
+              </div>
+
+              <ul>
+                {grupo.itens.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+
+        <div className="admin-mapa-fluxos">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Fluxos principais</span>
+            <h4>Como as áreas se conectam</h4>
+          </div>
+
+          <div className="admin-mapa-fluxos-grid">
+            {fluxosMapaSistema.map((fluxo) => (
+              <article className="admin-mapa-fluxo" key={fluxo.titulo}>
+                <strong>{fluxo.titulo}</strong>
+                <p>{fluxo.passos}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-mapa-observacao">
+          <strong>Observação técnica</strong>
+          <p>
+            Este mapa é visual e administrativo. Ele não altera Supabase, banco de dados, RLS, políticas,
+            autenticação ou permissões existentes.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   function renderizarAdministracao() {
     if (!usuarioEhAdminSistema()) {
       return (
@@ -12670,6 +12816,14 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           >
             Diagnóstico
           </button>
+
+          <button
+            type="button"
+            className={`admin-aba-botao ${abaAdministracao === 'mapa' ? 'ativo' : ''}`}
+            onClick={() => setAbaAdministracao('mapa')}
+          >
+            Mapa do sistema
+          </button>
         </div>
 
         {abaAdministracao === 'visao' && (
@@ -12730,6 +12884,20 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
                 onClick={() => setAbaAdministracao('auditoria')}
               >
                 Abrir auditoria
+              </button>
+            </article>
+
+            <article className="admin-visao-card admin-visao-card-mapa">
+              <span className="selo-admin">Estrutura</span>
+              <h3>Mapa do sistema</h3>
+              <strong>{PAGINAS_SISTEMA.length}</strong>
+              <p>páginas internas documentadas para suporte, treinamento e manutenção.</p>
+              <button
+                type="button"
+                className="botao-secundario"
+                onClick={() => setAbaAdministracao('mapa')}
+              >
+                Abrir mapa
               </button>
             </article>
 
@@ -12827,6 +12995,8 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           )}
         </div>
         )}
+
+        {abaAdministracao === 'mapa' && renderizarMapaSistemaAdmin()}
 
         {abaAdministracao === 'sugestoes' && renderizarAlertasFeedbackAdmin()}
 
