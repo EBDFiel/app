@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "docs:mapa": "node scripts/gerar-mapa-tecnico.cjs",
+    "prebuild": "node scripts/gerar-mapa-tecnico.cjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
