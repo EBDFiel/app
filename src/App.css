@@ -28289,3 +28289,393 @@ html body #root .conteudo .dashboard-v41-circulo span {
     justify-items: start !important;
   }
 }
+/* =========================================================
+   EBD FIEL - RELATÓRIOS V2
+   Melhorias visuais gerais da página Relatórios
+   Cole este bloco no FINAL do src/App.css
+   Não altera Supabase, banco, autenticação ou regras.
+========================================================= */
+
+@media screen {
+  .pagina-relatorios {
+    display: grid !important;
+    gap: 22px !important;
+    background:
+      radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 34%),
+      linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%) !important;
+  }
+
+  .pagina-relatorios .topo-pagina-interna {
+    align-items: center !important;
+    padding: 32px 36px !important;
+    border: 1px solid rgba(15, 78, 126, 0.08) !important;
+    border-radius: 28px !important;
+    background:
+      radial-gradient(circle at top right, rgba(245, 158, 11, 0.08), transparent 30%),
+      #ffffff !important;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  .pagina-relatorios .topo-pagina-interna h2 {
+    margin: 8px 0 8px !important;
+    color: #0f172a !important;
+    font-size: clamp(36px, 4vw, 54px) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.055em !important;
+  }
+
+  .pagina-relatorios .topo-pagina-interna p,
+  .pagina-relatorios .relatorio-orientacao span {
+    color: #475569 !important;
+    font-weight: 700 !important;
+  }
+
+  .pagina-relatorios .subtitulo-pagina-interna {
+    display: inline-flex !important;
+    width: fit-content !important;
+    padding: 8px 13px !important;
+    border-radius: 999px !important;
+    background: #eef6ff !important;
+    color: #164e87 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  .pagina-relatorios .relatorio-orientacao {
+    max-width: 330px !important;
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    text-align: right !important;
+  }
+
+  .pagina-relatorios .relatorios-dashboard {
+    display: grid !important;
+    gap: 16px !important;
+    margin: 0 !important;
+  }
+
+  .pagina-relatorios .relatorios-hero {
+    min-height: 152px !important;
+    align-items: center !important;
+    padding: 28px 34px !important;
+    border-radius: 28px !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    background:
+      radial-gradient(circle at 88% 50%, rgba(255, 255, 255, 0.2), transparent 28%),
+      linear-gradient(135deg, #0f3d91 0%, #2563eb 52%, #0ea5e9 100%) !important;
+    box-shadow: 0 22px 52px rgba(37, 99, 235, 0.2) !important;
+    color: #ffffff !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .selo-publico {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  }
+
+  .pagina-relatorios .relatorios-hero h3 {
+    margin: 10px 0 8px !important;
+    color: #ffffff !important;
+    font-size: clamp(25px, 2.4vw, 34px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .pagina-relatorios .relatorios-hero p {
+    max-width: 720px !important;
+    color: #dbeafe !important;
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+    font-weight: 700 !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual {
+    width: 190px !important;
+    height: auto !important;
+    min-height: 112px !important;
+    padding: 20px 22px !important;
+    border-radius: 24px !important;
+    display: grid !important;
+    align-content: center !important;
+    justify-items: start !important;
+    gap: 8px !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 246, 255, 0.92) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    box-shadow:
+      0 18px 38px rgba(15, 23, 42, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    color: #0f172a !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual::before {
+    content: 'Frequência' !important;
+    display: inline-flex !important;
+    width: fit-content !important;
+    padding: 5px 9px !important;
+    border-radius: 999px !important;
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual::after {
+    content: '' !important;
+    position: absolute !important;
+    right: -28px !important;
+    bottom: -30px !important;
+    width: 92px !important;
+    height: 92px !important;
+    border-radius: 999px !important;
+    background: rgba(14, 165, 233, 0.12) !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual strong {
+    color: #0f172a !important;
+    font-size: 44px !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.055em !important;
+    font-weight: 950 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual span {
+    color: #334155 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .pagina-relatorios .cards-relatorios-modernas {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin: 0 !important;
+  }
+
+  .pagina-relatorios .card-relatorio-moderna {
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 112px !important;
+    padding: 22px 22px 18px !important;
+    border-radius: 22px !important;
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    box-shadow: 0 16px 38px rgba(15, 23, 42, 0.07) !important;
+  }
+
+  .pagina-relatorios .card-relatorio-moderna::after {
+    content: '' !important;
+    position: absolute !important;
+    right: -28px !important;
+    bottom: -34px !important;
+    width: 96px !important;
+    height: 96px !important;
+    border-radius: 999px !important;
+    background: rgba(245, 158, 11, 0.13) !important;
+  }
+
+  .pagina-relatorios .card-relatorio-moderna span {
+    color: #334155 !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+  }
+
+  .pagina-relatorios .card-relatorio-moderna strong {
+    display: block !important;
+    margin: 4px 0 !important;
+    color: #0f172a !important;
+    font-size: 32px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .pagina-relatorios .card-relatorio-moderna p {
+    color: #64748b !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+
+  .pagina-relatorios .relatorio-professores-moderno,
+  .pagina-relatorios .relatorio-folha,
+  .pagina-relatorios .historico-chamadas-relatorio,
+  .pagina-relatorios .relatorio-acoes-rodape {
+    border-radius: 26px !important;
+    border: 1px solid #dbeafe !important;
+    background: #ffffff !important;
+    box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07) !important;
+  }
+
+  .pagina-relatorios .relatorio-professores-moderno,
+  .pagina-relatorios .historico-chamadas-relatorio {
+    padding: 26px 28px !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-professores h3 {
+    color: #0f172a !important;
+    font-size: clamp(24px, 2.1vw, 32px) !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .pagina-relatorios .grade-professores-resumo {
+    margin-top: 24px !important;
+    gap: 14px !important;
+  }
+
+  .pagina-relatorios .grade-professores-resumo > div {
+    padding: 18px !important;
+    border-radius: 18px !important;
+    background: #f8fbff !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .pagina-relatorios .relatorio-folha {
+    padding: 28px !important;
+    overflow: hidden !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-oficial {
+    padding-bottom: 18px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .pagina-relatorios .cabecalho-relatorio-oficial h3 {
+    color: #0f172a !important;
+    font-size: 22px !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .pagina-relatorios .tabela-ebd {
+    font-size: 12px !important;
+  }
+
+  .pagina-relatorios .tabela-ebd th,
+  .pagina-relatorios .tabela-ebd td {
+    padding: 9px 8px !important;
+  }
+
+  .pagina-relatorios .historico-chamadas-relatorio .aviso,
+  .pagina-relatorios .historico-chamadas-relatorio .mensagem-vazia {
+    border-radius: 18px !important;
+    border: 1px dashed #93c5fd !important;
+    background: #f8fbff !important;
+    color: #475569 !important;
+    font-weight: 700 !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-rodape {
+    display: grid !important;
+    grid-template-columns: minmax(230px, 0.78fr) minmax(0, 2fr) !important;
+    align-items: center !important;
+    gap: 22px !important;
+    padding: 26px 28px !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-rodape > div:first-child {
+    padding: 16px 18px !important;
+    border-radius: 18px !important;
+    background: #f8fbff !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-rodape strong {
+    display: block !important;
+    margin-bottom: 4px !important;
+    color: #0f172a !important;
+    font-size: 16px !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-rodape span {
+    color: #475569 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.35 !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes button {
+    min-height: 44px !important;
+    margin: 0 !important;
+    border-radius: 999px !important;
+    padding: 11px 18px !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes .botao-principal {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%) !important;
+    color: #111827 !important;
+    box-shadow: 0 12px 25px rgba(245, 158, 11, 0.28) !important;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .pagina-relatorios .cards-relatorios-modernas {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-rodape {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes {
+    justify-content: flex-start !important;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .pagina-relatorios .topo-pagina-interna {
+    padding: 22px !important;
+    text-align: left !important;
+  }
+
+  .pagina-relatorios .relatorio-orientacao {
+    max-width: 100% !important;
+    text-align: left !important;
+  }
+
+  .pagina-relatorios .relatorios-hero {
+    grid-template-columns: 1fr !important;
+    padding: 22px !important;
+  }
+
+  .pagina-relatorios .relatorios-hero .relatorios-percentual {
+    width: 100% !important;
+    min-height: 96px !important;
+    justify-items: start !important;
+  }
+
+  .pagina-relatorios .cards-relatorios-modernas {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagina-relatorios .relatorio-folha {
+    padding: 16px !important;
+  }
+
+  .pagina-relatorios .relatorio-acoes-botoes,
+  .pagina-relatorios .relatorio-acoes-botoes button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
