@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import './App.css'
 import { supabase } from './lib/supabase'
+import { MAPA_TECNICO_SISTEMA, montarMapaTecnicoMarkdown, montarMapaTecnicoTexto } from './data/mapaTecnicoSistema'
 
 const classesIniciais = [
   { id: 1, nome: 'Jovens', professor: 'Ev. Lucas' },
@@ -12500,147 +12501,309 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
     )
   }
 
-  function renderizarMapaSistemaAdmin() {
-    const gruposMapaSistema = [
-      {
-        titulo: 'Área pública',
-        subtitulo: 'Entrada comercial e institucional do EBD Fiel.',
-        itens: [
-          'Página inicial pública',
-          'Recursos, Benefícios, Planos e Dúvidas',
-          'Entrada no sistema',
-          'Apresentação da plataforma',
-        ],
-      },
-      {
-        titulo: 'Acesso e cadastro',
-        subtitulo: 'Fluxos usados antes do usuário entrar no painel.',
-        itens: [
-          'Login',
-          'Recuperação de senha',
-          'Solicitação de cadastro da igreja',
-          'Cadastro enviado para análise',
-        ],
-      },
-      {
-        titulo: 'Secretaria',
-        subtitulo: 'Área principal de operação da EBD.',
-        itens: [
-          'Painel',
-          'Resumo geral',
-          'Classes',
-          'Alunos',
-          'Professores',
-          'Usuários',
-          'Chamada',
-        ],
-      },
-      {
-        titulo: 'Relatórios e acompanhamento',
-        subtitulo: 'Dados consolidados para gestão e impressão.',
-        itens: [
-          'Relatórios',
-          'Histórico do aluno',
-          'Frequência por classe',
-          'Aniversariantes da semana',
-          'Cartão de aniversário',
-        ],
-      },
-      {
-        titulo: 'Gestão interna',
-        subtitulo: 'Configurações e suporte da igreja.',
-        itens: [
-          'Financeiro',
-          'Segurança e auditoria',
-          'Manual do usuário',
-          'Configurações da igreja',
-          'Personalização para relatórios e PDFs',
-        ],
-      },
-      {
-        titulo: 'Administração do sistema',
-        subtitulo: 'Área restrita para controle geral da plataforma.',
-        itens: [
-          'Visão geral administrativa',
-          'Sugestões recebidas',
-          'Igrejas cadastradas',
-          'Auditoria',
-          'Diagnóstico',
-          'Mapa do sistema',
-        ],
-      },
-    ]
 
-    const fluxosMapaSistema = [
-      {
-        titulo: 'Cadastro de igreja',
-        passos: 'Solicitação pública → análise administrativa → liberação → primeiro acesso → completar dados internos.',
-      },
-      {
-        titulo: 'Chamada',
-        passos: 'Selecionar classe e data → marcar presença/falta → salvar → alimentar relatórios e frequência.',
-      },
-      {
-        titulo: 'Relatórios',
-        passos: 'Selecionar período ou turma → visualizar resumo → gerar impressão/PDF.',
-      },
-      {
-        titulo: 'Aniversariantes',
-        passos: 'Sistema identifica aniversariantes → usuário abre a lista → gera cartão → baixa, imprime ou compartilha.',
-      },
-    ]
+  function baixarArquivoTexto(nomeArquivo, conteudo, tipo = 'text/plain;charset=utf-8') {
+    try {
+      const blob = new Blob([conteudo], { type: tipo })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.download = nomeArquivo
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Erro ao baixar arquivo do mapa técnico:', error)
+      alert('Não foi possível baixar o arquivo do mapa técnico.')
+    }
+  }
+
+  async function copiarMapaTecnicoParaIA() {
+    const conteudo = montarMapaTecnicoMarkdown()
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(conteudo)
+        alert('Mapa técnico copiado. Agora você pode colar esse conteúdo em outra IA.')
+        return
+      }
+
+      const campoTemporario = document.createElement('textarea')
+      campoTemporario.value = conteudo
+      campoTemporario.setAttribute('readonly', 'readonly')
+      campoTemporario.style.position = 'fixed'
+      campoTemporario.style.left = '-9999px'
+
+      document.body.appendChild(campoTemporario)
+      campoTemporario.select()
+      document.execCommand('copy')
+      campoTemporario.remove()
+
+      alert('Mapa técnico copiado. Agora você pode colar esse conteúdo em outra IA.')
+    } catch (error) {
+      console.error('Erro ao copiar mapa técnico:', error)
+      alert('Não foi possível copiar automaticamente. Use o botão de baixar arquivo.')
+    }
+  }
+
+  function baixarMapaTecnicoMarkdown() {
+    baixarArquivoTexto(
+      'mapa-tecnico-ebd-fiel.md',
+      montarMapaTecnicoMarkdown(),
+      'text/markdown;charset=utf-8'
+    )
+  }
+
+  function baixarMapaTecnicoTxt() {
+    baixarArquivoTexto(
+      'mapa-tecnico-ebd-fiel.txt',
+      montarMapaTecnicoTexto(),
+      'text/plain;charset=utf-8'
+    )
+  }
+
+  function renderizarMapaSistemaAdmin() {
+    const mapaTecnico = MAPA_TECNICO_SISTEMA
+    const totalPaginas = mapaTecnico.paginas.reduce(
+      (total, grupo) => total + grupo.itens.length,
+      0
+    )
+    const totalFluxos = mapaTecnico.fluxos.length
+    const totalArquivos = mapaTecnico.arquivosPrincipais.length
 
     return (
-      <div className="admin-mapa-sistema">
-        <div className="admin-mapa-cabecalho">
-          <span className="selo-admin">Mapa do sistema</span>
-          <h3>Estrutura atual do EBD Fiel</h3>
+      <div className="admin-mapa-sistema admin-mapa-tecnico-vivo">
+        <div className="admin-mapa-cabecalho admin-mapa-tecnico-hero">
+          <span className="selo-admin">Mapa técnico vivo</span>
+          <h3>{mapaTecnico.titulo}</h3>
           <p>
-            Visão administrativa das áreas públicas, telas internas, fluxos principais e páginas restritas do sistema.
-            Use este mapa para suporte, treinamento, manutenção e conferência de acesso.
+            Documento único de continuidade técnica para manutenção do EBD Fiel.
+            Esta área foi criada para que outra IA, desenvolvedor ou suporte consiga entender
+            a estrutura do sistema antes de alterar o código.
           </p>
+
+          <div className="admin-mapa-tecnico-acoes">
+            <button type="button" className="botao-principal" onClick={copiarMapaTecnicoParaIA}>
+              Copiar para outra IA
+            </button>
+            <button type="button" className="botao-secundario" onClick={baixarMapaTecnicoMarkdown}>
+              Baixar Markdown
+            </button>
+            <button type="button" className="botao-secundario" onClick={baixarMapaTecnicoTxt}>
+              Baixar TXT
+            </button>
+            <a
+              className="botao-secundario link-botao-publico"
+              href="/docs/mapa-tecnico-ebd-fiel.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Abrir arquivo gerado
+            </a>
+          </div>
+
+          <div className="admin-mapa-tecnico-status">
+            <span>Atualizado em: <strong>{mapaTecnico.atualizadoEm}</strong></span>
+            <span>Versão do mapa: <strong>{mapaTecnico.versaoMapa}</strong></span>
+            <span>Geração automática: <strong>npm run build</strong></span>
+          </div>
         </div>
 
-        <div className="admin-mapa-grid">
-          {gruposMapaSistema.map((grupo) => (
-            <article className="admin-mapa-card" key={grupo.titulo}>
-              <div>
-                <span className="admin-mapa-etiqueta">{grupo.itens.length} itens</span>
-                <h4>{grupo.titulo}</h4>
-                <p>{grupo.subtitulo}</p>
-              </div>
+        <div className="admin-mapa-tecnico-resumo">
+          <article>
+            <strong>{totalPaginas}</strong>
+            <span>páginas/telas documentadas</span>
+          </article>
+          <article>
+            <strong>{totalFluxos}</strong>
+            <span>fluxos principais</span>
+          </article>
+          <article>
+            <strong>{totalArquivos}</strong>
+            <span>arquivos principais</span>
+          </article>
+          <article>
+            <strong>{mapaTecnico.bancoDados.tabelas.length}</strong>
+            <span>tabelas Supabase mapeadas</span>
+          </article>
+        </div>
 
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Projeto</span>
+            <h4>Ambiente, publicação e comandos</h4>
+          </div>
+
+          <div className="admin-mapa-grid">
+            <article className="admin-mapa-card">
+              <h4>Identificação</h4>
               <ul>
-                {grupo.itens.map((item) => (
+                <li>Projeto: {mapaTecnico.projeto.nome}</li>
+                <li>Domínio: {mapaTecnico.projeto.dominio}</li>
+                <li>Stack: {mapaTecnico.projeto.stack}</li>
+                <li>Deploy: {mapaTecnico.projeto.deploy}</li>
+                <li>Repositório: {mapaTecnico.projeto.repositorio}</li>
+              </ul>
+            </article>
+
+            <article className="admin-mapa-card">
+              <h4>Ambiente local</h4>
+              <ul>
+                {mapaTecnico.ambienteLocal.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </article>
-          ))}
+
+            <article className="admin-mapa-card">
+              <h4>Comandos principais</h4>
+              <ul>
+                {mapaTecnico.comandos.map((comando) => (
+                  <li key={comando.comando}>
+                    <code>{comando.comando}</code> — {comando.descricao}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
         </div>
 
-        <div className="admin-mapa-fluxos">
+        <div className="admin-mapa-tecnico-bloco">
           <div className="admin-mapa-secao-titulo">
-            <span className="selo-admin">Fluxos principais</span>
-            <h4>Como as áreas se conectam</h4>
+            <span className="selo-admin">Páginas</span>
+            <h4>Estrutura pública, interna e administrativa</h4>
           </div>
 
-          <div className="admin-mapa-fluxos-grid">
-            {fluxosMapaSistema.map((fluxo) => (
-              <article className="admin-mapa-fluxo" key={fluxo.titulo}>
-                <strong>{fluxo.titulo}</strong>
-                <p>{fluxo.passos}</p>
+          <div className="admin-mapa-grid">
+            {mapaTecnico.paginas.map((grupo) => (
+              <article className="admin-mapa-card" key={grupo.titulo}>
+                <div>
+                  <span className="admin-mapa-etiqueta">{grupo.itens.length} itens</span>
+                  <h4>{grupo.titulo}</h4>
+                  <p>{grupo.descricao}</p>
+                </div>
+
+                <ul>
+                  {grupo.itens.map((item) => (
+                    <li key={item.nome}>
+                      <strong>{item.nome}</strong>: {item.finalidade}
+                    </li>
+                  ))}
+                </ul>
               </article>
             ))}
           </div>
         </div>
 
-        <div className="admin-mapa-observacao">
-          <strong>Observação técnica</strong>
-          <p>
-            Este mapa é visual e administrativo. Ele não altera Supabase, banco de dados, RLS, políticas,
-            autenticação ou permissões existentes.
-          </p>
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Fluxos</span>
+            <h4>Como as áreas se conectam</h4>
+          </div>
+
+          <div className="admin-mapa-fluxos-grid">
+            {mapaTecnico.fluxos.map((fluxo) => (
+              <article className="admin-mapa-fluxo" key={fluxo.titulo}>
+                <strong>{fluxo.titulo}</strong>
+                <p>{fluxo.descricao}</p>
+                <ol>
+                  {fluxo.passos.map((passo) => (
+                    <li key={passo}>{passo}</li>
+                  ))}
+                </ol>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Supabase</span>
+            <h4>Banco, autenticação e cuidados</h4>
+          </div>
+
+          <div className="admin-mapa-grid">
+            <article className="admin-mapa-card">
+              <h4>Tabelas citadas no sistema</h4>
+              <ul>
+                {mapaTecnico.bancoDados.tabelas.map((tabela) => (
+                  <li key={tabela}>
+                    <code>{tabela}</code>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="admin-mapa-card">
+              <h4>RPCs e funções</h4>
+              <ul>
+                {mapaTecnico.bancoDados.rpcs.map((rpc) => (
+                  <li key={rpc}>
+                    <code>{rpc}</code>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="admin-mapa-card">
+              <h4>Variáveis de ambiente</h4>
+              <ul>
+                {mapaTecnico.bancoDados.variaveisAmbiente.map((variavel) => (
+                  <li key={variavel}>
+                    <code>{variavel}</code>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Arquivos</span>
+            <h4>Onde mexer e onde evitar alterações arriscadas</h4>
+          </div>
+
+          <div className="admin-mapa-grid">
+            {mapaTecnico.arquivosPrincipais.map((arquivo) => (
+              <article className="admin-mapa-card" key={arquivo.caminho}>
+                <h4><code>{arquivo.caminho}</code></h4>
+                <p>{arquivo.descricao}</p>
+                <ul>
+                  {arquivo.cuidados.map((cuidado) => (
+                    <li key={cuidado}>{cuidado}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Regras de segurança</span>
+            <h4>Orientações para outra IA ou desenvolvedor</h4>
+          </div>
+
+          <div className="admin-mapa-observacao">
+            <strong>Antes de alterar o sistema</strong>
+            <ul>
+              {mapaTecnico.regrasDeOuro.map((regra) => (
+                <li key={regra}>{regra}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="admin-mapa-tecnico-bloco">
+          <div className="admin-mapa-secao-titulo">
+            <span className="selo-admin">Prompt pronto</span>
+            <h4>Texto para colar em outra IA</h4>
+          </div>
+
+          <pre className="admin-mapa-tecnico-prompt">{mapaTecnico.promptParaOutraIA}</pre>
         </div>
       </div>
     )
