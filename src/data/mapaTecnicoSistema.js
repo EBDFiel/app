@@ -1,8 +1,8 @@
 export const MAPA_TECNICO_SISTEMA = {
   titulo: 'Mapa técnico completo do EBD Fiel',
   subtitulo: 'Documento de continuidade técnica para manutenção do sistema por outra IA, desenvolvedor ou suporte.',
-  atualizadoEm: '20/06/2026',
-  versaoMapa: '1.0.0',
+  atualizadoEm: '27/06/2026',
+  versaoMapa: '1.0.1',
   projeto: {
     nome: 'EBD Fiel / Secretaria EBD Fiel',
     dominio: 'https://app.ebdfiel.com.br',
@@ -15,7 +15,7 @@ export const MAPA_TECNICO_SISTEMA = {
   },
   ambienteLocal: [
     'O projeto local fica em C:\\Users\\user\\OneDrive\\Documents\\ebdfiel-app-github.',
-    'A pasta principal contém .git, public, src, package.json, vite.config.js, index.html e node_modules.',
+    'A pasta principal contém .git, public, src, package.json, vite.config.js, index.html e node_modules. O index.html concentra as metatags públicas de SEO, compartilhamento e PWA do app.',
     'O app é uma SPA. A maioria das telas é controlada por estado interno no App.jsx, não por rotas separadas.',
     'As variáveis locais do Supabase ficam em .env.local e não devem ser enviadas ao GitHub.',
     'O arquivo .env.local deve conter VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.',
@@ -26,8 +26,8 @@ export const MAPA_TECNICO_SISTEMA = {
     { comando: 'npm.cmd run preview', descricao: 'pré-visualiza o build localmente.' },
     { comando: 'npm.cmd run docs:mapa', descricao: 'gera manualmente os arquivos public/docs/mapa-tecnico-ebd-fiel.md e .txt.' },
     { comando: 'git status', descricao: 'mostra arquivos alterados antes do commit.' },
-    { comando: 'git add src/App.jsx src/App.css src/data/mapaTecnicoSistema.js scripts/gerar-mapa-tecnico.cjs package.json', descricao: 'adiciona os arquivos desta atualização.' },
-    { comando: 'git commit -m "Atualiza mapa tecnico vivo do sistema"', descricao: 'salva a atualização no Git.' },
+    { comando: 'git add index.html public/manifest.webmanifest public/favicon.ico public/favicon.png public/apple-touch-icon.png public/preview-ebdfiel-app.png public/icons src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt', descricao: 'adiciona os arquivos de miniatura, ícones, PWA e mapa técnico desta atualização.' },
+    { comando: 'git commit -m "Corrige miniatura e icones do app"', descricao: 'salva a atualização no Git.' },
     { comando: 'git push origin main', descricao: 'envia para o GitHub e aciona o deploy na Vercel.' },
   ],
   paginas: [
@@ -176,6 +176,24 @@ export const MAPA_TECNICO_SISTEMA = {
   },
   arquivosPrincipais: [
     {
+      caminho: 'index.html',
+      descricao: 'Arquivo HTML base do Vite. Define título, descrição, favicon, manifest, tags Open Graph/Twitter e metadados usados para miniatura de compartilhamento e atalho mobile.',
+      cuidados: [
+        'Manter og:image e twitter:image apontando para imagem absoluta em https://app.ebdfiel.com.br/.',
+        'Evitar duplicar tags twitter:image ou og:image com imagens diferentes, pois isso pode confundir WhatsApp, Facebook, Twitter/X e navegadores.',
+        'Após alterar miniatura ou ícones, publicar na Vercel e testar compartilhamento em WhatsApp/Telegram e atalho na tela inicial do celular.',
+      ],
+    },
+    {
+      caminho: 'public/manifest.webmanifest e public/icons',
+      descricao: 'Arquivos públicos usados pelo navegador para instalar/adicionar o app à tela inicial com nome, tema e ícones corretos.',
+      cuidados: [
+        'Manter ícones 192x192, 512x512 e maskable em public/icons.',
+        'Manter apple-touch-icon.png e favicon.png na pasta public para compatibilidade com iPhone, Android e navegadores.',
+        'Quando trocar ícones, usar query string ou novo nome de arquivo para vencer cache dos celulares.',
+      ],
+    },
+    {
       caminho: 'src/App.jsx',
       descricao: 'Arquivo principal do sistema. Concentra estados, renderização de páginas, fluxo de autenticação, carregamento de dados, administração, chamada, relatórios e aniversariantes.',
       cuidados: [
@@ -248,7 +266,7 @@ export const MAPA_TECNICO_SISTEMA = {
   ],
   regrasDeOuro: [
     'Nunca mexer em Supabase, RLS, policies, tabelas ou RPCs sem necessidade real e sem backup.',
-    'Sempre rodar npm.cmd run build antes de publicar.',
+    'Sempre rodar npm.cmd run build antes de publicar. Para mudanças em index.html/public, conferir também se a miniatura e os ícones carregam pela URL pública.',
     'Sempre testar em desktop e mobile depois de alterar App.jsx ou App.css.',
     'Manter o mapa técnico atualizado quando criar página, botão, fluxo, tabela ou regra nova.',
     'Não apagar funções aparentemente antigas sem verificar se algum JSX ainda chama essas funções.',
