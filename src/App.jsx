@@ -4454,7 +4454,7 @@ EBD Fiel â€” Fiel à Palavra, organizado para servir melhor.`
         <body>
           <main class="folha-extra">
             <div class="cabecalho-extra">
-              <img src="/logoplataformaebd.png" alt="Logo EBD Fiel" />
+              <img src="/logo-ebd-fiel.png" alt="Logo EBD Fiel" />
               <h1>${escaparHtmlRelatorio(nomeIgreja)}</h1>
               ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
               ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
@@ -5162,7 +5162,7 @@ EBD Fiel â€” Fiel à Palavra, organizado para servir melhor.`
     return `
       <div class="relatorio-folha relatorio-folha-em-branco">
         <div class="cabecalho-relatorio">
-          <img src="/logoplataformaebd.png" alt="Logo EBD Fiel" class="logo-relatorio" />
+          <img src="/logo-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
           <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
           ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
           ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
@@ -5405,7 +5405,7 @@ EBD Fiel â€” Fiel à Palavra, organizado para servir melhor.`
         return `
           <section class="folha-chamada-classe">
             <div class="cabecalho-relatorio cabecalho-chamada-classe">
-              <img src="/logoplataformaebd.png" alt="Logo EBD Fiel" class="logo-relatorio" />
+              <img src="/logo-ebd-fiel.png" alt="Logo EBD Fiel" class="logo-relatorio" />
               <h3>${escaparHtmlRelatorio(nomeIgreja)}</h3>
               ${configuracaoIgreja.congregacao ? `<p>${escaparHtmlRelatorio(configuracaoIgreja.congregacao)}</p>` : ''}
               ${configuracaoIgreja.pastor_dirigente ? `<p>Dirigente: ${escaparHtmlRelatorio(configuracaoIgreja.pastor_dirigente)}</p>` : ''}
@@ -6634,7 +6634,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -6673,7 +6673,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -6751,7 +6751,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -6828,7 +6828,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -6899,7 +6899,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -7351,7 +7351,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -7495,7 +7495,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             <div className="logo logo-com-imagem-oficial">
               <div className="logo-icon logo-icon-oficial">
                 <img
-                  src="/logoplataformaebd.png"
+                  src="/logo-ebd-fiel.png"
                   alt="Logo oficial EBD Fiel"
                   className="logo-oficial-navbar"
                 />
@@ -7857,7 +7857,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -7887,7 +7887,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -7932,7 +7932,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
           <div className="marca-login">
             <div className="logo-simbolo">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-imagem"
               />
@@ -11494,7 +11494,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
           <div className="cabecalho-relatorio cabecalho-relatorio-oficial">
             <div className="cabecalho-relatorio-marca">
               <img
-                src="/logoplataformaebd.png"
+                src="/logo-ebd-fiel.png"
                 alt="Logo EBD Fiel"
                 className="logo-relatorio"
               />
@@ -14286,7 +14286,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="marca-mobile-interna">
           <div className="logo-simbolo logo-simbolo-sidebar">
             <img
-              src="/logoplataformaebd.png"
+              src="/logo-ebd-fiel.png"
               alt="Logo EBD Fiel"
               className="logo-imagem"
             />
@@ -14327,7 +14327,7 @@ ${conteudoCartao.assinaturaLinha1} ${conteudoCartao.assinaturaLinha2}`
         <div className="marca-sidebar">
           <div className="logo-simbolo logo-simbolo-sidebar">
             <img
-              src="/logoplataformaebd.png"
+              src="/logo-ebd-fiel.png"
               alt="Logo EBD Fiel"
               className="logo-imagem"
             />

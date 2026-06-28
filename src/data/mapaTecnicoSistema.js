@@ -423,3 +423,6 @@ export function montarMapaTecnicoTexto(mapa = MAPA_TECNICO_SISTEMA) {
 }
 
 // Atualização visual v2 (28/06/2026): refinamento da página pública e login desktop/mobile sem alteração de funcionamento.
+
+
+// Atualização visual v2.2 - logo redonda: App.jsx usa /logo-ebd-fiel.png no login/home; App.css remove moldura/sombra da logo.

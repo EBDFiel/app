@@ -30902,3 +30902,77 @@ body {
     line-height: 1.28 !important;
   }
 }
+
+
+/* =========================================================
+   EBD FIEL - LOGO REDONDA OFICIAL V2.2
+   Usa /logo-ebd-fiel.png e remove qualquer quadro visual.
+   Mantém apenas a imagem circular transparente.
+========================================================= */
+
+.logo-simbolo,
+.logo-icon-oficial,
+.marca-login .logo-simbolo,
+.painel-login-v70 .marca-login .logo-simbolo,
+.tela-login-v70 .marca-login .logo-simbolo,
+.login-apresentacao .logo-simbolo {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+img[src*="logo-ebd-fiel.png"],
+.logo-imagem[src*="logo-ebd-fiel.png"],
+.logo-oficial-navbar[src*="logo-ebd-fiel.png"] {
+  display: block !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  object-fit: contain !important;
+}
+
+.marca-login img[src*="logo-ebd-fiel.png"],
+.painel-login-v70 .marca-login img[src*="logo-ebd-fiel.png"],
+.tela-login-v70 .marca-login img[src*="logo-ebd-fiel.png"] {
+  width: 132px !important;
+  height: 132px !important;
+  min-width: 132px !important;
+  min-height: 132px !important;
+  max-width: 132px !important;
+  max-height: 132px !important;
+}
+
+.logo-oficial-navbar[src*="logo-ebd-fiel.png"],
+.navbar img[src*="logo-ebd-fiel.png"] {
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  max-width: 54px !important;
+}
+
+@media (max-width: 760px) {
+  .marca-login img[src*="logo-ebd-fiel.png"],
+  .painel-login-v70 .marca-login img[src*="logo-ebd-fiel.png"],
+  .tela-login-v70 .marca-login img[src*="logo-ebd-fiel.png"] {
+    width: 112px !important;
+    height: 112px !important;
+    min-width: 112px !important;
+    min-height: 112px !important;
+    max-width: 112px !important;
+    max-height: 112px !important;
+  }
+
+  .marca-login {
+    align-items: center !important;
+    gap: 18px !important;
+  }
+}
