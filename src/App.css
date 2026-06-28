@@ -31995,3 +31995,48 @@ img[src*="logo-ebd-fiel.png"],
     width: 100%;
   }
 }
+
+/* Hotfix v3.1 - centraliza visualmente a logo da barra pública */
+.landing-pro-brand {
+  align-items: center !important;
+}
+
+.landing-pro-brand-mark {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  box-shadow: 0 10px 22px rgba(8, 27, 52, 0.14) !important;
+  transform: translateY(1px);
+}
+
+.landing-pro-brand-mark img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  border-radius: 50% !important;
+  margin: 0 !important;
+}
+
+.landing-pro-brand-text {
+  align-self: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 720px) {
+  .landing-pro-brand {
+    gap: 10px !important;
+  }
+
+  .landing-pro-brand-mark {
+    width: 46px !important;
+    height: 46px !important;
+    transform: translateY(0);
+  }
+}
