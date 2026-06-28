@@ -2,7 +2,7 @@ export const MAPA_TECNICO_SISTEMA = {
   titulo: 'Mapa técnico completo do EBD Fiel',
   subtitulo: 'Documento de continuidade técnica para manutenção do sistema por outra IA, desenvolvedor ou suporte.',
   atualizadoEm: '27/06/2026',
-  versaoMapa: '1.0.1',
+  versaoMapa: '1.0.2',
   projeto: {
     nome: 'EBD Fiel / Secretaria EBD Fiel',
     dominio: 'https://app.ebdfiel.com.br',
@@ -26,8 +26,8 @@ export const MAPA_TECNICO_SISTEMA = {
     { comando: 'npm.cmd run preview', descricao: 'pré-visualiza o build localmente.' },
     { comando: 'npm.cmd run docs:mapa', descricao: 'gera manualmente os arquivos public/docs/mapa-tecnico-ebd-fiel.md e .txt.' },
     { comando: 'git status', descricao: 'mostra arquivos alterados antes do commit.' },
-    { comando: 'git add index.html public/manifest.webmanifest public/favicon.ico public/favicon.png public/apple-touch-icon.png public/preview-ebdfiel-app.png public/icons src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt', descricao: 'adiciona os arquivos de miniatura, ícones, PWA e mapa técnico desta atualização.' },
-    { comando: 'git commit -m "Corrige miniatura e icones do app"', descricao: 'salva a atualização no Git.' },
+    { comando: 'git add index.html public/manifest.webmanifest public/favicon.ico public/favicon.png public/apple-touch-icon.png public/preview-ebdfiel-whatsapp.jpg public/preview-ebdfiel-app.png public/icons src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt', descricao: 'adiciona os arquivos de miniatura reforçada para WhatsApp, ícones, PWA e mapa técnico desta atualização.' },
+    { comando: 'git commit -m "Reforca miniatura e icones do app"', descricao: 'salva a atualização no Git.' },
     { comando: 'git push origin main', descricao: 'envia para o GitHub e aciona o deploy na Vercel.' },
   ],
   paginas: [
@@ -179,16 +179,16 @@ export const MAPA_TECNICO_SISTEMA = {
       caminho: 'index.html',
       descricao: 'Arquivo HTML base do Vite. Define título, descrição, favicon, manifest, tags Open Graph/Twitter e metadados usados para miniatura de compartilhamento e atalho mobile.',
       cuidados: [
-        'Manter og:image e twitter:image apontando para imagem absoluta em https://app.ebdfiel.com.br/.',
-        'Evitar duplicar tags twitter:image ou og:image com imagens diferentes, pois isso pode confundir WhatsApp, Facebook, Twitter/X e navegadores.',
-        'Após alterar miniatura ou ícones, publicar na Vercel e testar compartilhamento em WhatsApp/Telegram e atalho na tela inicial do celular.',
+        'Manter og:image e twitter:image apontando para imagem absoluta em https://app.ebdfiel.com.br/preview-ebdfiel-whatsapp.jpg, no padrão 1200x630 em JPEG para melhor compatibilidade com WhatsApp.',
+        'Evitar duplicar tags twitter:image ou og:image com imagens diferentes ou com parâmetros desnecessários, pois isso pode confundir WhatsApp, Facebook, Twitter/X e navegadores.',
+        'Após alterar miniatura ou ícones, publicar na Vercel e testar URLs públicas, compartilhamento em WhatsApp/Telegram e atalho na tela inicial do celular. No WhatsApp, testar também em conversa nova por causa do cache.',
       ],
     },
     {
       caminho: 'public/manifest.webmanifest e public/icons',
       descricao: 'Arquivos públicos usados pelo navegador para instalar/adicionar o app à tela inicial com nome, tema e ícones corretos.',
       cuidados: [
-        'Manter ícones 192x192, 512x512 e maskable em public/icons.',
+        'Manter ícones 192x192, 512x512 e maskable em public/icons, além de apple-touch-icon.png 180x180 para iPhone/Safari.',
         'Manter apple-touch-icon.png e favicon.png na pasta public para compatibilidade com iPhone, Android e navegadores.',
         'Quando trocar ícones, usar query string ou novo nome de arquivo para vencer cache dos celulares.',
       ],
