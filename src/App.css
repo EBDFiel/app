@@ -34102,3 +34102,670 @@ html body #root [class*="selo"] {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+
+/* =========================================================
+   V8 - REDESIGN INTERNO EBD FIEL
+   Foco: logo sem corte, sidebar navy, contraste e mobile compacto.
+   ========================================================= */
+
+:root {
+  --v8-navy-950: #06111f;
+  --v8-navy-900: #071a2f;
+  --v8-navy-850: #0a2747;
+  --v8-blue: #0b78ff;
+  --v8-cyan: #20d7ef;
+  --v8-gold: #ffb51b;
+  --v8-gold-2: #ffd166;
+  --v8-green: #18c77a;
+  --v8-white: #ffffff;
+  --v8-soft: #d7ecff;
+  --v8-muted: #9fb7ce;
+  --v8-border: rgba(255,255,255,.14);
+  --v8-panel: rgba(8, 24, 43, .92);
+  --v8-panel-2: rgba(9, 34, 61, .88);
+  --v8-glow: 0 22px 60px rgba(0, 174, 239, .22);
+  --v8-gold-shadow: 0 16px 34px rgba(255, 181, 27, .28);
+}
+
+html body #root .app {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(32, 215, 239, .18), transparent 28%),
+    radial-gradient(circle at 86% 8%, rgba(255, 181, 27, .16), transparent 26%),
+    linear-gradient(135deg, var(--v8-navy-950) 0%, var(--v8-navy-900) 52%, #0c3158 100%) !important;
+}
+
+/* ===== Sidebar desktop: logo redonda e sem sobreposição ===== */
+html body #root .menu-lateral {
+  width: 292px !important;
+  min-width: 292px !important;
+  max-width: 292px !important;
+  padding: 18px 18px 22px !important;
+  background:
+    radial-gradient(circle at 18% 4%, rgba(255, 181, 27, .18), transparent 26%),
+    radial-gradient(circle at 90% 24%, rgba(32, 215, 239, .16), transparent 30%),
+    linear-gradient(180deg, #06111f 0%, #071a2f 50%, #04101d 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, .10) !important;
+  box-shadow: 22px 0 70px rgba(0, 0, 0, .30) !important;
+  overflow-x: hidden !important;
+}
+
+html body #root .marca-sidebar,
+html body #root .menu-lateral .marca-sidebar,
+html body #root aside.menu-lateral .marca-sidebar {
+  display: grid !important;
+  grid-template-columns: 66px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 14px !important;
+  min-height: 78px !important;
+  width: 100% !important;
+  padding: 6px 2px 18px !important;
+  margin: 0 0 14px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .14) !important;
+  overflow: visible !important;
+}
+
+html body #root .marca-sidebar > div:not(.logo-simbolo):not(.logo-simbolo-sidebar) {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+html body #root .marca-sidebar h1,
+html body #root .menu-lateral .marca-sidebar h1 {
+  color: var(--v8-white) !important;
+  -webkit-text-fill-color: var(--v8-white) !important;
+  background: none !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 23px !important;
+  line-height: 1 !important;
+  letter-spacing: -.02em !important;
+  margin: 0 0 5px !important;
+  white-space: nowrap !important;
+  text-shadow: 0 4px 14px rgba(0,0,0,.32) !important;
+}
+
+html body #root .marca-sidebar p,
+html body #root .menu-lateral .marca-sidebar p {
+  color: var(--v8-gold-2) !important;
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  letter-spacing: .02em !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html body #root .logo-simbolo-sidebar,
+html body #root .marca-sidebar .logo-simbolo,
+html body #root .marca-sidebar .logo-simbolo-sidebar {
+  width: 66px !important;
+  height: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 2px solid rgba(255, 209, 102, .50) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .34), 0 0 0 5px rgba(32, 215, 239, .10) !important;
+  overflow: visible !important;
+  display: block !important;
+  flex: 0 0 auto !important;
+}
+
+html body #root .logo-simbolo-sidebar img,
+html body #root .marca-sidebar .logo-imagem,
+html body #root img.logo-imagem {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  border-radius: 50% !important;
+  transform: none !important;
+  filter: none !important;
+  display: block !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html body #root .area-principal {
+  margin-left: 292px !important;
+  width: calc(100% - 292px) !important;
+  min-height: 100vh !important;
+  padding: 30px 32px !important;
+  background:
+    radial-gradient(circle at 78% 3%, rgba(255, 181, 27, .18), transparent 25%),
+    radial-gradient(circle at 14% 7%, rgba(32, 215, 239, .15), transparent 28%),
+    linear-gradient(135deg, #07111f 0%, #09213b 45%, #0c3158 100%) !important;
+}
+
+/* ===== Menu com contraste forte ===== */
+html body #root .menu-navegacao {
+  display: grid !important;
+  gap: 9px !important;
+}
+
+html body #root .menu-navegacao button,
+html body #root aside.menu-lateral nav.menu-navegacao button {
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+  color: #f8fbff !important;
+  opacity: 1 !important;
+  font-weight: 850 !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-navegacao button *,
+html body #root aside.menu-lateral nav.menu-navegacao button * {
+  color: inherit !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-navegacao button .icone-menu {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(255,255,255,.96) !important;
+  color: #0976df !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.16) !important;
+}
+
+html body #root .menu-navegacao button.ativo {
+  color: #06111f !important;
+  background: linear-gradient(135deg, var(--v8-gold) 0%, #ff9d00 100%) !important;
+  border-color: rgba(255, 209, 102, .72) !important;
+  box-shadow: var(--v8-gold-shadow) !important;
+}
+
+html body #root .menu-navegacao button.ativo .icone-menu {
+  background: rgba(255,255,255,.72) !important;
+  color: #06111f !important;
+}
+
+html body #root .cartao-usuario-sidebar {
+  background: rgba(255,255,255,.10) !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  color: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 15px !important;
+  margin-top: 16px !important;
+}
+html body #root .cartao-usuario-sidebar * { color: #ffffff !important; opacity: 1 !important; }
+html body #root .selo-perfil-sidebar {
+  display: inline-flex !important;
+  width: fit-content !important;
+  color: #06111f !important;
+  background: linear-gradient(135deg, var(--v8-gold), #ffd166) !important;
+  border: none !important;
+}
+html body #root .botao-sair-sidebar { color: #06111f !important; background: #ffffff !important; }
+html body #root .botao-sair-sidebar * { color: #06111f !important; }
+
+/* ===== Páginas internas com cara de ebdfiel.com.br ===== */
+html body #root .conteudo,
+html body #root main.conteudo,
+html body #root .conteudo-admin-comercial,
+html body #root .pagina-interna,
+html body #root .secao-configuracoes {
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 34px !important;
+  padding: 28px !important;
+  box-shadow: 0 26px 80px rgba(0,0,0,.22) !important;
+}
+
+html body #root .topo-pagina,
+html body #root .topo-admin-sistema,
+html body #root .dashboard-v41-hero,
+html body #root .hero-painel,
+html body #root .cabecalho-painel,
+html body #root .cabecalho-pagina {
+  background:
+    radial-gradient(circle at 90% 18%, rgba(255, 181, 27, .28), transparent 27%),
+    linear-gradient(135deg, #06418a 0%, #0b78ff 48%, #20d7ef 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: 30px !important;
+  padding: clamp(24px, 4vw, 46px) !important;
+  box-shadow: var(--v8-glow) !important;
+}
+
+html body #root .topo-pagina *,
+html body #root .topo-admin-sistema *,
+html body #root .dashboard-v41-hero *,
+html body #root .hero-painel *,
+html body #root .cabecalho-painel *,
+html body #root .cabecalho-pagina * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+html body #root .topo-pagina h1,
+html body #root .topo-pagina h2,
+html body #root .topo-admin-sistema h1,
+html body #root .topo-admin-sistema h2,
+html body #root .dashboard-v41-hero h1,
+html body #root .dashboard-v41-hero h2,
+html body #root .hero-painel h1,
+html body #root .hero-painel h2 {
+  font-size: clamp(42px, 5.1vw, 72px) !important;
+  line-height: .96 !important;
+  letter-spacing: -.065em !important;
+  text-shadow: 0 12px 34px rgba(0,0,0,.25) !important;
+}
+
+html body #root .topo-admin-sistema .botao-principal,
+html body #root .topo-pagina .botao-principal,
+html body #root .dashboard-v41-hero .botao-principal,
+html body #root .hero-painel .botao-principal {
+  color: #06111f !important;
+  background: linear-gradient(135deg, var(--v8-gold) 0%, #ff9d00 100%) !important;
+  border: none !important;
+  box-shadow: var(--v8-gold-shadow) !important;
+}
+
+html body #root .card,
+html body #root .card-admin,
+html body #root .admin-visao-card,
+html body #root .admin-visao-card-mapa,
+html body #root .admin-mapa-card,
+html body #root .dashboard-v41-bloco,
+html body #root .item-lista,
+html body #root .alerta-aniversariantes,
+html body #root .personalizacao-card {
+  background:
+    radial-gradient(circle at 100% 100%, rgba(255,181,27,.13), transparent 28%),
+    linear-gradient(145deg, rgba(255,255,255,.96) 0%, rgba(239,250,255,.94) 100%) !important;
+  border: 1px solid rgba(32, 215, 239, .20) !important;
+  border-bottom: 4px solid rgba(32, 215, 239, .82) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 18px 48px rgba(0,0,0,.14) !important;
+}
+
+html body #root .card:nth-child(3n+1),
+html body #root .card-admin:nth-child(3n+1),
+html body #root .admin-visao-card:nth-child(3n+1) { border-bottom-color: var(--v8-gold) !important; }
+html body #root .card:nth-child(3n+2),
+html body #root .card-admin:nth-child(3n+2),
+html body #root .admin-visao-card:nth-child(3n+2) { border-bottom-color: var(--v8-cyan) !important; }
+html body #root .card:nth-child(3n+3),
+html body #root .card-admin:nth-child(3n+3),
+html body #root .admin-visao-card:nth-child(3n+3) { border-bottom-color: var(--v8-green) !important; }
+
+html body #root .card h2,
+html body #root .card h3,
+html body #root .card-admin h2,
+html body #root .card-admin h3,
+html body #root .admin-visao-card h3,
+html body #root .dashboard-v41-bloco h3 {
+  color: #06111f !important;
+  letter-spacing: -.035em !important;
+}
+
+html body #root .card p,
+html body #root .card-admin p,
+html body #root .admin-visao-card p,
+html body #root .dashboard-v41-bloco p {
+  color: #496176 !important;
+}
+
+html body #root .card strong,
+html body #root .card-admin strong,
+html body #root .admin-visao-card strong,
+html body #root .dashboard-v41-bloco strong {
+  color: #06111f !important;
+}
+
+html body #root .selo-admin,
+html body #root .card > span:first-child,
+html body #root .card-admin > span:first-child,
+html body #root .admin-visao-card > span:first-child {
+  color: #7a3d00 !important;
+  background: #fff4d5 !important;
+  border: 1px solid rgba(255,181,27,.48) !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+}
+
+html body #root .admin-abas-navegacao,
+html body #root .abas,
+html body #root .abas-chamada,
+html body #root .abas-relatorios {
+  background: rgba(255,255,255,.96) !important;
+  border: 1px solid rgba(32, 215, 239, .18) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.10) !important;
+}
+
+html body #root .admin-abas-navegacao button,
+html body #root .abas button,
+html body #root .abas-chamada button,
+html body #root .abas-relatorios button {
+  background: #ffffff !important;
+  color: #06111f !important;
+  border: 1px solid rgba(6,17,31,.12) !important;
+  font-weight: 900 !important;
+}
+
+html body #root .admin-abas-navegacao button.ativo,
+html body #root .abas button.ativo,
+html body #root .abas-chamada button.ativo,
+html body #root .abas-relatorios button.ativo {
+  background: linear-gradient(135deg, var(--v8-gold), #ff9d00) !important;
+  color: #06111f !important;
+  border-color: transparent !important;
+  box-shadow: var(--v8-gold-shadow) !important;
+}
+
+html body #root .botao-principal,
+html body #root .botao-acessar-igreja,
+html body #root .botao-aprovar-igreja,
+html body #root .botao-cadastrar-igreja {
+  color: #06111f !important;
+  background: linear-gradient(135deg, var(--v8-gold), #ff9d00) !important;
+  border: none !important;
+  box-shadow: var(--v8-gold-shadow) !important;
+  font-weight: 900 !important;
+}
+
+html body #root .botao-secundario,
+html body #root .botao-editar {
+  background: #ffffff !important;
+  color: #06111f !important;
+  border: 1px solid rgba(32, 215, 239, .28) !important;
+  font-weight: 900 !important;
+}
+
+html body #root input,
+html body #root select,
+html body #root textarea {
+  background: #ffffff !important;
+  color: #06111f !important;
+  border: 1px solid rgba(32, 215, 239, .24) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,.05) !important;
+}
+
+/* ===== Mobile: compacto, legível e sem corte ===== */
+@media (max-width: 900px) {
+  html body #root .app { display: block !important; }
+
+  html body #root .topo-mobile-interno {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    height: 70px !important;
+    min-height: 70px !important;
+    padding: 8px 12px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 48px 48px !important;
+    gap: 9px !important;
+    align-items: center !important;
+    background:
+      radial-gradient(circle at 18% 4%, rgba(255,181,27,.18), transparent 30%),
+      linear-gradient(135deg, #06111f 0%, #09213b 64%, #0b315a 100%) !important;
+    border-bottom: 1px solid rgba(255,255,255,.12) !important;
+    box-shadow: 0 10px 26px rgba(0,0,0,.34) !important;
+  }
+
+  html body #root .area-principal {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 82px 10px 22px !important;
+    background:
+      radial-gradient(circle at 90% 5%, rgba(255,181,27,.12), transparent 24%),
+      linear-gradient(135deg, #07111f 0%, #09213b 100%) !important;
+  }
+
+  html body #root .marca-mobile-interna {
+    display: grid !important;
+    grid-template-columns: 44px minmax(0,1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+    min-width: 0 !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    border: 1px solid rgba(255,209,102,.55) !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,.30) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna img,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-imagem {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong {
+    display: block !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+    letter-spacing: -.01em !important;
+    white-space: nowrap !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span {
+    display: block !important;
+    color: var(--v8-gold-2) !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    font-weight: 850 !important;
+    letter-spacing: .06em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 135px !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    background: rgba(255,255,255,.96) !important;
+    color: #0976df !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,.22) !important;
+  }
+  html body #root .botao-inicio-interno span { display: none !important; }
+  html body #root .botao-menu-interno span { background: #06111f !important; }
+
+  html body #root .menu-lateral,
+  html body #root .menu-lateral.menu-lateral-aberto {
+    margin-left: 0 !important;
+    width: min(86vw, 330px) !important;
+    min-width: 0 !important;
+    max-width: 330px !important;
+    padding: 16px 14px !important;
+    background:
+      radial-gradient(circle at 0 0, rgba(255,181,27,.18), transparent 30%),
+      linear-gradient(180deg, #06111f 0%, #09213b 62%, #07111f 100%) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar {
+    grid-template-columns: 50px minmax(0,1fr) 36px !important;
+    min-height: 58px !important;
+    padding: 0 0 12px !important;
+    gap: 10px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar .logo-simbolo,
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar .logo-simbolo-sidebar {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar h1 { font-size: 18px !important; color: #fff !important; }
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar p { font-size: 10px !important; color: var(--v8-gold-2) !important; }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button,
+  html body #root .menu-lateral-aberto .menu-navegacao button {
+    min-height: 44px !important;
+    padding: 7px 9px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+    color: #ffffff !important;
+    background: rgba(255,255,255,.11) !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo {
+    color: #06111f !important;
+    background: linear-gradient(135deg, var(--v8-gold), #ff9d00) !important;
+  }
+
+  html body #root .conteudo,
+  html body #root main.conteudo,
+  html body #root .conteudo-admin-comercial,
+  html body #root .pagina-interna,
+  html body #root .secao-configuracoes {
+    border-radius: 22px !important;
+    padding: 10px !important;
+  }
+
+  html body #root .topo-pagina,
+  html body #root .topo-admin-sistema,
+  html body #root .dashboard-v41-hero,
+  html body #root .hero-painel,
+  html body #root .cabecalho-painel,
+  html body #root .cabecalho-pagina {
+    padding: 16px !important;
+    border-radius: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  html body #root .topo-pagina h1,
+  html body #root .topo-pagina h2,
+  html body #root .topo-admin-sistema h1,
+  html body #root .topo-admin-sistema h2,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .dashboard-v41-hero h2,
+  html body #root .hero-painel h1,
+  html body #root .hero-painel h2 {
+    font-size: clamp(26px, 8vw, 36px) !important;
+    line-height: 1.02 !important;
+    margin: 0 0 8px !important;
+  }
+
+  html body #root .cards-admin-sistema,
+  html body #root .admin-visao-geral-grid,
+  html body #root .cards-estatisticas,
+  html body #root .dashboard-v41-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html body #root .cards-admin-sistema .card,
+  html body #root .card-admin,
+  html body #root .cards-estatisticas .card,
+  html body #root .card-estatistica {
+    min-height: 94px !important;
+    padding: 11px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .cards-admin-sistema .card strong,
+  html body #root .card-admin strong,
+  html body #root .cards-estatisticas .card strong,
+  html body #root .card-estatistica strong {
+    font-size: 28px !important;
+  }
+
+  html body #root .admin-visao-card,
+  html body #root .admin-visao-card-mapa,
+  html body #root .dashboard-v41-bloco,
+  html body #root .card:not(.card-login):not(.landing-pro-card),
+  html body #root .alerta-aniversariantes,
+  html body #root .personalizacao-card {
+    padding: 14px !important;
+    min-height: 0 !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .admin-visao-card h3,
+  html body #root .dashboard-v41-bloco h3,
+  html body #root .card h3,
+  html body #root .card h2 {
+    font-size: clamp(18px, 5.6vw, 24px) !important;
+    line-height: 1.08 !important;
+  }
+
+  html body #root .admin-visao-card strong,
+  html body #root .dashboard-v41-bloco strong,
+  html body #root .card strong {
+    font-size: clamp(29px, 9vw, 40px) !important;
+  }
+
+  html body #root .admin-visao-card p,
+  html body #root .dashboard-v41-bloco p,
+  html body #root .card p {
+    font-size: 13px !important;
+    line-height: 1.32 !important;
+  }
+
+  html body #root .admin-visao-card button,
+  html body #root .dashboard-v41-bloco button,
+  html body #root .card button,
+  html body #root .botao-secundario,
+  html body #root .botao-principal {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    border-radius: 12px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html body #root .topo-mobile-interno {
+    height: 66px !important;
+    min-height: 66px !important;
+    grid-template-columns: minmax(0, 1fr) 44px 44px !important;
+    padding: 7px 9px !important;
+  }
+  html body #root .area-principal { padding-top: 76px !important; }
+  html body #root .marca-mobile-interna { grid-template-columns: 42px minmax(0,1fr) !important; gap: 8px !important; }
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 42px !important; height: 42px !important; min-width: 42px !important;
+  }
+  html body #root .topo-mobile-interno .marca-mobile-interna span { max-width: 112px !important; }
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno { width: 44px !important; height: 44px !important; min-width: 44px !important; }
+}
