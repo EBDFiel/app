@@ -7489,362 +7489,246 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
 
   if (!sessao) {
     return (
-      <div className="pagina-publica modelo-exato-ebd">
-        <nav className="navbar">
-          <div className="nav-container">
-            <div className="logo logo-com-imagem-oficial">
-              <div className="logo-icon logo-icon-oficial">
-                <img
-                  src="/logo-ebd-fiel.png"
-                  alt="Logo oficial EBD Fiel"
-                  className="logo-oficial-navbar"
-                />
-              </div>
-              <div>
-                <div className="logo-text">
-                  {'EBD '}<span>{'Fiel'}</span>
-                </div>
-                <div className="logo-sub">{'ESCOLA B\u00cdBLICA DOMINICAL'}</div>
-              </div>
-            </div>
+      <div className="landing-pro-v3">
+        <nav className="landing-pro-navbar">
+          <div className="landing-pro-nav-inner">
+            <a className="landing-pro-brand" href="#inicio" aria-label="EBD Fiel - Início">
+              <span className="landing-pro-brand-mark">
+                <img src="/logo-ebd-fiel.png" alt="Logo EBD Fiel" />
+              </span>
+              <span className="landing-pro-brand-text">
+                <strong>EBD Fiel</strong>
+                <small>Escola Bíblica Dominical</small>
+              </span>
+            </a>
 
             <button
-              className={`menu-toggle ${menuPublicoAberto ? 'active' : ''}`}
+              className={`landing-pro-menu-button ${menuPublicoAberto ? 'active' : ''}`}
               type="button"
               aria-label="Abrir menu"
               onClick={() => setMenuPublicoAberto(!menuPublicoAberto)}
             >
-              <span className="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
 
-            <div className="nav-links">
-              <a href="#recursos">{'Recursos'}</a>
-              <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'Dúvidas'}</a>
-              <button className="btn-nav" type="button" onClick={() => setTelaPublica('login')}>
-                {'Entrar no sistema'}
+            <div className="landing-pro-nav-links">
+              <a href="#recursos">Recursos</a>
+              <a href="#beneficios">Benefícios</a>
+              <a href="#planos">Planos</a>
+              <a href="#faq">Dúvidas</a>
+              <button type="button" onClick={() => setTelaPublica('login')}>
+                Entrar
               </button>
             </div>
           </div>
         </nav>
 
-        <div className={`mobile-menu ${menuPublicoAberto ? 'active' : ''}`}>
-          <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>
-            {'Recursos'}
-          </a>
-          <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>
-            {'Benef\u00edcios'}
-          </a>
-          <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>
-            {'Planos'}
-          </a>
-          <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>
-            {'Dúvidas'}
-          </a>
-          <button
-            className="btn-nav-mobile"
-            type="button"
-            onClick={() => {
-              setMenuPublicoAberto(false)
-              setTelaPublica('login')
-            }}
-          >
-            {'Entrar no sistema'}
-          </button>
-        </div>
-
         {menuPublicoAberto && (
-          <button
-            className="menu-overlay active"
-            aria-label="Fechar menu"
-            type="button"
-            onClick={() => setMenuPublicoAberto(false)}
-          />
+          <div className="landing-pro-mobile-menu">
+            <a href="#recursos" onClick={() => setMenuPublicoAberto(false)}>Recursos</a>
+            <a href="#beneficios" onClick={() => setMenuPublicoAberto(false)}>Benefícios</a>
+            <a href="#planos" onClick={() => setMenuPublicoAberto(false)}>Planos</a>
+            <a href="#faq" onClick={() => setMenuPublicoAberto(false)}>Dúvidas</a>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuPublicoAberto(false)
+                setTelaPublica('login')
+              }}
+            >
+              Entrar no sistema
+            </button>
+          </div>
         )}
 
-        <main>
-          <section className="hero">
-            <div className="hero-content">
-              <div className="hero-copy">
+        <main id="inicio">
+          <section className="landing-pro-hero">
+            <div className="landing-pro-glow landing-pro-glow-one" aria-hidden="true"></div>
+            <div className="landing-pro-glow landing-pro-glow-two" aria-hidden="true"></div>
 
+            <div className="landing-pro-hero-inner">
+              <div className="landing-pro-hero-copy">
+                <span className="landing-pro-kicker">Secretaria EBD online</span>
                 <h1>
-                  {'Organize sua '}
-                  <span>{'Escola Bíblica Dominical'}</span>
-                  {' em poucos minutos'}
+                  Gestão moderna para sua
+                  <span> Escola Bíblica Dominical</span>
                 </h1>
-
                 <p>
-                  {'Controle classes, alunos, professores, chamadas e relatórios em um só lugar, sem planilhas e sem retrabalho.'}
+                  Organize classes, alunos, professores, chamadas e relatórios em uma
+                  plataforma simples, bonita e preparada para celular.
                 </p>
 
-                <button className="btn-primary btn-hero-login-v70" type="button" onClick={() => setTelaPublica('login')}>
-                  {'Entrar no sistema'}
-                </button>
+                <div className="landing-pro-actions">
+                  <button className="landing-pro-primary" type="button" onClick={() => setTelaPublica('login')}>
+                    Entrar no sistema
+                  </button>
+                  <a className="landing-pro-secondary" href="#recursos">
+                    Ver recursos
+                  </a>
+                </div>
 
-                <div className="hero-stats">
-                  <div className="stat">
-                    <div className="stat-number">{'10'}</div>
-                    <div className="stat-label">{'Igrejas atendidas'}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">{'PDF'}</div>
-                    <div className="stat-label">{'Relatórios prontos'}</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">{'24/7'}</div>
-                    <div className="stat-label">{'Online'}</div>
-                  </div>
+                <div className="landing-pro-trust">
+                  <span>✓ Chamada digital</span>
+                  <span>✓ Relatórios em PDF</span>
+                  <span>✓ Acesso pelo celular</span>
                 </div>
               </div>
 
-              <div className="hero-mockup">
-                <div className="mockup-header">
-                  <div className="mockup-dot mockup-red"></div>
-                  <div className="mockup-dot mockup-gold"></div>
-                  <div className="mockup-dot mockup-green"></div>
+              <div className="landing-pro-panel" aria-label="Prévia do painel EBD Fiel">
+                <div className="landing-pro-panel-top">
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
-
-                <div className="mockup-body">
-                  <h3>{'Painel da EBD'}</h3>
-                  <p>{'Resumo simples para secretaria, professores e liderança.'}</p>
-
-                  <div className="mockup-metricas-v70">
-                    <div>
-                      <strong>{'24'}</strong>
-                      <span>{'presentes'}</span>
-                    </div>
-                    <div>
-                      <strong>{'92%'}</strong>
-                      <span>{'frequência'}</span>
-                    </div>
-                    <div>
-                      <strong>{'PDF'}</strong>
-                      <span>{'relatório'}</span>
-                    </div>
+                <div className="landing-pro-panel-head">
+                  <div>
+                    <small>Painel da EBD</small>
+                    <strong>Resumo da semana</strong>
                   </div>
-
-                  <div className="mockup-lista-v70">
-                    <span>{'Classes organizadas'}</span>
-                    <span>{'Chamada digital'}</span>
-                    <span>{'Aniversariantes da semana'}</span>
+                  <div className="landing-pro-score">92%</div>
+                </div>
+                <div className="landing-pro-metrics">
+                  <div>
+                    <strong>12</strong>
+                    <span>Classes</span>
                   </div>
+                  <div>
+                    <strong>156</strong>
+                    <span>Alunos</span>
+                  </div>
+                  <div>
+                    <strong>28</strong>
+                    <span>Professores</span>
+                  </div>
+                </div>
+                <div className="landing-pro-chart">
+                  <span style={{ height: '48%' }}></span>
+                  <span style={{ height: '70%' }}></span>
+                  <span style={{ height: '56%' }}></span>
+                  <span style={{ height: '84%' }}></span>
+                  <span style={{ height: '64%' }}></span>
+                </div>
+                <div className="landing-pro-tasks">
+                  <div><span>✓</span> Chamada de hoje registrada</div>
+                  <div><span>✓</span> Aniversariantes identificados</div>
+                  <div><span>✓</span> Relatório pronto para exportar</div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="section" id="recursos">
-            <div className="container">
-              <h2 className="section-title">{'Recursos que fazem a diferen\u00e7a'}</h2>
-              <p className="section-subtitle">
-                {'Tudo o que sua igreja precisa para uma gest\u00e3o eficiente da EBD.'}
+          <section className="landing-pro-strip">
+            <div>
+              <strong>Menos papel</strong>
+              <span>Dados centralizados</span>
+            </div>
+            <div>
+              <strong>Mais clareza</strong>
+              <span>Indicadores da EBD</span>
+            </div>
+            <div>
+              <strong>Mais tempo</strong>
+              <span>Secretaria organizada</span>
+            </div>
+          </section>
+
+          <section className="landing-pro-section" id="recursos">
+            <div className="landing-pro-section-head">
+              <span>Recursos</span>
+              <h2>Tudo que a secretaria precisa em um só lugar</h2>
+              <p>Ferramentas práticas para a rotina da Escola Bíblica Dominical.</p>
+            </div>
+
+            <div className="landing-pro-cards">
+              <article>
+                <div className="landing-pro-card-icon">📋</div>
+                <h3>Chamada digital</h3>
+                <p>Registre presenças com rapidez pelo computador ou celular.</p>
+              </article>
+              <article>
+                <div className="landing-pro-card-icon">👥</div>
+                <h3>Classes e alunos</h3>
+                <p>Organize turmas, professores, alunos e informações essenciais.</p>
+              </article>
+              <article>
+                <div className="landing-pro-card-icon">📄</div>
+                <h3>Relatórios prontos</h3>
+                <p>Gere relatórios claros para acompanhamento e prestação de contas.</p>
+              </article>
+              <article>
+                <div className="landing-pro-card-icon">🎁</div>
+                <h3>Aniversariantes</h3>
+                <p>Acompanhe datas importantes e fortaleça o cuidado com a turma.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="landing-pro-section landing-pro-split" id="beneficios">
+            <div className="landing-pro-split-copy">
+              <span>Benefícios</span>
+              <h2>Uma EBD mais organizada, visual e fácil de acompanhar</h2>
+              <p>
+                O EBD Fiel ajuda liderança, secretaria e professores a manterem a rotina
+                mais simples, com informações acessíveis e relatórios objetivos.
               </p>
-
-              <div className="features-grid">
-                <article className="feature-card">
-                  <div className="feature-icon">{'\u2713'}</div>
-                  <h3>{'Chamada digital simples'}</h3>
-                  <p>{'Registre a presen\u00e7a dos alunos e professores pelo computador ou celular.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\u26EA'}</div>
-                  <h3>{'Dados separados por igreja'}</h3>
-                  <p>{'Cada igreja tem suas pr\u00f3prias informa\u00e7\u00f5es organizadas com seguran\u00e7a.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDCC4'}</div>
-                  <h3>{'Relat\u00f3rios prontos em PDF'}</h3>
-                  <p>{'A secretaria gera relat\u00f3rios organizados sem montar tudo manualmente.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83C\uDF10'}</div>
-                  <h3>{'Acesso online'}</h3>
-                  <p>{'Use o sistema pelo navegador, sem instala\u00e7\u00e3o complicada.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDC65'}</div>
-                  <h3>{'Gest\u00e3o de classes e alunos'}</h3>
-                  <p>{'Cadastre turmas, alunos, professores e acompanhe tudo em um s\u00f3 lugar.'}</p>
-                </article>
-
-                <article className="feature-card">
-                  <div className="feature-icon">{'\uD83D\uDCCA'}</div>
-                  <h3>{'Apoio para lideran\u00e7a'}</h3>
-                  <p>{'Acompanhe frequ\u00eancia, organiza\u00e7\u00e3o e evolu\u00e7\u00e3o da EBD com mais clareza.'}</p>
-                </article>
-              </div>
+              <button className="landing-pro-primary" type="button" onClick={() => setTelaPublica('login')}>
+                Acessar minha igreja
+              </button>
+            </div>
+            <div className="landing-pro-checklist">
+              <div><strong>01</strong><span>Cadastros separados por igreja</span></div>
+              <div><strong>02</strong><span>Interface simples para professores</span></div>
+              <div><strong>03</strong><span>Relatórios para secretaria e liderança</span></div>
+              <div><strong>04</strong><span>Experiência otimizada para mobile</span></div>
             </div>
           </section>
 
-          <section className="section section-soft">
-            <div className="container">
-              <h2 className="section-title">{'Chega de planilhas, pap\u00e9is e relat\u00f3rios manuais'}</h2>
-
-              <div className="comparison">
-                <div className="comparison-grid">
-                  <article className="comparison-card before">
-                    <div className="comparison-icon">{'\u26A0'}</div>
-                    <h3>{'Antes'}</h3>
-                    <ul>
-                      <li>{'Listas de presen\u00e7a em papel'}</li>
-                      <li>{'Dados espalhados'}</li>
-                      <li>{'Relat\u00f3rios feitos manualmente'}</li>
-                    </ul>
-                  </article>
-
-                  <article className="comparison-card after">
-                    <div className="comparison-icon">{'\u2714'}</div>
-                    <h3>{'Depois com o EBD Fiel'}</h3>
-                    <ul>
-                      <li>{'Chamada digital'}</li>
-                      <li>{'Classes e alunos organizados'}</li>
-                      <li>{'Relat\u00f3rios prontos em PDF'}</li>
-                    </ul>
-                  </article>
-                </div>
+          <section className="landing-pro-section" id="planos">
+            <div className="landing-pro-section-head">
+              <span>Acesso</span>
+              <h2>Planos para igrejas que desejam organizar melhor a EBD</h2>
+              <p>Liberação feita pelo administrador após análise da igreja.</p>
+            </div>
+            <div className="landing-pro-plan">
+              <div>
+                <small>Plano Igreja</small>
+                <h3>Sob consulta</h3>
+                <p>Para uso completo na rotina da Escola Bíblica Dominical.</p>
               </div>
+              <button type="button" onClick={() => setTelaPublica('login')}>Já sou cliente</button>
             </div>
           </section>
 
-          <section className="section" id="beneficios">
-            <div className="container">
-              <h2 className="section-title">{'Feito para quem cuida da EBD'}</h2>
-
-              <div className="personas-grid">
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\uD83D\uDCCB'}</div>
-                  <h3>{'Secretaria'}</h3>
-                  <p>{'Organiza cadastros, classes, relat\u00f3rios e informa\u00e7\u00f5es gerais.'}</p>
-                </article>
-
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\uD83D\uDCDA'}</div>
-                  <h3>{'Professores'}</h3>
-                  <p>{'Fazem chamada, acompanham suas turmas e ajudam na organiza\u00e7\u00e3o semanal.'}</p>
-                </article>
-
-                <article className="persona-card">
-                  <div className="persona-avatar">{'\u2B50'}</div>
-                  <h3>{'Lideran\u00e7a'}</h3>
-                  <p>{'Visualiza dados importantes para cuidar melhor da Escola B\u00edblica Dominical.'}</p>
-                </article>
-              </div>
+          <section className="landing-pro-section landing-pro-faq" id="faq">
+            <div className="landing-pro-section-head">
+              <span>Dúvidas</span>
+              <h2>Perguntas frequentes</h2>
             </div>
-          </section>
-
-          <section className="section section-plans" id="planos">
-            <div className="container">
-              <h2 className="section-title">{'Planos e acesso'}</h2>
-
-              <div className="plans-grid">
-                <article className="plan-card">
-                  <div className="plan-badge">{'Fechado'}</div>
-                  <h3>{'Acesso inicial'}</h3>
-                  <div className="plan-price">{'Gratuito'}</div>
-                  <p>{'Para igrejas em implantação assistida.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Entrar'}
-                  </button>
-                </article>
-
-                <article className="plan-card featured">
-                  <div className="plan-badge">{'Mais usado'}</div>
-                  <h3>{'Plano Igreja'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para uso completo na rotina da EBD.'}</p>
-                  <button className="btn-primary" type="button" onClick={() => setTelaPublica('login')}>
-                    {'J\u00e1 sou cliente'}
-                  </button>
-                </article>
-
-                <article className="plan-card">
-                  <h3>{'Plano Personalizado'}</h3>
-                  <div className="plan-price">{'Sob consulta'}</div>
-                  <p>{'Para igrejas com necessidades espec\u00edficas.'}</p>
-                  <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
-                    {'Acessar sistema'}
-                  </button>
-                </article>
-              </div>
-
-              <p className="plans-note">{'Sem cadastro p\u00fablico. Libera\u00e7\u00e3o manual pelo administrador.'}</p>
-            </div>
-          </section>
-
-          <section className="section" id="faq">
-            <div className="container">
-              <h2 className="section-title">{'Perguntas frequentes'}</h2>
-
-              <div className="faq-list">
-                <details className="faq-item">
-                  <summary>{'Como fa\u00e7o para participar do teste piloto?'}</summary>
-                  <p>
-                    {'O teste piloto \u00e9 exclusivo para participantes do grupo de WhatsApp da EBD Fiel.'}
-                  </p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'O sistema funciona no celular?'}</summary>
-                  <p>{'Sim. O EBD Fiel funciona no celular, tablet e computador.'}</p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'Os dados da minha igreja s\u00e3o seguros?'}</summary>
-                  <p>{'Sim. Cada igreja tem seus dados separados e acesso controlado por usu\u00e1rio.'}</p>
-                </details>
-
-                <details className="faq-item">
-                  <summary>{'Preciso instalar algum software?'}</summary>
-                  <p>{'N\u00e3o. O EBD Fiel \u00e9 online e acessado pelo navegador.'}</p>
-                </details>
-              </div>
+            <div className="landing-pro-faq-list">
+              <details>
+                <summary>O sistema funciona no celular?</summary>
+                <p>Sim. A página inicial, login e painel foram preparados para computador e celular.</p>
+              </details>
+              <details>
+                <summary>Preciso instalar algum programa?</summary>
+                <p>Não. O acesso é feito pelo navegador, usando o endereço do app.</p>
+              </details>
+              <details>
+                <summary>Os dados da igreja ficam separados?</summary>
+                <p>Sim. Cada igreja acessa suas próprias informações conforme as permissões configuradas.</p>
+              </details>
             </div>
           </section>
         </main>
 
-        <footer className="footer">
-          <div className="footer-grid">
-            <div>
-              <div className="footer-logo">{'EBD FIEL'}</div>
-              <p>{'Fiel \u00e0 Palavra, organizado para servir melhor.'}</p>
-              <p className="footer-gold">{'Escola B\u00edblica Dominical'}</p>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Mapa do site'}</h4>
-              <a href="#recursos">{'Recursos'}</a>
-              <a href="#beneficios">{'Benef\u00edcios'}</a>
-              <a href="#planos">{'Planos'}</a>
-              <a href="#faq">{'Dúvidas'}</a>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Contato'}</h4>
-              <span>{'WhatsApp'}</span>
-              <span>{'contato@ebdfiel.com.br'}</span>
-            </div>
-
-            <div className="footer-col">
-              <h4>{'Teste exclusivo'}</h4>
-              <p>{'Grupo fechado para participantes'}</p>
-              <button className="btn-outline footer-button" type="button" onClick={() => setTelaPublica('login')}>
-                {'J\u00e1 sou cliente'}
-              </button>
-            </div>
+        <footer className="landing-pro-footer">
+          <div>
+            <strong>EBD Fiel</strong>
+            <span>Fiel à Palavra, organizado para servir melhor.</span>
           </div>
-
-          <div className="footer-bottom">
-            <p>{'\u00a9 2026 EBD Fiel - Todos os direitos reservados.'}</p>
-          </div>
+          <button type="button" onClick={() => setTelaPublica('login')}>Entrar no sistema</button>
         </footer>
       </div>
     )
