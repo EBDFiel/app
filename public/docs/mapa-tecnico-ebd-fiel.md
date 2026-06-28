@@ -319,7 +319,7 @@ Você vai me ajudar no projeto EBD Fiel. Antes de sugerir código, leia o mapa t
 
 ## 12. Informações geradas automaticamente no build
 
-- **Gerado em:** 27/06/2026, 23:28
+- **Gerado em:** 28/06/2026, 00:26
 - **Nome do package:** ebdfiel-app
 - **Versão do package:** 0.0.0
 - **Tipo do projeto:** module
