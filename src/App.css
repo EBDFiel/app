@@ -34769,3 +34769,776 @@ html body #root textarea {
   html body #root .botao-inicio-interno,
   html body #root .botao-menu-interno { width: 44px !important; height: 44px !important; min-width: 44px !important; }
 }
+
+
+/* =========================================================
+   V8.1 - REFINAMENTO MOBILE / CONTRASTE / COMPACTAÇÃO
+   Ajuste visual sem alterar funcionamento do app.
+   Foco: menu legível, cards mais compactos e contraste melhor.
+   ========================================================= */
+
+:root {
+  --v81-navy-0: #030b15;
+  --v81-navy-1: #071422;
+  --v81-navy-2: #0a2743;
+  --v81-blue: #0d8cff;
+  --v81-cyan: #19c4dc;
+  --v81-gold: #ffb51b;
+  --v81-orange: #ff9700;
+  --v81-ink: #06111f;
+  --v81-muted: #526273;
+}
+
+/* Sidebar desktop mais legível e menos “lavada” */
+html body #root .menu-lateral {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255,181,27,.16), transparent 28%),
+    linear-gradient(180deg, #06111f 0%, #09213b 56%, #07111f 100%) !important;
+  color: #ffffff !important;
+  border-right: 1px solid rgba(255,255,255,.10) !important;
+  box-shadow: 18px 0 38px rgba(0,0,0,.24) !important;
+}
+
+html body #root .menu-lateral .marca-sidebar {
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-radius: 18px !important;
+  padding: 12px 10px !important;
+  gap: 10px !important;
+}
+
+html body #root .menu-lateral .marca-sidebar h1,
+html body #root .menu-lateral .marca-sidebar strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-lateral .marca-sidebar p,
+html body #root .menu-lateral .marca-sidebar span {
+  color: var(--v81-gold) !important;
+  -webkit-text-fill-color: var(--v81-gold) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body #root .menu-lateral .logo-simbolo,
+html body #root .menu-lateral .logo-simbolo-sidebar,
+html body #root .marca-sidebar .logo-simbolo,
+html body #root .marca-sidebar .logo-simbolo-sidebar {
+  background: transparent !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.32) !important;
+  flex: 0 0 auto !important;
+}
+
+html body #root .menu-lateral .logo-simbolo img,
+html body #root .menu-lateral .logo-simbolo-sidebar img,
+html body #root .marca-sidebar .logo-simbolo img,
+html body #root .marca-sidebar .logo-simbolo-sidebar img,
+html body #root .menu-lateral .logo-imagem {
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  transform: none !important;
+}
+
+html body #root .menu-navegacao button,
+html body #root .menu-lateral .menu-navegacao button {
+  color: rgba(255,255,255,.92) !important;
+  -webkit-text-fill-color: rgba(255,255,255,.92) !important;
+  background: rgba(255,255,255,.07) !important;
+  border: 1px solid rgba(255,255,255,.11) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06) !important;
+  user-select: none !important;
+}
+
+html body #root .menu-navegacao button svg,
+html body #root .menu-lateral .menu-navegacao button svg {
+  color: #7fe8ff !important;
+  stroke: currentColor !important;
+  opacity: 1 !important;
+}
+
+html body #root .menu-navegacao button.ativo,
+html body #root .menu-lateral .menu-navegacao button.ativo,
+html body #root .menu-lateral-aberto .menu-navegacao button.ativo {
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  background: linear-gradient(135deg, #ffd166 0%, #ff9700 100%) !important;
+  border-color: rgba(255,181,27,.75) !important;
+  box-shadow: 0 10px 24px rgba(255,151,0,.20) !important;
+}
+
+html body #root .menu-navegacao button.ativo svg,
+html body #root .menu-lateral .menu-navegacao button.ativo svg {
+  color: #06111f !important;
+}
+
+html body #root .card-usuario,
+html body #root .menu-lateral .card-usuario,
+html body #root .usuario-sidebar {
+  background: rgba(255,255,255,.10) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  color: #ffffff !important;
+}
+
+html body #root .card-usuario *,
+html body #root .usuario-sidebar * {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Corrige rótulos claros demais sobre cards brancos */
+html body #root .admin-visao-card .tag,
+html body #root .admin-visao-card .badge,
+html body #root .card .tag,
+html body #root .card .badge,
+html body #root .rotulo,
+html body #root .pill,
+html body #root .etiqueta {
+  color: #8a4a00 !important;
+  -webkit-text-fill-color: #8a4a00 !important;
+  background: rgba(255,181,27,.12) !important;
+  border-color: rgba(255,181,27,.34) !important;
+  opacity: 1 !important;
+}
+
+/* Textos em cards azuis/gradientes que estavam quase invisíveis */
+html body #root .dashboard-v41-hero *,
+html body #root .hero-painel *,
+html body #root .topo-admin-sistema *,
+html body #root .card-destaque *,
+html body #root .bloco-gradiente * {
+  opacity: 1 !important;
+}
+
+html body #root .dashboard-v41-hero p,
+html body #root .hero-painel p,
+html body #root .topo-admin-sistema p,
+html body #root .card-destaque p,
+html body #root .bloco-gradiente p {
+  color: rgba(255,255,255,.92) !important;
+  -webkit-text-fill-color: rgba(255,255,255,.92) !important;
+}
+
+html body #root .dashboard-v41-hero .badge,
+html body #root .hero-painel .badge,
+html body #root .topo-admin-sistema .badge,
+html body #root .card-destaque .badge,
+html body #root .bloco-gradiente .badge {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: rgba(255,255,255,.18) !important;
+  border: 1px solid rgba(255,255,255,.32) !important;
+}
+
+/* Compactação e melhor aproveitamento no mobile */
+@media (max-width: 760px) {
+  html body #root .area-principal,
+  html body #root .app-shell,
+  html body #root .layout-interno {
+    background:
+      radial-gradient(circle at 95% 0%, rgba(25,196,220,.16), transparent 34%),
+      linear-gradient(180deg, #07111f 0%, #09213b 42%, #07111f 100%) !important;
+  }
+
+  html body #root .topo-mobile-interno {
+    height: 62px !important;
+    min-height: 62px !important;
+    padding: 6px 12px !important;
+    grid-template-columns: minmax(0,1fr) 42px 42px !important;
+    gap: 8px !important;
+    background: rgba(6,17,31,.96) !important;
+    backdrop-filter: blur(18px) !important;
+    border-bottom: 1px solid rgba(127,232,255,.16) !important;
+  }
+
+  html body #root .area-principal { padding-top: 68px !important; }
+
+  html body #root .marca-mobile-interna {
+    grid-template-columns: 40px minmax(0,1fr) !important;
+    gap: 9px !important;
+    min-width: 0 !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    border: 1px solid rgba(255,209,102,.55) !important;
+    overflow: visible !important;
+    background: transparent !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,.34) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna img,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-imagem {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 50% !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong {
+    font-size: 16px !important;
+    max-width: 150px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span {
+    color: var(--v81-gold) !important;
+    -webkit-text-fill-color: var(--v81-gold) !important;
+    font-size: 9px !important;
+    max-width: 150px !important;
+    letter-spacing: .04em !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .conteudo,
+  html body #root main.conteudo,
+  html body #root .conteudo-admin-comercial,
+  html body #root .pagina-interna,
+  html body #root .secao-configuracoes {
+    padding: 8px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .topo-pagina,
+  html body #root .topo-admin-sistema,
+  html body #root .dashboard-v41-hero,
+  html body #root .hero-painel,
+  html body #root .cabecalho-painel,
+  html body #root .cabecalho-pagina {
+    padding: 13px !important;
+    border-radius: 18px !important;
+    margin-bottom: 8px !important;
+  }
+
+  html body #root .topo-pagina h1,
+  html body #root .topo-pagina h2,
+  html body #root .topo-admin-sistema h1,
+  html body #root .topo-admin-sistema h2,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .dashboard-v41-hero h2,
+  html body #root .hero-painel h1,
+  html body #root .hero-painel h2,
+  html body #root .cabecalho-pagina h1,
+  html body #root .cabecalho-pagina h2 {
+    font-size: clamp(22px, 7vw, 31px) !important;
+    line-height: 1.05 !important;
+    margin-bottom: 6px !important;
+  }
+
+  html body #root .cards-admin-sistema,
+  html body #root .admin-visao-geral-grid,
+  html body #root .cards-estatisticas,
+  html body #root .dashboard-v41-cards,
+  html body #root .resumo-cards,
+  html body #root .metricas-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html body #root .cards-admin-sistema .card,
+  html body #root .card-admin,
+  html body #root .cards-estatisticas .card,
+  html body #root .card-estatistica,
+  html body #root .resumo-card,
+  html body #root .metrica-card {
+    min-height: 78px !important;
+    padding: 9px !important;
+    border-radius: 15px !important;
+  }
+
+  html body #root .cards-admin-sistema .card strong,
+  html body #root .card-admin strong,
+  html body #root .cards-estatisticas .card strong,
+  html body #root .card-estatistica strong,
+  html body #root .resumo-card strong,
+  html body #root .metrica-card strong {
+    font-size: 25px !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .cards-admin-sistema .card p,
+  html body #root .card-admin p,
+  html body #root .cards-estatisticas .card p,
+  html body #root .card-estatistica p,
+  html body #root .resumo-card p,
+  html body #root .metrica-card p {
+    font-size: 11px !important;
+    line-height: 1.18 !important;
+  }
+
+  html body #root .admin-visao-card,
+  html body #root .admin-visao-card-mapa,
+  html body #root .dashboard-v41-bloco,
+  html body #root .card:not(.card-login):not(.landing-pro-card),
+  html body #root .alerta-aniversariantes,
+  html body #root .personalizacao-card,
+  html body #root .bloco-painel,
+  html body #root .secao-card {
+    padding: 12px !important;
+    margin-bottom: 9px !important;
+    border-radius: 16px !important;
+    min-height: unset !important;
+  }
+
+  html body #root .admin-visao-card h3,
+  html body #root .dashboard-v41-bloco h3,
+  html body #root .card h3,
+  html body #root .card h2,
+  html body #root .bloco-painel h3,
+  html body #root .secao-card h3 {
+    font-size: clamp(17px, 5vw, 22px) !important;
+    line-height: 1.08 !important;
+    margin-bottom: 5px !important;
+  }
+
+  html body #root .admin-visao-card strong,
+  html body #root .dashboard-v41-bloco strong,
+  html body #root .card strong,
+  html body #root .numero-destaque,
+  html body #root .valor-destaque {
+    font-size: clamp(25px, 8vw, 35px) !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .admin-visao-card p,
+  html body #root .dashboard-v41-bloco p,
+  html body #root .card p,
+  html body #root .bloco-painel p,
+  html body #root .secao-card p {
+    font-size: 12.5px !important;
+    line-height: 1.26 !important;
+    margin-bottom: 7px !important;
+  }
+
+  html body #root .admin-visao-card button,
+  html body #root .dashboard-v41-bloco button,
+  html body #root .card button,
+  html body #root .botao-secundario,
+  html body #root .botao-principal {
+    min-height: 34px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    border-radius: 11px !important;
+  }
+
+  html body #root .abas-admin,
+  html body #root .tabs,
+  html body #root .navegacao-abas {
+    gap: 7px !important;
+    padding: 7px !important;
+    overflow-x: auto !important;
+    scrollbar-width: thin !important;
+  }
+
+  html body #root .abas-admin button,
+  html body #root .tabs button,
+  html body #root .navegacao-abas button {
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    font-size: 12px !important;
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto,
+  html body #root .menu-lateral-aberto {
+    width: min(84vw, 315px) !important;
+    max-width: 315px !important;
+    padding: 14px 13px !important;
+    background:
+      radial-gradient(circle at 0 0, rgba(255,181,27,.18), transparent 28%),
+      linear-gradient(180deg, #06111f 0%, #09213b 65%, #07111f 100%) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button,
+  html body #root .menu-lateral-aberto .menu-navegacao button {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: rgba(255,255,255,.10) !important;
+    border: 1px solid rgba(255,255,255,.17) !important;
+    min-height: 42px !important;
+    border-radius: 13px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo,
+  html body #root .menu-lateral-aberto .menu-navegacao button.ativo {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    background: linear-gradient(135deg, #ffd166 0%, #ff9700 100%) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html body #root .topo-mobile-interno {
+    height: 60px !important;
+    min-height: 60px !important;
+    grid-template-columns: minmax(0,1fr) 40px 40px !important;
+    padding: 6px 9px !important;
+  }
+  html body #root .area-principal { padding-top: 66px !important; }
+  html body #root .marca-mobile-interna { grid-template-columns: 38px minmax(0,1fr) !important; gap: 8px !important; }
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+  }
+  html body #root .topo-mobile-interno .marca-mobile-interna strong { font-size: 15px !important; max-width: 130px !important; }
+  html body #root .topo-mobile-interno .marca-mobile-interna span { max-width: 130px !important; font-size: 8.5px !important; }
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno { width: 40px !important; height: 40px !important; min-width: 40px !important; }
+}
+
+/* =========================================================
+   V8.2 - CONTRASTE DESKTOP/MOBILE + CENTRALIZAÇÃO DO PAINEL
+   Arquivo único: não altera regras, rotas, dados ou Supabase.
+   ========================================================= */
+
+:root {
+  --v82-navy: #06111f;
+  --v82-navy-2: #09213b;
+  --v82-navy-3: #0d2f52;
+  --v82-gold: #ffb51b;
+  --v82-orange: #ff9700;
+  --v82-cyan: #39d8ff;
+  --v82-white: #f8fbff;
+}
+
+/* Desktop: menu lateral com contraste real e painel centralizado */
+@media (min-width: 761px) {
+  html body #root .app,
+  html body #root .app.autenticado,
+  html body #root .layout-app,
+  html body #root .layout-interno {
+    background:
+      radial-gradient(circle at 18% 0%, rgba(57,216,255,.12), transparent 28%),
+      radial-gradient(circle at 92% 4%, rgba(255,181,27,.10), transparent 20%),
+      linear-gradient(180deg, #06111f 0%, #081827 100%) !important;
+  }
+
+  html body #root .menu-lateral,
+  html body #root .sidebar {
+    width: 236px !important;
+    min-width: 236px !important;
+    max-width: 236px !important;
+    flex: 0 0 236px !important;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,181,27,.18), transparent 26%),
+      linear-gradient(180deg, #06111f 0%, #0a2139 48%, #06111f 100%) !important;
+    color: #ffffff !important;
+    border-right: 1px solid rgba(255,255,255,.14) !important;
+    box-shadow: 22px 0 46px rgba(0,0,0,.34) !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  html body #root .menu-lateral *,
+  html body #root .sidebar * {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  html body #root .menu-lateral::after,
+  html body #root .sidebar::after {
+    opacity: .45 !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar,
+  html body #root .sidebar .marca-sidebar {
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08) !important;
+    padding: 10px 8px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar h1,
+  html body #root .sidebar .marca-sidebar h1,
+  html body #root .menu-lateral .marca-sidebar strong,
+  html body #root .sidebar .marca-sidebar strong {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.28) !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar p,
+  html body #root .sidebar .marca-sidebar p,
+  html body #root .menu-lateral .marca-sidebar span,
+  html body #root .sidebar .marca-sidebar span {
+    color: var(--v82-gold) !important;
+    -webkit-text-fill-color: var(--v82-gold) !important;
+    font-weight: 900 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.35) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button,
+  html body #root .menu-lateral nav button,
+  html body #root .sidebar nav button,
+  html body #root .menu-navegacao button {
+    color: #f8fbff !important;
+    -webkit-text-fill-color: #f8fbff !important;
+    background: rgba(255,255,255,.12) !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 8px 18px rgba(0,0,0,.12) !important;
+    font-weight: 900 !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button span,
+  html body #root .menu-lateral nav button span,
+  html body #root .sidebar nav button span,
+  html body #root .menu-navegacao button span {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,.35) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button:hover,
+  html body #root .menu-lateral nav button:hover,
+  html body #root .sidebar nav button:hover {
+    background: rgba(57,216,255,.18) !important;
+    border-color: rgba(57,216,255,.34) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo,
+  html body #root .menu-lateral nav button.ativo,
+  html body #root .sidebar nav button.ativo,
+  html body #root .menu-navegacao button.ativo {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    background: linear-gradient(135deg, #ffd166 0%, #ff9700 100%) !important;
+    border-color: rgba(255,181,27,.85) !important;
+    box-shadow: 0 12px 26px rgba(255,151,0,.32) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo span,
+  html body #root .menu-lateral nav button.ativo span,
+  html body #root .sidebar nav button.ativo span,
+  html body #root .menu-navegacao button.ativo span {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    text-shadow: none !important;
+  }
+
+  html body #root .icone-menu {
+    background: rgba(255,255,255,.20) !important;
+    color: var(--v82-cyan) !important;
+    border: 1px solid rgba(255,255,255,.20) !important;
+  }
+
+  html body #root .menu-navegacao button.ativo .icone-menu,
+  html body #root .menu-lateral nav button.ativo .icone-menu {
+    color: #06111f !important;
+    background: rgba(255,255,255,.42) !important;
+    border-color: rgba(6,17,31,.10) !important;
+  }
+
+  html body #root .cartao-usuario-sidebar,
+  html body #root .card-usuario,
+  html body #root .usuario-sidebar {
+    background: rgba(255,255,255,.13) !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+    box-shadow: 0 14px 24px rgba(0,0,0,.18) !important;
+    color: #ffffff !important;
+  }
+
+  html body #root .cartao-usuario-sidebar *,
+  html body #root .card-usuario *,
+  html body #root .usuario-sidebar * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  html body #root .selo-perfil-sidebar {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    background: linear-gradient(135deg, #ffd166, #ff9700) !important;
+  }
+
+  html body #root .area-principal {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    padding: 24px 24px 28px !important;
+  }
+
+  html body #root main.conteudo,
+  html body #root .conteudo,
+  html body #root .conteudo-admin-comercial,
+  html body #root .pagina-interna,
+  html body #root .secao-configuracoes {
+    width: min(100%, 1240px) !important;
+    max-width: 1240px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* Mobile: contraste melhor e cards mais legíveis */
+@media (max-width: 760px) {
+  html body #root .topo-mobile-interno {
+    background: linear-gradient(90deg, #06111f 0%, #0a2743 100%) !important;
+    border-bottom: 1px solid rgba(57,216,255,.28) !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,.40) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.45) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span {
+    color: #ffd166 !important;
+    -webkit-text-fill-color: #ffd166 !important;
+    font-weight: 900 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.45) !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    background: #f8fbff !important;
+    color: #06111f !important;
+    border: 1px solid rgba(255,255,255,.50) !important;
+    box-shadow: 0 10px 22px rgba(0,0,0,.30) !important;
+  }
+
+  html body #root .hero-painel-conteudo,
+  html body #root .dashboard-v41-hero,
+  html body #root .topo-admin-sistema,
+  html body #root .topo-pagina {
+    box-shadow: 0 16px 38px rgba(0,0,0,.26) !important;
+  }
+
+  html body #root .atalho-chamada-topo {
+    background: rgba(248,251,255,.96) !important;
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    border: 1px solid rgba(255,255,255,.72) !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,.16) !important;
+  }
+
+  html body #root .atalho-chamada-topo *,
+  html body #root .atalho-chamada-topo strong,
+  html body #root .atalho-chamada-topo small,
+  html body #root .atalho-chamada-topo span {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .atalho-chamada-topo-icone,
+  html body #root .atalho-chamada-topo .icone-menu {
+    background: linear-gradient(135deg, #0d8cff, #19c4dc) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  html body #root .hero-painel-destaque,
+  html body #root .resumo-rapido,
+  html body #root .dashboard-v41-resumo {
+    background:
+      radial-gradient(circle at 90% 80%, rgba(255,181,27,.18), transparent 28%),
+      linear-gradient(135deg, rgba(13,140,255,.92), rgba(25,196,220,.88)) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,.18) !important;
+  }
+
+  html body #root .hero-painel-destaque *,
+  html body #root .resumo-rapido *,
+  html body #root .dashboard-v41-resumo * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .hero-painel-destaque li::marker,
+  html body #root .resumo-rapido li::marker,
+  html body #root .dashboard-v41-resumo li::marker {
+    color: #ffd166 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto,
+  html body #root .menu-lateral-aberto {
+    background:
+      radial-gradient(circle at 0 0, rgba(255,181,27,.16), transparent 25%),
+      linear-gradient(180deg, #030b15 0%, #071422 54%, #06111f 100%) !important;
+    border-right: 1px solid rgba(255,255,255,.20) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button,
+  html body #root .menu-lateral-aberto .menu-navegacao button {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: rgba(255,255,255,.14) !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,.45) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button span,
+  html body #root .menu-lateral-aberto .menu-navegacao button span {
+    color: inherit !important;
+    -webkit-text-fill-color: inherit !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo,
+  html body #root .menu-lateral-aberto .menu-navegacao button.ativo {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    background: linear-gradient(135deg, #ffd166, #ff9700) !important;
+    text-shadow: none !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo span,
+  html body #root .menu-lateral-aberto .menu-navegacao button.ativo span {
+    color: #06111f !important;
+    -webkit-text-fill-color: #06111f !important;
+    text-shadow: none !important;
+  }
+
+  html body #root .card,
+  html body #root .admin-visao-card,
+  html body #root .dashboard-v41-bloco,
+  html body #root .secao-card,
+  html body #root .bloco-painel {
+    box-shadow: 0 14px 30px rgba(0,0,0,.20) !important;
+  }
+
+  html body #root .card .tag,
+  html body #root .card .badge,
+  html body #root .admin-visao-card .tag,
+  html body #root .admin-visao-card .badge,
+  html body #root .rotulo,
+  html body #root .etiqueta,
+  html body #root .pill {
+    color: #7a3b00 !important;
+    -webkit-text-fill-color: #7a3b00 !important;
+    background: rgba(255,181,27,.17) !important;
+    border-color: rgba(255,181,27,.45) !important;
+    font-weight: 900 !important;
+  }
+}
