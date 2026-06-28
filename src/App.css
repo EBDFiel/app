@@ -30248,3 +30248,589 @@ body {
     padding: 20px;
   }
 }
+
+/* =========================================================
+   EBD FIEL V2 - CORREÇÃO VISUAL HOME + LOGIN
+   Foco: reduzir quebras/duplicações visuais, refinar desktop/mobile,
+   corrigir espaçamentos e manter funcionamento intacto.
+   ========================================================= */
+
+/* Base pública mais estável */
+.modelo-exato-ebd {
+  background: linear-gradient(180deg, #f6f9fc 0%, #eef4f8 100%) !important;
+  overflow-x: hidden !important;
+}
+
+.modelo-exato-ebd main {
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+  background: transparent !important;
+}
+
+.modelo-exato-ebd .navbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 80 !important;
+  min-height: 68px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.modelo-exato-ebd .nav-container {
+  min-height: 56px !important;
+}
+
+.modelo-exato-ebd .logo-oficial-navbar {
+  width: 52px !important;
+  height: 52px !important;
+  object-fit: contain !important;
+}
+
+.modelo-exato-ebd .logo-text {
+  font-size: 1.45rem !important;
+  line-height: 1 !important;
+}
+
+.modelo-exato-ebd .logo-sub {
+  font-size: 0.62rem !important;
+  letter-spacing: 0.12em !important;
+}
+
+/* Hero da página inicial */
+.modelo-exato-ebd .hero {
+  display: block !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  padding: clamp(72px, 8vw, 104px) 24px clamp(64px, 7vw, 90px) !important;
+  background:
+    radial-gradient(circle at 92% 72%, rgba(19, 184, 214, 0.18), transparent 30%),
+    radial-gradient(circle at 14% 18%, rgba(246, 184, 15, 0.10), transparent 26%),
+    linear-gradient(135deg, #071a31 0%, #0b2b4c 52%, #123f66 100%) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+}
+
+.modelo-exato-ebd .hero::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px) !important;
+  background-size: 72px 72px !important;
+  opacity: 0.45 !important;
+  pointer-events: none !important;
+  z-index: -2 !important;
+}
+
+.modelo-exato-ebd .hero::after {
+  content: "" !important;
+  position: absolute !important;
+  width: min(44vw, 520px) !important;
+  height: min(44vw, 520px) !important;
+  right: -140px !important;
+  bottom: -190px !important;
+  border-radius: 999px !important;
+  background: radial-gradient(circle, rgba(19, 184, 214, 0.22), transparent 66%) !important;
+  opacity: 1 !important;
+  z-index: -1 !important;
+}
+
+.modelo-exato-ebd .hero-content {
+  width: min(100%, 1160px) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.05fr) minmax(330px, 0.82fr) !important;
+  gap: clamp(34px, 5vw, 72px) !important;
+  align-items: center !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.modelo-exato-ebd .hero-copy {
+  max-width: 650px !important;
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+.modelo-exato-ebd .hero h1 {
+  color: #ffffff !important;
+  font-size: clamp(2.55rem, 5vw, 4.25rem) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.055em !important;
+  margin: 0 0 18px !important;
+  max-width: 680px !important;
+}
+
+.modelo-exato-ebd .hero h1 span {
+  color: #ffffff !important;
+  display: inline !important;
+}
+
+.modelo-exato-ebd .hero p {
+  color: rgba(255, 255, 255, 0.84) !important;
+  font-size: clamp(1rem, 1.3vw, 1.15rem) !important;
+  line-height: 1.65 !important;
+  max-width: 630px !important;
+  margin: 0 0 24px !important;
+}
+
+.modelo-exato-ebd .hero .btn-primary,
+.modelo-exato-ebd .btn-hero-login-v70 {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0b2b4c !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  min-height: 48px !important;
+  padding: 0 1.35rem !important;
+  border-radius: 999px !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18) !important;
+}
+
+.modelo-exato-ebd .hero-stats {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 22px !important;
+}
+
+.modelo-exato-ebd .stat {
+  min-width: 112px !important;
+  padding: 12px 14px !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.modelo-exato-ebd .stat-number {
+  color: #ffffff !important;
+  font-size: 1.26rem !important;
+  line-height: 1 !important;
+}
+
+.modelo-exato-ebd .stat-label {
+  color: rgba(255, 255, 255, 0.76) !important;
+  font-size: 0.78rem !important;
+}
+
+.modelo-exato-ebd .hero-mockup {
+  width: 100% !important;
+  max-width: 470px !important;
+  margin: 0 auto !important;
+  transform: none !important;
+  border-radius: 26px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 2 !important;
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.28) !important;
+}
+
+.modelo-exato-ebd .mockup-body {
+  padding: clamp(20px, 3vw, 30px) !important;
+}
+
+/* Seções abaixo: evita sensação de repetição/colagem do hero */
+.modelo-exato-ebd .hero + .section,
+.modelo-exato-ebd #recursos {
+  margin-top: 0 !important;
+  padding-top: clamp(58px, 7vw, 86px) !important;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(19, 184, 214, 0.08), transparent 28%),
+    linear-gradient(180deg, #f7fbff 0%, #eef4f8 100%) !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.modelo-exato-ebd .section {
+  padding: clamp(56px, 7vw, 86px) 24px !important;
+  background: #f6f9fc !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.modelo-exato-ebd .section-soft,
+.modelo-exato-ebd .section-plans {
+  background: linear-gradient(180deg, #eef6fb 0%, #f8fbff 100%) !important;
+}
+
+.modelo-exato-ebd .section-title {
+  font-size: clamp(1.8rem, 3vw, 2.55rem) !important;
+  margin-bottom: 12px !important;
+}
+
+.modelo-exato-ebd .features-grid,
+.modelo-exato-ebd .personas-grid,
+.modelo-exato-ebd .plans-grid {
+  gap: 22px !important;
+}
+
+.modelo-exato-ebd .feature-card,
+.modelo-exato-ebd .persona-card,
+.modelo-exato-ebd .plan-card,
+.modelo-exato-ebd .comparison,
+.modelo-exato-ebd .faq-item {
+  border-radius: 22px !important;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.07) !important;
+}
+
+/* Login refinado */
+.tela-login-v70 {
+  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.74fr) !important;
+  min-height: 100dvh !important;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef5fb 100%) !important;
+}
+
+.painel-login-v70 {
+  padding: clamp(38px, 5vw, 58px) clamp(34px, 5vw, 58px) !important;
+  min-height: 100dvh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: clamp(22px, 3vw, 34px) !important;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255,255,255,0.18), transparent 25%),
+    radial-gradient(circle at 90% 90%, rgba(34,211,238,0.22), transparent 34%),
+    linear-gradient(135deg, #0b63ce 0%, #0f93dc 55%, #22bfd5 100%) !important;
+}
+
+.painel-login-v70 .marca-login {
+  gap: 20px !important;
+  margin-bottom: clamp(14px, 3vw, 26px) !important;
+}
+
+.painel-login-v70 .marca-login .logo-simbolo,
+.painel-login-v70 .marca-login .logo-imagem {
+  width: clamp(82px, 8vw, 118px) !important;
+  height: clamp(82px, 8vw, 118px) !important;
+  min-width: clamp(82px, 8vw, 118px) !important;
+  min-height: clamp(82px, 8vw, 118px) !important;
+}
+
+.painel-login-v70 .marca-login h1 {
+  font-size: clamp(2rem, 3.8vw, 3rem) !important;
+  line-height: 1 !important;
+}
+
+.painel-login-v70 .marca-login p {
+  font-size: clamp(1rem, 1.5vw, 1.2rem) !important;
+  max-width: 560px !important;
+}
+
+.apresentacao-login-v70 {
+  max-width: 680px !important;
+}
+
+.tela-login-v70 .apresentacao-login-v70 h2,
+.apresentacao-login-v70 h2 {
+  font-size: clamp(2.7rem, 5vw, 5.1rem) !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.06em !important;
+  max-width: 760px !important;
+}
+
+.tela-login-v70 .apresentacao-login-v70 p,
+.apresentacao-login-v70 p {
+  font-size: clamp(1.04rem, 1.35vw, 1.22rem) !important;
+  line-height: 1.65 !important;
+  max-width: 720px !important;
+}
+
+.preview-login-v70 {
+  grid-template-columns: minmax(0, 1.1fr) repeat(2, minmax(130px, 0.5fr)) !important;
+  gap: 12px !important;
+  max-width: 760px !important;
+}
+
+.preview-login-card {
+  min-height: 104px !important;
+  padding: 16px !important;
+  border-radius: 20px !important;
+}
+
+.preview-login-card-maior {
+  min-height: 124px !important;
+}
+
+.beneficios-login-v70 {
+  max-width: 760px !important;
+  gap: 12px !important;
+}
+
+.tela-login-v70 .cartao-login,
+.tela-login-v70 .cartao-login-v70 {
+  border-radius: 34px 0 0 34px !important;
+  min-height: 100dvh !important;
+  padding: clamp(30px, 4vw, 52px) !important;
+  justify-content: center !important;
+  align-content: center !important;
+  gap: 22px !important;
+}
+
+.cartao-login-v70 .botao-voltar-publico,
+.botao-voltar-publico {
+  color: #0b4c86 !important;
+  background: #edf6ff !important;
+  border: 1px solid #d9eaf8 !important;
+  border-radius: 999px !important;
+  padding: 10px 16px !important;
+  font-weight: 900 !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+.cartao-login-v70 .topo-cartao-login {
+  gap: 16px !important;
+  align-items: center !important;
+}
+
+.cartao-login-v70 .topo-cartao-login h2 {
+  font-size: clamp(2.1rem, 3vw, 3.1rem) !important;
+}
+
+.cartao-login-v70 .formulario-login {
+  padding: clamp(20px, 3vw, 28px) !important;
+  border-radius: 24px !important;
+}
+
+.bloco-cadastro-v70 {
+  padding: clamp(20px, 3vw, 28px) !important;
+  border-radius: 24px !important;
+}
+
+/* Correção de qualquer texto com caracteres quebrados herdados */
+.botao-voltar-publico {
+  white-space: normal !important;
+}
+
+@media (max-width: 1180px) {
+  .tela-login-v70 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .painel-login-v70 {
+    min-height: auto !important;
+  }
+
+  .tela-login-v70 .cartao-login,
+  .tela-login-v70 .cartao-login-v70 {
+    min-height: auto !important;
+    border-radius: 34px 34px 0 0 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .modelo-exato-ebd .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+  }
+
+  .modelo-exato-ebd .hero-copy {
+    max-width: 100% !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    max-width: 520px !important;
+    margin-inline: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .modelo-exato-ebd .navbar {
+    min-height: 62px !important;
+  }
+
+  .modelo-exato-ebd .nav-container {
+    padding-inline: 14px !important;
+  }
+
+  .modelo-exato-ebd .logo-oficial-navbar {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .modelo-exato-ebd .logo-text {
+    font-size: 1.25rem !important;
+  }
+
+  .modelo-exato-ebd .logo-sub {
+    font-size: 0.52rem !important;
+  }
+
+  .modelo-exato-ebd .hero {
+    padding: 42px 18px 44px !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(2.15rem, 10.5vw, 3rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  .modelo-exato-ebd .hero p {
+    font-size: 0.98rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .modelo-exato-ebd .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    display: grid !important;
+    gap: 8px !important;
+  }
+
+  .modelo-exato-ebd .stat {
+    min-width: 0 !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .modelo-exato-ebd .stat-number {
+    font-size: 1rem !important;
+  }
+
+  .modelo-exato-ebd .stat-label {
+    font-size: 0.66rem !important;
+  }
+
+  .modelo-exato-ebd .hero-mockup {
+    display: none !important;
+  }
+
+  .modelo-exato-ebd .section {
+    padding: 46px 18px !important;
+  }
+
+  .modelo-exato-ebd .features-grid,
+  .modelo-exato-ebd .personas-grid,
+  .modelo-exato-ebd .plans-grid,
+  .modelo-exato-ebd .comparison-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .modelo-exato-ebd .feature-card,
+  .modelo-exato-ebd .persona-card,
+  .modelo-exato-ebd .plan-card {
+    padding: 20px !important;
+    min-height: auto !important;
+  }
+
+  .painel-login-v70 {
+    padding: 30px 22px 28px !important;
+    gap: 20px !important;
+  }
+
+  .painel-login-v70 .marca-login {
+    align-items: center !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .painel-login-v70 .marca-login .logo-simbolo,
+  .painel-login-v70 .marca-login .logo-imagem {
+    width: 74px !important;
+    height: 74px !important;
+    min-width: 74px !important;
+    min-height: 74px !important;
+  }
+
+  .painel-login-v70 .marca-login h1 {
+    font-size: 2.05rem !important;
+  }
+
+  .painel-login-v70 .marca-login p {
+    font-size: 1rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .tela-login-v70 .apresentacao-login-v70 h2,
+  .apresentacao-login-v70 h2 {
+    font-size: clamp(2.15rem, 11vw, 3.2rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .tela-login-v70 .apresentacao-login-v70 p,
+  .apresentacao-login-v70 p {
+    font-size: 1rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .preview-login-v70 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .preview-login-card:not(:first-child),
+  .beneficios-login-v70 {
+    display: none !important;
+  }
+
+  .preview-login-card,
+  .preview-login-card-maior {
+    min-height: auto !important;
+    padding: 16px !important;
+  }
+
+  .tela-login-v70 .cartao-login,
+  .tela-login-v70 .cartao-login-v70 {
+    border-radius: 28px 28px 0 0 !important;
+    padding: 26px 18px 34px !important;
+    gap: 18px !important;
+  }
+
+  .cartao-login-v70 .topo-cartao-login {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .cartao-login-v70 .topo-cartao-icone {
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px !important;
+  }
+
+  .cartao-login-v70 .topo-cartao-login h2 {
+    font-size: clamp(1.85rem, 9vw, 2.45rem) !important;
+  }
+
+  .cartao-login-v70 .formulario-login,
+  .bloco-cadastro-v70 {
+    padding: 18px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .modelo-exato-ebd .hero {
+    padding-top: 34px !important;
+  }
+
+  .modelo-exato-ebd .hero h1 {
+    font-size: clamp(2rem, 10.8vw, 2.65rem) !important;
+  }
+
+  .modelo-exato-ebd .hero-stats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .painel-login-v70 {
+    padding: 24px 18px !important;
+  }
+
+  .painel-login-v70 .marca-login {
+    align-items: flex-start !important;
+  }
+
+  .painel-login-v70 .marca-login .logo-simbolo,
+  .painel-login-v70 .marca-login .logo-imagem {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+  }
+
+  .cartao-login-v70 .topo-cartao-login {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}

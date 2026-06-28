@@ -421,3 +421,5 @@ export function montarMapaTecnicoTexto(mapa = MAPA_TECNICO_SISTEMA) {
     .replace(/\*\*/g, '')
     .replace(/`/g, '')
 }
+
+// Atualização visual v2 (28/06/2026): refinamento da página pública e login desktop/mobile sem alteração de funcionamento.

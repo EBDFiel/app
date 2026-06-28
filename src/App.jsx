@@ -6944,7 +6944,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             type="button"
             onClick={() => setTelaPublica('login')}
           >
-            â† Voltar para login
+            ← Voltar para login
           </button>
 
           <div className="topo-cartao-login">
@@ -7415,7 +7415,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
             type="button"
             onClick={() => setTelaPublica('landing')}
           >
-            â† Voltar para apresentação
+            ← Voltar para apresentação
           </button>
 
           <div className="topo-cartao-login">
@@ -7589,7 +7589,7 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
                 <div className="hero-stats">
                   <div className="stat">
                     <div className="stat-number">{'10'}</div>
-                    <div className="stat-label">{'Igrejas no piloto'}</div>
+                    <div className="stat-label">{'Igrejas atendidas'}</div>
                   </div>
                   <div className="stat">
                     <div className="stat-number">{'PDF'}</div>
@@ -7748,9 +7748,9 @@ Confirme se essa é realmente a data correta da EBD antes de continuar.`
               <div className="plans-grid">
                 <article className="plan-card">
                   <div className="plan-badge">{'Fechado'}</div>
-                  <h3>{'Teste piloto'}</h3>
+                  <h3>{'Acesso inicial'}</h3>
                   <div className="plan-price">{'Gratuito'}</div>
-                  <p>{'Para igrejas do grupo selecionadas.'}</p>
+                  <p>{'Para igrejas em implantação assistida.'}</p>
                   <button className="btn-outline" type="button" onClick={() => setTelaPublica('login')}>
                     {'Entrar'}
                   </button>
