@@ -35542,3 +35542,351 @@ html body #root .bloco-gradiente .badge {
     font-weight: 900 !important;
   }
 }
+
+/* =========================================================
+   V84 - Sidebar escura, centralização e ícones com arte
+   Correção focada solicitada pelo usuário
+   ========================================================= */
+
+@media (min-width: 901px) {
+  html body #root .app {
+    display: grid !important;
+    grid-template-columns: 248px minmax(0, 1fr) !important;
+    min-height: 100vh !important;
+    background:
+      radial-gradient(circle at 28% 0%, rgba(57, 216, 255, 0.13), transparent 30%),
+      radial-gradient(circle at 92% 8%, rgba(255, 181, 27, 0.10), transparent 24%),
+      linear-gradient(180deg, #06111f 0%, #081726 100%) !important;
+  }
+
+  html body #root .app > .menu-lateral,
+  html body #root aside.menu-lateral,
+  html body #root .menu-lateral {
+    width: 248px !important;
+    min-width: 248px !important;
+    max-width: 248px !important;
+    flex: 0 0 248px !important;
+    padding: 20px 14px 18px !important;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 181, 27, 0.18), transparent 28%),
+      radial-gradient(circle at 85% 12%, rgba(57, 216, 255, 0.14), transparent 34%),
+      linear-gradient(180deg, #020814 0%, #06111f 38%, #09233d 100%) !important;
+    color: #f8fbff !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 28px 0 70px rgba(0, 0, 0, 0.42) !important;
+    opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  html body #root .menu-lateral::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    background: linear-gradient(90deg, rgba(255,255,255,0.08), transparent 42%) !important;
+    opacity: 0.55 !important;
+  }
+
+  html body #root .menu-lateral::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: auto 12px 12px 12px !important;
+    height: 86px !important;
+    border-radius: 28px !important;
+    background: radial-gradient(circle at right, rgba(255, 181, 27, 0.22), transparent 58%) !important;
+    opacity: 0.62 !important;
+    pointer-events: none !important;
+  }
+
+  html body #root .menu-lateral > * {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar {
+    display: grid !important;
+    grid-template-columns: 56px minmax(0, 1fr) auto !important;
+    gap: 12px !important;
+    align-items: center !important;
+    padding: 12px 10px 14px !important;
+    margin: 0 0 14px !important;
+    border-radius: 22px !important;
+    background: rgba(255, 255, 255, 0.09) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.10),
+      0 18px 40px rgba(0, 0, 0, 0.22) !important;
+    min-width: 0 !important;
+  }
+
+  html body #root .menu-lateral .logo-simbolo-sidebar,
+  html body #root .menu-lateral .marca-sidebar .logo-simbolo {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    border-radius: 50% !important;
+    padding: 3px !important;
+    background:
+      radial-gradient(circle at 35% 20%, rgba(255,255,255,0.26), transparent 42%),
+      linear-gradient(135deg, #0b1b32, #07111f) !important;
+    border: 2px solid rgba(255, 181, 27, 0.70) !important;
+    box-shadow:
+      0 0 0 4px rgba(57, 216, 255, 0.10),
+      0 14px 28px rgba(0, 0, 0, 0.36) !important;
+    overflow: hidden !important;
+  }
+
+  html body #root .menu-lateral .logo-simbolo-sidebar img,
+  html body #root .menu-lateral .marca-sidebar img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 50% !important;
+    display: block !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar h1 {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.035em !important;
+    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.42) !important;
+    margin: 0 0 4px !important;
+  }
+
+  html body #root .menu-lateral .marca-sidebar p {
+    color: #ffcb4d !important;
+    -webkit-text-fill-color: #ffcb4d !important;
+    font-size: 11px !important;
+    font-weight: 950 !important;
+    letter-spacing: 0.035em !important;
+    text-transform: none !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.48) !important;
+    margin: 0 !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao,
+  html body #root .menu-lateral nav {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 9px !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button,
+  html body #root .menu-lateral nav button {
+    min-height: 52px !important;
+    padding: 9px 10px !important;
+    border-radius: 18px !important;
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px !important;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.055)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.10),
+      0 10px 24px rgba(0, 0, 0, 0.16) !important;
+    color: #f8fbff !important;
+    -webkit-text-fill-color: #f8fbff !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    text-align: left !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button span:not(.icone-menu),
+  html body #root .menu-lateral nav button span:not(.icone-menu) {
+    color: #f8fbff !important;
+    -webkit-text-fill-color: #f8fbff !important;
+    text-shadow: 0 2px 9px rgba(0, 0, 0, 0.42) !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button:hover,
+  html body #root .menu-lateral nav button:hover {
+    transform: translateX(3px) !important;
+    background:
+      linear-gradient(135deg, rgba(57,216,255,0.20), rgba(255,255,255,0.09)) !important;
+    border-color: rgba(57, 216, 255, 0.38) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo,
+  html body #root .menu-lateral nav button.ativo {
+    background: linear-gradient(135deg, #ffcb4d 0%, #ff9f0a 100%) !important;
+    color: #07111f !important;
+    -webkit-text-fill-color: #07111f !important;
+    border-color: rgba(255, 203, 77, 0.92) !important;
+    box-shadow:
+      0 14px 34px rgba(255, 159, 10, 0.34),
+      inset 0 1px 0 rgba(255,255,255,0.50) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo span:not(.icone-menu),
+  html body #root .menu-lateral nav button.ativo span:not(.icone-menu) {
+    color: #07111f !important;
+    -webkit-text-fill-color: #07111f !important;
+    text-shadow: none !important;
+  }
+
+  html body #root .menu-lateral .icone-menu {
+    width: 40px !important;
+    height: 40px !important;
+    flex: 0 0 40px !important;
+    border-radius: 15px !important;
+    display: grid !important;
+    place-items: center !important;
+    background:
+      radial-gradient(circle at 30% 22%, rgba(255,255,255,0.72), transparent 34%),
+      linear-gradient(135deg, #14c8e8 0%, #1267d8 100%) !important;
+    border: 1px solid rgba(255,255,255,0.38) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow:
+      0 12px 22px rgba(18, 103, 216, 0.22),
+      inset 0 1px 0 rgba(255,255,255,0.32) !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral .icone-menu svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke-width: 2.15 !important;
+    color: #ffffff !important;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.18)) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu,
+  html body #root .menu-lateral nav button.ativo .icone-menu {
+    background: linear-gradient(135deg, #07111f 0%, #12365b 100%) !important;
+    color: #ffcb4d !important;
+    -webkit-text-fill-color: #ffcb4d !important;
+    border-color: rgba(7, 17, 31, 0.22) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 10px 18px rgba(7,17,31,0.18) !important;
+  }
+
+  html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu svg,
+  html body #root .menu-lateral nav button.ativo .icone-menu svg {
+    color: #ffcb4d !important;
+  }
+
+  html body #root .cartao-usuario-sidebar {
+    background:
+      radial-gradient(circle at 88% 15%, rgba(255, 203, 77, 0.18), transparent 40%),
+      rgba(255,255,255,0.10) !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    color: #ffffff !important;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.24) !important;
+  }
+
+  html body #root .cartao-usuario-sidebar *,
+  html body #root .cartao-usuario-sidebar strong,
+  html body #root .cartao-usuario-sidebar p {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .cartao-usuario-sidebar .selo-perfil-sidebar {
+    color: #07111f !important;
+    -webkit-text-fill-color: #07111f !important;
+    background: linear-gradient(135deg, #ffcb4d, #ff9f0a) !important;
+    font-weight: 950 !important;
+  }
+
+  html body #root .area-principal {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 24px 26px 34px !important;
+    display: grid !important;
+    place-items: start center !important;
+    background:
+      radial-gradient(circle at 88% 5%, rgba(255,181,27,0.10), transparent 24%),
+      radial-gradient(circle at 8% 18%, rgba(57,216,255,0.10), transparent 26%),
+      linear-gradient(180deg, rgba(6,17,31,0.15), transparent) !important;
+  }
+
+  html body #root .area-principal > .conteudo,
+  html body #root main.area-principal > section,
+  html body #root main.area-principal > div:not(.banner-modo-suporte) {
+    width: min(100%, 1120px) !important;
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html body #root .topo-mobile-interno {
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,203,77,0.16), transparent 34%),
+      linear-gradient(90deg, #030b15 0%, #06172a 52%, #082f52 100%) !important;
+    border-bottom: 1px solid rgba(57,216,255,0.28) !important;
+  }
+
+  html body #root .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 50px !important;
+    height: 50px !important;
+    flex: 0 0 50px !important;
+    border-radius: 50% !important;
+    padding: 3px !important;
+    background: #07111f !important;
+    border: 2px solid rgba(255,203,77,0.72) !important;
+    overflow: hidden !important;
+  }
+
+  html body #root .marca-mobile-interna .logo-simbolo-sidebar img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255,203,77,0.20), transparent 28%),
+      radial-gradient(circle at 80% 14%, rgba(57,216,255,0.16), transparent 34%),
+      linear-gradient(180deg, #020814 0%, #06111f 52%, #08233d 100%) !important;
+    color: #ffffff !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button,
+  html body #root .menu-lateral.menu-lateral-aberto nav button {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: rgba(255,255,255,0.13) !important;
+    border: 1px solid rgba(255,255,255,0.20) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button span:not(.icone-menu),
+  html body #root .menu-lateral.menu-lateral-aberto nav button span:not(.icone-menu) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.42) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo,
+  html body #root .menu-lateral.menu-lateral-aberto nav button.ativo {
+    background: linear-gradient(135deg, #ffcb4d 0%, #ff9f0a 100%) !important;
+    color: #07111f !important;
+    -webkit-text-fill-color: #07111f !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button.ativo span:not(.icone-menu),
+  html body #root .menu-lateral.menu-lateral-aberto nav button.ativo span:not(.icone-menu) {
+    color: #07111f !important;
+    -webkit-text-fill-color: #07111f !important;
+    text-shadow: none !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .icone-menu {
+    background: linear-gradient(135deg, #14c8e8 0%, #1267d8 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.34) !important;
+  }
+}
