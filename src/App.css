@@ -30976,3 +30976,90 @@ img[src*="logo-ebd-fiel.png"],
     gap: 18px !important;
   }
 }
+
+/* =========================================================
+   HOTFIX v2.3 - Logo redonda sem quadrado no login/home
+   Mantém a imagem /logo-ebd-fiel.png limpa, sem caixa, sombra,
+   borda, fundo ou padding herdados de estilos anteriores.
+   ========================================================= */
+.tela-login .marca-login .logo-simbolo,
+.painel-apresentacao .marca-login .logo-simbolo,
+.marca-login .logo-simbolo,
+.marca-publica .logo-publica,
+.topo-publico .logo-simbolo,
+.topo-publico .logo-publica,
+.logo-simbolo:has(img[src*="logo-ebd-fiel"]),
+.logo-publica:has(img[src*="logo-ebd-fiel"]) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  border-radius: 50% !important;
+}
+
+.tela-login .marca-login .logo-simbolo::before,
+.tela-login .marca-login .logo-simbolo::after,
+.painel-apresentacao .marca-login .logo-simbolo::before,
+.painel-apresentacao .marca-login .logo-simbolo::after,
+.marca-login .logo-simbolo::before,
+.marca-login .logo-simbolo::after,
+.logo-simbolo:has(img[src*="logo-ebd-fiel"])::before,
+.logo-simbolo:has(img[src*="logo-ebd-fiel"])::after,
+.logo-publica:has(img[src*="logo-ebd-fiel"])::before,
+.logo-publica:has(img[src*="logo-ebd-fiel"])::after {
+  content: none !important;
+  display: none !important;
+}
+
+.tela-login .marca-login .logo-simbolo img,
+.tela-login .marca-login .logo-imagem,
+.painel-apresentacao .marca-login .logo-simbolo img,
+.painel-apresentacao .marca-login .logo-imagem,
+.marca-login .logo-simbolo img,
+.marca-login .logo-imagem,
+.logo-simbolo img.logo-imagem,
+.logo-publica img.logo-imagem,
+.logo-simbolo img[src*="logo-ebd-fiel"],
+.logo-publica img[src*="logo-ebd-fiel"] {
+  display: block !important;
+  width: clamp(86px, 10vw, 132px) !important;
+  height: clamp(86px, 10vw, 132px) !important;
+  min-width: clamp(86px, 10vw, 132px) !important;
+  min-height: clamp(86px, 10vw, 132px) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+@media (max-width: 720px) {
+  .tela-login .marca-login .logo-simbolo img,
+  .tela-login .marca-login .logo-imagem,
+  .painel-apresentacao .marca-login .logo-simbolo img,
+  .painel-apresentacao .marca-login .logo-imagem,
+  .marca-login .logo-simbolo img,
+  .marca-login .logo-imagem,
+  .logo-simbolo img.logo-imagem,
+  .logo-publica img.logo-imagem,
+  .logo-simbolo img[src*="logo-ebd-fiel"],
+  .logo-publica img[src*="logo-ebd-fiel"] {
+    width: 96px !important;
+    height: 96px !important;
+    min-width: 96px !important;
+    min-height: 96px !important;
+  }
+}
