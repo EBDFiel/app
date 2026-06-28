@@ -32410,3 +32410,624 @@ img[src*="logo-ebd-fiel.png"],
     padding: 16px !important;
   }
 }
+
+/* =========================================================
+   EBD Fiel App - Visual interno v5 inspirado em ebdfiel.com.br
+   Foco: identidade azul/navy, ciano, laranja e cards modernos.
+   Somente aparência: não altera regras, dados ou funcionamento.
+   ========================================================= */
+:root {
+  --ebd-navy-950: #061426;
+  --ebd-navy-900: #071b33;
+  --ebd-navy-800: #0a2747;
+  --ebd-blue-700: #0d6efd;
+  --ebd-blue-600: #1188f2;
+  --ebd-cyan-500: #19c6d7;
+  --ebd-gold-500: #ffb21a;
+  --ebd-gold-600: #ff9f0a;
+  --ebd-card: rgba(255, 255, 255, 0.96);
+  --ebd-stroke: rgba(20, 198, 215, 0.22);
+  --ebd-soft-shadow: 0 24px 60px rgba(4, 16, 32, 0.18);
+}
+
+html body #root .app {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(25, 198, 215, 0.20), transparent 28%),
+    radial-gradient(circle at 92% 6%, rgba(255, 178, 26, 0.16), transparent 26%),
+    linear-gradient(135deg, #eef7fb 0%, #f7fbff 46%, #eef3f7 100%) !important;
+}
+
+/* Sidebar estilo EBD Fiel: mais escura, premium e contrastada */
+html body #root .menu-lateral,
+html body #root .sidebar {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(25, 198, 215, 0.34), transparent 34%),
+    linear-gradient(180deg, #08182c 0%, #0a2342 54%, #071426 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 18px 0 48px rgba(4, 18, 35, 0.24) !important;
+  color: #ffffff !important;
+}
+
+html body #root .marca-sidebar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding-bottom: 18px !important;
+}
+
+html body #root .marca-sidebar h1,
+html body #root .marca-sidebar strong,
+html body #root .marca-sidebar p,
+html body #root .marca-sidebar span {
+  color: #ffffff !important;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.28) !important;
+}
+
+html body #root .marca-sidebar p {
+  color: rgba(255, 255, 255, 0.74) !important;
+}
+
+html body #root .logo-simbolo-sidebar,
+html body #root .marca-sidebar .logo-simbolo {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28) !important;
+  overflow: hidden !important;
+}
+
+html body #root .logo-simbolo-sidebar img,
+html body #root .marca-sidebar .logo-imagem {
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1.02) !important;
+}
+
+html body #root .menu-navegacao button,
+html body #root .menu-lateral nav button,
+html body #root .sidebar nav button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
+}
+
+html body #root .menu-navegacao button:hover,
+html body #root .menu-lateral nav button:hover,
+html body #root .sidebar nav button:hover {
+  background: rgba(25, 198, 215, 0.16) !important;
+  color: #ffffff !important;
+  transform: translateX(2px) !important;
+}
+
+html body #root .menu-navegacao button.ativo,
+html body #root .menu-lateral nav button.ativo,
+html body #root .sidebar nav button.ativo {
+  background: linear-gradient(135deg, #0d6efd 0%, #18bfd4 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
+  box-shadow: 0 16px 32px rgba(13, 110, 253, 0.30) !important;
+}
+
+html body #root .icone-menu {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+}
+
+html body #root .cartao-usuario-sidebar {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+html body #root .cartao-usuario-sidebar strong,
+html body #root .cartao-usuario-sidebar p {
+  color: #ffffff !important;
+}
+
+html body #root .selo-perfil-sidebar {
+  background: rgba(255, 178, 26, 0.16) !important;
+  color: #ffd27a !important;
+  border-color: rgba(255, 178, 26, 0.38) !important;
+}
+
+/* Área principal com profundidade parecida com o site principal */
+html body #root .area-principal {
+  background:
+    radial-gradient(circle at 4% 12%, rgba(25, 198, 215, 0.12), transparent 28%),
+    radial-gradient(circle at 92% 2%, rgba(255, 178, 26, 0.13), transparent 26%),
+    linear-gradient(135deg, #eef7fb 0%, #ffffff 48%, #eef3f8 100%) !important;
+}
+
+html body #root .conteudo,
+html body #root .pagina-interna,
+html body #root main.conteudo {
+  color: #0a1a2f !important;
+}
+
+/* Topos de página com bloco azul/ciano, estilo landing do site */
+html body #root .topo-pagina,
+html body #root .topo-pagina-interna,
+html body #root .topo-admin-sistema,
+html body #root .dashboard-v41-hero,
+html body #root .hero-painel {
+  background:
+    radial-gradient(circle at 88% 20%, rgba(255, 178, 26, 0.28), transparent 26%),
+    linear-gradient(135deg, #0d4ea6 0%, #1188f2 46%, #19c6d7 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow: 0 28px 70px rgba(13, 110, 253, 0.26) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+html body #root .topo-pagina::after,
+html body #root .topo-pagina-interna::after,
+html body #root .topo-admin-sistema::after,
+html body #root .dashboard-v41-hero::after,
+html body #root .hero-painel::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -80px !important;
+  bottom: -110px !important;
+  width: 260px !important;
+  height: 260px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 178, 26, 0.20) !important;
+  pointer-events: none !important;
+}
+
+html body #root .topo-pagina h1,
+html body #root .topo-pagina h2,
+html body #root .topo-pagina-interna h1,
+html body #root .topo-pagina-interna h2,
+html body #root .topo-admin-sistema h1,
+html body #root .topo-admin-sistema h2,
+html body #root .dashboard-v41-hero h1,
+html body #root .hero-painel h1 {
+  color: #ffffff !important;
+  text-shadow: 0 14px 34px rgba(4, 18, 35, 0.22) !important;
+}
+
+html body #root .topo-pagina p,
+html body #root .topo-pagina-interna p,
+html body #root .topo-admin-sistema p,
+html body #root .dashboard-v41-hero p,
+html body #root .hero-painel p {
+  color: rgba(255, 255, 255, 0.90) !important;
+}
+
+html body #root .selo-admin,
+html body #root .selo-manual,
+html body #root .topo-pagina span[class*="selo"],
+html body #root .topo-pagina-interna span[class*="selo"] {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.30) !important;
+  color: #fff3c8 !important;
+}
+
+/* Botões: laranja de ação e azul de apoio */
+html body #root .botao-principal,
+html body #root button.botao-principal,
+html body #root .btn-primary,
+html body #root button[type="submit"] {
+  background: linear-gradient(135deg, #ffb21a 0%, #ff9700 100%) !important;
+  color: #071426 !important;
+  border: 0 !important;
+  box-shadow: 0 18px 34px rgba(255, 159, 10, 0.28) !important;
+  font-weight: 900 !important;
+}
+
+html body #root .botao-principal:hover,
+html body #root button.botao-principal:hover,
+html body #root button[type="submit"]:hover {
+  filter: brightness(1.03) !important;
+  transform: translateY(-1px) !important;
+}
+
+html body #root .botao-secundario,
+html body #root button.botao-secundario {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #0a2747 !important;
+  border: 1px solid rgba(13, 110, 253, 0.18) !important;
+  box-shadow: 0 10px 24px rgba(4, 18, 35, 0.08) !important;
+  font-weight: 850 !important;
+}
+
+/* Cards com visual mais vivo e menos genérico */
+html body #root .card,
+html body #root .bloco,
+html body #root .painel,
+html body #root .cartao-pagina,
+html body #root .secao,
+html body #root .admin-visao-card-mapa,
+html body #root .admin-mapa-card,
+html body #root .admin-acessos-bloco,
+html body #root .admin-feedback-alertas,
+html body #root .controle-piloto-admin {
+  background:
+    radial-gradient(circle at 94% 90%, rgba(255, 178, 26, 0.14), transparent 25%),
+    rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(13, 110, 253, 0.12) !important;
+  box-shadow: var(--ebd-soft-shadow) !important;
+}
+
+html body #root .cards-estatisticas .card,
+html body #root .cards-admin-sistema .card,
+html body #root .dashboard-v41-cards .card,
+html body #root .card-estatistica,
+html body #root .card-admin {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 253, 255, 0.96)) !important;
+  border: 1px solid rgba(13, 110, 253, 0.16) !important;
+  border-bottom: 4px solid #19c6d7 !important;
+  box-shadow: 0 18px 44px rgba(4, 18, 35, 0.10) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+html body #root .cards-estatisticas .card::before,
+html body #root .cards-admin-sistema .card::before,
+html body #root .dashboard-v41-cards .card::before,
+html body #root .card-estatistica::before,
+html body #root .card-admin::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 5px !important;
+  background: linear-gradient(180deg, #ffb21a, #19c6d7) !important;
+}
+
+html body #root .cards-estatisticas .card strong,
+html body #root .cards-admin-sistema .card strong,
+html body #root .dashboard-v41-cards .card strong,
+html body #root .card-estatistica strong,
+html body #root .card-admin strong,
+html body #root .card-valor {
+  color: #071426 !important;
+}
+
+html body #root .cards-estatisticas .card span,
+html body #root .cards-admin-sistema .card span,
+html body #root .dashboard-v41-cards .card span,
+html body #root .card-estatistica span,
+html body #root .card-admin span {
+  color: #0a2747 !important;
+  background: rgba(255, 178, 26, 0.12) !important;
+  border-color: rgba(255, 178, 26, 0.36) !important;
+}
+
+/* Abas no padrão azul/laranja */
+html body #root .admin-abas-navegacao,
+html body #root .abas,
+html body #root .abas-chamada,
+html body #root .abas-relatorios {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(13, 110, 253, 0.12) !important;
+  box-shadow: 0 18px 38px rgba(4, 18, 35, 0.07) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+html body #root .admin-abas-navegacao button,
+html body #root .abas button,
+html body #root .abas-chamada button,
+html body #root .abas-relatorios button {
+  background: #ffffff !important;
+  color: #0a2747 !important;
+  border: 1px solid rgba(10, 39, 71, 0.10) !important;
+}
+
+html body #root .admin-abas-navegacao button.ativo,
+html body #root .abas button.ativo,
+html body #root .abas-chamada button.ativo,
+html body #root .abas-relatorios button.ativo {
+  background: linear-gradient(135deg, #ffb21a 0%, #ff9700 100%) !important;
+  color: #071426 !important;
+  border-color: transparent !important;
+  box-shadow: 0 14px 28px rgba(255, 159, 10, 0.24) !important;
+}
+
+/* Painel/dashboard interno: mais próximo do bloco do site principal */
+html body #root .dashboard-v41-hero,
+html body #root .hero-painel {
+  min-height: 0 !important;
+}
+
+html body #root .dashboard-v41-hero .botao-secundario,
+html body #root .hero-painel .botao-secundario,
+html body #root .dashboard-v41-hero button:not(.botao-principal),
+html body #root .hero-painel button:not(.botao-principal) {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #0a2747 !important;
+}
+
+html body #root .dashboard-v41-hero .botao-principal,
+html body #root .hero-painel .botao-principal {
+  background: linear-gradient(135deg, #ffb21a 0%, #ff9700 100%) !important;
+  color: #071426 !important;
+}
+
+/* Formulários mais claros e consistentes */
+html body #root input,
+html body #root select,
+html body #root textarea {
+  background: #ffffff !important;
+  color: #0a1a2f !important;
+  border: 1px solid rgba(13, 110, 253, 0.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 12px 26px rgba(4, 18, 35, 0.04) !important;
+}
+
+html body #root input::placeholder,
+html body #root textarea::placeholder {
+  color: rgba(10, 26, 47, 0.45) !important;
+}
+
+html body #root label {
+  color: #071426 !important;
+  font-weight: 900 !important;
+}
+
+/* Login também recebe linguagem visual semelhante */
+html body #root .tela-login {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(25, 198, 215, 0.28), transparent 30%),
+    radial-gradient(circle at 86% 18%, rgba(255, 178, 26, 0.22), transparent 28%),
+    linear-gradient(135deg, #071426 0%, #0d4ea6 52%, #19c6d7 100%) !important;
+}
+
+html body #root .tela-login .painel-apresentacao {
+  background: transparent !important;
+}
+
+html body #root .tela-login .cartao-login,
+html body #root .tela-login .cartao-solicitacao,
+html body #root .tela-login .card-solicitacao {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.36) !important;
+  box-shadow: 0 34px 90px rgba(4, 18, 35, 0.24) !important;
+}
+
+/* Mobile: foco em ser perceptivelmente diferente e mais próximo do site */
+@media (max-width: 900px) {
+  html body #root .app {
+    background:
+      radial-gradient(circle at 10% 8%, rgba(25, 198, 215, 0.22), transparent 30%),
+      linear-gradient(180deg, #071426 0%, #0b1e35 94px, #eef7fb 95px, #f6fbff 100%) !important;
+  }
+
+  html body #root .topo-mobile-interno {
+    background:
+      linear-gradient(135deg, rgba(7, 20, 38, 0.98) 0%, rgba(10, 39, 71, 0.98) 100%) !important;
+    border-bottom: 1px solid rgba(25, 198, 215, 0.20) !important;
+    box-shadow: 0 18px 42px rgba(4, 18, 35, 0.36) !important;
+    backdrop-filter: blur(14px) !important;
+    min-height: 76px !important;
+    height: 76px !important;
+    padding: 10px 14px !important;
+    grid-template-columns: minmax(0, 1fr) 48px 48px !important;
+    gap: 10px !important;
+  }
+
+  html body #root .area-principal {
+    padding-top: 92px !important;
+    background:
+      radial-gradient(circle at 90% 0%, rgba(255, 178, 26, 0.16), transparent 24%),
+      linear-gradient(180deg, #edf8fb 0%, #ffffff 44%, #eef3f8 100%) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna {
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna img,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-imagem {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: scale(1.02) !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong,
+  html body #root .topo-mobile-interno .marca-mobile-interna h1,
+  html body #root .topo-mobile-interno .marca-mobile-interna .titulo-mobile {
+    color: #ffffff !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+    max-width: 128px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span,
+  html body #root .topo-mobile-interno .marca-mobile-interna p,
+  html body #root .topo-mobile-interno .marca-mobile-interna .subtitulo-mobile {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+    max-width: 128px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.10) !important;
+    border: 1px solid rgba(255, 255, 255, 0.13) !important;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22) !important;
+  }
+
+  html body #root .botao-inicio-interno {
+    background: #ffffff !important;
+    color: #0d6efd !important;
+  }
+
+  html body #root .botao-inicio-interno span {
+    display: none !important;
+  }
+
+  html body #root .botao-menu-interno span {
+    background: #ffffff !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto,
+  html body #root .menu-lateral-aberto {
+    background:
+      radial-gradient(circle at 16% 0%, rgba(25, 198, 215, 0.28), transparent 38%),
+      linear-gradient(180deg, #071426 0%, #0a2747 70%, #071426 100%) !important;
+  }
+
+  html body #root .conteudo,
+  html body #root main.conteudo,
+  html body #root .conteudo.pagina-interna {
+    padding: 14px 12px 28px !important;
+  }
+
+  html body #root .topo-pagina,
+  html body #root .topo-pagina-interna,
+  html body #root .topo-admin-sistema,
+  html body #root .dashboard-v41-hero,
+  html body #root .hero-painel {
+    border-radius: 26px !important;
+    padding: 22px 18px !important;
+    margin-bottom: 14px !important;
+  }
+
+  html body #root .topo-pagina h1,
+  html body #root .topo-pagina h2,
+  html body #root .topo-pagina-interna h1,
+  html body #root .topo-pagina-interna h2,
+  html body #root .topo-admin-sistema h1,
+  html body #root .topo-admin-sistema h2,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .hero-painel h1 {
+    font-size: clamp(30px, 10vw, 42px) !important;
+    line-height: 1.02 !important;
+  }
+
+  html body #root .cards-estatisticas,
+  html body #root .cards-admin-sistema,
+  html body #root .dashboard-v41-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  html body #root .cards-estatisticas .card,
+  html body #root .cards-admin-sistema .card,
+  html body #root .dashboard-v41-cards .card,
+  html body #root .card-estatistica,
+  html body #root .card-admin {
+    min-height: 104px !important;
+    padding: 14px 12px 14px 16px !important;
+    border-radius: 20px !important;
+  }
+
+  html body #root .card:not(.card-estatistica),
+  html body #root .bloco,
+  html body #root .painel,
+  html body #root .admin-visao-card-mapa,
+  html body #root .admin-mapa-card,
+  html body #root .admin-acessos-bloco,
+  html body #root .admin-feedback-alertas,
+  html body #root .controle-piloto-admin {
+    border-radius: 24px !important;
+    padding: 18px !important;
+  }
+
+  html body #root .admin-abas-navegacao {
+    border-radius: 22px !important;
+    padding: 8px !important;
+  }
+
+  html body #root .admin-abas-navegacao button,
+  html body #root .abas button,
+  html body #root .abas-chamada button,
+  html body #root .abas-relatorios button {
+    min-height: 40px !important;
+    padding: 9px 14px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html body #root .topo-mobile-interno {
+    grid-template-columns: minmax(0, 1fr) 46px 46px !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    padding: 9px 12px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    gap: 9px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong,
+  html body #root .topo-mobile-interno .marca-mobile-interna h1,
+  html body #root .topo-mobile-interno .marca-mobile-interna .titulo-mobile {
+    max-width: 112px !important;
+    font-size: 16px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span,
+  html body #root .topo-mobile-interno .marca-mobile-interna p,
+  html body #root .topo-mobile-interno .marca-mobile-interna .subtitulo-mobile {
+    max-width: 112px !important;
+    font-size: 8.5px !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+  }
+
+  html body #root .area-principal {
+    padding-top: 88px !important;
+  }
+
+  html body #root .cards-estatisticas,
+  html body #root .cards-admin-sistema,
+  html body #root .dashboard-v41-cards {
+    gap: 9px !important;
+  }
+
+  html body #root .cards-estatisticas .card,
+  html body #root .cards-admin-sistema .card,
+  html body #root .dashboard-v41-cards .card,
+  html body #root .card-estatistica,
+  html body #root .card-admin {
+    min-height: 98px !important;
+  }
+}
