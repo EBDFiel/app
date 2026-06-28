@@ -33572,3 +33572,533 @@ button[type='submit'] {
     font-size: 16px !important;
   }
 }
+
+
+/* =========================================================
+   v7 - Correção estrutural de identidade visual interna
+   Foco: logo redonda sem corte, menu mobile legível e cards mobile compactos.
+   ========================================================= */
+
+/* LOGO: usar a imagem redonda inteira, sem corte, em todos os pontos internos */
+html body #root .logo-simbolo,
+html body #root .logo-simbolo-sidebar,
+html body #root .marca-sidebar .logo-simbolo,
+html body #root .marca-mobile-interna .logo-simbolo,
+html body #root .landing-pro-brand-mark {
+  border-radius: 50% !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+html body #root .logo-simbolo img,
+html body #root .logo-simbolo-sidebar img,
+html body #root img.logo-imagem,
+html body #root .landing-pro-brand-mark img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+html body #root .marca-sidebar .logo-simbolo,
+html body #root .marca-sidebar .logo-simbolo-sidebar {
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  flex: 0 0 58px !important;
+}
+
+/* SIDEBAR DESKTOP: mais próximo do site ebdfiel.com.br, com alto contraste */
+html body #root .menu-lateral,
+html body #root aside.menu-lateral {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(20, 184, 166, 0.25), transparent 30%),
+    radial-gradient(circle at 90% 100%, rgba(255, 178, 26, 0.20), transparent 28%),
+    linear-gradient(180deg, #07111f 0%, #0a1a2e 45%, #082644 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 18px 0 54px rgba(7, 17, 31, 0.20) !important;
+}
+
+html body #root .marca-sidebar h1,
+html body #root .marca-sidebar strong {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.18) !important;
+}
+
+html body #root .marca-sidebar p,
+html body #root .marca-sidebar span {
+  color: #d8efff !important;
+}
+
+html body #root .menu-navegacao button,
+html body #root .menu-lateral nav button {
+  color: #f1f8ff !important;
+  background: rgba(255,255,255,0.085) !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05) !important;
+  font-weight: 850 !important;
+}
+
+html body #root .menu-navegacao button span,
+html body #root .menu-lateral nav button span {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+html body #root .menu-navegacao button .icone-menu,
+html body #root .menu-lateral nav button .icone-menu {
+  background: rgba(255,255,255,0.92) !important;
+  color: #0ea5e9 !important;
+}
+
+html body #root .menu-navegacao button.ativo,
+html body #root .menu-lateral nav button.ativo {
+  background: linear-gradient(135deg, #ffcf4a 0%, #ff9700 100%) !important;
+  color: #07111f !important;
+  border-color: rgba(255,255,255,0.18) !important;
+}
+
+html body #root .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral nav button.ativo .icone-menu {
+  background: #ffffff !important;
+  color: #0f66d8 !important;
+}
+
+/* CARDS INTERNOS: mais identidade EBD Fiel e menos branco apagado */
+html body #root .topo-admin-sistema,
+html body #root .topo-pagina,
+html body #root .dashboard-v41-hero,
+html body #root .hero-painel {
+  background:
+    radial-gradient(circle at 94% 76%, rgba(255, 178, 26, 0.30), transparent 23%),
+    linear-gradient(135deg, #0b1f3a 0%, #0f66d8 48%, #20c9dc 100%) !important;
+  color: #ffffff !important;
+}
+
+html body #root .cards-admin-sistema .card,
+html body #root .card-admin,
+html body #root .admin-visao-card,
+html body #root .dashboard-v41-bloco,
+html body #root .painel-alerta-card,
+html body #root .alerta-aniversariantes,
+html body #root .card:not(.card-login):not(.landing-pro-card) {
+  background:
+    radial-gradient(circle at 92% 88%, rgba(255, 178, 26, 0.14), transparent 20%),
+    linear-gradient(180deg, #ffffff 0%, #f8fcff 100%) !important;
+  border: 1px solid rgba(135, 190, 230, 0.55) !important;
+  box-shadow: 0 20px 54px rgba(7, 17, 31, 0.10) !important;
+}
+
+html body #root .selo-admin,
+html body #root [class*="selo"] {
+  color: #8a3e00 !important;
+  background: rgba(255, 178, 26, 0.16) !important;
+  border: 1px solid rgba(255, 178, 26, 0.42) !important;
+  opacity: 1 !important;
+}
+
+/* MOBILE: topo compacto, logo redonda inteira, menu legível e cards com mais informação por tela */
+@media (max-width: 900px) {
+  html body #root .topo-mobile-interno {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 46px 46px !important;
+    align-items: center !important;
+    height: 68px !important;
+    min-height: 68px !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(32,201,220,0.22), transparent 35%),
+      linear-gradient(135deg, #07111f 0%, #0b1728 70%, #0d2e54 100%) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 12px 30px rgba(7, 17, 31, 0.34) !important;
+  }
+
+  html body #root .area-principal {
+    padding-top: 78px !important;
+  }
+
+  html body #root .marca-mobile-interna {
+    gap: 9px !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    flex: 0 0 44px !important;
+    border-radius: 50% !important;
+    overflow: visible !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-imagem,
+  html body #root .topo-mobile-interno .marca-mobile-interna img {
+    width: 44px !important;
+    height: 44px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    border-radius: 50% !important;
+  }
+
+  html body #root .marca-mobile-interna > div:last-child {
+    min-width: 0 !important;
+    max-width: 142px !important;
+    overflow: hidden !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong {
+    color: #ffffff !important;
+    font-size: 17px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.02em !important;
+    max-width: 142px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span {
+    color: #d7efff !important;
+    font-size: 10px !important;
+    line-height: 1.08 !important;
+    letter-spacing: 0.06em !important;
+    max-width: 142px !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    border-radius: 15px !important;
+    padding: 0 !important;
+    background: rgba(255,255,255,0.96) !important;
+    color: #0f66d8 !important;
+    border: 1px solid rgba(255,255,255,0.20) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18) !important;
+  }
+
+  html body #root .botao-inicio-interno span {
+    display: none !important;
+  }
+
+  html body #root .botao-menu-interno span {
+    background: #07111f !important;
+    width: 22px !important;
+    height: 2px !important;
+    margin: 2px auto !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto {
+    width: min(82vw, 310px) !important;
+    max-width: 310px !important;
+    padding: 18px 14px !important;
+    background:
+      radial-gradient(circle at 0 0, rgba(32,201,220,0.22), transparent 32%),
+      linear-gradient(180deg, #07111f 0%, #0a1a2e 52%, #0d2e54 100%) !important;
+    box-shadow: 20px 0 50px rgba(0,0,0,0.45) !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar {
+    padding: 0 0 12px !important;
+    gap: 10px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar .logo-simbolo,
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar .logo-simbolo-sidebar {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar h1 {
+    color: #ffffff !important;
+    font-size: 18px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .marca-sidebar p {
+    color: #ccefff !important;
+    font-size: 11px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao {
+    gap: 8px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button {
+    min-height: 46px !important;
+    padding: 8px 10px !important;
+    border-radius: 14px !important;
+    color: #f4fbff !important;
+    font-size: 14px !important;
+    font-weight: 850 !important;
+    background: rgba(255,255,255,0.10) !important;
+    border: 1px solid rgba(255,255,255,0.16) !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button span {
+    color: inherit !important;
+    opacity: 1 !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .icone-menu {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+    background: rgba(255,255,255,0.95) !important;
+    color: #0ea5e9 !important;
+  }
+
+  html body #root .fechar-menu-interno {
+    color: #ffffff !important;
+    background: rgba(255,255,255,0.12) !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+  }
+
+  html body #root .conteudo,
+  html body #root main.conteudo,
+  html body #root .conteudo-admin-comercial,
+  html body #root .pagina-interna,
+  html body #root .secao-configuracoes {
+    padding: 10px 10px 22px !important;
+  }
+
+  html body #root .topo-pagina,
+  html body #root .topo-admin-sistema,
+  html body #root .dashboard-v41-hero,
+  html body #root .hero-painel {
+    padding: 16px !important;
+    border-radius: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  html body #root .topo-pagina h1,
+  html body #root .topo-pagina h2,
+  html body #root .topo-admin-sistema h1,
+  html body #root .topo-admin-sistema h2,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .dashboard-v41-hero h2,
+  html body #root .hero-painel h1,
+  html body #root .hero-painel h2 {
+    font-size: clamp(28px, 8vw, 38px) !important;
+    line-height: 1.02 !important;
+    margin: 4px 0 8px !important;
+  }
+
+  html body #root .topo-pagina p,
+  html body #root .topo-admin-sistema p,
+  html body #root .dashboard-v41-hero p,
+  html body #root .hero-painel p {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+
+  html body #root .cards-admin-sistema,
+  html body #root .admin-visao-geral-grid,
+  html body #root .cards-estatisticas,
+  html body #root .dashboard-v41-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html body #root .cards-admin-sistema .card,
+  html body #root .card-admin {
+    min-height: 94px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .cards-admin-sistema .card span,
+  html body #root .card-admin span {
+    font-size: 9px !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 5px !important;
+  }
+
+  html body #root .cards-admin-sistema .card strong,
+  html body #root .card-admin strong {
+    font-size: 28px !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .cards-admin-sistema .card p,
+  html body #root .card-admin p {
+    font-size: 11px !important;
+    line-height: 1.18 !important;
+    margin-top: 4px !important;
+  }
+
+  html body #root .controle-piloto-admin {
+    display: grid !important;
+    gap: 10px !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .controle-piloto-admin h3 {
+    font-size: 20px !important;
+    line-height: 1.12 !important;
+  }
+
+  html body #root .controle-piloto-admin p {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+
+  html body #root .controle-piloto-acoes {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html body #root .admin-abas-navegacao,
+  html body #root .abas,
+  html body #root .abas-chamada,
+  html body #root .abas-relatorios {
+    padding: 7px !important;
+    gap: 7px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .admin-abas-navegacao button,
+  html body #root .abas button,
+  html body #root .abas-chamada button,
+  html body #root .abas-relatorios button {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    border-radius: 999px !important;
+  }
+
+  html body #root .admin-visao-card,
+  html body #root .admin-visao-card-mapa,
+  html body #root .admin-mapa-card,
+  html body #root .admin-acessos-bloco,
+  html body #root .admin-feedback-alertas,
+  html body #root .dashboard-v41-bloco,
+  html body #root .card:not(.card-admin):not(.card-login):not(.landing-pro-card),
+  html body #root .alerta-aniversariantes,
+  html body #root .personalizacao-card {
+    min-height: 0 !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .admin-visao-card h3,
+  html body #root .dashboard-v41-bloco h3,
+  html body #root .card h3,
+  html body #root .card h2 {
+    font-size: clamp(18px, 5.4vw, 24px) !important;
+    line-height: 1.08 !important;
+    margin: 6px 0 !important;
+  }
+
+  html body #root .admin-visao-card strong,
+  html body #root .dashboard-v41-bloco strong,
+  html body #root .card strong {
+    font-size: clamp(30px, 9vw, 42px) !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .admin-visao-card p,
+  html body #root .dashboard-v41-bloco p,
+  html body #root .card p,
+  html body #root .item-dashboard-v41 p {
+    font-size: 13px !important;
+    line-height: 1.32 !important;
+  }
+
+  html body #root .admin-visao-card .botao-secundario,
+  html body #root .dashboard-v41-bloco .botao-secundario,
+  html body #root .card .botao-secundario,
+  html body #root .card button,
+  html body #root .botao-secundario,
+  html body #root .botao-principal {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    border-radius: 12px !important;
+  }
+
+  html body #root .formulario,
+  html body #root .formulario-admin-igreja,
+  html body #root .formulario-admin-acesso {
+    padding: 14px !important;
+    gap: 10px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root input,
+  html body #root select,
+  html body #root textarea {
+    min-height: 42px !important;
+    font-size: 14px !important;
+    border-radius: 12px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html body #root .topo-mobile-interno {
+    grid-template-columns: minmax(0, 1fr) 44px 44px !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 7px 10px !important;
+  }
+
+  html body #root .area-principal {
+    padding-top: 72px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-simbolo-sidebar,
+  html body #root .topo-mobile-interno .marca-mobile-interna .logo-imagem,
+  html body #root .topo-mobile-interno .marca-mobile-interna img {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+  }
+
+  html body #root .marca-mobile-interna > div:last-child {
+    max-width: 128px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna strong {
+    font-size: 16px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna span {
+    font-size: 9px !important;
+  }
+
+  html body #root .cards-admin-sistema,
+  html body #root .admin-visao-geral-grid,
+  html body #root .cards-estatisticas,
+  html body #root .dashboard-v41-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
