@@ -30834,3 +30834,71 @@ body {
     align-items: flex-start !important;
   }
 }
+
+/* Correção v2.1 — logo sem caixa/sombra quadrada
+   Mantém o funcionamento intacto e corrige apenas a apresentação visual da marca. */
+.tela-login .marca-login .logo-simbolo,
+.painel-apresentacao .marca-login .logo-simbolo,
+.marca-login .logo-simbolo {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+  width: clamp(82px, 8vw, 112px) !important;
+  height: clamp(82px, 8vw, 112px) !important;
+  flex: 0 0 auto !important;
+}
+
+.tela-login .marca-login .logo-imagem,
+.painel-apresentacao .marca-login .logo-imagem,
+.marca-login .logo-imagem {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 12px 22px rgba(0, 20, 60, 0.22)) !important;
+}
+
+.tela-login .marca-login {
+  align-items: center !important;
+  gap: clamp(14px, 2.4vw, 24px) !important;
+}
+
+.tela-login .marca-login h1 {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  text-shadow: 0 4px 14px rgba(0, 20, 60, 0.22) !important;
+}
+
+@media (max-width: 720px) {
+  .tela-login .marca-login {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .tela-login .marca-login .logo-simbolo,
+  .painel-apresentacao .marca-login .logo-simbolo,
+  .marca-login .logo-simbolo {
+    width: 96px !important;
+    height: 96px !important;
+  }
+
+  .tela-login .marca-login h1 {
+    font-size: clamp(36px, 10vw, 54px) !important;
+    line-height: 0.95 !important;
+  }
+
+  .tela-login .marca-login p {
+    font-size: clamp(18px, 5.2vw, 26px) !important;
+    line-height: 1.28 !important;
+  }
+}
