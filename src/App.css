@@ -33031,3 +33031,544 @@ html body #root .tela-login .card-solicitacao {
     min-height: 98px !important;
   }
 }
+
+/* =========================================================
+   V6 — Identidade visual forte estilo ebdfiel.com.br
+   Alteração visual apenas. Não altera regras, dados ou Supabase.
+   ========================================================= */
+
+:root {
+  --ebd-navy-950: #07111f;
+  --ebd-navy-900: #0b1728;
+  --ebd-navy-850: #0d213a;
+  --ebd-blue-700: #0f66d8;
+  --ebd-blue-600: #1789ef;
+  --ebd-cyan-500: #20c9dc;
+  --ebd-gold-500: #ffb21a;
+  --ebd-gold-600: #ff9700;
+  --ebd-cream: #fff8e8;
+  --ebd-card-dark: rgba(10, 28, 52, 0.88);
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(32, 201, 220, 0.16), transparent 34%),
+    radial-gradient(circle at 86% 0%, rgba(255, 178, 26, 0.13), transparent 30%),
+    linear-gradient(180deg, #dce7ef 0%, #edf5fb 44%, #f8fbff 100%);
+}
+
+/* LOGIN — direita com cara de plataforma, não formulário genérico */
+.tela-login {
+  background:
+    radial-gradient(circle at 17% 18%, rgba(32, 201, 220, 0.22), transparent 34%),
+    radial-gradient(circle at 82% 72%, rgba(255, 178, 26, 0.14), transparent 30%),
+    linear-gradient(135deg, var(--ebd-navy-950) 0%, #0a2342 38%, #073e72 68%, #0ea5c6 100%) !important;
+}
+
+.tela-login::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.03), transparent 38%, rgba(255,255,255,0.08)),
+    radial-gradient(circle at 76% 18%, rgba(255, 178, 26, 0.20), transparent 19%);
+  z-index: 0;
+}
+
+.tela-login > * {
+  position: relative;
+  z-index: 1;
+}
+
+.tela-login .painel-apresentacao {
+  background:
+    radial-gradient(circle at 0% 100%, rgba(32, 201, 220, 0.25), transparent 30%),
+    linear-gradient(135deg, rgba(7, 17, 31, 0.70) 0%, rgba(15, 102, 216, 0.42) 100%) !important;
+  border-right: 1px solid rgba(255,255,255,0.14);
+}
+
+.tela-login .cartao-login {
+  align-self: center;
+  width: min(92%, 610px);
+  margin: 0 auto;
+  padding: 34px !important;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at top right, rgba(255, 178, 26, 0.22), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(32, 201, 220, 0.22), transparent 34%),
+    linear-gradient(145deg, rgba(7, 17, 31, 0.96), rgba(11, 31, 58, 0.96)) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 34px !important;
+  box-shadow: 0 30px 90px rgba(7,17,31,0.46) !important;
+}
+
+.tela-login .cartao-login::before {
+  content: 'EBD Fiel';
+  display: inline-flex;
+  margin-bottom: 16px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(255, 178, 26, 0.14);
+  border: 1px solid rgba(255, 178, 26, 0.36);
+  color: #ffd87a;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.tela-login .botao-voltar-publico {
+  background: rgba(255,255,255,0.09) !important;
+  border: 1px solid rgba(255,255,255,0.16) !important;
+  color: #e6f7ff !important;
+}
+
+.tela-login .topo-cartao-login {
+  padding: 18px;
+  border-radius: 26px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.11);
+}
+
+.tela-login .topo-cartao-login h2 {
+  color: #ffffff !important;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.20);
+}
+
+.tela-login .topo-cartao-login p,
+.tela-login .cartao-login p {
+  color: rgba(231, 246, 255, 0.82) !important;
+}
+
+.tela-login .topo-cartao-icone {
+  background: linear-gradient(135deg, #0f66d8, #20c9dc) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.20) !important;
+  box-shadow: 0 18px 40px rgba(32,201,220,0.22);
+}
+
+.tela-login .aviso,
+.tela-login .aviso-cadastro-piloto {
+  background: linear-gradient(135deg, rgba(255,178,26,0.18), rgba(255,248,232,0.09)) !important;
+  border: 1px solid rgba(255,178,26,0.42) !important;
+  color: #ffe1a0 !important;
+}
+
+.tela-login .formulario,
+.tela-login .formulario-login {
+  padding: 20px !important;
+  border-radius: 28px !important;
+  background: rgba(255,255,255,0.96) !important;
+  border: 1px solid rgba(255,255,255,0.50) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.20) !important;
+}
+
+.tela-login .formulario label {
+  color: #08203c !important;
+}
+
+.tela-login .formulario input,
+.tela-login .formulario select,
+.tela-login .formulario textarea {
+  background: #eef6ff !important;
+  border: 1px solid #bfdbfe !important;
+  color: #07111f !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.tela-login .botao-principal,
+.tela-login .botao-destaque {
+  color: #07111f !important;
+  background: linear-gradient(135deg, #ffcf4a 0%, #ff9700 100%) !important;
+  border: 0 !important;
+  box-shadow: 0 18px 42px rgba(255,151,0,0.30) !important;
+}
+
+.tela-login .cartao-solicitar-cadastro,
+.tela-login .bloco-cadastro,
+.tela-login [class*='solicitar'] {
+  border-radius: 30px !important;
+}
+
+/* ÁREA INTERNA — aproximar do visual escuro/azul da ebdfiel.com.br */
+.layout-app,
+.app.autenticado,
+.app:has(.sidebar),
+.app:has(.menu-lateral) {
+  background:
+    radial-gradient(circle at 22% 0%, rgba(32, 201, 220, 0.16), transparent 26%),
+    radial-gradient(circle at 95% 4%, rgba(255, 178, 26, 0.10), transparent 22%),
+    linear-gradient(180deg, #081525 0%, #0a1c34 38%, #eef4fa 38%, #f8fbff 100%) !important;
+}
+
+.menu-lateral,
+.sidebar {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(32, 201, 220, 0.22), transparent 32%),
+    linear-gradient(180deg, #07111f 0%, #0b1728 48%, #0d2647 100%) !important;
+  color: #ffffff !important;
+}
+
+.menu-lateral::after,
+.sidebar::after {
+  content: '';
+  position: absolute;
+  inset: auto 14px 14px 14px;
+  height: 90px;
+  border-radius: 26px;
+  background: radial-gradient(circle at right, rgba(255,178,26,0.16), transparent 50%);
+  pointer-events: none;
+}
+
+.marca-sidebar,
+.sidebar .marca-sidebar,
+.menu-lateral .marca-sidebar {
+  align-items: center !important;
+  padding: 12px 8px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.logo-simbolo-sidebar,
+.sidebar .logo-simbolo,
+.menu-lateral .logo-simbolo {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+.menu-lateral nav button,
+.menu-navegacao button,
+.sidebar nav button {
+  color: rgba(236, 248, 255, 0.92) !important;
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.menu-lateral nav button svg,
+.menu-navegacao button svg,
+.sidebar nav button svg {
+  color: #8ee7ff !important;
+}
+
+.menu-lateral nav button.ativo,
+.menu-navegacao button.ativo,
+.sidebar nav button.ativo {
+  color: #07111f !important;
+  background: linear-gradient(135deg, #ffcf4a 0%, #ff9700 100%) !important;
+  box-shadow: 0 18px 36px rgba(255,151,0,0.26) !important;
+}
+
+.menu-lateral nav button.ativo svg,
+.menu-navegacao button.ativo svg,
+.sidebar nav button.ativo svg {
+  color: #07111f !important;
+}
+
+.cartao-usuario-sidebar,
+.usuario-logado,
+.card-usuario,
+.bloco-usuario {
+  background: rgba(255,255,255,0.09) !important;
+  color: #ffffff !important;
+}
+
+.cartao-usuario-sidebar *,
+.usuario-logado *,
+.card-usuario *,
+.bloco-usuario * {
+  color: inherit;
+}
+
+.botao-sair-sidebar,
+.botao-sair {
+  background: rgba(255,255,255,0.95) !important;
+  color: #07111f !important;
+  border-radius: 16px !important;
+}
+
+.area-principal,
+.painel-conteudo,
+.conteudo,
+.area-conteudo {
+  background: transparent !important;
+}
+
+.topo-pagina,
+.topo-admin-sistema,
+.secao-configuracoes > .topo-pagina,
+.conteudo > .topo-pagina:first-child {
+  padding: clamp(26px, 4vw, 46px) !important;
+  border-radius: 34px !important;
+  color: #ffffff !important;
+  background:
+    radial-gradient(circle at 92% 78%, rgba(255,178,26,0.20), transparent 22%),
+    linear-gradient(135deg, #0f66d8 0%, #168fec 52%, #20c9dc 100%) !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  box-shadow: 0 28px 80px rgba(15,102,216,0.20) !important;
+}
+
+.topo-pagina h1,
+.topo-pagina h2,
+.topo-admin-sistema h1,
+.topo-admin-sistema h2,
+.secao-configuracoes > .topo-pagina h1,
+.secao-configuracoes > .topo-pagina h2 {
+  color: #ffffff !important;
+  letter-spacing: -0.055em;
+}
+
+.topo-pagina p,
+.topo-admin-sistema p,
+.secao-configuracoes > .topo-pagina p {
+  color: rgba(255,255,255,0.88) !important;
+}
+
+.selo-admin,
+.selo-apresentacao,
+[class*='selo'] {
+  background: rgba(255, 178, 26, 0.14) !important;
+  border: 1px solid rgba(255, 178, 26, 0.42) !important;
+  color: #ffd36a !important;
+}
+
+.hero-painel {
+  background:
+    radial-gradient(circle at right bottom, rgba(255,178,26,0.17), transparent 32%),
+    linear-gradient(135deg, #0f66d8 0%, #0ea5e9 52%, #20c9dc 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  box-shadow: 0 30px 80px rgba(15,102,216,0.24) !important;
+}
+
+.hero-painel * {
+  color: inherit;
+}
+
+.card,
+.resumo,
+.item-lista,
+.formulario,
+.filtros,
+.alerta-aniversariantes,
+.relatorio-professores-moderno,
+.secao-configuracoes,
+.aviso,
+.card-admin,
+.igreja-admin-card {
+  background:
+    radial-gradient(circle at 95% 88%, rgba(255,178,26,0.13), transparent 20%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 100%) !important;
+  border: 1px solid rgba(148, 191, 225, 0.55) !important;
+  box-shadow: 0 22px 58px rgba(7, 17, 31, 0.10) !important;
+}
+
+.cards-admin-sistema .card-admin,
+.grade-resumo .card,
+.card-resumo,
+.resumo-card,
+.cards-resumo > * {
+  border-top: 0 !important;
+  border-left: 5px solid #20c9dc !important;
+  border-bottom: 4px solid #ffb21a !important;
+}
+
+.card-admin strong,
+.card-resumo strong,
+.resumo-card strong,
+.cards-resumo strong {
+  color: #07111f !important;
+}
+
+.card-admin span,
+.card-resumo span,
+.resumo-card span,
+.cards-resumo span {
+  color: #334155 !important;
+}
+
+.abas-admin,
+.tabs,
+.navegacao-abas,
+.barra-abas {
+  background: rgba(7, 17, 31, 0.04) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(148, 191, 225, 0.34) !important;
+}
+
+.abas-admin button,
+.tabs button,
+.navegacao-abas button,
+.barra-abas button {
+  border-radius: 999px !important;
+  border: 1px solid rgba(15, 102, 216, 0.10) !important;
+}
+
+.abas-admin button.ativo,
+.tabs button.ativo,
+.navegacao-abas button.ativo,
+.barra-abas button.ativo,
+button.ativo {
+  background: linear-gradient(135deg, #ffcf4a, #ff9700) !important;
+  color: #07111f !important;
+  box-shadow: 0 14px 32px rgba(255,151,0,0.22) !important;
+}
+
+button:not(.botao-secundario):not(.botao-perigo):not(.botao-sair-sidebar),
+.botao-principal,
+.botao-destaque {
+  border-radius: 16px;
+}
+
+.botao-principal,
+.botao-destaque,
+.botao-adicionar,
+.botao-novo,
+button[type='submit'] {
+  background: linear-gradient(135deg, #ffcf4a 0%, #ff9700 100%) !important;
+  color: #07111f !important;
+  border: 0 !important;
+  box-shadow: 0 16px 36px rgba(255,151,0,0.24) !important;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea,
+.filtros input,
+.filtros select,
+.campo input,
+.campo select,
+.campo textarea {
+  background: #ffffff !important;
+  border: 1px solid #b9d8f4 !important;
+  color: #0b1728 !important;
+  border-radius: 16px !important;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus,
+.filtros input:focus,
+.filtros select:focus {
+  outline: 3px solid rgba(32,201,220,0.20) !important;
+  border-color: #20c9dc !important;
+}
+
+/* Mobile interno: cabeçalho mais premium e menos genérico */
+@media (max-width: 760px) {
+  .tela-login {
+    display: block !important;
+    background: linear-gradient(180deg, #07111f 0%, #0f66d8 42%, #f6fbff 42%) !important;
+  }
+
+  .tela-login .painel-apresentacao {
+    padding: 28px 22px !important;
+    min-height: auto !important;
+  }
+
+  .tela-login .cartao-login {
+    width: calc(100% - 28px) !important;
+    margin: 18px auto 28px !important;
+    padding: 22px !important;
+    border-radius: 28px !important;
+  }
+
+  .tela-login .formulario,
+  .tela-login .formulario-login {
+    padding: 16px !important;
+  }
+
+  .menu-mobile,
+  .topo-mobile,
+  .cabecalho-mobile,
+  .sidebar-mobile,
+  header.mobile {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(32,201,220,0.20), transparent 35%),
+      linear-gradient(135deg, #07111f, #0b1728 65%, #0d2647) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+    box-shadow: 0 18px 42px rgba(7,17,31,0.32) !important;
+  }
+
+  .topo-pagina,
+  .topo-admin-sistema,
+  .secao-configuracoes > .topo-pagina,
+  .hero-painel {
+    border-radius: 28px !important;
+    padding: 26px 22px !important;
+  }
+
+  .topo-pagina h1,
+  .topo-pagina h2,
+  .topo-admin-sistema h1,
+  .topo-admin-sistema h2 {
+    font-size: clamp(34px, 11vw, 48px) !important;
+    line-height: 0.98 !important;
+  }
+
+  .card,
+  .resumo,
+  .item-lista,
+  .formulario,
+  .filtros,
+  .alerta-aniversariantes,
+  .relatorio-professores-moderno,
+  .secao-configuracoes,
+  .aviso,
+  .card-admin,
+  .igreja-admin-card {
+    border-radius: 26px !important;
+    padding: 22px !important;
+  }
+
+  .cards-admin-sistema,
+  .grade-resumo,
+  .cards-resumo {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .cards-admin-sistema .card-admin,
+  .grade-resumo .card,
+  .cards-resumo > * {
+    min-height: 150px !important;
+    padding: 18px !important;
+  }
+
+  .card-admin strong,
+  .card-resumo strong,
+  .resumo-card strong,
+  .cards-resumo strong {
+    font-size: 42px !important;
+  }
+
+  .abas-admin,
+  .tabs,
+  .navegacao-abas,
+  .barra-abas {
+    overflow-x: auto !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+
+  .abas-admin button,
+  .tabs button,
+  .navegacao-abas button,
+  .barra-abas button {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    padding: 12px 16px !important;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea,
+  .filtros input,
+  .filtros select {
+    min-height: 52px !important;
+    font-size: 16px !important;
+  }
+}
