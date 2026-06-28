@@ -616,6 +616,7 @@ congregacao: '',
   const usuarioCarregadoRef = useRef(null)
   const carregamentoDadosEmAndamentoRef = useRef(false)
   const suporteAdminEmTransicaoRef = useRef(false)
+  const historicoInternoInicializadoRef = useRef(false)
 
   function definirSessao(sessaoNova) {
     sessaoRef.current = sessaoNova
@@ -649,6 +650,37 @@ congregacao: '',
     paginaAtualRef.current = paginaSegura
     setPaginaAtual(paginaSegura)
     salvarPaginaAtualSalva(paginaSegura)
+  }
+
+  function registrarPaginaNoHistoricoInterno(paginaId, modo = 'push') {
+    if (typeof window === 'undefined' || !window.history) {
+      return
+    }
+
+    const paginaSegura = PAGINAS_SISTEMA.includes(paginaId) ? paginaId : 'painel'
+    const estadoAtual = window.history.state || {}
+
+    if (estadoAtual?.ebdfielApp && estadoAtual?.pagina === paginaSegura && modo !== 'replace') {
+      return
+    }
+
+    const novoEstado = {
+      ...(estadoAtual || {}),
+      ebdfielApp: true,
+      pagina: paginaSegura,
+    }
+
+    const hashPagina = `#${paginaSegura}`
+
+    try {
+      if (modo === 'replace') {
+        window.history.replaceState(novoEstado, '', hashPagina)
+      } else {
+        window.history.pushState(novoEstado, '', hashPagina)
+      }
+    } catch (erroHistorico) {
+      console.warn('Não foi possível registrar a navegação interna.', erroHistorico)
+    }
   }
 
   function normalizarIgrejaSuporteAdmin(igreja) {
@@ -951,6 +983,42 @@ congregacao: '',
     paginaAtualRef.current = paginaAtual
     salvarPaginaAtualSalva(paginaAtual)
   }, [paginaAtual])
+
+  useEffect(() => {
+    if (!sessao) {
+      historicoInternoInicializadoRef.current = false
+      return undefined
+    }
+
+    if (!historicoInternoInicializadoRef.current) {
+      registrarPaginaNoHistoricoInterno(paginaAtualRef.current || paginaAtual || 'painel', 'replace')
+      historicoInternoInicializadoRef.current = true
+    }
+
+    function aoVoltarNavegador(event) {
+      const estado = event.state || {}
+
+      if (estado?.ebdfielApp && PAGINAS_SISTEMA.includes(estado.pagina)) {
+        definirPaginaAtual(estado.pagina)
+        setMenuInternoAberto(false)
+        return
+      }
+
+      const paginaInicial = usuarioEhAdminSistema() && !igrejaSuporteAdminRef.current?.id ? 'administracao' : 'painel'
+
+      if (paginaAtualRef.current !== paginaInicial) {
+        definirPaginaAtual(paginaInicial)
+        registrarPaginaNoHistoricoInterno(paginaInicial, 'push')
+        setMenuInternoAberto(false)
+      }
+    }
+
+    window.addEventListener('popstate', aoVoltarNavegador)
+
+    return () => {
+      window.removeEventListener('popstate', aoVoltarNavegador)
+    }
+  }, [sessao])
 
   useEffect(() => {
     iniciarCorrecaoGlobalDeAcentos()
@@ -1843,6 +1911,7 @@ congregacao: '',
   function navegarParaPagina(paginaId) {
     setMenuInternoAberto(false)
     definirPaginaAtual(paginaId)
+    registrarPaginaNoHistoricoInterno(paginaId, 'push')
 
     if (paginaId === 'painel') {
       setAlertaPainelFechado(false)
