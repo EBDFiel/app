@@ -35890,3 +35890,150 @@ html body #root .bloco-gradiente .badge {
     border: 1px solid rgba(255,255,255,0.34) !important;
   }
 }
+
+/* ==========================================================
+   V8.5 — Ícones coloridos e centralização real do painel
+   Mantém funcionamento intacto; ajustes apenas visuais.
+   ========================================================== */
+
+@media (min-width: 901px) {
+  html body #root .layout-app,
+  html body #root .app,
+  html body #root .aplicacao {
+    background: linear-gradient(135deg, #06111f 0%, #082136 42%, #07111f 100%) !important;
+  }
+
+  html body #root .menu-lateral,
+  html body #root aside.menu-lateral,
+  html body #root .sidebar {
+    width: 248px !important;
+    min-width: 248px !important;
+    max-width: 248px !important;
+    background:
+      radial-gradient(circle at 14% 5%, rgba(255, 203, 77, .12), transparent 26%),
+      radial-gradient(circle at 88% 18%, rgba(57, 216, 255, .12), transparent 34%),
+      linear-gradient(180deg, #030b15 0%, #061726 48%, #07111f 100%) !important;
+    border-right: 1px solid rgba(57, 216, 255, .22) !important;
+    box-shadow: 18px 0 44px rgba(0, 0, 0, .32) !important;
+  }
+
+  /* Centralização: área útil calcula a largura real sem jogar o painel para a direita */
+  html body #root .area-principal,
+  html body #root main.area-principal {
+    margin-left: 248px !important;
+    width: calc(100vw - 248px) !important;
+    min-width: 0 !important;
+    padding: 24px 24px 36px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    box-sizing: border-box !important;
+  }
+
+  html body #root .area-principal > .conteudo,
+  html body #root main.area-principal > .conteudo,
+  html body #root main.area-principal > section,
+  html body #root main.area-principal > div:not(.banner-modo-suporte) {
+    width: min(100%, 1180px) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  html body #root .conteudo-admin-comercial,
+  html body #root .conteudo-painel,
+  html body #root .conteudo-configuracoes,
+  html body #root .conteudo-relatorios,
+  html body #root .conteudo-resumo-geral {
+    width: min(100%, 1180px) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* Menu com leitura forte */
+html body #root .menu-lateral .menu-navegacao button,
+html body #root .menu-lateral nav button,
+html body #root aside.menu-lateral .menu-navegacao button {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.055)) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button span:not(.icone-menu),
+html body #root .menu-lateral nav button span:not(.icone-menu) {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 950 !important;
+  text-shadow: 0 2px 7px rgba(0,0,0,.55) !important;
+}
+
+/* Ícones coloridos por item do menu */
+html body #root .menu-lateral .menu-navegacao button .icone-menu,
+html body #root .menu-lateral nav button .icone-menu {
+  background: linear-gradient(135deg, #12d7ff 0%, #1369ff 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  box-shadow: 0 10px 22px rgba(18, 215, 255, .20), inset 0 1px 0 rgba(255,255,255,.35) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button:nth-child(1) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(1) .icone-menu { background: linear-gradient(135deg, #20d7ef, #1769ff) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(2) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(2) .icone-menu { background: linear-gradient(135deg, #8b5cf6, #2563eb) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(3) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(3) .icone-menu { background: linear-gradient(135deg, #ffb51b, #ff7a18) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(4) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(4) .icone-menu { background: linear-gradient(135deg, #22c55e, #06b6d4) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(5) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(5) .icone-menu { background: linear-gradient(135deg, #ffd166, #f97316) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(6) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(6) .icone-menu { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(7) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(7) .icone-menu { background: linear-gradient(135deg, #16a34a, #22c55e) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(8) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(8) .icone-menu { background: linear-gradient(135deg, #facc15, #f59e0b) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(9) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(9) .icone-menu { background: linear-gradient(135deg, #a78bfa, #6366f1) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(10) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(10) .icone-menu { background: linear-gradient(135deg, #10b981, #059669) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(11) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(11) .icone-menu { background: linear-gradient(135deg, #fb7185, #f97316) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(12) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(12) .icone-menu { background: linear-gradient(135deg, #60a5fa, #1d4ed8) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(13) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(13) .icone-menu { background: linear-gradient(135deg, #ffcb4d, #ff9f0a) !important; }
+html body #root .menu-lateral .menu-navegacao button:nth-child(14) .icone-menu,
+html body #root .menu-lateral nav button:nth-child(14) .icone-menu { background: linear-gradient(135deg, #ffcb4d, #f97316) !important; }
+
+html body #root .menu-lateral .menu-navegacao button .icone-menu svg,
+html body #root .menu-lateral nav button .icone-menu svg {
+  color: #ffffff !important;
+  stroke: currentColor !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.28)) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo,
+html body #root .menu-lateral nav button.ativo {
+  background: linear-gradient(135deg, #ffcb4d 0%, #ff9f0a 100%) !important;
+  color: #07111f !important;
+  -webkit-text-fill-color: #07111f !important;
+  box-shadow: 0 14px 34px rgba(255, 159, 10, .30), inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral nav button.ativo .icone-menu {
+  background: linear-gradient(135deg, #07111f, #0e3a63) !important;
+  color: #ffcb4d !important;
+  -webkit-text-fill-color: #ffcb4d !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo span:not(.icone-menu),
+html body #root .menu-lateral nav button.ativo span:not(.icone-menu) {
+  color: #07111f !important;
+  -webkit-text-fill-color: #07111f !important;
+  text-shadow: none !important;
+}
