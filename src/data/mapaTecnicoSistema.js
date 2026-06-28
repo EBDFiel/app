@@ -1,8 +1,8 @@
 export const MAPA_TECNICO_SISTEMA = {
   titulo: 'Mapa técnico completo do EBD Fiel',
   subtitulo: 'Documento de continuidade técnica para manutenção do sistema por outra IA, desenvolvedor ou suporte.',
-  atualizadoEm: '27/06/2026',
-  versaoMapa: '1.0.2',
+  atualizadoEm: '28/06/2026',
+  versaoMapa: '1.0.3',
   projeto: {
     nome: 'EBD Fiel / Secretaria EBD Fiel',
     dominio: 'https://app.ebdfiel.com.br',
@@ -26,8 +26,8 @@ export const MAPA_TECNICO_SISTEMA = {
     { comando: 'npm.cmd run preview', descricao: 'pré-visualiza o build localmente.' },
     { comando: 'npm.cmd run docs:mapa', descricao: 'gera manualmente os arquivos public/docs/mapa-tecnico-ebd-fiel.md e .txt.' },
     { comando: 'git status', descricao: 'mostra arquivos alterados antes do commit.' },
-    { comando: 'git add index.html public/manifest.webmanifest public/favicon.ico public/favicon.png public/apple-touch-icon.png public/preview-ebdfiel-whatsapp.jpg public/preview-ebdfiel-app.png public/icons src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt', descricao: 'adiciona os arquivos de miniatura reforçada para WhatsApp, ícones, PWA e mapa técnico desta atualização.' },
-    { comando: 'git commit -m "Reforca miniatura e icones do app"', descricao: 'salva a atualização no Git.' },
+    { comando: 'git add src/App.css src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt', descricao: 'adiciona os arquivos de melhoria visual do app e mapa técnico desta atualização.' },
+    { comando: 'git commit -m "Melhora visual do login e dashboard"', descricao: 'salva a atualização visual no Git.' },
     { comando: 'git push origin main', descricao: 'envia para o GitHub e aciona o deploy na Vercel.' },
   ],
   paginas: [
@@ -205,8 +205,9 @@ export const MAPA_TECNICO_SISTEMA = {
     },
     {
       caminho: 'src/App.css',
-      descricao: 'Arquivo principal de estilos. Contém layout público, login, dashboard, menu mobile, administração, relatórios, aniversariantes e mapa técnico.',
+      descricao: 'Arquivo principal de estilos. Contém layout público, login, dashboard, menu mobile, administração, relatórios, aniversariantes e mapa técnico. Em 28/06/2026 recebeu a melhoria visual v1, focada em página pública, login, painel/dashboard e acabamento das telas internas sem alterar funcionamento.',
       cuidados: [
+        'A melhoria visual v1 foi aplicada por regras CSS no final do arquivo para preservar a estrutura e o comportamento existentes.',
         'Preferir adicionar blocos no final quando possível.',
         'Evitar remover regras antigas sem testar telas mobile e desktop.',
         'Após qualquer alteração visual, testar login, painel, administração e cartão de aniversário.',

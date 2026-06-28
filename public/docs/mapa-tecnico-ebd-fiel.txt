@@ -1,7 +1,7 @@
 Mapa técnico completo do EBD Fiel
 
-Atualizado em: 27/06/2026
-Versão do mapa: 1.0.2
+Atualizado em: 28/06/2026
+Versão do mapa: 1.0.3
 
 Documento de continuidade técnica para manutenção do sistema por outra IA, desenvolvedor ou suporte.
 
@@ -32,8 +32,8 @@ Documento de continuidade técnica para manutenção do sistema por outra IA, de
 - npm.cmd run preview — pré-visualiza o build localmente.
 - npm.cmd run docs:mapa — gera manualmente os arquivos public/docs/mapa-tecnico-ebd-fiel.md e .txt.
 - git status — mostra arquivos alterados antes do commit.
-- git add index.html public/manifest.webmanifest public/favicon.ico public/favicon.png public/apple-touch-icon.png public/preview-ebdfiel-whatsapp.jpg public/preview-ebdfiel-app.png public/icons src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt — adiciona os arquivos de miniatura reforçada para WhatsApp, ícones, PWA e mapa técnico desta atualização.
-- git commit -m "Reforca miniatura e icones do app" — salva a atualização no Git.
+- git add src/App.css src/data/mapaTecnicoSistema.js public/docs/mapa-tecnico-ebd-fiel.md public/docs/mapa-tecnico-ebd-fiel.txt — adiciona os arquivos de melhoria visual do app e mapa técnico desta atualização.
+- git commit -m "Melhora visual do login e dashboard" — salva a atualização visual no Git.
 - git push origin main — envia para o GitHub e aciona o deploy na Vercel.
 
 4. Mapa de páginas e áreas
@@ -205,8 +205,9 @@ Arquivo principal do sistema. Concentra estados, renderização de páginas, flu
 
 src/App.css
 
-Arquivo principal de estilos. Contém layout público, login, dashboard, menu mobile, administração, relatórios, aniversariantes e mapa técnico.
+Arquivo principal de estilos. Contém layout público, login, dashboard, menu mobile, administração, relatórios, aniversariantes e mapa técnico. Em 28/06/2026 recebeu a melhoria visual v1, focada em página pública, login, painel/dashboard e acabamento das telas internas sem alterar funcionamento.
 
+- A melhoria visual v1 foi aplicada por regras CSS no final do arquivo para preservar a estrutura e o comportamento existentes.
 - Preferir adicionar blocos no final quando possível.
 - Evitar remover regras antigas sem testar telas mobile e desktop.
 - Após qualquer alteração visual, testar login, painel, administração e cartão de aniversário.
@@ -319,7 +320,7 @@ Você vai me ajudar no projeto EBD Fiel. Antes de sugerir código, leia o mapa t
 
 12. Informações geradas automaticamente no build
 
-- Gerado em: 28/06/2026, 00:26
+- Gerado em: 28/06/2026, 00:55
 - Nome do package: ebdfiel-app
 - Versão do package: 0.0.0
 - Tipo do projeto: module
