@@ -36651,3 +36651,298 @@ html body #root .menu-lateral-aberto .menu-navegacao button.ativo .icone-menu sv
     border-radius: 16px !important;
   }
 }
+
+/* =========================================================
+   V9 — Contraste dos cards azuis e compactação mobile
+   Foco: card "Fazer chamada", chips do painel e telas mobile.
+   ========================================================= */
+
+/* Card principal "Fazer chamada" dentro do hero do painel */
+html body #root .hero-painel .hero-painel-conteudo button.atalho-chamada-topo,
+html body #root .hero-painel button.atalho-chamada-topo,
+html body #root button.atalho-chamada-topo,
+html body #root .atalho-chamada-topo {
+  background: linear-gradient(135deg, #ffffff 0%, #eef8ff 100%) !important;
+  border: 1px solid rgba(255,255,255,.88) !important;
+  color: #06172b !important;
+  -webkit-text-fill-color: #06172b !important;
+  text-shadow: none !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,.20) !important;
+  opacity: 1 !important;
+}
+
+html body #root .hero-painel .hero-painel-conteudo button.atalho-chamada-topo *,
+html body #root .hero-painel button.atalho-chamada-topo *,
+html body #root button.atalho-chamada-topo *,
+html body #root .atalho-chamada-topo * {
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body #root .hero-painel .hero-painel-conteudo button.atalho-chamada-topo strong,
+html body #root .hero-painel .hero-painel-conteudo button.atalho-chamada-topo small,
+html body #root .hero-painel button.atalho-chamada-topo strong,
+html body #root .hero-painel button.atalho-chamada-topo small,
+html body #root button.atalho-chamada-topo strong,
+html body #root button.atalho-chamada-topo small,
+html body #root .atalho-chamada-topo strong,
+html body #root .atalho-chamada-topo small,
+html body #root .atalho-chamada-topo-texto,
+html body #root .atalho-chamada-topo-texto strong,
+html body #root .atalho-chamada-topo-texto small {
+  color: #06172b !important;
+  -webkit-text-fill-color: #06172b !important;
+}
+
+html body #root .atalho-chamada-topo strong,
+html body #root .atalho-chamada-topo-texto strong {
+  font-weight: 900 !important;
+  letter-spacing: -.01em !important;
+}
+
+html body #root .atalho-chamada-topo small,
+html body #root .atalho-chamada-topo-texto small {
+  color: #35516f !important;
+  -webkit-text-fill-color: #35516f !important;
+  font-weight: 800 !important;
+}
+
+html body #root .atalho-chamada-topo-icone,
+html body #root button.atalho-chamada-topo .atalho-chamada-topo-icone,
+html body #root .atalho-chamada-topo .atalho-chamada-topo-icone,
+html body #root .atalho-chamada-topo .icone-menu {
+  background: linear-gradient(135deg, #0677ff 0%, #14c4d8 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(6,119,255,.28) !important;
+}
+
+html body #root .atalho-chamada-topo-icone svg,
+html body #root .atalho-chamada-topo .icone-menu svg,
+html body #root .atalho-chamada-topo svg {
+  color: #ffffff !important;
+  stroke: currentColor !important;
+  filter: none !important;
+}
+
+/* Chips de métricas sobre fundo azul: mais contraste sem pesar o visual. */
+html body #root .hero-painel-metricas span,
+html body #root .metricas-painel span,
+html body #root .dashboard-v41-metricas span {
+  background: rgba(3, 18, 36, .34) !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+html body #root .hero-painel-metricas span *,
+html body #root .metricas-painel span *,
+html body #root .dashboard-v41-metricas span * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Textos dentro de blocos azuis e cards de resumo: impede texto apagado. */
+html body #root .hero-painel-conteudo,
+html body #root .dashboard-v41-hero,
+html body #root .hero-painel-destaque,
+html body #root .resumo-rapido,
+html body #root .dashboard-v41-resumo {
+  color: #ffffff !important;
+}
+
+html body #root .hero-painel-conteudo > p,
+html body #root .dashboard-v41-hero > p,
+html body #root .hero-painel-destaque p,
+html body #root .resumo-rapido p,
+html body #root .dashboard-v41-resumo p,
+html body #root .hero-painel-destaque li,
+html body #root .resumo-rapido li,
+html body #root .dashboard-v41-resumo li {
+  color: rgba(255,255,255,.96) !important;
+  -webkit-text-fill-color: rgba(255,255,255,.96) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.18) !important;
+}
+
+/* Compactação mobile: menos rolagem nas telas pública, login e internas. */
+@media (max-width: 760px) {
+  html body #root .landing-pro-hero {
+    min-height: auto !important;
+    padding: 26px 18px 24px !important;
+  }
+
+  html body #root .landing-pro-hero-inner {
+    gap: 18px !important;
+  }
+
+  html body #root .landing-pro-kicker {
+    margin-bottom: 12px !important;
+  }
+
+  html body #root .landing-pro-hero h1 {
+    font-size: clamp(2.15rem, 10.5vw, 3.15rem) !important;
+    line-height: .94 !important;
+    margin-bottom: 14px !important;
+  }
+
+  html body #root .landing-pro-hero p {
+    font-size: 1rem !important;
+    line-height: 1.36 !important;
+    margin-bottom: 16px !important;
+  }
+
+  html body #root .landing-pro-actions {
+    gap: 10px !important;
+    margin: 14px 0 12px !important;
+  }
+
+  html body #root .landing-pro-primary,
+  html body #root .landing-pro-secondary {
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .landing-pro-trust {
+    gap: 8px !important;
+    margin-top: 10px !important;
+  }
+
+  html body #root .landing-pro-trust span {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .landing-pro-panel {
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  html body #root .landing-pro-metrics {
+    gap: 8px !important;
+  }
+
+  html body #root .landing-pro-metrics div,
+  html body #root .landing-pro-panel li,
+  html body #root .landing-pro-panel .landing-pro-panel-row {
+    min-height: 42px !important;
+    padding: 9px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .landing-pro-strip,
+  html body #root .landing-pro-section,
+  html body #root .landing-pro-split,
+  html body #root .landing-pro-footer {
+    padding: 22px 18px !important;
+    margin: 18px 0 !important;
+  }
+
+  html body #root .landing-pro-cards article {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .tela-login {
+    min-height: auto !important;
+    padding: 14px !important;
+  }
+
+  html body #root .tela-login .painel-apresentacao {
+    min-height: auto !important;
+    padding: 20px 18px !important;
+  }
+
+  html body #root .tela-login .apresentacao-texto h1,
+  html body #root .tela-login .apresentacao-texto h2 {
+    font-size: clamp(2rem, 9vw, 2.75rem) !important;
+    line-height: .98 !important;
+  }
+
+  html body #root .tela-login .beneficios-login,
+  html body #root .tela-login .beneficios-login-v70 {
+    gap: 8px !important;
+    margin-top: 12px !important;
+  }
+
+  html body #root .tela-login .beneficios-login > *,
+  html body #root .tela-login .beneficios-login-v70 > * {
+    min-height: 40px !important;
+    padding: 8px 10px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .tela-login .cartao-login,
+  html body #root .tela-login .cartao-login-v70,
+  html body #root .tela-login .cartao-solicitacao,
+  html body #root .tela-login .card-solicitacao {
+    padding: 16px !important;
+    border-radius: 20px !important;
+  }
+
+  html body #root .hero-painel,
+  html body #root .hero-painel-conteudo,
+  html body #root .dashboard-v41-hero {
+    gap: 12px !important;
+  }
+
+  html body #root .hero-painel-conteudo,
+  html body #root .dashboard-v41-hero {
+    padding: 16px !important;
+  }
+
+  html body #root .hero-painel-conteudo h1,
+  html body #root .dashboard-v41-hero h1 {
+    font-size: clamp(2rem, 9.2vw, 2.85rem) !important;
+    line-height: .96 !important;
+  }
+
+  html body #root .hero-painel-conteudo > p,
+  html body #root .dashboard-v41-hero > p {
+    font-size: .92rem !important;
+    line-height: 1.32 !important;
+  }
+
+  html body #root .hero-painel-metricas,
+  html body #root .metricas-painel,
+  html body #root .dashboard-v41-metricas {
+    gap: 8px !important;
+    margin: 8px 0 !important;
+  }
+
+  html body #root .hero-painel-metricas span,
+  html body #root .metricas-painel span,
+  html body #root .dashboard-v41-metricas span {
+    min-height: 34px !important;
+    padding: 7px 10px !important;
+    border-radius: 13px !important;
+    font-size: .86rem !important;
+  }
+
+  html body #root .hero-painel .hero-painel-conteudo button.atalho-chamada-topo,
+  html body #root .hero-painel button.atalho-chamada-topo,
+  html body #root button.atalho-chamada-topo,
+  html body #root .atalho-chamada-topo {
+    min-height: 58px !important;
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+    gap: 10px !important;
+  }
+
+  html body #root .atalho-chamada-topo-icone {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 13px !important;
+  }
+
+  html body #root .atalho-chamada-topo strong {
+    font-size: 1rem !important;
+  }
+
+  html body #root .atalho-chamada-topo small {
+    font-size: .78rem !important;
+  }
+}
