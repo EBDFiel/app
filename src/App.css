@@ -36946,3 +36946,213 @@ html body #root .dashboard-v41-resumo li {
     font-size: .78rem !important;
   }
 }
+
+/* =========================================================
+   HOTFIX V9.1 - Contraste forte + compactacao real
+   Base: v9.0. Ajuste intencional para garantir diff no Git.
+   ========================================================= */
+html body #root .sidebar .nav-item.active,
+html body #root .sidebar button.active,
+html body #root .menu-lateral .ativo,
+html body #root .menu-lateral button.ativo,
+html body #root .sidebar a.active,
+html body #root .menu-item.active {
+  background: linear-gradient(135deg, #ffbf2f 0%, #ff9f0a 100%) !important;
+  color: #061729 !important;
+  text-shadow: none !important;
+  box-shadow: 0 10px 24px rgba(255, 171, 24, .26) !important;
+  border-color: rgba(255, 216, 111, .72) !important;
+}
+
+html body #root .sidebar .nav-item.active *,
+html body #root .sidebar button.active *,
+html body #root .menu-lateral .ativo *,
+html body #root .menu-lateral button.ativo *,
+html body #root .sidebar a.active *,
+html body #root .menu-item.active * {
+  color: #061729 !important;
+  text-shadow: none !important;
+}
+
+html body #root .sidebar .nav-item.active svg,
+html body #root .sidebar button.active svg,
+html body #root .menu-lateral .ativo svg,
+html body #root .menu-lateral button.ativo svg,
+html body #root .menu-item.active svg {
+  color: #ffbf2f !important;
+  stroke: #ffbf2f !important;
+}
+
+html body #root .sidebar .nav-item.active .menu-icon,
+html body #root .sidebar button.active .menu-icon,
+html body #root .menu-lateral .ativo .menu-icon,
+html body #root .menu-item.active .menu-icon,
+html body #root .sidebar .nav-item.active [class*="icon"],
+html body #root .menu-item.active [class*="icon"] {
+  background: #08223c !important;
+  color: #ffbf2f !important;
+  box-shadow: none !important;
+}
+
+html body #root .user-card,
+html body #root .usuario-card,
+html body #root .sidebar-user,
+html body #root .card-usuario,
+html body #root .logado-card,
+html body #root [class*="logado"] {
+  background: linear-gradient(145deg, rgba(10, 35, 58, .98), rgba(21, 57, 82, .96)) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  color: #fff !important;
+  text-shadow: none !important;
+  box-shadow: 0 18px 36px rgba(0,0,0,.28) !important;
+}
+
+html body #root .user-card *,
+html body #root .usuario-card *,
+html body #root .sidebar-user *,
+html body #root .card-usuario *,
+html body #root .logado-card *,
+html body #root [class*="logado"] * {
+  color: #fff !important;
+  text-shadow: none !important;
+}
+
+html body #root .user-card .role,
+html body #root .usuario-card .role,
+html body #root .sidebar-user .role,
+html body #root .badge-secretaria,
+html body #root .perfil-badge,
+html body #root [class*="secretaria"] {
+  color: #061729 !important;
+  background: linear-gradient(135deg, #ffd34d, #ff9f0a) !important;
+  text-shadow: none !important;
+}
+
+html body #root .btn-sair,
+html body #root button.btn-sair,
+html body #root .logout-button,
+html body #root .botao-sair,
+html body #root button[aria-label*="Sair"],
+html body #root button:has(svg) {
+  text-shadow: none !important;
+}
+
+html body #root .user-card .btn-sair,
+html body #root .usuario-card .btn-sair,
+html body #root .sidebar-user .btn-sair,
+html body #root .card-usuario .btn-sair,
+html body #root .logado-card .btn-sair,
+html body #root .botao-sair,
+html body #root .logout-button {
+  background: #fff !important;
+  color: #071b2d !important;
+  border: 1px solid rgba(255,255,255,.88) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18) !important;
+}
+
+html body #root .user-card .btn-sair *,
+html body #root .usuario-card .btn-sair *,
+html body #root .sidebar-user .btn-sair *,
+html body #root .card-usuario .btn-sair *,
+html body #root .logado-card .btn-sair *,
+html body #root .botao-sair *,
+html body #root .logout-button * {
+  color: #071b2d !important;
+  stroke: #071b2d !important;
+}
+
+html body #root .atalho-chamada-topo,
+html body #root button.atalho-chamada-topo,
+html body #root .hero-painel .atalho-chamada-topo,
+html body #root .dashboard-v41-hero .atalho-chamada-topo,
+html body #root [class*="atalho"][class*="chamada"] {
+  background: rgba(255,255,255,.96) !important;
+  color: #061729 !important;
+  border: 1px solid rgba(255,255,255,.82) !important;
+  box-shadow: 0 12px 30px rgba(3, 15, 28, .18) !important;
+}
+
+html body #root .atalho-chamada-topo *,
+html body #root button.atalho-chamada-topo *,
+html body #root .hero-painel .atalho-chamada-topo *,
+html body #root .dashboard-v41-hero .atalho-chamada-topo *,
+html body #root [class*="atalho"][class*="chamada"] * {
+  color: #061729 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body #root .atalho-chamada-topo small,
+html body #root button.atalho-chamada-topo small,
+html body #root [class*="atalho"][class*="chamada"] small {
+  color: #39556f !important;
+  font-weight: 800 !important;
+}
+
+html body #root .metricas-painel span,
+html body #root .hero-painel-metricas span,
+html body #root .dashboard-v41-metricas span,
+html body #root .hero-painel [class*="metrica"] {
+  background: rgba(5, 31, 55, .42) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,.34) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.28) !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 768px) {
+  html body #root .pagina-publica,
+  html body #root .home-publica,
+  html body #root .tela-apresentacao,
+  html body #root .tela-login {
+    padding-top: 8px !important;
+  }
+
+  html body #root .hero-publico,
+  html body #root .home-hero,
+  html body #root .landing-hero,
+  html body #root .secao-hero {
+    min-height: auto !important;
+    padding-top: 26px !important;
+    padding-bottom: 26px !important;
+  }
+
+  html body #root .hero-painel-conteudo,
+  html body #root .dashboard-v41-hero,
+  html body #root .hero-painel {
+    padding: 14px !important;
+    border-radius: 24px !important;
+  }
+
+  html body #root .hero-painel-conteudo h1,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .hero-painel h1 {
+    font-size: clamp(2rem, 8.6vw, 2.75rem) !important;
+    line-height: .98 !important;
+    margin-bottom: 8px !important;
+  }
+
+  html body #root .hero-painel-conteudo > p,
+  html body #root .dashboard-v41-hero > p,
+  html body #root .hero-painel > p {
+    font-size: .88rem !important;
+    line-height: 1.28 !important;
+    margin-bottom: 10px !important;
+  }
+
+  html body #root .atalho-chamada-topo,
+  html body #root button.atalho-chamada-topo,
+  html body #root [class*="atalho"][class*="chamada"] {
+    min-height: 52px !important;
+    padding: 8px 10px !important;
+    border-radius: 15px !important;
+  }
+
+  html body #root .card,
+  html body #root .dashboard-card,
+  html body #root .admin-card,
+  html body #root .painel-card,
+  html body #root [class*="card"] {
+    --mobile-card-padding-v91: 14px;
+  }
+}
