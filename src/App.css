@@ -36107,3 +36107,547 @@ html body #root .menu-lateral nav button.ativo span:not(.icone-menu) {
     }
   }
 }
+
+/* ==========================================================
+   V8.9 — Contraste final + compactação mobile
+   - melhora contraste do card do usuário e botão sair
+   - remove sombra azul/halo do botão amarelo ativo
+   - compacta home pública, login e páginas internas no mobile
+   ========================================================== */
+
+:root {
+  --v89-navy-0: #030b15;
+  --v89-navy-1: #06111f;
+  --v89-navy-2: #0a2035;
+  --v89-cyan: #20d7ef;
+  --v89-gold: #ffb51b;
+  --v89-gold-2: #ff9700;
+  --v89-white: #ffffff;
+}
+
+/* --- Sidebar: contraste do usuário e botão sair --- */
+html body #root .cartao-usuario-sidebar,
+html body #root .card-usuario,
+html body #root .usuario-sidebar {
+  background:
+    linear-gradient(145deg, rgba(7, 21, 34, .98), rgba(15, 43, 64, .94)) !important;
+  border: 1px solid rgba(255, 203, 77, .28) !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255,255,255,.08) !important;
+  color: #ffffff !important;
+}
+
+html body #root .cartao-usuario-sidebar *,
+html body #root .card-usuario *,
+html body #root .usuario-sidebar * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body #root .cartao-usuario-sidebar small,
+html body #root .cartao-usuario-sidebar .label,
+html body #root .card-usuario small,
+html body #root .usuario-sidebar small {
+  color: #dceeff !important;
+  -webkit-text-fill-color: #dceeff !important;
+  letter-spacing: .08em !important;
+  font-weight: 900 !important;
+}
+
+html body #root .cartao-usuario-sidebar strong,
+html body #root .card-usuario strong,
+html body #root .usuario-sidebar strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 950 !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+html body #root .selo-perfil-sidebar,
+html body #root .cartao-usuario-sidebar .selo-perfil-sidebar,
+html body #root .card-usuario .selo-perfil-sidebar,
+html body #root .usuario-sidebar .selo-perfil-sidebar {
+  background: #ffb51b !important;
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+html body #root .cartao-usuario-sidebar button,
+html body #root .card-usuario button,
+html body #root .usuario-sidebar button,
+html body #root .botao-sair,
+html body #root button.botao-sair {
+  background: #ffffff !important;
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  border: 1px solid rgba(255,255,255,.72) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,.20) !important;
+  font-weight: 950 !important;
+  opacity: 1 !important;
+}
+
+html body #root .cartao-usuario-sidebar button *,
+html body #root .card-usuario button *,
+html body #root .usuario-sidebar button *,
+html body #root .botao-sair * {
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  opacity: 1 !important;
+}
+
+/* --- Menu ativo: amarelo limpo, sem sombra azul/halo --- */
+html body #root .menu-lateral .menu-navegacao button.ativo,
+html body #root .menu-lateral nav button.ativo,
+html body #root aside.menu-lateral .menu-navegacao button.ativo,
+html body #root .menu-lateral-aberto .menu-navegacao button.ativo {
+  background: linear-gradient(135deg, #ffc43d 0%, #ff9f0a 100%) !important;
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  border-color: rgba(255, 196, 61, .85) !important;
+  box-shadow: 0 8px 18px rgba(255, 159, 10, .24), inset 0 1px 0 rgba(255,255,255,.45) !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo::before,
+html body #root .menu-lateral nav button.ativo::before,
+html body #root .menu-lateral .menu-navegacao button.ativo::after,
+html body #root .menu-lateral nav button.ativo::after {
+  box-shadow: none !important;
+  filter: none !important;
+  background: transparent !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo span:not(.icone-menu),
+html body #root .menu-lateral nav button.ativo span:not(.icone-menu),
+html body #root aside.menu-lateral .menu-navegacao button.ativo span:not(.icone-menu),
+html body #root .menu-lateral-aberto .menu-navegacao button.ativo span:not(.icone-menu) {
+  color: #06111f !important;
+  -webkit-text-fill-color: #06111f !important;
+  text-shadow: none !important;
+  background: transparent !important;
+  text-decoration: none !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral nav button.ativo .icone-menu,
+html body #root aside.menu-lateral .menu-navegacao button.ativo .icone-menu,
+html body #root .menu-lateral-aberto .menu-navegacao button.ativo .icone-menu {
+  background: #06111f !important;
+  color: #ffcb4d !important;
+  -webkit-text-fill-color: #ffcb4d !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+html body #root .menu-lateral .menu-navegacao button.ativo .icone-menu svg,
+html body #root .menu-lateral nav button.ativo .icone-menu svg,
+html body #root .menu-lateral-aberto .menu-navegacao button.ativo .icone-menu svg {
+  color: #ffcb4d !important;
+  stroke: currentColor !important;
+  filter: none !important;
+}
+
+/* --- Compactação mobile: home pública e login --- */
+@media (max-width: 760px) {
+  html body #root .landing-pro-page,
+  html body #root .landing-pro-root,
+  html body #root .landing-pro {
+    background: linear-gradient(180deg, #06111f 0%, #082136 52%, #07111f 100%) !important;
+  }
+
+  html body #root .landing-pro-nav-inner {
+    min-height: 58px !important;
+    padding: 10px 18px !important;
+  }
+
+  html body #root .landing-pro-brand-mark {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  html body #root .landing-pro-brand-text strong {
+    font-size: 1rem !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .landing-pro-brand-text small {
+    font-size: .62rem !important;
+    line-height: 1.05 !important;
+  }
+
+  html body #root .landing-pro-hero {
+    min-height: auto !important;
+    padding: 32px 18px 22px !important;
+  }
+
+  html body #root .landing-pro-hero-inner {
+    gap: 18px !important;
+    padding: 0 !important;
+  }
+
+  html body #root .landing-pro-hero h1 {
+    font-size: clamp(2rem, 9vw, 3.15rem) !important;
+    line-height: .96 !important;
+    margin: 10px 0 12px !important;
+  }
+
+  html body #root .landing-pro-hero p {
+    font-size: 1rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 16px !important;
+  }
+
+  html body #root .landing-pro-actions {
+    gap: 10px !important;
+    margin: 14px 0 !important;
+  }
+
+  html body #root .landing-pro-primary,
+  html body #root .landing-pro-secondary {
+    min-height: 46px !important;
+    padding: 12px 18px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .landing-pro-trust {
+    gap: 8px !important;
+    margin-top: 14px !important;
+  }
+
+  html body #root .landing-pro-trust span {
+    min-height: 36px !important;
+    padding: 8px 12px !important;
+    border-radius: 999px !important;
+    font-size: .84rem !important;
+  }
+
+  html body #root .landing-pro-panel {
+    margin-top: 16px !important;
+    padding: 18px !important;
+    border-radius: 28px !important;
+  }
+
+  html body #root .landing-pro-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  html body #root .landing-pro-metrics div,
+  html body #root .landing-pro-panel li,
+  html body #root .landing-pro-panel .landing-pro-panel-row {
+    min-height: 42px !important;
+    padding: 8px 10px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .landing-pro-section,
+  html body #root .landing-pro-split,
+  html body #root .landing-pro-footer {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  html body #root .landing-pro-cards {
+    gap: 12px !important;
+  }
+
+  html body #root .landing-pro-cards article {
+    padding: 16px !important;
+    border-radius: 20px !important;
+  }
+
+  html body #root .tela-login {
+    min-height: 100svh !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    background: linear-gradient(180deg, #06111f 0%, #092844 52%, #07111f 100%) !important;
+  }
+
+  html body #root .tela-login .painel-apresentacao {
+    min-height: auto !important;
+    padding: 24px 22px 18px !important;
+    border-radius: 0 0 28px 28px !important;
+  }
+
+  html body #root .tela-login .marca-login {
+    margin-bottom: 18px !important;
+    gap: 10px !important;
+  }
+
+  html body #root .tela-login .marca-login img,
+  html body #root .tela-login .logo-login {
+    width: 58px !important;
+    height: 58px !important;
+    object-fit: contain !important;
+  }
+
+  html body #root .tela-login .apresentacao-texto {
+    gap: 10px !important;
+  }
+
+  html body #root .tela-login .apresentacao-texto h1,
+  html body #root .tela-login .apresentacao-texto h2 {
+    font-size: clamp(2rem, 8.4vw, 3rem) !important;
+    line-height: .98 !important;
+    margin: 0 0 10px !important;
+  }
+
+  html body #root .tela-login .apresentacao-texto p {
+    font-size: 1rem !important;
+    line-height: 1.45 !important;
+    margin: 0 !important;
+  }
+
+  html body #root .tela-login .beneficios-login,
+  html body #root .tela-login .beneficios-login-v70 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+  }
+
+  html body #root .tela-login .beneficios-login > *,
+  html body #root .tela-login .beneficios-login-v70 > * {
+    min-height: auto !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .tela-login .cartao-login,
+  html body #root .tela-login .cartao-login-v70,
+  html body #root .tela-login .cartao-solicitacao,
+  html body #root .tela-login .card-solicitacao {
+    width: calc(100% - 28px) !important;
+    margin: 16px auto 22px !important;
+    padding: 18px !important;
+    border-radius: 24px !important;
+    background: rgba(255,255,255,.97) !important;
+  }
+
+  html body #root .tela-login .topo-cartao-login {
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  html body #root .tela-login .topo-cartao-login h2 {
+    font-size: clamp(1.8rem, 7vw, 2.35rem) !important;
+    line-height: 1 !important;
+  }
+
+  html body #root .tela-login .topo-cartao-login p {
+    font-size: .98rem !important;
+    line-height: 1.42 !important;
+  }
+
+  html body #root .tela-login .formulario,
+  html body #root .tela-login .formulario-login {
+    gap: 12px !important;
+  }
+
+  html body #root .tela-login .formulario input,
+  html body #root .tela-login .formulario select,
+  html body #root .tela-login .formulario textarea {
+    min-height: 48px !important;
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .tela-login .botao-principal,
+  html body #root .tela-login .botao-destaque,
+  html body #root .tela-login button[type='submit'] {
+    min-height: 50px !important;
+    padding: 12px 18px !important;
+    border-radius: 16px !important;
+  }
+
+  html body #root .tela-login .cartao-solicitar-cadastro,
+  html body #root .tela-login .bloco-cadastro,
+  html body #root .tela-login [class*='solicitar'] {
+    padding: 16px !important;
+    border-radius: 20px !important;
+    margin-top: 14px !important;
+  }
+}
+
+/* --- Compactação mobile: telas internas --- */
+@media (max-width: 760px) {
+  html body #root .topo-mobile-interno {
+    min-height: 72px !important;
+    padding: 8px 14px !important;
+  }
+
+  html body #root .topo-mobile-interno .marca-mobile-interna img,
+  html body #root .marca-mobile-interna img {
+    width: 44px !important;
+    height: 44px !important;
+    object-fit: contain !important;
+  }
+
+  html body #root .botao-inicio-interno,
+  html body #root .botao-menu-interno {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    border-radius: 18px !important;
+  }
+
+  html body #root .area-principal,
+  html body #root main.area-principal {
+    padding: 86px 12px 18px !important;
+  }
+
+  html body #root .conteudo,
+  html body #root .conteudo-painel,
+  html body #root .conteudo-admin-comercial,
+  html body #root .conteudo-configuracoes,
+  html body #root .conteudo-relatorios,
+  html body #root .conteudo-resumo-geral,
+  html body #root .pagina-interna {
+    gap: 14px !important;
+  }
+
+  html body #root .hero-painel-conteudo,
+  html body #root .dashboard-v41-hero,
+  html body #root .topo-admin-sistema,
+  html body #root .topo-pagina,
+  html body #root .cabecalho-pagina,
+  html body #root .hero-relatorios {
+    padding: 18px !important;
+    border-radius: 24px !important;
+    margin-bottom: 12px !important;
+  }
+
+  html body #root .hero-painel-conteudo h1,
+  html body #root .dashboard-v41-hero h1,
+  html body #root .topo-admin-sistema h1,
+  html body #root .topo-pagina h1,
+  html body #root .cabecalho-pagina h1,
+  html body #root .hero-relatorios h1 {
+    font-size: clamp(1.95rem, 8vw, 2.65rem) !important;
+    line-height: 1.02 !important;
+    margin-bottom: 8px !important;
+  }
+
+  html body #root .hero-painel-conteudo p,
+  html body #root .dashboard-v41-hero p,
+  html body #root .topo-admin-sistema p,
+  html body #root .topo-pagina p,
+  html body #root .cabecalho-pagina p,
+  html body #root .hero-relatorios p {
+    font-size: .98rem !important;
+    line-height: 1.38 !important;
+  }
+
+  html body #root .dashboard-v41-metricas,
+  html body #root .metricas-painel,
+  html body #root .cards-resumo,
+  html body #root .admin-status-grid,
+  html body #root .grid-estatisticas,
+  html body #root .grade-cards,
+  html body #root .cards-dashboard {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  html body #root .card,
+  html body #root .card-admin,
+  html body #root .admin-visao-card,
+  html body #root .dashboard-v41-card,
+  html body #root .dashboard-v41-bloco,
+  html body #root .secao-card,
+  html body #root .bloco-painel,
+  html body #root .card-estatistica,
+  html body #root .cartao-estatistica {
+    padding: 14px !important;
+    border-radius: 20px !important;
+    min-height: auto !important;
+  }
+
+  html body #root .card h2,
+  html body #root .card h3,
+  html body #root .admin-visao-card h2,
+  html body #root .admin-visao-card h3,
+  html body #root .dashboard-v41-bloco h2,
+  html body #root .secao-card h2,
+  html body #root .bloco-painel h2 {
+    font-size: clamp(1.35rem, 5.7vw, 1.9rem) !important;
+    line-height: 1.08 !important;
+    margin-bottom: 8px !important;
+  }
+
+  html body #root .card p,
+  html body #root .admin-visao-card p,
+  html body #root .dashboard-v41-bloco p,
+  html body #root .secao-card p,
+  html body #root .bloco-painel p {
+    font-size: .92rem !important;
+    line-height: 1.36 !important;
+    margin-bottom: 10px !important;
+  }
+
+  html body #root .card .numero,
+  html body #root .admin-visao-card .numero,
+  html body #root .card-estatistica .numero,
+  html body #root .cartao-estatistica .numero,
+  html body #root .dashboard-v41-card strong,
+  html body #root .dashboard-v41-card .valor {
+    font-size: clamp(2.1rem, 10vw, 3.3rem) !important;
+    line-height: .95 !important;
+  }
+
+  html body #root .acoes-rapidas,
+  html body #root .grid-acoes,
+  html body #root .lista-acoes,
+  html body #root .admin-tabs,
+  html body #root .abas-admin,
+  html body #root .tabs-admin {
+    gap: 8px !important;
+  }
+
+  html body #root button,
+  html body #root .botao,
+  html body #root .botao-secundario,
+  html body #root .botao-primario,
+  html body #root .admin-visao-card button {
+    min-height: 42px !important;
+    padding: 10px 14px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .formulario,
+  html body #root form,
+  html body #root .campo-formulario {
+    gap: 10px !important;
+  }
+
+  html body #root input,
+  html body #root select,
+  html body #root textarea {
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border-radius: 14px !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto,
+  html body #root .menu-lateral-aberto {
+    color: #ffffff !important;
+  }
+
+  html body #root .menu-lateral.menu-lateral-aberto .menu-navegacao button,
+  html body #root .menu-lateral-aberto .menu-navegacao button {
+    min-height: 54px !important;
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+  }
+}
