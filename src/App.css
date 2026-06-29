@@ -36037,3 +36037,73 @@ html body #root .menu-lateral nav button.ativo span:not(.icone-menu) {
   -webkit-text-fill-color: #07111f !important;
   text-shadow: none !important;
 }
+
+/* ==========================================================
+   V8.8 — Centralização segura no desktop
+   Corrige a margem dupla causada por regra anterior.
+   Mantém menu escuro e ícones coloridos.
+   ========================================================== */
+@media (min-width: 901px) {
+  html body #root .app,
+  html body #root .layout-app,
+  html body #root .aplicacao {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  html body #root .menu-lateral,
+  html body #root aside.menu-lateral,
+  html body #root .sidebar {
+    flex: 0 0 248px !important;
+    width: 248px !important;
+    min-width: 248px !important;
+    max-width: 248px !important;
+  }
+
+  html body #root .area-principal,
+  html body #root main.area-principal {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 24px 32px 36px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    box-sizing: border-box !important;
+  }
+
+  html body #root .area-principal > .conteudo,
+  html body #root main.area-principal > .conteudo,
+  html body #root .area-principal > section,
+  html body #root main.area-principal > section,
+  html body #root .conteudo-admin-comercial,
+  html body #root .conteudo-painel,
+  html body #root .conteudo-configuracoes,
+  html body #root .conteudo-relatorios,
+  html body #root .conteudo-resumo-geral {
+    width: min(100%, 1180px) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Em telas largas, deixa o painel um pouco maior sem encostar nas laterais. */
+  @media (min-width: 1700px) {
+    html body #root .area-principal > .conteudo,
+    html body #root main.area-principal > .conteudo,
+    html body #root .area-principal > section,
+    html body #root main.area-principal > section,
+    html body #root .conteudo-admin-comercial,
+    html body #root .conteudo-painel,
+    html body #root .conteudo-configuracoes,
+    html body #root .conteudo-relatorios,
+    html body #root .conteudo-resumo-geral {
+      width: min(100%, 1260px) !important;
+      max-width: 1260px !important;
+    }
+  }
+}
